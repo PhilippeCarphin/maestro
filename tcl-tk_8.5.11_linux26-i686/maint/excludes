@@ -1,0 +1,1 @@
+--exclude man --exclude include --exclude bin --exclude lib --exclude share
