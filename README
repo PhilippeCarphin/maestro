@@ -25,3 +25,49 @@ tcl-tk_8.5.11_linux26-x86-64
    tcl-tk_8.5.11_multi must have been installed before hand.
 
    (last time I used erg 64 bits for compilation)
+
+
+1) install multi package in domain
+
+ ssm install -d /ssm/net/isst/maestro/master_tcl -p tcl-tk_8.5.11_multi -f /ssm/.repo/isst/maestro/tcl/tcl-tk_8.5.11_multi.ssm
+
+2) install platform packages
+
+ssm install -d /ssm/net/isst/maestro/master_tcl -p tcl-tk_8.5.11_ubuntu-12.04-amd64-64 -f /ssm/.repo/isst/maestro/tcl/tcl-tk_8.5.11_ubuntu-12.04-amd64-64.ssm
+
+ssm install -d /ssm/net/isst/maestro/master_tcl -p tcl-tk_8.5.11_linux26-x86-64 -f /ssm/.repo/isst/maestro/tcl/tcl-tk_8.5.11_linux26-x86-64.ssm
+
+ssm install -d /ssm/net/isst/maestro/master_tcl -p tcl-tk_8.5.11_linux26-i686 -f /ssm/.repo/isst/maestro/tcl/tcl-tk_8.5.11_linux26-i686.ssm
+
+3) compile platform packages
+(compile ubuntu 12)
+ssh mez
+cd /ssm/net/isst/maestro/master_tcl/tcl-tk_8.5.11_ubuntu-12.04-amd64-64/src
+./INSTALL.sh
+
+(compile regular Linux 64)
+ssh pollux
+cd  /ssm/net/isst/maestro/master_tcl/tcl-tk_8.5.11_linux26-x86-64/src
+./INSTALL.sh
+
+ssm install -d /ssm/net/isst/maestro/master_10.3 -f /home/ordenv/GIT-DEPOTS/impl/isst/tcl-tk/tcl-tk_8.5.11/tcl-tk_8.5.11_ubuntu-12.04-amd64-64/ssm/tcl-tk_8.5.11_ubuntu-12.04-amd64-64.ssm
+
+(compile 32 bits)
+ssh idl
+cd /ssm/net/isst/maestro/master_tcl/tcl-tk_8.5.11_linux26-i686/src
+./INSTALL.sh
+
+# ssm uninstall -d /ssm/net/isst/maestro/master_10.3 -p tcl-tk_8.5.11_ubuntu-12.04-amd64-64
+
+. ssmuse-sh -d  /ssm/net/isst/maestro/master_10.3 -p tcl-tk_8.5.11_ubuntu-12.04-amd64-64
+
+4) publish the packages
+PUBLISH_DOMAIN=/data/ords/afsi/afsisul/ssm/publish_test_domain
+INSTALL_DOMAIN=/ssm/net/isst/maestro/master_tcl 
+
+ssm publish -P ${PUBLISH_DOMAIN} -d ${INSTALL_DOMAIN} -p tcl-tk_8.5.11_ubuntu-12.04-amd64-64
+ssm publish -P ${PUBLISH_DOMAIN} -d ${INSTALL_DOMAIN} -p tcl-tk_8.5.11_linux26-x86-64 
+ssm publish -P ${PUBLISH_DOMAIN} -d ${INSTALL_DOMAIN} -p  tcl-tk_8.5.11_linux26-i686 
+
+5) use the publish domain
+. ssmuse-sh -d ${PUBLISH_DOMAIN}
