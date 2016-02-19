@@ -5,4 +5,4 @@
 *.ssm
 *.swp
 *.swo
-tcl-tk*/ssm/tcl-tk_* 
+*/ssm/tcl-tk_* 
