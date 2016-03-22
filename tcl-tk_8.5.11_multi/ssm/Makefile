@@ -10,7 +10,7 @@ ssm:
 	mkdir -p $(SSMPACKAGE)/.ssm.d;
 	echo "Package: $(SSMPACKAGE)" > $(SSMPACKAGE)/.ssm.d/control; \
 	echo "Version: ${VERSION}" >> $(SSMPACKAGE)/.ssm.d/control; \
-	echo "Platform:" >> $(SSMPACKAGE)/.ssm.d/control; \
+	echo "Platform: multi" >> $(SSMPACKAGE)/.ssm.d/control; \
 	echo "Maintainer: $(shell whoami)" >> $(SSMPACKAGE)/.ssm.d/control; \
 	echo "BuildInfo:" >> $(SSMPACKAGE)/.ssm.d/control; \
 	echo "Description: maestro tcl-tk 8.5" >> $(SSMPACKAGE)/.ssm.d/control; \
