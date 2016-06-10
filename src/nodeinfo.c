@@ -31,6 +31,7 @@
 #include "nodeinfo.h"
 #include "tictac.h"
 #include "SeqUtil.h"
+#include "SeqDatesUtil.h"
 #include "XmlUtils.h"
 #include "SeqLoopsUtil.h"
 #include "FlowVisitor.h"
@@ -46,7 +47,6 @@ int SHOW_RESPATH = 0;
 
 /* root node of xml resource file */
 const char* NODE_RES_XML_ROOT = "/NODE_RESOURCES";
-
 SeqNodeType getNodeType ( const xmlChar *_node_name ) {
    SeqNodeType nodeType = Task;
    SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo.getNodeType() node name: %s\n", _node_name);
@@ -351,7 +351,7 @@ void parseLoopAttributes (xmlXPathObjectPtr _result, const char* _loop_node_path
 void parseSubmits (xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr) {
    xmlNodeSetPtr nodeset;
    xmlNodePtr nodePtr;
-   const xmlChar *nodeName, *propertyName;
+   const xmlChar *propertyName;
    xmlAttrPtr propertiesPtr;
    int i=0, isSubmit=1;
    char* tmpstring;
@@ -360,7 +360,6 @@ void parseSubmits (xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr) {
       nodeset = _result->nodesetval;
       for (i=0; i < nodeset->nodeNr; i++) {
          nodePtr = nodeset->nodeTab[i];
-         nodeName = nodePtr->name;
          propertiesPtr = nodePtr->properties;
          isSubmit = 0;
          while (propertiesPtr != NULL) {
@@ -500,7 +499,7 @@ void parseNodeSiblings (xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr) 
 
    xmlNodeSetPtr nodeset;
    xmlNodePtr nodePtr;
-   const xmlChar *nodeName = NULL, *propertyName = NULL;
+   const xmlChar *propertyName = NULL;
    xmlAttrPtr propertiesPtr = NULL;
 
    int i=0;
@@ -509,7 +508,6 @@ void parseNodeSiblings (xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr) 
       nodeset = _result->nodesetval;
       for (i=0; i < nodeset->nodeNr; i++) {
          nodePtr = nodeset->nodeTab[i];
-         nodeName = nodePtr->name;
          propertiesPtr = nodePtr->properties;
          while (propertiesPtr != NULL) {
             propertyName = propertiesPtr->name;
@@ -748,14 +746,13 @@ void getNodeResources ( SeqNodeDataPtr _nodeDataPtr, const char *_nodePath, cons
    char *xmlFile = NULL, *defFile = NULL, *value=NULL, *abortValue=NULL, *shellValue=NULL;
    char query[256];
    char *fixedNodePath = (char*) SeqUtil_fixPath( _nodePath );
-   int i,extraSpace = 0;
+   int extraSpace = 0;
    SeqNodeDataPtr  workerNodeDataPtr=NULL;
 
    FILE *pxml = NULL;
    int xmlSize = 0;
    
    xmlDocPtr doc = NULL;
-   xmlNodeSetPtr nodeset = NULL;
    xmlXPathObjectPtr result = NULL;
    xmlXPathContextPtr context = NULL;
 
@@ -941,10 +938,11 @@ void getNodeResources ( SeqNodeDataPtr _nodeDataPtr, const char *_nodePath, cons
 *********************************************************************************/
 void getFlowInfo ( SeqNodeDataPtr _nodeDataPtr, const char *_nodePath, const char *_seq_exp_home , const char * _datestamp)
 {
+   if (strcmp(_nodePath, "") == 0) raiseError("Calling getFlowInfo() with an empty path, that's paddlin'\n");
    FlowVisitorPtr flow_visitor = Flow_newVisitor(_seq_exp_home);
 
    if ( Flow_parsePath(flow_visitor,_nodeDataPtr, _nodePath) == FLOW_FAILURE )
-      raiseError("Unable to get to the specified node\n");
+      raiseError("Unable to get to the specified node %s\n",_nodePath);
 
    Flow_setPathData(flow_visitor, _nodeDataPtr);
 
@@ -967,6 +965,7 @@ void getFlowInfo ( SeqNodeDataPtr _nodeDataPtr, const char *_nodePath, const cha
 *********************************************************************************/
 int doesNodeExist (const char *_nodePath, const char *_seq_exp_home , const char * _datestamp) {
 
+   SeqUtil_TRACE(TL_FULL_TRACE, "doesNodeExist() begin\n");
    FlowVisitorPtr flow_visitor = Flow_newVisitor( _seq_exp_home);
    int nodeExists = FLOW_FALSE;
    char * newNode = (char*) SeqUtil_fixPath( _nodePath );
@@ -981,9 +980,11 @@ int doesNodeExist (const char *_nodePath, const char *_seq_exp_home , const char
    Flow_deleteVisitor(flow_visitor);
    free(newNode);
    SeqNode_freeNode(tempNode);
+   SeqUtil_TRACE(TL_FULL_TRACE, "doesNodeExist() end\n");
    return nodeExists;
 }
 
+#include "newGetNodeResources.c"
 SeqNodeDataPtr nodeinfo ( const char* node, const char* filters, SeqNameValuesPtr _loops, const char* _exp_home, char *extraArgs, char* datestamp ) {
 
    char *newNode = NULL, *tmpstrtok = NULL, *tmpfilters = NULL;
@@ -1015,7 +1016,8 @@ SeqNodeDataPtr nodeinfo ( const char* node, const char* filters, SeqNameValuesPt
    SeqNode_setWorkdir( nodeDataPtr, workdir );
 
    SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo.nodefinfo() argument datestamp %s. If (null), will run tictac to find value.\n", datestamp );
-   SeqNode_setDatestamp( nodeDataPtr, (const char *) tictac_getDate(_exp_home,"",datestamp) );
+   const char * newDatestamp = tictac_getDate(_exp_home,"",datestamp);
+   SeqNode_setDatestamp( nodeDataPtr, newDatestamp );
    /*pass the content of the command-line (or interface) extra soumet args to the node*/
    SeqNode_setSoumetArgs(nodeDataPtr,extraArgs);
 
@@ -1025,10 +1027,18 @@ SeqNodeDataPtr nodeinfo ( const char* node, const char* filters, SeqNameValuesPt
       /* add loop arg list to node */
       SeqNode_setLoopArgs( nodeDataPtr,_loops);
       getFlowInfo ( nodeDataPtr, (char*) newNode, _exp_home, NULL);
+#if 0
       getNodeResources (nodeDataPtr, (char*) newNode, _exp_home);
+      SeqUtil_TRACE(TL_FULL_TRACE, "newNode=%s\n", newNode);
+#else
+      /* getPhilResources(nodeDataPtr, newNode, _exp_home); */
+      getPaulResources(nodeDataPtr,_exp_home, newNode);
+#endif
 
    }
 
+   free(newNode);
+   free((char*) newDatestamp);
    free( tmpfilters ); 
    return nodeDataPtr;
 }

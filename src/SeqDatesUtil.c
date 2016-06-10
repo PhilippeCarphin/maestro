@@ -47,7 +47,7 @@
 ********************************************************************************/
 #define isDigit(a) ('0' <= a && a <= '9')
 #define MAX_DIGITS 9
-char* SeqDatesUtil_addTimeDelta(char * datestamp, char * timeDelta){
+char* SeqDatesUtil_addTimeDelta(const char * datestamp, const char * timeDelta){
    char * p = timeDelta, buffer[MAX_DIGITS] = {'\0'}, type;
    int sign = ( *p == '-' ? -1 : 1);
    int days = 0, hours = 0, minutes = 0, seconds = 0, digitCounter = 0;
@@ -86,7 +86,7 @@ char* SeqDatesUtil_addTimeDelta(char * datestamp, char * timeDelta){
  * int minute            -- increment or decrement by x minutes
  * int second            -- increment or decrement by x seconds
 ********************************************************************************/
-char* SeqDatesUtil_getPrintableDate( char* printable_date, int day, int hour, int minute, int second )
+char* SeqDatesUtil_getPrintableDate(const char* printable_date, int day, int hour, int minute, int second )
 {
    long long int increment;
    char fulldate[15],buffer[15],four_char_date[5],two_char_date[3];
@@ -142,7 +142,7 @@ int SeqDatesUtil_dow(int y, int m, int d)
    return (y + y/4 - y/100 + y/400 + t[m-1] + d) % 7;
 }
 
-int SeqDatesUtil_isDepHourValid( char* date, char* hourToCheck){
+int SeqDatesUtil_isDepHourValid(const char* date,const char* hourToCheck){
   SeqUtil_TRACE(TL_FULL_TRACE, "SeqDatesUtil.isDepHourValid() checking hour %s for date %s \n", hourToCheck, date);
 
   if ((hourToCheck == NULL) || (date == NULL))  {
@@ -165,7 +165,7 @@ int SeqDatesUtil_isDepHourValid( char* date, char* hourToCheck){
  
 }
  
-int SeqDatesUtil_isDepDOWValid( char* date, char* dowToCheck){
+int SeqDatesUtil_isDepDOWValid( const char* date, const char* dowToCheck){
   int dow = 0, dowToCheckInInt=0; 
   char year[5], month[3], day[3];
 

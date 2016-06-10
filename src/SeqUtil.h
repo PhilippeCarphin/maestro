@@ -65,6 +65,7 @@ void  raiseError(const char* fmt, ... );
 void  SeqUtil_TRACE( int level,const char * fmt, ...);
 void  SeqUtil_setTraceLevel (int _trace) ;
 int   SeqUtil_getTraceLevel () ;
+void SeqUtil_setTraceFlag(int flag, int value);
 void  SeqUtil_checkExpHome (char * _expHome) ;
 void  actions(char *signal, char* flow, char *node) ;
 void  actionsEnd(char *signal, char* flow, char* node) ;

@@ -698,6 +698,7 @@ char* SeqUtil_getdef( const char* filename, const char* key , const char* _seq_e
        retval = SeqUtil_parsedef(defpath,key);
     }
   } 
+  free(defpath);
   free(ovpath);
   return retval;
 }

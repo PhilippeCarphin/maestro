@@ -20,5 +20,13 @@
 
 
 #include "SeqNode.h"
+#include <libxml/xpath.h>
 extern SeqNodeDataPtr nodeinfo ( const char* node, const char* filters, SeqNameValuesPtr _loops, const char* _exp_home, char* extraArgs, char * datestamp );
 extern int doesNodeExist(const char* node, const char* _exp_home, const char * datestamp);
+void parseSubmits (xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr);
+void parseNodeSiblings (xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr);
+void parseNodeSpecifics (SeqNodeType _nodeType, xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr);
+void parseDepends (xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr, int isIntraDep );
+void parseWorkerPath (char * pathToNode, const char * _seq_exp_home, SeqNodeDataPtr _nodeDataPtr );
+SeqNodeType getNodeType ( const xmlChar *_node_name );
+void getNodeLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *_loop_node_path, const char *_seq_exp_home );

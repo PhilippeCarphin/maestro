@@ -14,8 +14,7 @@
 #include "SeqLoopsUtil.h"
 
 #include "FlowVisitor.h"
-
-
+#include "newGetNodeResources.h"
 
 extern char * switchReturn( SeqNodeDataPtr _nodeDataPtr, const char* switchType );
 
@@ -44,6 +43,8 @@ FlowVisitorPtr Flow_newVisitor(const char * _seq_exp_home)
    new_flow_visitor->doc = XmlUtils_getdoc(xmlFilename);
    new_flow_visitor->context = xmlXPathNewContext(new_flow_visitor->doc);
 
+   new_flow_visitor->context->node = new_flow_visitor->doc->children;
+
    new_flow_visitor->previousDoc = NULL;
    new_flow_visitor->previousContext = NULL;
    new_flow_visitor->currentFlowNode = NULL;
@@ -51,6 +52,7 @@ FlowVisitorPtr Flow_newVisitor(const char * _seq_exp_home)
    new_flow_visitor->taskPath = NULL;
    new_flow_visitor->module = NULL;
    new_flow_visitor->intramodulePath = NULL;
+   new_flow_visitor->currentNodeType = Task;
 
 out_free:
    free(xmlFilename);
@@ -94,7 +96,7 @@ int Flow_deleteVisitor(FlowVisitorPtr _flow_visitor)
 ********************************************************************************/
 int Flow_parsePath(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr, const char * _nodePath)
 {
-   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parsePath() begin\n");
+   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parsePath() begin nodePath=%s\n", _nodePath);
    int retval = FLOW_SUCCESS;
    int totalCount = SeqUtil_tokenCount( _nodePath, "/" ) - 1;/* count is 0-based */
    int count = 0;
@@ -123,7 +125,11 @@ int Flow_parsePath(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr, co
          Flow_parseSwitchAttributes(_flow_visitor, _nodeDataPtr, count == totalCount );
 
       if( _flow_visitor->currentNodeType == Loop && count != totalCount ){
+#if 1
          getNodeLoopContainersAttr( _nodeDataPtr, _flow_visitor->currentFlowNode, _flow_visitor->expHome);
+#else
+         getPhilLoopContainersAttr(_nodeDataPtr, _flow_visitor->currentFlowNode, _flow_visitor->expHome);
+#endif
       }
 
       count++;
@@ -395,8 +401,6 @@ out_free:
 const char * Flow_findSwitchType(const FlowVisitorPtr _flow_visitor ){
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchType() begin\n");
    xmlXPathObjectPtr attributesResult = NULL;
-   xmlNodeSetPtr nodeset = NULL;
-   xmlNodePtr currentNodePtr = NULL;
    const char * switchType = NULL;
 
    if( (attributesResult = XmlUtils_getnodeset( "(@type)" , _flow_visitor->context)) == NULL )
@@ -554,9 +558,6 @@ int Flow_checkWorkUnit(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_checkWorkUnit begin\n");
    int retval = FLOW_SUCCESS;
    xmlXPathObjectPtr attributesResult = NULL;
-   xmlNodeSetPtr nodeset = NULL;;
-   xmlNodePtr currentNodePtr = NULL;
-   char * nodeName;
 
    if ( (attributesResult = XmlUtils_getnodeset( "(@work_unit)", _flow_visitor->context) ) == NULL ){
       goto out;
@@ -706,13 +707,16 @@ int Flow_parseSiblings(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parseSiblings begin\n");
    SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo.getFlowInfo() *********** node siblings **********\n");
-   int switchItemFound = (strcmp(_flow_visitor->context->node->name, "SWITCH_ITEM") == 0);
+   int switchItemFound = 0;
+   if( _flow_visitor->context == NULL ) raiseError("WHAT IS THE DEAL WITH AIRLINE FOOOD?\n");
+   if( _flow_visitor->context->node == NULL ) raiseError("HELLO MY NAME IS INIGO MONTOYA\n");
+   switchItemFound = (strcmp(_flow_visitor->context->node->name, "SWITCH_ITEM") == 0);
    xmlXPathObjectPtr result = NULL;
    xmlXPathContextPtr context = NULL;
    char query[SEQ_MAXFIELD] = {'\0'};
    char * switchPrefix = NULL;
 
-   if ( strcmp(_flow_visitor->context->node->name,"SWITCH_ITEM") == 0 )
+   if (switchItemFound)
       switchPrefix = strdup("../");
    else
       switchPrefix = strdup("");
@@ -723,7 +727,7 @@ int Flow_parseSiblings(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr
       context = _flow_visitor->context;
 
    sprintf( query, "(%spreceding-sibling::*[@name])", switchPrefix);
-   result =  XmlUtils_getnodeset (query, _flow_visitor->context);
+   result =  XmlUtils_getnodeset (query, context);
    if (result) {
       SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo.getFlowInfo() *********** preceding siblings found**********\n");
    }
@@ -731,7 +735,7 @@ int Flow_parseSiblings(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr
    xmlXPathFreeObject (result);
 
    sprintf( query, "(%sfollowing-sibling::*[@name])", switchPrefix);
-   result =  XmlUtils_getnodeset (query, _flow_visitor->context);
+   result =  XmlUtils_getnodeset (query, context);
    if (result) {
       SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo.getFlowInfo() *********** following siblings found**********\n");
    }
