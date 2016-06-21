@@ -307,10 +307,18 @@ out:
 ********************************************************************************/
 void getPhilLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *loopNodePath, const char *expHome )
 {
+   SeqUtil_TRACE(TL_FULL_TRACE, "getPhilLoopContainersAttr() begin\n");
    ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,expHome,loopNodePath);
-   if( rv == NULL ) return;
+
+   if( rv->context == NULL )
+      goto out_free;
+
    Resource_parseNodeDFS(rv,_nodeDataPtr,Resource_getContainerLoopAttributes);
+
+out_free:
    deleteResourceVisitor(rv);
+   SeqUtil_TRACE(TL_FULL_TRACE, "getPhilLoopContainersAttr() end\n");
+   return;
 }
 
 /********************************************************************************
