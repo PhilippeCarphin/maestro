@@ -19,7 +19,7 @@ const char * defFilename(const char * _seq_exp_home)
 /********************************************************************************
  * Constructs the path to the node's resource xml file
 ********************************************************************************/
-const char * xmlResourceFilename(SeqNodeDataPtr _nodeDataPtr, const char * _seq_exp_home, const char * nodePath)
+const char * xmlResourceFilename(const char * _seq_exp_home, const char * nodePath, SeqNodeType nodeType )
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "xmlResourceFilename() begin\n");
    const char * xml_postfix = "/container.xml";
@@ -29,7 +29,7 @@ const char * xmlResourceFilename(SeqNodeDataPtr _nodeDataPtr, const char * _seq_
    char xmlFile[pathLength];
    char * normalizedXmlFile = malloc( pathLength );
 
-   if ( _nodeDataPtr->type == Task || _nodeDataPtr->type == NpassTask )
+   if ( nodeType == Task || nodeType == NpassTask )
       xml_postfix = ".xml";
 
    sprintf(xmlFile, "%s%s%s%s", _seq_exp_home, infix, nodePath, xml_postfix);
@@ -45,7 +45,7 @@ const char * xmlResourceFilename(SeqNodeDataPtr _nodeDataPtr, const char * _seq_
  * Returns a pointer to the newly created ResourceVisitor, or returns NULL if
  * the XML document could not be parsed.
 ********************************************************************************/
-ResourceVisitorPtr newResourceVisitor(SeqNodeDataPtr _nodeDataPtr, const char * _seq_exp_home, const char * nodePath)
+ResourceVisitorPtr newResourceVisitor(SeqNodeDataPtr _nodeDataPtr, const char * _seq_exp_home, const char * nodePath, SeqNodeType nodeType)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "newResourceVisitor() begin, nodePath=%s expHome=%s\n", nodePath, _seq_exp_home);
    ResourceVisitorPtr rv = (ResourceVisitorPtr) malloc ( sizeof (ResourceVisitor) );
@@ -53,8 +53,8 @@ ResourceVisitorPtr newResourceVisitor(SeqNodeDataPtr _nodeDataPtr, const char * 
    rv->nodePath = strdup(nodePath);
 
    rv->defFile = defFilename(_seq_exp_home);
-   rv->xmlFile = xmlResourceFilename(_nodeDataPtr, _seq_exp_home, nodePath);
-   rv->context = Resource_createContext(_nodeDataPtr, rv->xmlFile, rv->defFile );
+   rv->xmlFile = xmlResourceFilename(_seq_exp_home, nodePath, nodeType);
+   rv->context = Resource_createContext(_nodeDataPtr, rv->xmlFile, rv->defFile, nodeType );
    if( rv->context != NULL )
       rv->context->node = rv->context->doc->children;
 
@@ -181,14 +181,14 @@ void printValidityData(ValidityDataPtr val)
  * Based on the experiment home and the node path, creates an xmlXPath context
  * with the resource file of the given node.
 ********************************************************************************/
-xmlXPathContextPtr Resource_createContext(SeqNodeDataPtr _nodeDataPtr, const char * xmlFile, const char * defFile)
+xmlXPathContextPtr Resource_createContext(SeqNodeDataPtr _nodeDataPtr, const char * xmlFile, const char * defFile, SeqNodeType nodeType)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Resource_createContext() begin\n");
    xmlXPathContextPtr context = NULL;
    xmlDocPtr doc = NULL;
 
    if ( access(xmlFile, R_OK ) != 0 ){
-      if ( _nodeDataPtr->type == Loop || _nodeDataPtr->type == ForEach ){
+      if ( nodeType == Loop || nodeType == ForEach ){
          raiseError("createResourceContext(): Cannot access mandatory resource file %s\n", xmlFile);
       } else {
          context = NULL;
@@ -199,7 +199,7 @@ xmlXPathContextPtr Resource_createContext(SeqNodeDataPtr _nodeDataPtr, const cha
    doc = XmlUtils_getdoc(xmlFile);
 
    if (doc == NULL) {
-      doc = xml_fallbackDoc( _nodeDataPtr, xmlFile);
+      doc = xml_fallbackDoc( xmlFile, nodeType);
    }
 
    context = xmlXPathNewContext(doc);
@@ -217,7 +217,7 @@ out:
  * If it wasn't empty and could not be parsed, there is nothing we can do about
  * it except exit with error.
 ********************************************************************************/
-xmlDocPtr xml_fallbackDoc(SeqNodeDataPtr _nodeDataPtr, const char * xmlFile)
+xmlDocPtr xml_fallbackDoc(const char * xmlFile, SeqNodeType nodeType)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "xml_fallbackDoc() begin\n");
    FILE * pxml = NULL;
@@ -237,7 +237,7 @@ xmlDocPtr xml_fallbackDoc(SeqNodeDataPtr _nodeDataPtr, const char * xmlFile)
       if( ! fprintf(pxml, "%s", start_tag) ){
          goto write_err;
       }
-      if (  _nodeDataPtr->type == Loop) {
+      if (  nodeType == Loop) {
          if(!fprintf(pxml, "%s",loop_node))
             goto write_err;
       }
@@ -287,7 +287,7 @@ int getPaulResources(SeqNodeDataPtr _nodeDataPtr, const char * expHome, const ch
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "getPaulResources() begin\n");
    int retval = RESOURCE_SUCCESS;
-   ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,expHome,nodePath);
+   ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,expHome,nodePath,_nodeDataPtr->type);
 
    Resource_parseNodeDFS(rv,_nodeDataPtr, do_all);
 
@@ -308,7 +308,7 @@ out:
 void getPhilLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *loopNodePath, const char *expHome )
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "getPhilLoopContainersAttr() begin\n");
-   ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,expHome,loopNodePath);
+   ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,expHome,loopNodePath,Loop);
 
    if( rv->context == NULL )
       goto out_free;

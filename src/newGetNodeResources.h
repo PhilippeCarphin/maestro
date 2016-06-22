@@ -36,14 +36,14 @@ typedef  int (*NodeFunction)(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 
 
 const char * defFilename(const char * _seq_exp_home);
-const char * xmlResourceFilename(SeqNodeDataPtr _nodeDataPtr, const char * _seq_exp_home, const char * nodePath);
-ResourceVisitorPtr newResourceVisitor(SeqNodeDataPtr _nodeDataPtr, const char * _seq_exp_home, const char * nodePath);
+const char * xmlResourceFilename(const char * _seq_exp_home, const char * nodePath, SeqNodeType nodeType );
+ResourceVisitorPtr newResourceVisitor(SeqNodeDataPtr _nodeDataPtr, const char * _seq_exp_home, const char * nodePath, SeqNodeType nodeType);
 void deleteResourceVisitor(ResourceVisitorPtr rv);
 ValidityDataPtr newValidityData();
 void deleteValidityData( ValidityDataPtr val );
 void printValidityData(ValidityDataPtr val);
-xmlXPathContextPtr Resource_createContext(SeqNodeDataPtr _nodeDataPtr, const char * xmlFile, const char * defFile);
-xmlDocPtr xml_fallbackDoc(SeqNodeDataPtr _nodeDataPtr, const char * xmlFile);
+xmlXPathContextPtr Resource_createContext(SeqNodeDataPtr _nodeDataPtr, const char * xmlFile, const char * defFile, SeqNodeType nodeType);
+xmlDocPtr xml_fallbackDoc(const char * xmlFile, SeqNodeType nodeType);
 int getPhilResources( SeqNodeDataPtr _nodeDataPtr, const char * _nodePath, const char * _seq_exp_home);
 void Resource_parseRootNode(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr);
 int Resource_parseValidityNodes(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr);

@@ -85,7 +85,7 @@ int test_xml_fallback()
    xmlDocPtr doc = XmlUtils_getdoc(badFile);
    if ( doc == NULL ){
       SeqUtil_TRACE(TL_FULL_TRACE, "Parsing unsuccessful, running fallback\n");
-      doc = xml_fallbackDoc(ndp,badFile);
+      doc = xml_fallbackDoc(badFile,ndp->type);
    }
    if( doc == NULL ) raiseError("TEST_FAILED");
 
@@ -192,7 +192,7 @@ int test_Resource_createContext()
    /* TEST 1 : With the node having type Loop */
    ndp->type = Loop;
    nodePath = "/sample_module/Loop_Examples/outerloop";
-   xmlFile = xmlResourceFilename( ndp, expHome, nodePath);
+   xmlFile = xmlResourceFilename( expHome, nodePath, Loop);
    expected = "/home/ops/afsi/phc/Documents/Experiences/sample/resources/sample_module/Loop_Examples/outerloop/container.xml";
    if ( strcmp( xmlFile, expected) != 0 ){
       SeqUtil_TRACE(TL_FULL_TRACE, " xmlFile=%s\nexpected=%s\n", xmlFile, expected);
@@ -203,7 +203,7 @@ int test_Resource_createContext()
    /* TEST 2 : With the node being of type Task */
    ndp->type = Task;
    nodePath = "/sample_module/Loop_Examples/outerloop/outerloopTask";
-   xmlFile = xmlResourceFilename(ndp, expHome, nodePath);
+   xmlFile = xmlResourceFilename(expHome, nodePath, Task);
    expected = "/home/ops/afsi/phc/Documents/Experiences/sample/resources/resources.def";
    if ( strcmp( defFile, expected) != 0 ){
       SeqUtil_TRACE(TL_FULL_TRACE, " defFile=%s\nexpected=%s\n", defFile, expected);
@@ -228,7 +228,7 @@ ResourceVisitorPtr createTestResourceVisitor(SeqNodeDataPtr ndp, const char * no
    rv->defFile = (defFile != NULL ? strdup(defFile) : NULL );
    rv->xmlFile = (xmlFile != NULL ? strdup(xmlFile) : NULL );
 
-   rv->context = Resource_createContext(ndp, xmlFile, defFile );
+   rv->context = Resource_createContext(ndp, xmlFile, defFile,ndp->type );
    rv->context->node = rv->context->doc->children;
 
    rv->loopResourcesFound = 0;
