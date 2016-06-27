@@ -49,10 +49,10 @@ ResourceVisitorPtr newResourceVisitor(SeqNodeDataPtr _nodeDataPtr, const char * 
    if( rv->context != NULL )
       rv->context->node = rv->context->doc->children;
 
-   rv->loopResourcesFound = 0;
-   rv->forEachResourcesFound = 0;
-   rv->batchResourcesFound = 0;
-   rv->abortActionFound = 0;
+   rv->loopResourcesFound = RESOURCE_FALSE;
+   rv->forEachResourcesFound = RESOURCE_FALSE;
+   rv->batchResourcesFound = RESOURCE_FALSE;
+   rv->abortActionFound = RESOURCE_FALSE;
 
    memset(rv->_nodeStack, '\0', RESOURCE_VISITOR_STACK_SIZE);
    rv->_stackSize = 0;
@@ -283,6 +283,7 @@ syntax_err:
 ********************************************************************************/
 int do_all(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
+   int retval = RESOURCE_SUCCESS;
    SeqUtil_TRACE(TL_FULL_TRACE, "do_all() begin\n");
    if( _nodeDataPtr->type == Loop)
       Resource_getLoopAttributes(rv,_nodeDataPtr);
@@ -295,7 +296,7 @@ int do_all(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
    Resource_getAbortActions(rv, _nodeDataPtr);
 
    SeqUtil_TRACE(TL_FULL_TRACE, "do_all() end\n");
-   return 0;
+   return retval;
 }
 
 /********************************************************************************
@@ -341,7 +342,6 @@ void getNodeLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *expHo
 out_free:
    deleteResourceVisitor(rv);
    SeqUtil_TRACE(TL_FULL_TRACE, "getNodeLoopContainersAttr() end\n");
-   return;
 }
 
 /********************************************************************************
@@ -424,7 +424,7 @@ int checkValidity(SeqNodeDataPtr _nodeDataPtr, ValidityDataPtr val )
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "checkValidity() begin\n");
    printValidityData(val);
-   int retval = 1;
+   int retval = RESOURCE_TRUE;
 
    char * local_ext = SeqLoops_indexToExt(val->local_index);
    SeqUtil_TRACE(TL_FULL_TRACE, "PHIL!! datestamp = %s\n",_nodeDataPtr->datestamp);
@@ -435,21 +435,21 @@ int checkValidity(SeqNodeDataPtr _nodeDataPtr, ValidityDataPtr val )
    if ( local_ext != NULL && strcmp ( local_ext, _nodeDataPtr->extension ) != 0
          && strcmp(local_ext, "") != 0){
       SeqUtil_TRACE(TL_FULL_TRACE,"checkValidity(): extension mismatch:local_index=%s, local_ext=%s, ndp->extension=%s\n", val->local_index, local_ext, _nodeDataPtr->extension);
-      retval = 0;
+      retval = RESOURCE_FALSE;
       goto out_free;
    }
 
    /* Check valid_hour */
    if (val->valid_hour != NULL && strlen(val->valid_hour) > 0
          && !SeqDatesUtil_isDepHourValid(incrementedDatestamp, val->valid_hour)){
-      retval = 0;
+      retval = RESOURCE_FALSE;
       goto out_free;
    }
 
    /* Check valid_dow */
    if (val->valid_dow != NULL && strlen(val->valid_dow) > 0
          && !SeqDatesUtil_isDepDOWValid(incrementedDatestamp, val->valid_dow)){
-      retval = 0;
+      retval = RESOURCE_FALSE;
       goto out_free;
    }
 
@@ -483,19 +483,17 @@ int isValid(SeqNodeDataPtr _nodeDataPtr, xmlNodePtr validityNode)
 ********************************************************************************/
 int Resource_getLoopAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
-   int retval = 0;
+   int retval = RESOURCE_SUCCESS;
    SeqUtil_TRACE(TL_FULL_TRACE, "getLoopAttributes() begin\n");
 
-   if( rv->loopResourcesFound ){
-      retval = 1;
+   if( rv->loopResourcesFound == RESOURCE_TRUE ){
       goto out;
    }
 
    xmlXPathObjectPtr result = XmlUtils_getnodeset("(child::LOOP/@*)",rv->context);
    if(result != NULL){
       parseNodeSpecifics(Loop, result, _nodeDataPtr);
-      rv->loopResourcesFound = 1;
-      retval = 0;
+      rv->loopResourcesFound = RESOURCE_TRUE;
    }
 
 out_free:
@@ -511,13 +509,12 @@ out:
 int Resource_getContainerLoopAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Resource_getContainerLoopAttributes() begin\n");
-   int retval = 0;
+   int retval = RESOURCE_SUCCESS;
    xmlXPathObjectPtr result = NULL;
    const char * fixedNodePath = SeqUtil_fixPath(rv->nodePath);
 
    if( (result = XmlUtils_getnodeset ("(child::LOOP/@*)",rv->context)) != NULL ) {
       parseLoopAttributes( result, fixedNodePath, _nodeDataPtr );
-      retval = 1;
    }
 
    free((char *) fixedNodePath);
@@ -532,17 +529,16 @@ int Resource_getContainerLoopAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _n
 ********************************************************************************/
 int Resource_getForEachAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
-   int retval = 0;
+   int retval = RESOURCE_SUCCESS;
    SeqUtil_TRACE(TL_FULL_TRACE, "getForEachAttributes() begin\n");
-   if( rv->forEachResourcesFound ){
-      retval = 1;
+   if( rv->forEachResourcesFound == RESOURCE_TRUE ){
       goto out;
    }
 
    xmlXPathObjectPtr result = XmlUtils_getnodeset("(child::FOR_EACH/@*)",rv->context);
    if( result != NULL ){
       parseForEachTarget(result,_nodeDataPtr);
-      rv->forEachResourcesFound = 1;
+      rv->forEachResourcesFound = RESOURCE_TRUE;
    }
 
 out_free:
@@ -558,17 +554,16 @@ out:
 ********************************************************************************/
 int Resource_getBatchAttributes(ResourceVisitorPtr rv,SeqNodeDataPtr _nodeDataPtr)
 {
-   int retval = 0;
+   int retval = RESOURCE_SUCCESS;
    SeqUtil_TRACE(TL_FULL_TRACE, "getBatchAttributes() begin\n");
-   if( rv->batchResourcesFound ){
-      retval = 1;
+   if( rv->batchResourcesFound == RESOURCE_TRUE ){
       goto out;
    }
 
    xmlXPathObjectPtr result = XmlUtils_getnodeset("(child::BATCH/@*)",rv->context);
    if( result != NULL ){
       parseBatchResources(result,_nodeDataPtr);
-      rv->batchResourcesFound = 1;
+      rv->batchResourcesFound = RESOURCE_TRUE;
    }
 
 out_free:
@@ -585,6 +580,7 @@ out:
 int Resource_getDependencies(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "getDependencies() begin\n");
+   int retval = RESOURCE_SUCCESS;
 
    xmlXPathObjectPtr result = XmlUtils_getnodeset("(child::DEPENDS_ON)",rv->context);
    if( result != NULL )
@@ -594,7 +590,7 @@ out_free:
    xmlXPathFreeObject(result);
 out:
    SeqUtil_TRACE(TL_FULL_TRACE, "getDependencies() end\n");
-   return 0;
+   return retval;
 }
 
 /********************************************************************************
@@ -603,11 +599,10 @@ out:
 ********************************************************************************/
 int Resource_getAbortActions(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
-   int retval = 0;
+   int retval = RESOURCE_SUCCESS;
    SeqUtil_TRACE(TL_FULL_TRACE, "getAbortActions() begin\n");
 
-   if( rv->abortActionFound ){
-      retval = 1;
+   if( rv->abortActionFound == RESOURCE_TRUE ){
       goto out;
    }
 
@@ -615,8 +610,10 @@ int Resource_getAbortActions(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
    xmlXPathObjectPtr result = XmlUtils_getnodeset("(child::ABORT_ACTION/@*)",rv->context);
    if( result != NULL ){
       parseAbortActions(result,_nodeDataPtr);
+      rv->abortActionFound = RESOURCE_TRUE;
    } else if ( rv->defFile != NULL && (abortValue = SeqUtil_getdef(rv->defFile, "SEQ_DEFAULT_ABORT_ACTION", _nodeDataPtr->expHome))) {
       SeqNode_addAbortAction(_nodeDataPtr, abortValue);
+      rv->abortActionFound = RESOURCE_TRUE;
    }
 
 out_free:
@@ -675,7 +672,7 @@ int Resource_validateMachine(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 
    free(value);
    SeqUtil_TRACE(TL_FULL_TRACE, "validateMachine() end\n");
-   return 1;
+   return RESOURCE_SUCCESS;
 }
 
 /********************************************************************************

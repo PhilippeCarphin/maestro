@@ -6,6 +6,8 @@
 #define RESOURCE_MAX_RECURSION_DEPTH ((RESOURCE_VISITOR_STACK_SIZE)-1)
 #define RESOURCE_SUCCESS 0
 #define RESOURCE_FAILURE -1
+#define RESOURCE_TRUE 1
+#define RESOURCE_FALSE 0
 
 typedef struct _ValidityData {
 
