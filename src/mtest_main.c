@@ -239,7 +239,7 @@ out_free:
 
 ResourceVisitorPtr createTestResourceVisitor(SeqNodeDataPtr ndp, const char * nodePath, const char * xmlFile, const char * defFile)
 {
-   SeqUtil_TRACE(TL_FULL_TRACE, "newResourceVisitor() begin\n");
+   SeqUtil_TRACE(TL_FULL_TRACE, "createTestResourceVisitor() begin\n");
    ResourceVisitorPtr rv = (ResourceVisitorPtr) malloc ( sizeof (ResourceVisitor) );
 
    rv->nodePath = ( nodePath != NULL ? strdup(nodePath) : strdup("") );
@@ -254,10 +254,11 @@ ResourceVisitorPtr createTestResourceVisitor(SeqNodeDataPtr ndp, const char * no
    rv->forEachResourcesFound = 0;
    rv->batchResourcesFound = 0;
    rv->abortActionFound = 0;
+   rv->workerPathFound = 0;
 
    rv->_stackSize = 0;
 
-   SeqUtil_TRACE(TL_FULL_TRACE, "newResourceVisitor() end\n");
+   SeqUtil_TRACE(TL_FULL_TRACE, "createTestResourceVisitor() end\n");
    return rv;
 }
 #define NODE_RES_XML_ROOT "NODE_RESOURCES"
@@ -461,6 +462,43 @@ int test_parseNodeDFS()
    return 0;
 }
 
+int test_Resource_parseWorkerPath()
+{
+   header("parseWorkerPath");
+   SeqNodeDataPtr ndp = SeqNode_createNode("phil");
+   free(ndp->datestamp);
+   ndp->datestamp = strdup("20160102120000");
+   free(ndp->extension);
+   ndp->extension = strdup("+1");
+
+   const char * xmlFile = absolutePath("loop_container.xml");
+   ResourceVisitorPtr rv = createTestResourceVisitor(ndp,NULL,xmlFile,NULL);
+
+   Resource_parseNodeDFS(rv,ndp,Resource_getWorkerPath);
+
+   if( strcmp(ndp->workerPath, "this/is/the/end" ) != 0 ) raiseError("TEST FAILED");
+
+   free(ndp->datestamp);
+   ndp->datestamp = strdup("20160101030405");
+   free(ndp->workerPath);
+   ndp->workerPath = strdup("HELLO");
+   rv->workerPathFound = RESOURCE_FALSE;
+
+   Resource_parseNodeDFS(rv,ndp,Resource_getWorkerPath);
+
+   SeqUtil_TRACE(TL_FULL_TRACE, "ndp->workerPath: %s\n", ndp->workerPath);
+   if( strcmp(ndp->workerPath, "hello/my/name/is/inigo/montoya/you/killed/my/father/prepare/to/die") != 0 )
+      raiseError("TEST FAILED");
+   
+   SeqNode_freeNode(ndp);
+   free((char*)xmlFile);
+   deleteResourceVisitor(rv);
+   return 0;
+}
+
+
+
+
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
    test_xml_fallback();
@@ -472,6 +510,7 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
    test_isValid();
    test_Resource_getLoopAttributes();
    test_parseNodeDFS();
+   test_Resource_parseWorkerPath();
 
 
 

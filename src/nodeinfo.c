@@ -400,7 +400,9 @@ void parseSubmits (xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr) {
    }
 }
 
+#ifndef _RESOURCE_NEW_WORKER_FUNCTIONS_
 /* set the node's worker path */
+
 void parseWorkerPath (char * pathToNode, const char * _seq_exp_home, SeqNodeDataPtr _nodeDataPtr ) {
    xmlDocPtr doc = NULL;
    xmlXPathObjectPtr result = NULL;
@@ -453,6 +455,7 @@ void parseWorkerPath (char * pathToNode, const char * _seq_exp_home, SeqNodeData
 
 
 }
+#endif
 
 void parseAbortActions (xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr) {
    xmlNodeSetPtr nodeset = NULL;

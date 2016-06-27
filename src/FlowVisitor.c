@@ -592,7 +592,11 @@ int Flow_checkWorkUnit(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr
       goto out_free;
    }
 
+#ifndef _RESOURCE_NEW_WORKER_FUNCTIONS_
    parseWorkerPath(_flow_visitor->currentFlowNode, _flow_visitor->expHome, _nodeDataPtr);
+#else
+   Resource_parseWorkerPath(_flow_visitor->currentFlowNode, _flow_visitor->expHome, _nodeDataPtr);
+#endif
 
 out_free:
    xmlXPathFreeObject(attributesResult);
@@ -607,7 +611,7 @@ out:
 ********************************************************************************/
 int Flow_setPathData(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr)
 {
-   SeqUtil_TRACE(TL_FULL_TRACE,"Flow_setPathData() begin");
+   SeqUtil_TRACE(TL_FULL_TRACE,"Flow_setPathData() begin\n");
 
    Flow_setPathToModule(_flow_visitor,_nodeDataPtr);
    SeqNode_setInternalPath( _nodeDataPtr, _flow_visitor->taskPath );
@@ -623,7 +627,7 @@ int Flow_setPathData(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr)
    SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo.getFlowInfo() pathToModule=%s\n",_nodeDataPtr->pathToModule );
    SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo.getFlowInfo() taskPath=%s\n", _flow_visitor->taskPath );
 
-   SeqUtil_TRACE(TL_FULL_TRACE,"Flow_setPathData() end");
+   SeqUtil_TRACE(TL_FULL_TRACE,"Flow_setPathData() end\n");
    return FLOW_SUCCESS;
 }
 

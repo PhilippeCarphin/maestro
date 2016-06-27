@@ -28,6 +28,14 @@
 #include <libxml/xpathInternals.h>
 #include "SeqNode.h"
 
+/* Uncomment this line to use the replacement functions for getting worker
+ * information:
+ * The body of Resource_setWorkerData() is changed for one that does no extra
+ * work instead of calling nodeinfo,
+ * ParseWorkerPath() is replaced by Resource_parseWorkerPath in
+ * Flow_setWorkerPath() which do a DFS through the VALIDITY nodes of the xml
+ * file.*/
+#define _RESOURCE_NEW_WORKER_FUNCTIONS_
 
 #define RESOURCE_VISITOR_STACK_SIZE 30
 #define RESOURCE_MAX_RECURSION_DEPTH ((RESOURCE_VISITOR_STACK_SIZE)-1)
@@ -60,6 +68,7 @@ typedef struct _ResourceVisitor {
    int forEachResourcesFound;
    int batchResourcesFound;
    int abortActionFound;
+   int workerPathFound;
 
    xmlNodePtr _nodeStack[RESOURCE_VISITOR_STACK_SIZE];
    int _stackSize;
@@ -99,9 +108,11 @@ int Resource_parseNodeDFS(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr, No
 int Resource_parseNodeDFS_internal(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr,
                                     xmlNodePtr node, NodeFunction nf, int depth);
 int Resource_getContainerLoopAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr);
+int Resource_getWorkerPath(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr);
 
 
 
+int Resource_parseWorkerPath( const char * pathToNode, const char * _seq_exp_home, SeqNodeDataPtr _nodeDataPtr);
 void getNodeLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *loopNodePath, const char *expHome );
 int getNodeResources(SeqNodeDataPtr _nodeDataPtr, const char * expHome, const char * nodePath);
 

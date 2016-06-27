@@ -80,6 +80,7 @@ ResourceVisitorPtr newResourceVisitor(SeqNodeDataPtr _nodeDataPtr, const char * 
    rv->forEachResourcesFound = RESOURCE_FALSE;
    rv->batchResourcesFound = RESOURCE_FALSE;
    rv->abortActionFound = RESOURCE_FALSE;
+   rv->workerPathFound = RESOURCE_FALSE;
 
    memset(rv->_nodeStack, '\0', RESOURCE_VISITOR_STACK_SIZE);
    rv->_stackSize = 0;
@@ -371,6 +372,36 @@ out_free:
    SeqUtil_TRACE(TL_FULL_TRACE, "getNodeLoopContainersAttr() end\n");
 }
 
+
+/********************************************************************************
+ * Called from Flow_checkWorkUnit to get the worker path of a node on the
+ * path of the subject node.
+********************************************************************************/
+int Resource_parseWorkerPath( const char * pathToNode, const char * _seq_exp_home, SeqNodeDataPtr _nodeDataPtr)
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "parseWorkerPath() begin\n");
+   int retval = RESOURCE_SUCCESS;
+   ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,_seq_exp_home,pathToNode,Loop);
+
+   if ( rv->context == NULL ){
+      retval = RESOURCE_FAILURE;
+      goto out_free;
+   }
+
+   Resource_parseNodeDFS(rv,_nodeDataPtr,Resource_getWorkerPath);
+
+   if( rv->workerPathFound == RESOURCE_FALSE ){
+      retval = RESOURCE_FAILURE;
+      goto out_free;
+   }
+
+out_free:
+   deleteResourceVisitor(rv);
+   SeqUtil_TRACE(TL_FULL_TRACE, "parseWorkerPath() end\n");
+   return retval;
+}
+
+
 /********************************************************************************
  * Calls Resource_parseNodeDFS_internal() on the root node of the resource xml
  * file.
@@ -600,6 +631,33 @@ out:
    return retval;
 }
 
+
+int Resource_getWorkerPath(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_getWorkerPath() begin\n");
+   int retval = RESOURCE_SUCCESS;
+   char * workerPath = NULL;
+
+   if( rv->workerPathFound == RESOURCE_TRUE ){
+      goto out;
+   }
+
+   xmlXPathObjectPtr result = XmlUtils_getnodeset((const xmlChar *) "(child::WORKER)", rv->context);
+   if ( result != NULL ){
+      workerPath = xmlGetProp( result->nodesetval->nodeTab[0], (const xmlChar *) "path");
+      SeqNode_setWorkerPath(_nodeDataPtr, workerPath);
+      rv->workerPathFound = RESOURCE_TRUE;
+   }
+
+out_free:
+   free(workerPath);
+   xmlXPathFreeObject(result);
+out:
+   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_getWorkerPath() end\n");
+   return retval;
+}
+
+
 /********************************************************************************
  * NodeFunction: Queries the context for DEPENDS_ON children of the current node
  * of the context and parses their data into the _nodeDataPtr.
@@ -663,6 +721,7 @@ int Resource_setWorkerData(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
       goto out;
    }
 
+#ifndef _RESOURCE_NEW_WORKER_FUNCTIONS_
    SeqNodeDataPtr workerNodeDataPtr = nodeinfo( _nodeDataPtr->workerPath, "all", NULL, _nodeDataPtr->expHome, NULL, NULL);
    _nodeDataPtr->mpi=workerNodeDataPtr->mpi;
    _nodeDataPtr->catchup=workerNodeDataPtr->catchup;
@@ -674,6 +733,11 @@ int Resource_setWorkerData(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
    SeqNode_setArgs( _nodeDataPtr,  workerNodeDataPtr->soumetArgs );
    SeqNode_setShell( _nodeDataPtr,  workerNodeDataPtr->shell );
    SeqNode_freeNode( workerNodeDataPtr );
+#else
+   ResourceVisitorPtr worker_rv = newResourceVisitor(_nodeDataPtr, _nodeDataPtr->expHome, _nodeDataPtr->workerPath, Task);
+   Resource_parseNodeDFS(worker_rv, _nodeDataPtr, Resource_getBatchAttributes );
+   deleteResourceVisitor(worker_rv);
+#endif
 
 out:
    SeqUtil_TRACE(TL_FULL_TRACE, "Resource_setWorkerData() end\n");
@@ -729,3 +793,4 @@ out:
    SeqUtil_TRACE(TL_FULL_TRACE, "Resource_setShell() end\n");
    return retval;
 }
+
