@@ -136,6 +136,7 @@ int Resource_unsetNode(ResourceVisitorPtr rv)
 ********************************************************************************/
 ValidityDataPtr newValidityData()
 {
+   SeqUtil_TRACE(TL_FULL_TRACE, "newValidityData() begin\n");
    ValidityDataPtr val = (ValidityDataPtr ) malloc( sizeof (ValidityData) );
 
    val->dow = NULL;
@@ -145,6 +146,7 @@ ValidityDataPtr newValidityData()
    val->valid_dow = NULL;
    val->local_index = NULL;
 
+   SeqUtil_TRACE(TL_FULL_TRACE, "newValidityData() end\n");
    return val;
 }
 
@@ -153,6 +155,7 @@ ValidityDataPtr newValidityData()
 ********************************************************************************/
 void deleteValidityData( ValidityDataPtr val )
 {
+   SeqUtil_TRACE(TL_FULL_TRACE, "deleteValidityData() begin\n");
    free(val->dow);
    free(val->hour);
    free(val->time_delta);
@@ -160,6 +163,7 @@ void deleteValidityData( ValidityDataPtr val )
    free(val->valid_dow);
    free(val->local_index);
    free( val );
+   SeqUtil_TRACE(TL_FULL_TRACE, "deleteValidityData() end\n");
 }
 
 /********************************************************************************
@@ -272,6 +276,7 @@ syntax_err:
 ********************************************************************************/
 int do_all(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
+   SeqUtil_TRACE(TL_FULL_TRACE, "do_all() begin\n");
    if( _nodeDataPtr->type == Loop)
       Resource_getLoopAttributes(rv,_nodeDataPtr);
 
@@ -282,6 +287,7 @@ int do_all(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
    Resource_getDependencies(rv, _nodeDataPtr);
    Resource_getAbortActions(rv, _nodeDataPtr);
 
+   SeqUtil_TRACE(TL_FULL_TRACE, "do_all() end\n");
    return 0;
 }
 
@@ -337,8 +343,8 @@ int Resource_parseNodeDFS(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr, No
    int retval = RESOURCE_SUCCESS;
    if( rv->context != NULL ){
       retval = Resource_parseNodeDFS_internal(rv,_nodeDataPtr, rv->context->doc->children, nf, 0);
-      SeqUtil_TRACE(TL_FULL_TRACE, "Resource_parseNodeDFS() end\n");
    }
+   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_parseNodeDFS() end\n");
    return retval;
 }
 
@@ -636,8 +642,12 @@ out:
 ********************************************************************************/
 int Resource_setWorkerData(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
-   if( strcmp(_nodeDataPtr->workerPath,"") == 0)
-      return 0;
+   int retval = RESOURCE_SUCCESS;
+   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_setWorkerData() begin\n");
+   if( strcmp(_nodeDataPtr->workerPath,"") == 0){
+      retval = RESOURCE_FAILURE;
+      goto out;
+   }
 
    SeqNodeDataPtr workerNodeDataPtr = nodeinfo( _nodeDataPtr->workerPath, "all", NULL, _nodeDataPtr->expHome, NULL, NULL);
    _nodeDataPtr->mpi=workerNodeDataPtr->mpi;
@@ -650,7 +660,10 @@ int Resource_setWorkerData(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
    SeqNode_setArgs( _nodeDataPtr,  workerNodeDataPtr->soumetArgs );
    SeqNode_setShell( _nodeDataPtr,  workerNodeDataPtr->shell );
    SeqNode_freeNode( workerNodeDataPtr );
-   return 1;
+
+out:
+   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_setWorkerData() end\n");
+   return retval;
 }
 
 /********************************************************************************
@@ -680,11 +693,11 @@ int Resource_validateMachine(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 ********************************************************************************/
 int Resource_setShell(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
-   int retval = 0;
+   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_setShell() begin\n");
+   int retval = RESOURCE_SUCCESS;
    char * shellValue = NULL;
 
    if ( strcmp(_nodeDataPtr->shell,"") != 0){
-      retval = 1;
       goto out;
    }
 
@@ -695,10 +708,10 @@ int Resource_setShell(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
    } else {
       SeqNode_setShell( _nodeDataPtr, "/bin/ksh" );
    }
-   retval = 0;
 
 out_free:
    free(shellValue);
 out:
+   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_setShell() end\n");
    return retval;
 }
