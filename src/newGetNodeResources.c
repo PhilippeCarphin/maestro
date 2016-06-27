@@ -385,7 +385,7 @@ ValidityDataPtr getValidityData(xmlNodePtr validityNode)
    SeqUtil_TRACE(TL_FULL_TRACE, "getValidityData() begin\n");
    if ( strcmp(validityNode->name, "VALIDITY") != 0)
       raiseError( "isValid() must receive a VALIDITY xml node\n");
-   ValidityDataPtr val = (ValidityDataPtr) malloc( sizeof(ValidityData));
+   ValidityDataPtr val = newValidityData();
 
    val->dow = xmlGetProp( validityNode, "dow");
    val->hour = xmlGetProp( validityNode, "hour");
