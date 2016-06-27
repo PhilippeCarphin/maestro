@@ -1,6 +1,12 @@
 
+#ifndef _RESOURCE_VISITOR_H_
+#define _RESOURCE_VISITOR_H_
+
 #define RESOURCE_VISITOR_STACK_SIZE 30
 #define RESOURCE_MAX_RECURSION_DEPTH ((RESOURCE_VISITOR_STACK_SIZE)-1)
+#define RESOURCE_SUCCESS 0
+#define RESOURCE_FAILURE -1
+
 typedef struct _ValidityData {
 
    char * dow;
@@ -68,3 +74,6 @@ int Resource_getContainerLoopAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _n
 
 
 void getPhilLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *loopNodePath, const char *expHome );
+
+
+#endif

@@ -42,8 +42,10 @@ const char * xmlResourceFilename(const char * _seq_exp_home, const char * nodePa
 /********************************************************************************
  * Allocates and initialises a ResourceVisitor object to hold data used in the
  * process of getting the node's resources.
- * Returns a pointer to the newly created ResourceVisitor, or returns NULL if
- * the XML document could not be parsed.
+ * NOTE that the visitor may still be useful as a struct containing filenames
+ * and other information even if the xml file could not be parsed or does not
+ * exist.  Therefore, the user of this visitor must check whether the
+ * rv->context is NULL before making queries to it.
 ********************************************************************************/
 ResourceVisitorPtr newResourceVisitor(SeqNodeDataPtr _nodeDataPtr, const char * _seq_exp_home, const char * nodePath, SeqNodeType nodeType)
 {
@@ -67,18 +69,11 @@ ResourceVisitorPtr newResourceVisitor(SeqNodeDataPtr _nodeDataPtr, const char * 
    rv->_stackSize = 0;
 
    SeqUtil_TRACE(TL_FULL_TRACE, "newResourceVisitor() end\n");
-success:
    return rv;
-fail:
-   free((char*) rv->nodePath);
-   free((char*) rv->defFile);
-   free((char*) rv->xmlFile);
-   free( rv );
-   return NULL;
 }
 
 /********************************************************************************
- * Free's a ResourceVisitor object
+ * Frees a ResourceVisitor object
 ********************************************************************************/
 void deleteResourceVisitor(ResourceVisitorPtr rv)
 {
@@ -93,9 +88,6 @@ void deleteResourceVisitor(ResourceVisitorPtr rv)
    free(rv);
    SeqUtil_TRACE(TL_FULL_TRACE, "deleteResourceVisitor() end\n");
 }
-#define RESOURCE_SUCCESS 0
-#define RESOURCE_FAILURE -1
-
 int _pushNode(ResourceVisitorPtr rv, xmlNodePtr node)
 {
    if( rv->_stackSize < RESOURCE_VISITOR_STACK_SIZE ){
