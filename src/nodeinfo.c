@@ -47,6 +47,7 @@ int SHOW_RESPATH = 0;
 
 /* root node of xml resource file */
 const char* NODE_RES_XML_ROOT = "/NODE_RESOURCES";
+const char* NODE_RES_XML_ROOT_NAME = "NODE_RESOURCES";
 SeqNodeType getNodeType ( const xmlChar *_node_name ) {
    SeqNodeType nodeType = Task;
    SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo.getNodeType() node name: %s\n", _node_name);

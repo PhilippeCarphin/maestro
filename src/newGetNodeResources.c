@@ -1,5 +1,6 @@
 /* int getNodeResources(SeqNodeDataPtr _nodeDataPtr); */
 #include "newGetNodeResources.h"
+#include "nodeinfo.h"
 #include "SeqDatesUtil.h"
 #include "SeqLoopsUtil.h"
 #include "SeqUtil.h"
@@ -206,6 +207,12 @@ xmlXPathContextPtr Resource_createContext(SeqNodeDataPtr _nodeDataPtr, const cha
    }
 
    context = xmlXPathNewContext(doc);
+
+   if( strcmp( context->doc->children->name, NODE_RES_XML_ROOT_NAME ) != 0 ){
+      SeqUtil_TRACE(TL_FULL_TRACE, "Root node:%s, NODE_RES_XML_ROOT_NAME:%s\n",context->doc->children->name, NODE_RES_XML_ROOT_NAME);
+      raiseError( "Root node of xmlFile %s must be %s\n",xmlFile, NODE_RES_XML_ROOT_NAME);
+   }
+
    if ( defFile != NULL )
       XmlUtils_resolve(xmlFile,context,defFile,_nodeDataPtr->expHome);
 

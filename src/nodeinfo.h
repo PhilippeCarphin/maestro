@@ -30,3 +30,5 @@ void parseDepends (xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr, int i
 void parseWorkerPath (char * pathToNode, const char * _seq_exp_home, SeqNodeDataPtr _nodeDataPtr );
 SeqNodeType getNodeType ( const xmlChar *_node_name );
 void getNodeLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *_loop_node_path, const char *_seq_exp_home );
+extern const char * NODE_RES_XML_ROOT;
+extern const char * NODE_RES_XML_ROOT_NAME;
