@@ -328,9 +328,9 @@ out:
  * gets the loop attributes for a loop on the container path of a node.  This is
  * used in getFlowInfo (specifically in Flow_parsePath() ).
 ********************************************************************************/
-void getPhilLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *loopNodePath, const char *expHome )
+void getNodeLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *expHome, const char *loopNodePath)
 {
-   SeqUtil_TRACE(TL_FULL_TRACE, "getPhilLoopContainersAttr() begin\n");
+   SeqUtil_TRACE(TL_FULL_TRACE, "getNodeLoopContainersAttr() begin\n");
    ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,expHome,loopNodePath,Loop);
 
    if( rv->context == NULL )
@@ -340,7 +340,7 @@ void getPhilLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *loopN
 
 out_free:
    deleteResourceVisitor(rv);
-   SeqUtil_TRACE(TL_FULL_TRACE, "getPhilLoopContainersAttr() end\n");
+   SeqUtil_TRACE(TL_FULL_TRACE, "getNodeLoopContainersAttr() end\n");
    return;
 }
 

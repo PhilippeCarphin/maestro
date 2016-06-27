@@ -125,12 +125,7 @@ int Flow_parsePath(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr, co
          Flow_parseSwitchAttributes(_flow_visitor, _nodeDataPtr, count == totalCount );
 
       if( _flow_visitor->currentNodeType == Loop && count != totalCount ){
-#if 0
-         getNodeLoopContainersAttr( _nodeDataPtr, _flow_visitor->currentFlowNode, _flow_visitor->expHome);
-#else
-         /* Switch argument order so that it fits with the rest: function(ndp, expHome, nodePath) */
-         getPhilLoopContainersAttr(_nodeDataPtr, _flow_visitor->currentFlowNode, _flow_visitor->expHome);
-#endif
+         getNodeLoopContainersAttr(_nodeDataPtr, _flow_visitor->expHome, _flow_visitor->currentFlowNode);
       }
 
       count++;
