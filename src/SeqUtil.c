@@ -1394,4 +1394,17 @@ char * SeqUtil_normpath(char *out, const char *in) {
 }
 
 
+/********************************************************************************
+ * Constructs the path for the resource.def file of the experiment
+********************************************************************************/
+const char * resourceDefFilename(const char * _seq_exp_home)
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "defFilename() begin\n");
+   const char * resource_postfix = "/resources/resources.def";
+   char * defFile = (char *)malloc(sizeof(char)*(strlen(_seq_exp_home) + strlen(resource_postfix) + 1));
+   sprintf(defFile, "%s%s", _seq_exp_home, resource_postfix);
+   SeqUtil_TRACE(TL_FULL_TRACE, "defFilename() end\n");
+   return (const char *) defFile;
+}
+
 

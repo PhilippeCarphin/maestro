@@ -2,19 +2,7 @@
 #include "newGetNodeResources.h"
 #include "SeqDatesUtil.h"
 #include "SeqLoopsUtil.h"
-
-/********************************************************************************
- * Constructs the path for the resource.def file of the experiment
-********************************************************************************/
-const char * defFilename(const char * _seq_exp_home)
-{
-   SeqUtil_TRACE(TL_FULL_TRACE, "defFilename() begin\n");
-   const char * resource_postfix = "/resources/resources.def";
-   char * defFile = (char *)malloc(sizeof(char)*(strlen(_seq_exp_home) + strlen(resource_postfix) + 1));
-   sprintf(defFile, "%s%s", _seq_exp_home, resource_postfix);
-   SeqUtil_TRACE(TL_FULL_TRACE, "defFilename() end\n");
-   return (const char *) defFile;
-}
+#include "SeqUtil.h"
 
 /********************************************************************************
  * Constructs the path to the node's resource xml file
@@ -54,7 +42,7 @@ ResourceVisitorPtr newResourceVisitor(SeqNodeDataPtr _nodeDataPtr, const char * 
 
    rv->nodePath = strdup(nodePath);
 
-   rv->defFile = defFilename(_seq_exp_home);
+   rv->defFile = resourceDefFilename(_seq_exp_home);
    rv->xmlFile = xmlResourceFilename(_seq_exp_home, nodePath, nodeType);
    rv->context = Resource_createContext(_nodeDataPtr, rv->xmlFile, rv->defFile, nodeType );
    if( rv->context != NULL )

@@ -186,7 +186,7 @@ int test_Resource_createContext()
    const char * expHome = "/home/ops/afsi/phc/Documents/Experiences/sample";
    const char * nodePath = NULL;
    const char * xmlFile = NULL;
-   const char * defFile = defFilename(expHome);
+   const char * defFile = resourceDefFilename(expHome);
    const char * expected = NULL;
 
    /* TEST 1 : With the node having type Loop */
