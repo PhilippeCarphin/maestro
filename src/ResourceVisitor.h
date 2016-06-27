@@ -2,6 +2,13 @@
 #ifndef _RESOURCE_VISITOR_H_
 #define _RESOURCE_VISITOR_H_
 
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/tree.h>
+#include <libxml/xpathInternals.h>
+#include "SeqNode.h"
+
+
 #define RESOURCE_VISITOR_STACK_SIZE 30
 #define RESOURCE_MAX_RECURSION_DEPTH ((RESOURCE_VISITOR_STACK_SIZE)-1)
 #define RESOURCE_SUCCESS 0
@@ -75,7 +82,8 @@ int Resource_getContainerLoopAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _n
 
 
 
-void getPhilLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *loopNodePath, const char *expHome );
+void getNodeLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *loopNodePath, const char *expHome );
+int getNodeResources(SeqNodeDataPtr _nodeDataPtr, const char * expHome, const char * nodePath);
 
 
 #endif

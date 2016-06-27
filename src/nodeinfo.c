@@ -35,6 +35,7 @@
 #include "XmlUtils.h"
 #include "SeqLoopsUtil.h"
 #include "FlowVisitor.h"
+#include "ResourceVisitor.h"
 
 
 int SHOW_ALL = 0;
@@ -716,7 +717,6 @@ int doesNodeExist (const char *_nodePath, const char *_seq_exp_home , const char
    return nodeExists;
 }
 
-#include "newGetNodeResources.c"
 SeqNodeDataPtr nodeinfo ( const char* node, const char* filters, SeqNameValuesPtr _loops, const char* _exp_home, char *extraArgs, char* datestamp ) {
 
    char *newNode = NULL, *tmpstrtok = NULL, *tmpfilters = NULL;

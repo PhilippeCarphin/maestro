@@ -14,7 +14,7 @@
 #include "SeqLoopsUtil.h"
 
 #include "FlowVisitor.h"
-#include "newGetNodeResources.h"
+#include "ResourceVisitor.h"
 
 extern char * switchReturn( SeqNodeDataPtr _nodeDataPtr, const char* switchType );
 

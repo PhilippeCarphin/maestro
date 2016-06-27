@@ -1,4 +1,12 @@
 /* int getNodeResources(SeqNodeDataPtr _nodeDataPtr); */
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/tree.h>
+#include <libxml/xpathInternals.h>
+#include <string.h>
+#include "SeqUtilServer.h"
+#include "XmlUtils.h"
+#include "SeqNode.h"
 #include "newGetNodeResources.h"
 #include "nodeinfo.h"
 #include "SeqDatesUtil.h"
@@ -157,12 +165,12 @@ ValidityDataPtr newValidityData()
 void deleteValidityData( ValidityDataPtr val )
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "deleteValidityData() begin\n");
-   free(val->dow);
-   free(val->hour);
-   free(val->time_delta);
-   free(val->valid_hour);
-   free(val->valid_dow);
-   free(val->local_index);
+   free((char *)val->dow);
+   free((char *)val->hour);
+   free((char *)val->time_delta);
+   free((char *)val->valid_hour);
+   free((char *)val->valid_dow);
+   free((char *)val->local_index);
    free( val );
    SeqUtil_TRACE(TL_FULL_TRACE, "deleteValidityData() end\n");
 }
@@ -208,7 +216,7 @@ xmlXPathContextPtr Resource_createContext(SeqNodeDataPtr _nodeDataPtr, const cha
 
    context = xmlXPathNewContext(doc);
 
-   if( strcmp( context->doc->children->name, NODE_RES_XML_ROOT_NAME ) != 0 ){
+   if( strcmp((const char *) context->doc->children->name, NODE_RES_XML_ROOT_NAME ) != 0 ){
       SeqUtil_TRACE(TL_FULL_TRACE, "Root node:%s, NODE_RES_XML_ROOT_NAME:%s\n",context->doc->children->name, NODE_RES_XML_ROOT_NAME);
       raiseError( "Root node of xmlFile %s must be %s\n",xmlFile, NODE_RES_XML_ROOT_NAME);
    }
@@ -374,7 +382,7 @@ int Resource_parseNodeDFS_internal(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDa
 
    Resource_setNode(rv, node);
 
-   xmlXPathObjectPtr validityResults = XmlUtils_getnodeset("(child::VALIDITY)", rv->context );
+   xmlXPathObjectPtr validityResults = XmlUtils_getnodeset((const xmlChar *)"(child::VALIDITY)", rv->context );
    for_results( valNode , validityResults ){
       /* Note that once a valid VALIDITY node is found, others at the same level
        * will be ignored.*/
@@ -400,16 +408,16 @@ out:
 ValidityDataPtr getValidityData(xmlNodePtr validityNode)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "getValidityData() begin\n");
-   if ( strcmp(validityNode->name, "VALIDITY") != 0)
+   if ( strcmp((const char *)validityNode->name, "VALIDITY") != 0)
       raiseError( "isValid() must receive a VALIDITY xml node\n");
    ValidityDataPtr val = newValidityData();
 
-   val->dow = xmlGetProp( validityNode, "dow");
-   val->hour = xmlGetProp( validityNode, "hour");
-   val->time_delta = xmlGetProp( validityNode, "time_delta");
-   val->valid_hour = xmlGetProp( validityNode, "valid_hour");
-   val->valid_dow = xmlGetProp( validityNode, "valid_dow");
-   val->local_index = xmlGetProp( validityNode, "local_index");
+   val->dow = (const char *) xmlGetProp( validityNode,(const xmlChar *) "dow");
+   val->hour =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "hour");
+   val->time_delta =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "time_delta");
+   val->valid_hour =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "valid_hour");
+   val->valid_dow =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "valid_dow");
+   val->local_index =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "local_index");
 
    SeqUtil_TRACE(TL_FULL_TRACE, "getValidityData() end\n");
    return val;
@@ -490,7 +498,7 @@ int Resource_getLoopAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPt
       goto out;
    }
 
-   xmlXPathObjectPtr result = XmlUtils_getnodeset("(child::LOOP/@*)",rv->context);
+   xmlXPathObjectPtr result = XmlUtils_getnodeset((const xmlChar*)"(child::LOOP/@*)",rv->context);
    if(result != NULL){
       parseNodeSpecifics(Loop, result, _nodeDataPtr);
       rv->loopResourcesFound = RESOURCE_TRUE;
@@ -513,7 +521,7 @@ int Resource_getContainerLoopAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _n
    xmlXPathObjectPtr result = NULL;
    const char * fixedNodePath = SeqUtil_fixPath(rv->nodePath);
 
-   if( (result = XmlUtils_getnodeset ("(child::LOOP/@*)",rv->context)) != NULL ) {
+   if( (result = XmlUtils_getnodeset ((const xmlChar*)"(child::LOOP/@*)",rv->context)) != NULL ) {
       parseLoopAttributes( result, fixedNodePath, _nodeDataPtr );
    }
 
@@ -535,7 +543,7 @@ int Resource_getForEachAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDat
       goto out;
    }
 
-   xmlXPathObjectPtr result = XmlUtils_getnodeset("(child::FOR_EACH/@*)",rv->context);
+   xmlXPathObjectPtr result = XmlUtils_getnodeset((const xmlChar*)"(child::FOR_EACH/@*)",rv->context);
    if( result != NULL ){
       parseForEachTarget(result,_nodeDataPtr);
       rv->forEachResourcesFound = RESOURCE_TRUE;
@@ -560,7 +568,7 @@ int Resource_getBatchAttributes(ResourceVisitorPtr rv,SeqNodeDataPtr _nodeDataPt
       goto out;
    }
 
-   xmlXPathObjectPtr result = XmlUtils_getnodeset("(child::BATCH/@*)",rv->context);
+   xmlXPathObjectPtr result = XmlUtils_getnodeset((const xmlChar*)"(child::BATCH/@*)",rv->context);
    if( result != NULL ){
       parseBatchResources(result,_nodeDataPtr);
       rv->batchResourcesFound = RESOURCE_TRUE;
@@ -582,7 +590,7 @@ int Resource_getDependencies(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
    SeqUtil_TRACE(TL_FULL_TRACE, "getDependencies() begin\n");
    int retval = RESOURCE_SUCCESS;
 
-   xmlXPathObjectPtr result = XmlUtils_getnodeset("(child::DEPENDS_ON)",rv->context);
+   xmlXPathObjectPtr result = XmlUtils_getnodeset((const xmlChar*)"(child::DEPENDS_ON)",rv->context);
    if( result != NULL )
       parseDepends(result,_nodeDataPtr,0);
 
@@ -607,7 +615,7 @@ int Resource_getAbortActions(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
    }
 
    char * abortValue = NULL;
-   xmlXPathObjectPtr result = XmlUtils_getnodeset("(child::ABORT_ACTION/@*)",rv->context);
+   xmlXPathObjectPtr result = XmlUtils_getnodeset((const xmlChar *)"(child::ABORT_ACTION/@*)",rv->context);
    if( result != NULL ){
       parseAbortActions(result,_nodeDataPtr);
       rv->abortActionFound = RESOURCE_TRUE;
