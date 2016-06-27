@@ -88,6 +88,11 @@ void deleteResourceVisitor(ResourceVisitorPtr rv)
    free(rv);
    SeqUtil_TRACE(TL_FULL_TRACE, "deleteResourceVisitor() end\n");
 }
+
+/********************************************************************************
+ * Used as part of the depth first search through VALIDITY nodes.  Pushes an
+ * xmlNodePtr onto the stack of the resourceVisitor.
+********************************************************************************/
 int _pushNode(ResourceVisitorPtr rv, xmlNodePtr node)
 {
    if( rv->_stackSize < RESOURCE_VISITOR_STACK_SIZE ){
@@ -98,6 +103,11 @@ int _pushNode(ResourceVisitorPtr rv, xmlNodePtr node)
    }
 }
 
+/********************************************************************************
+ * Sets the xmlNodePtr received as a parameter as the current node of the
+ * resourceVisitor's context and pushes the current node of the context onto the
+ * stack.  Used when entering the function Resource_parseNodeDFS_internal().
+********************************************************************************/
 int Resource_setNode(ResourceVisitorPtr rv, xmlNodePtr _node)
 {
    if( _pushNode(rv,rv->context->node) == RESOURCE_SUCCESS ){
@@ -108,6 +118,10 @@ int Resource_setNode(ResourceVisitorPtr rv, xmlNodePtr _node)
    }
 }
 
+/********************************************************************************
+ * Pops an xmlNodePtr from the resourceVisitor's stack and returns the popped
+ * node.
+********************************************************************************/
 xmlNodePtr _popNode(ResourceVisitorPtr rv)
 {
    if( rv->_stackSize > 0 )
@@ -116,6 +130,10 @@ xmlNodePtr _popNode(ResourceVisitorPtr rv)
       return NULL;
 }
 
+/********************************************************************************
+ * Pops a node from the stack and sets it as the current node of the context.
+ * This function is used when returning from Resource_parseNodeDFS_internal().
+********************************************************************************/
 int Resource_unsetNode(ResourceVisitorPtr rv)
 {
    rv->context->node = _popNode(rv);
