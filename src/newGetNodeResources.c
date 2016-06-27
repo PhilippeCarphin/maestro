@@ -191,7 +191,8 @@ void printValidityData(ValidityDataPtr val)
  * Based on the experiment home and the node path, creates an xmlXPath context
  * with the resource file of the given node.
 ********************************************************************************/
-xmlXPathContextPtr Resource_createContext(SeqNodeDataPtr _nodeDataPtr, const char * xmlFile, const char * defFile, SeqNodeType nodeType)
+xmlXPathContextPtr Resource_createContext(SeqNodeDataPtr _nodeDataPtr, const char * xmlFile,
+                                          const char * defFile, SeqNodeType nodeType)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Resource_createContext() begin\n");
    xmlXPathContextPtr context = NULL;
@@ -270,10 +271,16 @@ syntax_err:
    return NULL; /* In case we change raiseError for something that doesn' halt the program, we should still return something. */
 }
 
+/********************************************************************************
+ * NODE FUNCTIONS: Node functions are functions that return an int and take a
+ * resourceVisitorPtr and a SeqNodeDataPtr as arguments.  Pointers to these
+ * functions are given to Resource_parseNodeDFS to be executed on nodes during
+ * the DFS.
+********************************************************************************/
 
 
 /********************************************************************************
- *
+ * NodeFunction to do the work for getNodeResources.
 ********************************************************************************/
 int do_all(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
@@ -291,7 +298,7 @@ int do_all(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 }
 
 /********************************************************************************
- * 
+ * Parses the associated resource xml file to get the resources of the node.
 ********************************************************************************/
 int getPaulResources(SeqNodeDataPtr _nodeDataPtr, const char * expHome, const char * nodePath)
 {
@@ -313,7 +320,8 @@ out:
 }
 
 /********************************************************************************
- *
+ * gets the loop attributes for a loop on the container path of a node.  This is
+ * used in getFlowInfo (specifically in Flow_parsePath() ).
 ********************************************************************************/
 void getPhilLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *loopNodePath, const char *expHome )
 {
@@ -332,12 +340,13 @@ out_free:
 }
 
 /********************************************************************************
- * Calls parseNodeDFS on the root node of the resource xml file.
+ * Calls Resource_parseNodeDFS_internal() on the root node of the resource xml
+ * file.
 ********************************************************************************/
 int Resource_parseNodeDFS(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr, NodeFunction nf)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Resource_parseNodeDFS() begin\n");
-   int retval = 0;
+   int retval = RESOURCE_SUCCESS;
    if( rv->context != NULL ){
       retval = Resource_parseNodeDFS_internal(rv,_nodeDataPtr, rv->context->doc->children, nf, 0);
       SeqUtil_TRACE(TL_FULL_TRACE, "Resource_parseNodeDFS() end\n");
@@ -345,13 +354,16 @@ int Resource_parseNodeDFS(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr, No
    return retval;
 }
 
+/********************************************************************************
+ * Internal function for depth first search through VALIDITY nodes.
+********************************************************************************/
 int Resource_parseNodeDFS_internal(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr,
                                     xmlNodePtr node, NodeFunction nf, int depth)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Resource_parseNodeDFS_internal() begin, depth = %d\n",depth);
-   int retval = 0;
+   int retval = RESOURCE_SUCCESS;
    if( depth > RESOURCE_MAX_RECURSION_DEPTH ){
-      retval = 1;
+      retval = RESOURCE_FAILURE;
       goto out;
    }
 
@@ -421,8 +433,8 @@ const char * getIncrementedDatestamp( const char * baseDatestamp, char * hour, c
 
 /********************************************************************************
  * Compares the data in val with the current _nodeDataPtr to determine whether
- * the the VALIDITY xml node is currently "valid" to decide whether we parse
- * it's content (children).
+ * the the data in a VALIDITY xml node is currently "valid" to decide whether or
+ * not we parse it's content (children).
 ********************************************************************************/
 int checkValidity(SeqNodeDataPtr _nodeDataPtr, ValidityDataPtr val )
 {
@@ -482,7 +494,7 @@ int isValid(SeqNodeDataPtr _nodeDataPtr, xmlNodePtr validityNode)
 }
 
 /********************************************************************************
- * Queries the context for the attributes of the LOOP child of the
+ * NodeFunction: Queries the context for the attributes of the LOOP child of the
  * current node which may be the root node or a VALIDITY node.
 ********************************************************************************/
 int Resource_getLoopAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
@@ -510,7 +522,7 @@ out:
 }
 
 /********************************************************************************
- * Gets attributes for a container loop.
+ * NodeFunction: Gets attributes for a container loop.
 ********************************************************************************/
 int Resource_getContainerLoopAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
@@ -531,7 +543,7 @@ int Resource_getContainerLoopAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _n
 }
 
 /********************************************************************************
- * Queries the context for the attributes of the FOR_EACH child of the
+ * NodeFunction: Queries the context for the attributes of the FOR_EACH child of the
  * current node which may be the root node or a VALIDITY node.
 ********************************************************************************/
 int Resource_getForEachAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
@@ -557,7 +569,7 @@ out:
 }
 
 /********************************************************************************
- * Queries the context for the attributes of the BATCH child of the
+ * NodeFunction: Queries the context for the attributes of the BATCH child of the
  * current node which may be the root node or a VALIDITY node.
 ********************************************************************************/
 int Resource_getBatchAttributes(ResourceVisitorPtr rv,SeqNodeDataPtr _nodeDataPtr)
@@ -583,8 +595,8 @@ out:
 }
 
 /********************************************************************************
- * Queries the context for DEPENDS_ON children of the current node of the
- * context and parses their data into the _nodeDataPtr.
+ * NodeFunction: Queries the context for DEPENDS_ON children of the current node
+ * of the context and parses their data into the _nodeDataPtr.
 ********************************************************************************/
 int Resource_getDependencies(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
@@ -602,8 +614,8 @@ out:
 }
 
 /********************************************************************************
- * Queries the context for the attributes of the ABORT_ACTION child of the
- * current node which may be the root node or a VALIDITY node.
+ * NodeFucntion: Queries the context for the attributes of the ABORT_ACTION
+ * child of the current node which may be the root node or a VALIDITY node.
 ********************************************************************************/
 int Resource_getAbortActions(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
