@@ -704,8 +704,6 @@ int Flow_parseSiblings(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parseSiblings begin\n");
    SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo.getFlowInfo() *********** node siblings **********\n");
    int switchItemFound = 0;
-   if( _flow_visitor->context == NULL ) raiseError("WHAT IS THE DEAL WITH AIRLINE FOOOD?\n");
-   if( _flow_visitor->context->node == NULL ) raiseError("HELLO MY NAME IS INIGO MONTOYA\n");
    switchItemFound = (strcmp(_flow_visitor->context->node->name, "SWITCH_ITEM") == 0);
    xmlXPathObjectPtr result = NULL;
    xmlXPathContextPtr context = NULL;
