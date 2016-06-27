@@ -25,6 +25,27 @@
 #include "SeqDatesUtil.h"
 
 
+/********************************************************************************
+ * Returns a copy of baseDatestamp incremented by time_delta or by hour if
+ * time_delta is not specified ( NULL or "").
+********************************************************************************/
+const char * getIncrementedDatestamp( const char * baseDatestamp, char * hour, char * time_delta)
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "getIncrementedDatestamp() begin\n");
+   const char * incrementedDatestamp = NULL;
+   if( time_delta != NULL && strlen(time_delta) > 0 ){
+      incrementedDatestamp  = SeqDatesUtil_addTimeDelta( baseDatestamp, time_delta);
+   } else if( hour != NULL && strlen(hour) > 0 ) {
+      /* calculate relative datestamp based on the current one */
+      incrementedDatestamp = SeqDatesUtil_getPrintableDate( baseDatestamp,0, atoi(hour),0,0 );
+   } else {
+      SeqUtil_TRACE(TL_FULL_TRACE, "getIncrementedDatestamp(): baseDatestamp=%s\n", baseDatestamp);
+      incrementedDatestamp = strdup(baseDatestamp);
+   }
+   SeqUtil_TRACE(TL_FULL_TRACE, "getIncrementedDatestamp() end\n");
+   return incrementedDatestamp;
+}
+
 
 /********************************************************************************
  * SeqDatesUtil_addTimeDelta()

@@ -30,5 +30,6 @@ long long FromDaysToSeconds (int day, int hour, int minute, int second);
 void DateFromJulian (long long jsec, int *yyyymmdd, int *hhmmss);
 long long JulianSecond(int year, int month, int day, int hour, int minute, int second);
 char* SeqDatesUtil_addTimeDelta(const char * datestamp, const char * timeDelta);
+const char * getIncrementedDatestamp( const char * baseDatestamp, char * hour, char * time_delta);
 
 #endif
