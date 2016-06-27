@@ -1,3 +1,23 @@
+
+#  Makefile for maestro source code
+#  Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
+#                           Environment Canada
+#
+#  Maestro is free software; you can redistribute it and/or
+#  modify it under the terms of the GNU Lesser General Public
+#  License as published by the Free Software Foundation,
+#  version 2.1 of the License.
+#
+#  Maestro is distributed in the hope that it will be useful,
+#  but WITHOUT ANY WARRANTY; without even the implied warranty of
+#  MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+#  Lesser General Public License for more details.
+#
+#  You should have received a copy of the GNU Lesser General Public
+#  License along with this library; if not, write to the
+#  Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+#  Boston, MA 02111-1307, USA.
+
 MAKEFILE:=$(lastword $(MAKEFILE_LIST))
 
 # common section definition
@@ -132,11 +152,18 @@ getopt_long.o:	getopt_long.c getopt.h
 
 # Targets for command line executables:
 
-tictac:	 tictac.o SeqUtil.o QueryServer.o l2d2_socket.o SeqUtilServer.o l2d2_commun.o SeqListNode.o tictac_main.c getopt_long.o 
-	$(CC) -g tictac.o SeqUtil.o QueryServer.o l2d2_socket.o SeqUtilServer.o l2d2_commun.o SeqListNode.o tictac_main.c getopt_long.o -L$(XML_LIB_DIR) -lxml2 $(LIB) -o tictac
+TICTAC_OBJECTS = tictac.o SeqUtil.o QueryServer.o l2d2_socket.o SeqUtilServer.o \
+	l2d2_commun.o SeqListNode.o getopt_long.o
+
+tictac:	tictac_main.c $(TICTAC_OBJECTS)
+	$(CC) -g $^ -L$(XML_LIB_DIR) -lxml2 $(LIB) -o tictac
 	cp tictac $(BINDIR)
 
-NODELOGGER_OBJECTS = nodelogger.o SeqUtil.o l2d2_commun.o SeqUtilServer.o l2d2_socket.o QueryServer.o tictac.o nodeinfo.o SeqNode.o SeqLoopsUtil.o XmlUtils.o SeqNameValues.o SeqListNode.o SeqDatesUtil.o getopt_long.o FlowVisitor.o ResourceVisitor.o
+NODELOGGER_OBJECTS = nodelogger.o SeqUtil.o l2d2_commun.o SeqUtilServer.o \
+	l2d2_socket.o QueryServer.o tictac.o nodeinfo.o SeqNode.o SeqLoopsUtil.o \
+	XmlUtils.o SeqNameValues.o SeqListNode.o SeqDatesUtil.o getopt_long.o \
+	FlowVisitor.o ResourceVisitor.o
+
 nodelogger: nodelogger_main.c $(NODELOGGER_OBJECTS)
 	$(CC) -g $^ -I $(XML_INCLUDE_DIR) -L$(XML_LIB_DIR) -lxml2 $(LIB) -I$(INCDIR) -o nodelogger
 	cp nodelogger $(BINDIR)
@@ -145,8 +172,13 @@ logreader:	logreader.o SeqUtil.o SeqDatesUtil.o l2d2_commun.o SeqListNode.o logr
 	$(CC) -g logreader.o SeqUtil.o SeqDatesUtil.o l2d2_commun.o SeqListNode.o getopt_long.o logreader_main.c $(LIB) -o logreader
 	cp logreader $(BINDIR)
 
-MAESTRO_OBJECTS = maestro.o logreader.o nodelogger.o tictac.o nodeinfo.o SeqNode.o SeqLoopsUtil.o XmlUtils.o SeqNameValues.o SeqListNode.o SeqDatesUtil.o SeqUtil.o l2d2_commun.o SeqUtilServer.o QueryServer.o l2d2_socket.o runcontrollib.o ocmjinfo.o expcatchup.o getopt_long.o ResourceVisitor.o FlowVisitor.o
-maestro:	 maestro_main.c $(MAESTRO_OBJECTS)
+MAESTRO_OBJECTS = maestro.o logreader.o nodelogger.o tictac.o nodeinfo.o \
+	SeqNode.o SeqLoopsUtil.o XmlUtils.o SeqNameValues.o SeqListNode.o SeqDatesUtil.o \
+	SeqUtil.o l2d2_commun.o SeqUtilServer.o QueryServer.o l2d2_socket.o \
+	runcontrollib.o ocmjinfo.o expcatchup.o getopt_long.o ResourceVisitor.o \
+	FlowVisitor.o
+
+maestro: maestro_main.c $(MAESTRO_OBJECTS)
 	$(CC) -g $^ -I $(INCDIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o maestro; \
 	cp maestro $(BINDIR);
 
@@ -154,7 +186,10 @@ expcatchup:	expcatchup.o getopt_long.o SeqUtil.o expcatchup_main.c XmlUtils.o Se
 	$(CC) -g getopt_long.o expcatchup.o SeqUtil.o expcatchup_main.c XmlUtils.o SeqListNode.o l2d2_commun.o -L $(XML_LIB_DIR) -lxml2 $(LIB) -o expcatchup; \
 	cp expcatchup $(BINDIR);
 
-NODEINFO_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o QueryServer.o l2d2_socket.o SeqListNode.o SeqDatesUtil.o SeqUtilServer.o tictac.o SeqNameValues.o nodeinfo.o getopt_long.o FlowVisitor.o ResourceVisitor.o
+NODEINFO_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o \
+	QueryServer.o l2d2_socket.o SeqListNode.o SeqDatesUtil.o SeqUtilServer.o \
+	tictac.o SeqNameValues.o nodeinfo.o getopt_long.o FlowVisitor.o \
+	ResourceVisitor.o
 
 nodeinfo: nodeinfo_main.c $(NODEINFO_OBJECTS)
 	$(CC) -g $^ -I $(XML_INCLUDE_DIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o nodeinfo 
@@ -174,7 +209,10 @@ madmin: $(L2D2AOBJECTS)
 	cp madmin $(BINDIR);
 
 
-TEST_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o QueryServer.o l2d2_socket.o SeqListNode.o SeqDatesUtil.o SeqUtilServer.o tictac.o SeqNameValues.o nodeinfo.o getopt_long.o FlowVisitor.o ResourceVisitor.o
+TEST_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o \
+	QueryServer.o l2d2_socket.o SeqListNode.o SeqDatesUtil.o SeqUtilServer.o \
+	tictac.o SeqNameValues.o nodeinfo.o getopt_long.o FlowVisitor.o \
+	ResourceVisitor.o
 
 mtest:	mtest_main.c $(TEST_OBJECTS)
 	$(CC) -g $^ -I $(XML_INCLUDE_DIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@
