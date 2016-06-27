@@ -300,10 +300,14 @@ int do_all(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 
 /********************************************************************************
  * Parses the associated resource xml file to get the resources of the node.
+ * this function reads the node xml resource file to retrive info such as
+ * dependencies, batch resource, abort actions and loop information for loop
+ * nodes. The xml resource, if it exists, is located under
+ * $SEQ_EXP_HOME/resources/ It follows the experiment node tree.
 ********************************************************************************/
-int getPaulResources(SeqNodeDataPtr _nodeDataPtr, const char * expHome, const char * nodePath)
+int getNodeResources(SeqNodeDataPtr _nodeDataPtr, const char * expHome, const char * nodePath)
 {
-   SeqUtil_TRACE(TL_FULL_TRACE, "getPaulResources() begin\n");
+   SeqUtil_TRACE(TL_FULL_TRACE, "getNodeResources() begin\n");
    int retval = RESOURCE_SUCCESS;
    ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,expHome,nodePath,_nodeDataPtr->type);
 
@@ -316,7 +320,7 @@ int getPaulResources(SeqNodeDataPtr _nodeDataPtr, const char * expHome, const ch
 out_free:
    deleteResourceVisitor(rv);
 out:
-   SeqUtil_TRACE(TL_FULL_TRACE, "getPaulResources() end\n");
+   SeqUtil_TRACE(TL_FULL_TRACE, "getNodeResources() end\n");
    return retval;
 }
 
