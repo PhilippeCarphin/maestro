@@ -48,6 +48,7 @@ LISTNODEPTR SeqLoops_getLoopContainerExtensions( SeqNodeDataPtr _nodeDataPtr, co
 LISTNODEPTR SeqLoops_getLoopContainerExtensionsInReverse( SeqNodeDataPtr _nodeDataPtr, const char * depIndex ); 
 void SeqLoops_validateNumLoopExpression( char * _expression);
 char * SeqLoops_indexToExt( const char * index);
+char* SeqLoops_getLoopArgs( SeqNameValuesPtr _loop_args );
 
 
 #endif
