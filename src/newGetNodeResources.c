@@ -418,7 +418,7 @@ int checkValidity(SeqNodeDataPtr _nodeDataPtr, ValidityDataPtr val )
    char * local_ext = SeqLoops_indexToExt(val->local_index);
    SeqUtil_TRACE(TL_FULL_TRACE, "PHIL!! datestamp = %s\n",_nodeDataPtr->datestamp);
 
-   const char * incrementedDatestamp = getIncrementedDatestamp( _nodeDataPtr->datestamp, val->hour, val->time_delta);
+   const char * incrementedDatestamp = SeqDatesUtil_getIncrementedDatestamp( _nodeDataPtr->datestamp, val->hour, val->time_delta);
 
    /* Check local_index */
    if ( local_ext != NULL && strcmp ( local_ext, _nodeDataPtr->extension ) != 0

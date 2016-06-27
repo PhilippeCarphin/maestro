@@ -29,7 +29,7 @@
  * Returns a copy of baseDatestamp incremented by time_delta or by hour if
  * time_delta is not specified ( NULL or "").
 ********************************************************************************/
-const char * getIncrementedDatestamp( const char * baseDatestamp, char * hour, char * time_delta)
+const char * SeqDatesUtil_getIncrementedDatestamp( const char * baseDatestamp, char * hour, char * time_delta)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "getIncrementedDatestamp() begin\n");
    const char * incrementedDatestamp = NULL;

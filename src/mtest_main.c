@@ -107,7 +107,7 @@ int test_getIncrementedDatestamp()
    val->hour = "03";
 
    /* TEST : Resulting incremented datestamp must be 20160102060405 */
-   const char * newDatestamp = getIncrementedDatestamp(baseDatestamp,val->hour,val->time_delta);
+   const char * newDatestamp = SeqDatesUtil_getIncrementedDatestamp(baseDatestamp,val->hour,val->time_delta);
    if ( strcmp("20160102060405",newDatestamp) ) raiseError("TEST_FAILED");
 
    /* CLEANUP */
