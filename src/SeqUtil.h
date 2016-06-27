@@ -103,5 +103,5 @@ void  SeqUtil_printOrWrite( FILE * filename, char * text, ...);
 int   SeqUtil_basicTruncatedAverage(int *unsorted_int_array, int elements, int removal_quantity); 
 int   SeqUtil_compareInt (const void * a, const void * b);
 char* SeqUtil_normpath(char *out, const char *in); 
-const char * resourceDefFilename(const char * _seq_exp_home);
+const char * SeqUtil_resourceDefFilename(const char * _seq_exp_home);
 #endif

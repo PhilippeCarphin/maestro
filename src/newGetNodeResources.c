@@ -42,7 +42,7 @@ ResourceVisitorPtr newResourceVisitor(SeqNodeDataPtr _nodeDataPtr, const char * 
 
    rv->nodePath = strdup(nodePath);
 
-   rv->defFile = resourceDefFilename(_seq_exp_home);
+   rv->defFile = SeqUtil_resourceDefFilename(_seq_exp_home);
    rv->xmlFile = xmlResourceFilename(_seq_exp_home, nodePath, nodeType);
    rv->context = Resource_createContext(_nodeDataPtr, rv->xmlFile, rv->defFile, nodeType );
    if( rv->context != NULL )
