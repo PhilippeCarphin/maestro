@@ -32,27 +32,137 @@
 #include "SeqLoopsUtil.h"
 #include "SeqUtil.h"
 
+
 /********************************************************************************
- * Constructs the path to the node's resource xml file
+ * Allocates and initialises a ValidityData struct to transfer between functions.
 ********************************************************************************/
-const char * xmlResourceFilename(const char * _seq_exp_home, const char * nodePath, SeqNodeType nodeType )
+ValidityDataPtr newValidityData()
 {
-   SeqUtil_TRACE(TL_FULL_TRACE, "xmlResourceFilename() begin\n");
-   const char * xml_postfix = "/container.xml";
-   const char * infix = "/resources/";
-   size_t pathLength =  strlen(_seq_exp_home) + strlen(infix)
-                    + strlen(nodePath) + strlen(xml_postfix) + 1;
-   char xmlFile[pathLength];
-   char * normalizedXmlFile = malloc( pathLength );
+   SeqUtil_TRACE(TL_FULL_TRACE, "newValidityData() begin\n");
+   ValidityDataPtr val = (ValidityDataPtr ) malloc( sizeof (ValidityData) );
 
-   if ( nodeType == Task || nodeType == NpassTask )
-      xml_postfix = ".xml";
+   val->dow = NULL;
+   val->hour = NULL;
+   val->time_delta = NULL;
+   val->valid_hour = NULL;
+   val->valid_dow = NULL;
+   val->local_index = NULL;
 
-   sprintf(xmlFile, "%s%s%s%s", _seq_exp_home, infix, nodePath, xml_postfix);
-   SeqUtil_normpath(normalizedXmlFile,xmlFile);
+   SeqUtil_TRACE(TL_FULL_TRACE, "newValidityData() end\n");
+   return val;
+}
 
-   SeqUtil_TRACE(TL_FULL_TRACE, "xmlResourceFilename() end : returning %s\n", normalizedXmlFile);
-   return (const char *) normalizedXmlFile;
+/********************************************************************************
+ * Free's a valididtyData struct.
+********************************************************************************/
+void deleteValidityData( ValidityDataPtr val )
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "deleteValidityData() begin\n");
+   free((char *)val->dow);
+   free((char *)val->hour);
+   free((char *)val->time_delta);
+   free((char *)val->valid_hour);
+   free((char *)val->valid_dow);
+   free((char *)val->local_index);
+   free( val );
+   SeqUtil_TRACE(TL_FULL_TRACE, "deleteValidityData() end\n");
+}
+
+/********************************************************************************
+ * Prints the fields of the validityData struct.
+********************************************************************************/
+void printValidityData(ValidityDataPtr val)
+{
+   if( val->dow != NULL ) SeqUtil_TRACE(TL_FULL_TRACE, " val->dow = %s\n", val->dow);
+   if( val->hour != NULL ) SeqUtil_TRACE(TL_FULL_TRACE, " val->hour = %s\n", val->hour);
+   if( val->time_delta != NULL ) SeqUtil_TRACE(TL_FULL_TRACE, " val->time_delta = %s\n", val->time_delta);
+   if( val->valid_hour != NULL ) SeqUtil_TRACE(TL_FULL_TRACE, " val->valid_hour = %s\n", val->valid_hour);
+   if( val->valid_dow != NULL ) SeqUtil_TRACE(TL_FULL_TRACE, " val->valid_dow = %s\n", val->valid_dow);
+   if( val->local_index != NULL ) SeqUtil_TRACE(TL_FULL_TRACE, " val->local_index = %s\n", val->local_index);
+}
+
+/********************************************************************************
+ * Extracts the data form an XML VALIDITY node into a dynamically allocated
+ * struct validityData and returns a pointer to it.
+********************************************************************************/
+ValidityDataPtr getValidityData(xmlNodePtr validityNode)
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "getValidityData() begin\n");
+   if ( strcmp((const char *)validityNode->name, "VALIDITY") != 0)
+      raiseError( "isValid() must receive a VALIDITY xml node\n");
+   ValidityDataPtr val = newValidityData();
+
+   val->dow = (const char *) xmlGetProp( validityNode,(const xmlChar *) "dow");
+   val->hour =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "hour");
+   val->time_delta =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "time_delta");
+   val->valid_hour =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "valid_hour");
+   val->valid_dow =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "valid_dow");
+   val->local_index =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "local_index");
+
+   SeqUtil_TRACE(TL_FULL_TRACE, "getValidityData() end\n");
+   return val;
+}
+
+/********************************************************************************
+ * Compares the data in val with the current _nodeDataPtr to determine whether
+ * the the data in a VALIDITY xml node is currently "valid" to decide whether or
+ * not we parse it's content (children).
+********************************************************************************/
+int checkValidity(SeqNodeDataPtr _nodeDataPtr, ValidityDataPtr val )
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "checkValidity() begin\n");
+   printValidityData(val);
+   int retval = RESOURCE_TRUE;
+
+   char * local_ext = SeqLoops_indexToExt(val->local_index);
+   SeqUtil_TRACE(TL_FULL_TRACE, "PHIL!! datestamp = %s\n",_nodeDataPtr->datestamp);
+
+   const char * incrementedDatestamp = SeqDatesUtil_getIncrementedDatestamp( _nodeDataPtr->datestamp, val->hour, val->time_delta);
+
+   /* Check local_index */
+   if ( local_ext != NULL && strcmp ( local_ext, _nodeDataPtr->extension ) != 0
+         && strcmp(local_ext, "") != 0){
+      SeqUtil_TRACE(TL_FULL_TRACE,"checkValidity(): extension mismatch:local_index=%s, local_ext=%s, ndp->extension=%s\n", val->local_index, local_ext, _nodeDataPtr->extension);
+      retval = RESOURCE_FALSE;
+      goto out_free;
+   }
+
+   /* Check valid_hour */
+   if (val->valid_hour != NULL && strlen(val->valid_hour) > 0
+         && !SeqDatesUtil_isDepHourValid(incrementedDatestamp, val->valid_hour)){
+      retval = RESOURCE_FALSE;
+      goto out_free;
+   }
+
+   /* Check valid_dow */
+   if (val->valid_dow != NULL && strlen(val->valid_dow) > 0
+         && !SeqDatesUtil_isDepDOWValid(incrementedDatestamp, val->valid_dow)){
+      retval = RESOURCE_FALSE;
+      goto out_free;
+   }
+
+out_free:
+   free(local_ext);
+   free((char *)incrementedDatestamp);
+   SeqUtil_TRACE(TL_FULL_TRACE, "checkValidity() end. Returning %d\n", retval);
+   return retval;
+}
+
+/********************************************************************************
+ * Determines whether an XML VALIDITY node is valid.
+********************************************************************************/
+int isValid(SeqNodeDataPtr _nodeDataPtr, xmlNodePtr validityNode)
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "isValid() begin\n");
+   SeqUtil_TRACE(TL_FULL_TRACE, "isValid() datestamp = %s\n", _nodeDataPtr->datestamp);
+
+   ValidityDataPtr validityData = getValidityData(validityNode);
+
+   int isValid = checkValidity(_nodeDataPtr, validityData);
+
+   SeqUtil_TRACE(TL_FULL_TRACE, "isValid() end returning %d\n", isValid);
+   deleteValidityData(validityData);
+   return isValid;
 }
 
 /********************************************************************************
@@ -161,51 +271,26 @@ int Resource_unsetNode(ResourceVisitorPtr rv)
 }
 
 /********************************************************************************
- * Allocates and initialises a ValidityData struct to transfer between functions.
+ * Constructs the path to the node's resource xml file
 ********************************************************************************/
-ValidityDataPtr newValidityData()
+const char * xmlResourceFilename(const char * _seq_exp_home, const char * nodePath, SeqNodeType nodeType )
 {
-   SeqUtil_TRACE(TL_FULL_TRACE, "newValidityData() begin\n");
-   ValidityDataPtr val = (ValidityDataPtr ) malloc( sizeof (ValidityData) );
+   SeqUtil_TRACE(TL_FULL_TRACE, "xmlResourceFilename() begin\n");
+   const char * xml_postfix = "/container.xml";
+   const char * infix = "/resources/";
+   size_t pathLength =  strlen(_seq_exp_home) + strlen(infix)
+                    + strlen(nodePath) + strlen(xml_postfix) + 1;
+   char xmlFile[pathLength];
+   char * normalizedXmlFile = malloc( pathLength );
 
-   val->dow = NULL;
-   val->hour = NULL;
-   val->time_delta = NULL;
-   val->valid_hour = NULL;
-   val->valid_dow = NULL;
-   val->local_index = NULL;
+   if ( nodeType == Task || nodeType == NpassTask )
+      xml_postfix = ".xml";
 
-   SeqUtil_TRACE(TL_FULL_TRACE, "newValidityData() end\n");
-   return val;
-}
+   sprintf(xmlFile, "%s%s%s%s", _seq_exp_home, infix, nodePath, xml_postfix);
+   SeqUtil_normpath(normalizedXmlFile,xmlFile);
 
-/********************************************************************************
- * Free's a valididtyData struct.
-********************************************************************************/
-void deleteValidityData( ValidityDataPtr val )
-{
-   SeqUtil_TRACE(TL_FULL_TRACE, "deleteValidityData() begin\n");
-   free((char *)val->dow);
-   free((char *)val->hour);
-   free((char *)val->time_delta);
-   free((char *)val->valid_hour);
-   free((char *)val->valid_dow);
-   free((char *)val->local_index);
-   free( val );
-   SeqUtil_TRACE(TL_FULL_TRACE, "deleteValidityData() end\n");
-}
-
-/********************************************************************************
- * Prints the fields of the validityData struct.
-********************************************************************************/
-void printValidityData(ValidityDataPtr val)
-{
-   if( val->dow != NULL ) SeqUtil_TRACE(TL_FULL_TRACE, " val->dow = %s\n", val->dow);
-   if( val->hour != NULL ) SeqUtil_TRACE(TL_FULL_TRACE, " val->hour = %s\n", val->hour);
-   if( val->time_delta != NULL ) SeqUtil_TRACE(TL_FULL_TRACE, " val->time_delta = %s\n", val->time_delta);
-   if( val->valid_hour != NULL ) SeqUtil_TRACE(TL_FULL_TRACE, " val->valid_hour = %s\n", val->valid_hour);
-   if( val->valid_dow != NULL ) SeqUtil_TRACE(TL_FULL_TRACE, " val->valid_dow = %s\n", val->valid_dow);
-   if( val->local_index != NULL ) SeqUtil_TRACE(TL_FULL_TRACE, " val->local_index = %s\n", val->local_index);
+   SeqUtil_TRACE(TL_FULL_TRACE, "xmlResourceFilename() end : returning %s\n", normalizedXmlFile);
+   return (const char *) normalizedXmlFile;
 }
 
 /********************************************************************************
@@ -237,7 +322,6 @@ xmlXPathContextPtr Resource_createContext(SeqNodeDataPtr _nodeDataPtr, const cha
    context = xmlXPathNewContext(doc);
 
    if( strcmp((const char *) context->doc->children->name, NODE_RES_XML_ROOT_NAME ) != 0 ){
-      SeqUtil_TRACE(TL_FULL_TRACE, "Root node:%s, NODE_RES_XML_ROOT_NAME:%s\n",context->doc->children->name, NODE_RES_XML_ROOT_NAME);
       raiseError( "Root node of xmlFile %s must be %s\n",xmlFile, NODE_RES_XML_ROOT_NAME);
    }
 
@@ -298,109 +382,6 @@ syntax_err:
    return NULL; /* In case we change raiseError for something that doesn' halt the program, we should still return something. */
 }
 
-/********************************************************************************
- * NODE FUNCTIONS: Node functions are functions that return an int and take a
- * resourceVisitorPtr and a SeqNodeDataPtr as arguments.  Pointers to these
- * functions are given to Resource_parseNodeDFS to be executed on nodes during
- * the DFS.
-********************************************************************************/
-
-
-/********************************************************************************
- * NodeFunction to do the work for getNodeResources.
-********************************************************************************/
-int do_all(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
-{
-   int retval = RESOURCE_SUCCESS;
-   SeqUtil_TRACE(TL_FULL_TRACE, "do_all() begin\n");
-   if( _nodeDataPtr->type == Loop)
-      Resource_getLoopAttributes(rv,_nodeDataPtr);
-
-   if( _nodeDataPtr->type == ForEach)
-      Resource_getForEachAttributes(rv, _nodeDataPtr);
-
-   Resource_getBatchAttributes(rv, _nodeDataPtr);
-   Resource_getDependencies(rv, _nodeDataPtr);
-   Resource_getAbortActions(rv, _nodeDataPtr);
-
-   SeqUtil_TRACE(TL_FULL_TRACE, "do_all() end\n");
-   return retval;
-}
-
-/********************************************************************************
- * Parses the associated resource xml file to get the resources of the node.
- * this function reads the node xml resource file to retrive info such as
- * dependencies, batch resource, abort actions and loop information for loop
- * nodes. The xml resource, if it exists, is located under
- * $SEQ_EXP_HOME/resources/ It follows the experiment node tree.
-********************************************************************************/
-int getNodeResources(SeqNodeDataPtr _nodeDataPtr, const char * expHome, const char * nodePath)
-{
-   SeqUtil_TRACE(TL_FULL_TRACE, "getNodeResources() begin\n");
-   int retval = RESOURCE_SUCCESS;
-   ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,expHome,nodePath,_nodeDataPtr->type);
-
-   Resource_parseNodeDFS(rv,_nodeDataPtr, do_all);
-
-   Resource_setWorkerData(rv, _nodeDataPtr);
-   Resource_validateMachine(rv, _nodeDataPtr);
-   Resource_setShell(rv, _nodeDataPtr);
-
-out_free:
-   deleteResourceVisitor(rv);
-out:
-   SeqUtil_TRACE(TL_FULL_TRACE, "getNodeResources() end\n");
-   return retval;
-}
-
-/********************************************************************************
- * gets the loop attributes for a loop on the container path of a node.  This is
- * used in getFlowInfo (specifically in Flow_parsePath() ).
-********************************************************************************/
-void getNodeLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *expHome, const char *loopNodePath)
-{
-   SeqUtil_TRACE(TL_FULL_TRACE, "getNodeLoopContainersAttr() begin\n");
-   ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,expHome,loopNodePath,Loop);
-
-   if( rv->context == NULL )
-      goto out_free;
-
-   Resource_parseNodeDFS(rv,_nodeDataPtr,Resource_getContainerLoopAttributes);
-
-out_free:
-   deleteResourceVisitor(rv);
-   SeqUtil_TRACE(TL_FULL_TRACE, "getNodeLoopContainersAttr() end\n");
-}
-
-
-/********************************************************************************
- * Called from Flow_checkWorkUnit to get the worker path of a node on the
- * path of the subject node.
-********************************************************************************/
-int Resource_parseWorkerPath( const char * pathToNode, const char * _seq_exp_home, SeqNodeDataPtr _nodeDataPtr)
-{
-   SeqUtil_TRACE(TL_FULL_TRACE, "parseWorkerPath() begin\n");
-   int retval = RESOURCE_SUCCESS;
-   ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,_seq_exp_home,pathToNode,Loop);
-
-   if ( rv->context == NULL ){
-      retval = RESOURCE_FAILURE;
-      goto out_free;
-   }
-
-   Resource_parseNodeDFS(rv,_nodeDataPtr,Resource_getWorkerPath);
-
-   if( rv->workerPathFound == RESOURCE_FALSE ){
-      retval = RESOURCE_FAILURE;
-      goto out_free;
-   }
-
-out_free:
-   deleteResourceVisitor(rv);
-   SeqUtil_TRACE(TL_FULL_TRACE, "parseWorkerPath() end\n");
-   return retval;
-}
-
 
 /********************************************************************************
  * Calls Resource_parseNodeDFS_internal() on the root node of the resource xml
@@ -451,89 +432,37 @@ out:
    return retval;
 }
 
-/********************************************************************************
- * Extracts the data form an XML VALIDITY node into a dynamically allocated
- * struct validityData and returns a pointer to it.
-********************************************************************************/
-ValidityDataPtr getValidityData(xmlNodePtr validityNode)
-{
-   SeqUtil_TRACE(TL_FULL_TRACE, "getValidityData() begin\n");
-   if ( strcmp((const char *)validityNode->name, "VALIDITY") != 0)
-      raiseError( "isValid() must receive a VALIDITY xml node\n");
-   ValidityDataPtr val = newValidityData();
 
-   val->dow = (const char *) xmlGetProp( validityNode,(const xmlChar *) "dow");
-   val->hour =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "hour");
-   val->time_delta =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "time_delta");
-   val->valid_hour =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "valid_hour");
-   val->valid_dow =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "valid_dow");
-   val->local_index =  (const char *)xmlGetProp( validityNode,(const xmlChar *) "local_index");
-
-   SeqUtil_TRACE(TL_FULL_TRACE, "getValidityData() end\n");
-   return val;
-}
 
 /********************************************************************************
- * Compares the data in val with the current _nodeDataPtr to determine whether
- * the the data in a VALIDITY xml node is currently "valid" to decide whether or
- * not we parse it's content (children).
+ * NODE FUNCTIONS: Node functions are functions that return an int and take a
+ * resourceVisitorPtr and a SeqNodeDataPtr as arguments.  Pointers to these
+ * functions are given to Resource_parseNodeDFS to be executed on nodes during
+ * the DFS.
 ********************************************************************************/
-int checkValidity(SeqNodeDataPtr _nodeDataPtr, ValidityDataPtr val )
+
+
+/********************************************************************************
+ * NodeFunction to do the work for getNodeResources.
+********************************************************************************/
+int do_all(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
 {
-   SeqUtil_TRACE(TL_FULL_TRACE, "checkValidity() begin\n");
-   printValidityData(val);
-   int retval = RESOURCE_TRUE;
+   int retval = RESOURCE_SUCCESS;
+   SeqUtil_TRACE(TL_FULL_TRACE, "do_all() begin\n");
+   if( _nodeDataPtr->type == Loop)
+      Resource_getLoopAttributes(rv,_nodeDataPtr);
 
-   char * local_ext = SeqLoops_indexToExt(val->local_index);
-   SeqUtil_TRACE(TL_FULL_TRACE, "PHIL!! datestamp = %s\n",_nodeDataPtr->datestamp);
+   if( _nodeDataPtr->type == ForEach)
+      Resource_getForEachAttributes(rv, _nodeDataPtr);
 
-   const char * incrementedDatestamp = SeqDatesUtil_getIncrementedDatestamp( _nodeDataPtr->datestamp, val->hour, val->time_delta);
+   Resource_getBatchAttributes(rv, _nodeDataPtr);
+   Resource_getDependencies(rv, _nodeDataPtr);
+   Resource_getAbortActions(rv, _nodeDataPtr);
 
-   /* Check local_index */
-   if ( local_ext != NULL && strcmp ( local_ext, _nodeDataPtr->extension ) != 0
-         && strcmp(local_ext, "") != 0){
-      SeqUtil_TRACE(TL_FULL_TRACE,"checkValidity(): extension mismatch:local_index=%s, local_ext=%s, ndp->extension=%s\n", val->local_index, local_ext, _nodeDataPtr->extension);
-      retval = RESOURCE_FALSE;
-      goto out_free;
-   }
-
-   /* Check valid_hour */
-   if (val->valid_hour != NULL && strlen(val->valid_hour) > 0
-         && !SeqDatesUtil_isDepHourValid(incrementedDatestamp, val->valid_hour)){
-      retval = RESOURCE_FALSE;
-      goto out_free;
-   }
-
-   /* Check valid_dow */
-   if (val->valid_dow != NULL && strlen(val->valid_dow) > 0
-         && !SeqDatesUtil_isDepDOWValid(incrementedDatestamp, val->valid_dow)){
-      retval = RESOURCE_FALSE;
-      goto out_free;
-   }
-
-out_free:
-   free(local_ext);
-   free((char *)incrementedDatestamp);
-   SeqUtil_TRACE(TL_FULL_TRACE, "checkValidity() end. Returning %d\n", retval);
+   SeqUtil_TRACE(TL_FULL_TRACE, "do_all() end\n");
    return retval;
 }
 
-/********************************************************************************
- * Determines whether an XML VALIDITY node is valid.
-********************************************************************************/
-int isValid(SeqNodeDataPtr _nodeDataPtr, xmlNodePtr validityNode)
-{
-   SeqUtil_TRACE(TL_FULL_TRACE, "isValid() begin\n");
-   SeqUtil_TRACE(TL_FULL_TRACE, "isValid() datestamp = %s\n", _nodeDataPtr->datestamp);
-
-   ValidityDataPtr validityData = getValidityData(validityNode);
-
-   int isValid = checkValidity(_nodeDataPtr, validityData);
-
-   SeqUtil_TRACE(TL_FULL_TRACE, "isValid() end returning %d\n", isValid);
-   deleteValidityData(validityData);
-   return isValid;
-}
 
 /********************************************************************************
  * NodeFunction: Queries the context for the attributes of the LOOP child of the
@@ -561,25 +490,6 @@ out:
    return retval;
 }
 
-/********************************************************************************
- * NodeFunction: Gets attributes for a container loop.
-********************************************************************************/
-int Resource_getContainerLoopAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
-{
-   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_getContainerLoopAttributes() begin\n");
-   int retval = RESOURCE_SUCCESS;
-   xmlXPathObjectPtr result = NULL;
-   const char * fixedNodePath = SeqUtil_fixPath(rv->nodePath);
-
-   if( (result = XmlUtils_getnodeset ((const xmlChar*)"(child::LOOP/@*)",rv->context)) != NULL ) {
-      parseLoopAttributes( result, fixedNodePath, _nodeDataPtr );
-   }
-
-   free((char *) fixedNodePath);
-   xmlXPathFreeObject(result);
-   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_getContainerLoopAttributes() end\n");
-   return retval;
-}
 
 /********************************************************************************
  * NodeFunction: Queries the context for the attributes of the FOR_EACH child of the
@@ -628,32 +538,6 @@ out_free:
    xmlXPathFreeObject(result);
 out:
    SeqUtil_TRACE(TL_FULL_TRACE, "getBatchAttributes() end\n");
-   return retval;
-}
-
-
-int Resource_getWorkerPath(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
-{
-   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_getWorkerPath() begin\n");
-   int retval = RESOURCE_SUCCESS;
-   char * workerPath = NULL;
-
-   if( rv->workerPathFound == RESOURCE_TRUE ){
-      goto out;
-   }
-
-   xmlXPathObjectPtr result = XmlUtils_getnodeset((const xmlChar *) "(child::WORKER)", rv->context);
-   if ( result != NULL ){
-      workerPath = xmlGetProp( result->nodesetval->nodeTab[0], (const xmlChar *) "path");
-      SeqNode_setWorkerPath(_nodeDataPtr, workerPath);
-      rv->workerPathFound = RESOURCE_TRUE;
-   }
-
-out_free:
-   free(workerPath);
-   xmlXPathFreeObject(result);
-out:
-   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_getWorkerPath() end\n");
    return retval;
 }
 
@@ -708,6 +592,55 @@ out:
    SeqUtil_TRACE(TL_FULL_TRACE, "getAbortActions() end\n");
    return retval;
 }
+
+
+/********************************************************************************
+ * NodeFunction: Gets attributes for a container loop.
+********************************************************************************/
+int Resource_getContainerLoopAttributes(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_getContainerLoopAttributes() begin\n");
+   int retval = RESOURCE_SUCCESS;
+   xmlXPathObjectPtr result = NULL;
+   const char * fixedNodePath = SeqUtil_fixPath(rv->nodePath);
+
+   if( (result = XmlUtils_getnodeset ((const xmlChar*)"(child::LOOP/@*)",rv->context)) != NULL ) {
+      parseLoopAttributes( result, fixedNodePath, _nodeDataPtr );
+   }
+
+   free((char *) fixedNodePath);
+   xmlXPathFreeObject(result);
+   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_getContainerLoopAttributes() end\n");
+   return retval;
+}
+
+int Resource_getWorkerPath(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr)
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_getWorkerPath() begin\n");
+   int retval = RESOURCE_SUCCESS;
+   char * workerPath = NULL;
+
+   if( rv->workerPathFound == RESOURCE_TRUE ){
+      goto out;
+   }
+
+   xmlXPathObjectPtr result = XmlUtils_getnodeset((const xmlChar *) "(child::WORKER)", rv->context);
+   if ( result != NULL ){
+      workerPath = xmlGetProp( result->nodesetval->nodeTab[0], (const xmlChar *) "path");
+      SeqNode_setWorkerPath(_nodeDataPtr, workerPath);
+      rv->workerPathFound = RESOURCE_TRUE;
+   }
+
+out_free:
+   free(workerPath);
+   xmlXPathFreeObject(result);
+out:
+   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_getWorkerPath() end\n");
+   return retval;
+}
+
+
+
 
 /********************************************************************************
  * Sets the worker data of the node if a worker path is specified.
@@ -794,3 +727,76 @@ out:
    return retval;
 }
 
+/********************************************************************************
+ * Parses the associated resource xml file to get the resources of the node.
+ * this function reads the node xml resource file to retrive info such as
+ * dependencies, batch resource, abort actions and loop information for loop
+ * nodes. The xml resource, if it exists, is located under
+ * $SEQ_EXP_HOME/resources/ It follows the experiment node tree.
+********************************************************************************/
+int getNodeResources(SeqNodeDataPtr _nodeDataPtr, const char * expHome, const char * nodePath)
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "getNodeResources() begin\n");
+   int retval = RESOURCE_SUCCESS;
+   ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,expHome,nodePath,_nodeDataPtr->type);
+
+   Resource_parseNodeDFS(rv,_nodeDataPtr, do_all);
+
+   Resource_setWorkerData(rv, _nodeDataPtr);
+   Resource_validateMachine(rv, _nodeDataPtr);
+   Resource_setShell(rv, _nodeDataPtr);
+
+out_free:
+   deleteResourceVisitor(rv);
+out:
+   SeqUtil_TRACE(TL_FULL_TRACE, "getNodeResources() end\n");
+   return retval;
+}
+
+/********************************************************************************
+ * gets the loop attributes for a loop on the container path of a node.  This is
+ * used in getFlowInfo (specifically in Flow_parsePath() ).
+********************************************************************************/
+void getNodeLoopContainersAttr (  SeqNodeDataPtr _nodeDataPtr, const char *expHome, const char *loopNodePath)
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "getNodeLoopContainersAttr() begin\n");
+   ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,expHome,loopNodePath,Loop);
+
+   if( rv->context == NULL )
+      goto out_free;
+
+   Resource_parseNodeDFS(rv,_nodeDataPtr,Resource_getContainerLoopAttributes);
+
+out_free:
+   deleteResourceVisitor(rv);
+   SeqUtil_TRACE(TL_FULL_TRACE, "getNodeLoopContainersAttr() end\n");
+}
+
+
+/********************************************************************************
+ * Called from Flow_checkWorkUnit to get the worker path of a node on the
+ * path of the subject node.
+********************************************************************************/
+int Resource_parseWorkerPath( const char * pathToNode, const char * _seq_exp_home, SeqNodeDataPtr _nodeDataPtr)
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "parseWorkerPath() begin\n");
+   int retval = RESOURCE_SUCCESS;
+   ResourceVisitorPtr rv = newResourceVisitor(_nodeDataPtr,_seq_exp_home,pathToNode,Loop);
+
+   if ( rv->context == NULL ){
+      retval = RESOURCE_FAILURE;
+      goto out_free;
+   }
+
+   Resource_parseNodeDFS(rv,_nodeDataPtr,Resource_getWorkerPath);
+
+   if( rv->workerPathFound == RESOURCE_FALSE ){
+      retval = RESOURCE_FAILURE;
+      goto out_free;
+   }
+
+out_free:
+   deleteResourceVisitor(rv);
+   SeqUtil_TRACE(TL_FULL_TRACE, "parseWorkerPath() end\n");
+   return retval;
+}
