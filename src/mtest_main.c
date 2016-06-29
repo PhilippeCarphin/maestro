@@ -85,30 +85,61 @@ void header(const char * test){
    SeqUtil_TRACE(TL_CRITICAL, "\n=================== UNIT TEST FOR %s ===================\n",test);
 }
 
+
+LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head);
 LISTNODEPTR parseFlowTree(const char * seq_exp_home)
 {
    LISTNODEPTR list_head = NULL;
-   SeqNodeDataPtr dummy_node = SeqNode_createNode("PHIL");
-
    FlowVisitorPtr fv = Flow_newVisitor(seq_exp_home);
 
    const char * basePath = (const char *) xmlGetProp(fv->context->node, (const xmlChar *)"name");
    SeqListNode_pushFront(&list_head, basePath);
 
+   parseFlowTree_internal(fv, &list_head);
+
+   return list_head;
+
+}
+
+
+LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head)
+{
+   SeqNodeDataPtr dummy_node = SeqNode_createNode("PHIL");
+
+
+   const char * basePath = (*list_head)->data;
+
    SeqUtil_TRACE(TL_FULL_TRACE, "Name found is %s\n",basePath);
 
    xmlXPathObjectPtr results = XmlUtils_getnodeset("(child::SUBMITS)", fv->context);
    for_results( xmlNode, results ){
-      const char * submits = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"sub_name");
+      const char * sub_name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"sub_name");
       char path[SEQ_MAXFIELD] = {0};
-      sprintf( path, "%s/%s", basePath,submits);
-      SeqUtil_TRACE(TL_FULL_TRACE, "SUBMITS sub_name=\"%s\"\n", submits);
-      SeqUtil_TRACE(TL_FULL_TRACE, "Path : %s\n", path);
-      SeqListNode_pushFront(&list_head, path);
+      sprintf( path, "%s/%s", basePath,sub_name);
+      SeqListNode_pushFront(list_head, path);
+
+      char query[SEQ_MAXFIELD] = {0};
+      /* Look for an XML node that has an attribute "name" whose value is equal
+       * to that of sub_name
+       * */
+      sprintf ( query, "(child::*[@name='%s'])", sub_name );
+      xmlXPathObjectPtr result = XmlUtils_getnodeset(query, fv->context);
+      
+      SeqUtil_TRACE(TL_FULL_TRACE, "Number of results: %d\n" , result->nodesetval->nodeNr);
+
+      SeqUtil_TRACE(TL_FULL_TRACE, "node corresponding to SUBMITS : %s\n", result->nodesetval->nodeTab[0]->name);
+
+      xmlNodePtr node = result->nodesetval->nodeTab[0];
+
+      if( strcmp(node->name, "MODULE") == 0){
+
+         Flow_changeModule(fv, (const char *) path);
+      }
+
+
+
    }
 
-   SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\n");
-   SeqListNode_printList(list_head);
    
 
 
@@ -118,7 +149,11 @@ LISTNODEPTR parseFlowTree(const char * seq_exp_home)
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
 
-   parseFlowTree(seq_exp_home);
+   LISTNODEPTR list_head = parseFlowTree(seq_exp_home);
+
+   SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\n");
+   SeqListNode_printList(list_head);
+
 
 
    SeqUtil_TRACE(TL_CRITICAL, "============== ALL TESTS HAVE PASSED =====================\n");

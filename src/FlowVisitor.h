@@ -21,6 +21,7 @@
 #ifndef _FLOW_VISITOR_H_
 #define _FLOW_VISITOR_H_
 
+#define MAX_CONTEXT_STACK_SIZE 20
 
 #define FLOW_SUCCESS 0
 #define FLOW_FAILURE -1
@@ -48,6 +49,9 @@ typedef struct _FlowVisitor{
    xmlXPathContextPtr context;
    xmlDocPtr previousDoc;
    xmlXPathContextPtr previousContext;
+
+   xmlXPathContextPtr _context_stack[MAX_CONTEXT_STACK_SIZE];
+   int _stackSize;
 } FlowVisitor;
 
 typedef FlowVisitor* FlowVisitorPtr;
