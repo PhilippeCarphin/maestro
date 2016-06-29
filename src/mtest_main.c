@@ -86,7 +86,7 @@ void header(const char * test){
 }
 
 
-LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head);
+LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head, int depth);
 LISTNODEPTR parseFlowTree(const char * seq_exp_home)
 {
    LISTNODEPTR list_head = NULL;
@@ -95,24 +95,38 @@ LISTNODEPTR parseFlowTree(const char * seq_exp_home)
    const char * basePath = (const char *) xmlGetProp(fv->context->node, (const xmlChar *)"name");
    SeqListNode_pushFront(&list_head, basePath);
 
-   parseFlowTree_internal(fv, &list_head);
+   parseFlowTree_internal(fv, &list_head, 0);
 
    return list_head;
 
 }
 
 
-LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head)
+LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head, int depth)
 {
-   SeqNodeDataPtr dummy_node = SeqNode_createNode("PHIL");
-
 
    const char * basePath = (*list_head)->data;
 
    SeqUtil_TRACE(TL_FULL_TRACE, "Name found is %s\n",basePath);
 
    xmlXPathObjectPtr results = XmlUtils_getnodeset("(child::SUBMITS)", fv->context);
+
+   SeqUtil_TRACE(TL_FULL_TRACE, "Printing results for basePath %s, at depth %d\n", basePath, depth);
+   {
+      for_results( xmlNode, results ){
+         SeqUtil_TRACE(TL_FULL_TRACE, "   xmlNode->name=%s, name attrib=%s\n",
+                                             xmlNode->name,xmlGetProp(xmlNode,"sub_name"));
+      }
+   }
+
+   getchar();
+
+
    for_results( xmlNode, results ){
+      /*fv->context->node = xmlNode;
+      SeqUtil_TRACE(TL_FULL_TRACE, "== xmlNode->name=%s, name attrib=%s\n",
+                                             xmlNode->name,xmlGetProp(xmlNode,"sub_name"));
+                                             */
       const char * sub_name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"sub_name");
       char path[SEQ_MAXFIELD] = {0};
       sprintf( path, "%s/%s", basePath,sub_name);
@@ -124,27 +138,27 @@ LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head)
        * */
       sprintf ( query, "(child::*[@name='%s'])", sub_name );
       xmlXPathObjectPtr result = XmlUtils_getnodeset(query, fv->context);
-      
-      SeqUtil_TRACE(TL_FULL_TRACE, "Number of results: %d\n" , result->nodesetval->nodeNr);
 
-      SeqUtil_TRACE(TL_FULL_TRACE, "node corresponding to SUBMITS : %s\n", result->nodesetval->nodeTab[0]->name);
+      if ( result != NULL ){
+         SeqUtil_TRACE(TL_FULL_TRACE, "Number of results: %d\n" , result->nodesetval->nodeNr);
+         SeqUtil_TRACE(TL_FULL_TRACE, "node corresponding to SUBMITS : %s\n", result->nodesetval->nodeTab[0]->name);
 
-      xmlNodePtr node = result->nodesetval->nodeTab[0];
+         xmlNodePtr node = result->nodesetval->nodeTab[0];
 
-      if( strcmp(node->name, "MODULE") == 0){
-         Flow_changeModule(fv, (const char *) sub_name);
-         parseFlowTree_internal(fv, list_head);
-         Flow_restoreContext(fv);
+         if( strcmp(node->name, "MODULE") == 0){
+            Flow_changeModule(fv, (const char *) sub_name);
+            parseFlowTree_internal(fv, list_head, depth+1);
+            Flow_restoreContext(fv);
+         }
+
+         if( strcmp(node->name, "LOOP") == 0 || strcmp(node->name, "FAMILY") == 0){
+            xmlNodePtr previousNode = fv->context->node;
+            fv->context->node = node;
+            parseFlowTree_internal(fv, list_head,depth+1);
+            fv->context->node = previousNode;
+         }
       }
-
-
-
    }
-
-   
-
-
-
 }
 
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
