@@ -99,6 +99,9 @@ l2d2_socket.o: l2d2_socket.h l2d2_socket.c
 expcatchup.o:	expcatchup.c expcatchup.h
 	$(CC) -g -I $(INCDIR) -I $(XML_INCLUDE_DIR) -c expcatchup.c
 
+nodeinfo_db.o: nodeinfo_db.c FlowVisitor.h nodeinfo.h
+	$(CC) -g $(WERROR_FLAGS) -I $(INCDIR) -I $(XML_INCLUDE_DIR) -c $<
+
 FlowVisitor.o:  FlowVisitor.c FlowVisitor.h nodeinfo.c nodeinfo.h ResourceVisitor.h ResourceVisitor.c
 	$(CC) -g $(WERROR_FLAGS) -I $(INCDIR) -I $(XML_INCLUDE_DIR) -c $<
 
@@ -162,7 +165,7 @@ tictac:	tictac_main.c $(TICTAC_OBJECTS)
 NODELOGGER_OBJECTS = nodelogger.o SeqUtil.o l2d2_commun.o SeqUtilServer.o \
 	l2d2_socket.o QueryServer.o tictac.o nodeinfo.o SeqNode.o SeqLoopsUtil.o \
 	XmlUtils.o SeqNameValues.o SeqListNode.o SeqDatesUtil.o getopt_long.o \
-	FlowVisitor.o ResourceVisitor.o
+	FlowVisitor.o ResourceVisitor.o nodeinfo_db.o
 
 nodelogger: nodelogger_main.c $(NODELOGGER_OBJECTS)
 	$(CC) -g $^ -I $(XML_INCLUDE_DIR) -L$(XML_LIB_DIR) -lxml2 $(LIB) -I$(INCDIR) -o nodelogger
@@ -176,7 +179,7 @@ MAESTRO_OBJECTS = maestro.o logreader.o nodelogger.o tictac.o nodeinfo.o \
 	SeqNode.o SeqLoopsUtil.o XmlUtils.o SeqNameValues.o SeqListNode.o SeqDatesUtil.o \
 	SeqUtil.o l2d2_commun.o SeqUtilServer.o QueryServer.o l2d2_socket.o \
 	runcontrollib.o ocmjinfo.o expcatchup.o getopt_long.o ResourceVisitor.o \
-	FlowVisitor.o
+	FlowVisitor.o nodeinfo_db.o
 
 maestro: maestro_main.c $(MAESTRO_OBJECTS)
 	$(CC) -g $^ -I $(INCDIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o maestro; \
@@ -189,7 +192,7 @@ expcatchup:	expcatchup.o getopt_long.o SeqUtil.o expcatchup_main.c XmlUtils.o Se
 NODEINFO_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o \
 	QueryServer.o l2d2_socket.o SeqListNode.o SeqDatesUtil.o SeqUtilServer.o \
 	tictac.o SeqNameValues.o nodeinfo.o getopt_long.o FlowVisitor.o \
-	ResourceVisitor.o
+	ResourceVisitor.o nodeinfo_db.o
 
 nodeinfo: nodeinfo_main.c $(NODEINFO_OBJECTS)
 	$(CC) -g $^ -I $(XML_INCLUDE_DIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o nodeinfo 
@@ -212,8 +215,9 @@ madmin: $(L2D2AOBJECTS)
 TEST_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o \
 	QueryServer.o l2d2_socket.o SeqListNode.o SeqDatesUtil.o SeqUtilServer.o \
 	tictac.o SeqNameValues.o nodeinfo.o getopt_long.o FlowVisitor.o \
-	ResourceVisitor.o
+	ResourceVisitor.o nodeinfo_db.o
 
 mtest:	mtest_main.c $(TEST_OBJECTS)
-	$(CC) -g $^ -I $(XML_INCLUDE_DIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@
+	$(CC) -g $(WERROR_FLAGS) $^ -I $(XML_INCLUDE_DIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@
 	cp $@ $(BINDIR)
+

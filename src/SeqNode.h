@@ -43,6 +43,7 @@ typedef enum _SeqNodeType {
    Module,
    Loop,
    Switch,
+   SwitchItem,
    ForEach,
 } SeqNodeType;
 
@@ -195,6 +196,7 @@ void SeqNode_setSuiteName ( SeqNodeDataPtr node_ptr, const char* suiteName );
 void SeqNode_setInternalPath ( SeqNodeDataPtr node_ptr, const char* path );
 void SeqNode_setModule ( SeqNodeDataPtr node_ptr, const char* module );
 void SeqNode_addSwitch ( SeqNodeDataPtr _nodeDataPtr, char* switchName, char* switchType, char* returnValue);
+void SeqNode_printNode ( SeqNodeDataPtr node_ptr, const char* filters, const char * filename );
 
 extern void SeqNode_generateConfig (const SeqNodeDataPtr _nodeDataPtr, const char* flow, const char * filename );
 extern char * SeqNode_extension (const SeqNodeDataPtr _nodeDataPtr);

@@ -20,7 +20,9 @@
  */
 #ifndef _FLOW_VISITOR_H_
 #define _FLOW_VISITOR_H_
+#include "SeqNode.h"
 
+#define MAX_CONTEXT_STACK_SIZE 20
 
 #define FLOW_SUCCESS 0
 #define FLOW_FAILURE -1
@@ -44,13 +46,19 @@ typedef struct _FlowVisitor{
    char * module;
    char * intramodulePath;
    int currentNodeType;
-   xmlDocPtr doc;
    xmlXPathContextPtr context;
-   xmlDocPtr previousDoc;
-   xmlXPathContextPtr previousContext;
+
+   xmlXPathContextPtr _context_stack[MAX_CONTEXT_STACK_SIZE];
+   int _stackSize;
 } FlowVisitor;
 
 typedef FlowVisitor* FlowVisitorPtr;
+
+int _pushContext(FlowVisitorPtr fv, xmlXPathContextPtr context);
+int Flow_saveContext(FlowVisitorPtr fv);
+xmlXPathContextPtr _popContext(FlowVisitorPtr fv);
+int Flow_restoreContext(FlowVisitorPtr fv);
+xmlXPathContextPtr Flow_previousContext(FlowVisitorPtr fv);
 
 /********************************************************************************
  * Initializes the flow_visitor to the entry module;
@@ -213,4 +221,10 @@ int Flow_parseSpecifics(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPt
 ********************************************************************************/
 void Flow_print_state(FlowVisitorPtr _flow_visitor, int trace_level);
 
+
+
+
+
+int Flow_parsePath_db(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr,
+                                                         const char * _nodePath);
 #endif /* _FLOW_VISITOR_H */

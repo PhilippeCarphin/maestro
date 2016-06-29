@@ -29,6 +29,7 @@
 #include <libxml/tree.h>
 #include <libxml/xpathInternals.h>
 #include "nodeinfo.h"
+#include "nodeinfo_db.h"
 #include "tictac.h"
 #include "SeqUtil.h"
 #include "SeqDatesUtil.h"
@@ -655,6 +656,37 @@ void parseForEachTarget(xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr) 
    free(t_index);
    free(t_hour);
    }
+}
+void PhilFlowInfo( SeqNodeDataPtr _nodeDataPtr, const char *_seq_exp_home,
+                                                const char *_nodePath_SI)
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "PhilFlowInfo() begin\n");
+   FlowVisitorPtr fv = Flow_newVisitor(_seq_exp_home);
+
+   Flow_parsePath_db(fv, _nodeDataPtr, _nodePath_SI);
+
+   /* DEBUG */
+   Flow_print_state(fv,TL_FULL_TRACE);
+
+
+   Flow_setPathData(fv,_nodeDataPtr);
+   SeqUtil_TRACE(TL_FULL_TRACE, "PhilFlowInfo() end\n");
+}
+
+SeqNodeDataPtr nodeinfo_db(const char *_seq_exp_home, const char *_nodePath_SI)
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo_db() begin\n");
+   const char * path = SI_path_to_path(_nodePath_SI);
+
+   SeqNodeDataPtr ndp = SeqNode_createNode(path);
+   PhilFlowInfo( ndp, _seq_exp_home, _nodePath_SI);
+   /* getNodeResources( ndp, _seq_exp_home, ndp->name); */
+
+out_free:
+   free((char*)path);
+out:
+   SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo_db() end\n");
+   return ndp;
 }
 
 /*********************************************************************************

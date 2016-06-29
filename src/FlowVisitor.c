@@ -53,20 +53,20 @@ FlowVisitorPtr Flow_newVisitor(const char * _seq_exp_home)
    if( new_flow_visitor == NULL )
       goto out;
 
-   char * postfix = "/EntryModule/flow.xml";
-
-   char * xmlFilename = (char *) malloc ( strlen(_seq_exp_home) + strlen(postfix) + 1 );
-   sprintf(xmlFilename, "%s%s", _seq_exp_home,postfix);
+   {
+      char * postfix = "/EntryModule/flow.xml";
+      char * xmlFilename = (char *) malloc ( strlen(_seq_exp_home) + strlen(postfix) + 1 );
+      sprintf(xmlFilename, "%s%s", _seq_exp_home,postfix);
+      xmlDocPtr doc = XmlUtils_getdoc(xmlFilename);
+      new_flow_visitor->context = xmlXPathNewContext(doc);
+      free(xmlFilename);
+   }
 
    new_flow_visitor->expHome = _seq_exp_home;
 
-   new_flow_visitor->doc = XmlUtils_getdoc(xmlFilename);
-   new_flow_visitor->context = xmlXPathNewContext(new_flow_visitor->doc);
 
-   new_flow_visitor->context->node = new_flow_visitor->doc->children;
+   new_flow_visitor->context->node = new_flow_visitor->context->doc->children;
 
-   new_flow_visitor->previousDoc = NULL;
-   new_flow_visitor->previousContext = NULL;
    new_flow_visitor->currentFlowNode = NULL;
    new_flow_visitor->suiteName = NULL;
    new_flow_visitor->taskPath = NULL;
@@ -74,11 +74,21 @@ FlowVisitorPtr Flow_newVisitor(const char * _seq_exp_home)
    new_flow_visitor->intramodulePath = NULL;
    new_flow_visitor->currentNodeType = Task;
 
+   new_flow_visitor->_stackSize = 0;
+
 out_free:
-   free(xmlFilename);
 out:
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_newVisitor() end\n");
    return new_flow_visitor;
+}
+
+void _freeStack(FlowVisitorPtr fv)
+{
+   xmlXPathContextPtr context;
+   while ( (context = _popContext(fv)) != NULL){
+      xmlFreeDoc(context->doc);
+      xmlXPathFreeContext(context);
+   }
 }
 
 /********************************************************************************
@@ -87,15 +97,12 @@ out:
 int Flow_deleteVisitor(FlowVisitorPtr _flow_visitor)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_deleteVisitor() begin\n");
+   if( _flow_visitor->context->doc != NULL )
+      xmlFreeDoc(_flow_visitor->context->doc);
    if( _flow_visitor->context != NULL )
       xmlXPathFreeContext(_flow_visitor->context);
-   if( _flow_visitor->doc != NULL )
-      xmlFreeDoc(_flow_visitor->doc);
 
-   if( _flow_visitor->previousContext != NULL )
-      xmlXPathFreeContext(_flow_visitor->previousContext);
-   if( _flow_visitor->previousDoc != NULL )
-      xmlFreeDoc(_flow_visitor->previousDoc);
+   _freeStack(_flow_visitor);
 
    free(_flow_visitor->currentFlowNode);
    free(_flow_visitor->taskPath);
@@ -156,6 +163,102 @@ out:
    return retval;
 }
 
+int Flow_parsePath_db(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr,
+                                                         const char * _nodePath)
+{
+   int retval = FLOW_SUCCESS;
+   int totalCount = SeqUtil_tokenCount(_nodePath, "/");
+   int count = 0;
+
+   for_tokens(token, _nodePath, "/[]",sp){
+
+      /* Flow_doNodeQuery part */
+      if ( fv->currentNodeType == Switch ){
+         /* int go_into_switch_item(FlowVisitorPtr fv, const char *switch_item_name */
+         {
+            xmlXPathObjectPtr switch_items = XmlUtils_getnodeset("(child::SWITCH_ITEM)", fv->context);
+            for_results(switch_item, switch_items){
+               const char * switch_name = xmlGetProp(switch_item, (const char *)"name");
+               if( strcmp( token,switch_name) == 0){
+                  fv->context->node = switch_item;
+                  fv->currentNodeType = SwitchItem;
+                  free((char*)switch_name);
+                  goto tmp_out;
+               }
+               free((char*)switch_name);
+
+            }
+            tmp_out: ;
+            xmlXPathFreeObject(switch_items);
+         }
+         goto next;
+      }
+      Flow_doNodeQuery(fv, token, count == 0);
+      Flow_updatePaths(fv, token, count != totalCount );
+
+      if( fv->currentNodeType == Module ){
+         if ( Flow_changeModule(fv, token) == FLOW_FAILURE ){
+            retval = FLOW_FAILURE;
+            goto out;
+         }
+      }
+
+      /*
+       * Data Collection part.
+       *
+       * NOTE: ParseSwitchAttributes in Flow_parsePath finds the correct switch
+       * item.  Since we're going to have to replace that part
+       */
+      /* retrieve node specific attributes */
+      if( fv->currentNodeType != Task && fv->currentNodeType != NpassTask )
+         Flow_checkWorkUnit(fv, _nodeDataPtr);
+
+      if( fv->currentNodeType == Switch ){
+         /* Flow_parseSwitchAttributes(fv, _nodeDataPtr, count == totalCount );*/
+         /*
+          * This should be the actual function Flow_parseSwitchAttributes.
+          * The current function, as it stands does two things (which is wrong
+          * and warrants a beating from Linus Torvalds.
+          *
+          * The call to Flow_parseSwitchAttributes will become
+          * 1) A call to Flow_parseSwitchAttributes but the version below.
+          *
+          * 2) A call to a new function that will, based on the nodeDataPtr's
+          * datestamp, and the switch type, will go to the correct switch item.
+          */
+         /* Flow_parseSwitchAttributes(FlowVisitorPtr fv, SeqNodeDataPtr ndp, int isLast)*/
+         int isLast = (count == totalCount);
+         {
+            const char * switchType = NULL;
+            if( (switchType = Flow_findSwitchType(fv)) == NULL )
+               raiseError("Flow_parseSwitchAttributes(): switchType not found\n");
+            char * switchValue = switchReturn(_nodeDataPtr, switchType);
+            char * fixedSwitchPath = SeqUtil_fixPath( fv->currentFlowNode );
+            SeqNameValues_insertItem(&(_nodeDataPtr->switchAnswers), fixedSwitchPath , switchValue );
+            if(isLast){
+               SeqNode_addSpecificData(_nodeDataPtr, "VALUE", switchValue);
+               /* PHIL: do this outside of the while instead of using isLast */
+               _nodeDataPtr->type = Switch;
+            } else {
+               SeqNode_addSpecificData( _nodeDataPtr, "SWITCH_TYPE", switchType );
+               SeqNode_addSwitch(_nodeDataPtr,fixedSwitchPath , switchType, switchValue);
+            }
+            free(switchValue);
+            free(fixedSwitchPath);
+         }
+      }
+
+      if( fv->currentNodeType == Loop && count != totalCount ){
+         getNodeLoopContainersAttr(_nodeDataPtr, fv->expHome, fv->currentFlowNode);
+      }
+      count++;
+
+   next:;
+   }
+
+out:
+   return retval;
+}
 
 /********************************************************************************
  * Tries to get to the node specified by nodePath.
@@ -285,6 +388,51 @@ out:
    return retval;
 }
 
+int _pushContext(FlowVisitorPtr fv, xmlXPathContextPtr context)
+{
+   if( fv->_stackSize < MAX_CONTEXT_STACK_SIZE ){
+      fv->_context_stack[(fv->_stackSize)++] = context;
+      return FLOW_SUCCESS;
+   } else {
+      return FLOW_FAILURE;
+   }
+}
+
+int Flow_saveContext(FlowVisitorPtr fv)
+{
+   return _pushContext(fv, fv->context);
+}
+
+xmlXPathContextPtr _popContext(FlowVisitorPtr fv)
+{
+   if ( fv->_stackSize > 0)
+      return fv->_context_stack[--(fv->_stackSize)];
+   else
+      return NULL;
+}
+
+int Flow_restoreContext(FlowVisitorPtr fv)
+{
+   if (fv->context != NULL) {
+      xmlFreeDoc(fv->context->doc);
+      xmlXPathFreeContext(fv->context);
+   }
+   if( (fv->context = _popContext(fv)) == NULL ){
+      return FLOW_FAILURE;
+   } else {
+      return FLOW_SUCCESS;
+   }
+}
+
+xmlXPathContextPtr Flow_previousContext(FlowVisitorPtr fv)
+{
+   if( fv->_stackSize > 0)
+      return fv->_context_stack[fv->_stackSize - 1];
+   else
+      return NULL;
+}
+
+
 /********************************************************************************
  * Changes the current xml document and context to a new one specified by
  * xmlFilename and saves the previous document and context.
@@ -294,22 +442,14 @@ out:
 int Flow_changeXmlFile(FlowVisitorPtr _flow_visitor, const char * xmlFilename)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_changeXmlFile(): begin : xmlFilename=%s\n", xmlFilename);
-   if (_flow_visitor->previousContext != NULL){
-      xmlXPathFreeContext(_flow_visitor->previousContext);
-      _flow_visitor->previousContext = NULL;
-   }
-   if (_flow_visitor->previousDoc != NULL){
-      xmlFreeDoc(_flow_visitor->previousDoc);
-      _flow_visitor->previousDoc = NULL;
-   }
+   xmlDocPtr doc = NULL;
 
-   _flow_visitor->previousDoc = _flow_visitor->doc;
-   _flow_visitor->previousContext = _flow_visitor->context;
+   Flow_saveContext(_flow_visitor);
 
-   if( (_flow_visitor->doc = XmlUtils_getdoc(xmlFilename)) == NULL ){
+   if( (doc = XmlUtils_getdoc(xmlFilename)) == NULL ){
       return FLOW_FAILURE;
    }
-   _flow_visitor->context = xmlXPathNewContext(_flow_visitor->doc);
+   _flow_visitor->context = xmlXPathNewContext(doc);
 
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_changeXmlFile(): end\n");
    return FLOW_SUCCESS;
@@ -468,7 +608,7 @@ out:
 int Flow_findSwitchItemWithValue( FlowVisitorPtr _flow_visitor, const char * switchValue)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchItemWithValue() begin\n");
-   int retval = FLOW_SUCCESS;
+   int retval = FLOW_FAILURE;
    xmlXPathObjectPtr switchItemResult;
 
    if( (switchItemResult = XmlUtils_getnodeset( "(child::SWITCH_ITEM[not(@name='default')])", _flow_visitor->context)) == NULL){
@@ -506,6 +646,7 @@ int Flow_findDefaultSwitchItem( FlowVisitorPtr _flow_visitor)
       retval = FLOW_FAILURE;
       goto out;
    } else {
+      SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findDefaultSwitchItem(): changing to default SWITCH_ITEM\n");
       _flow_visitor->context->node = switchItemResult->nodesetval->nodeTab[0];
       retval = FLOW_SUCCESS;
       goto out_free;
@@ -542,7 +683,7 @@ int Flow_switchItemHasValue(const FlowVisitorPtr _flow_visitor, xmlNodePtr curre
 out:
    xmlXPathFreeObject(attributesResult);
    _flow_visitor->context->node = previousNodePtr;
-   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_switchItemHasValue() begin\n");
+   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_switchItemHasValue() end\n");
    return retval;
 }
 
@@ -638,7 +779,7 @@ int Flow_setPathData(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr)
 int Flow_setPathToModule(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_setPathToModule() begin\n");
-   int entryModule = (_flow_visitor->previousDoc == NULL);
+   int entryModule = (_flow_visitor->_stackSize == 0);
    char pathToModule[SEQ_MAXFIELD] = {'\0'};
 
    if( _flow_visitor->intramodulePath != NULL && ! entryModule ){
@@ -682,7 +823,7 @@ int Flow_parseDependencies(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDat
    xmlXPathContextPtr context = NULL;
 
    if (_flow_visitor->currentNodeType == Module){
-      context = _flow_visitor->previousContext;
+      context = Flow_previousContext(_flow_visitor);
    } else {
       context = _flow_visitor->context;
    }
@@ -740,7 +881,7 @@ int Flow_parseSiblings(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr
       switchPrefix = strdup("");
 
    if (_nodeDataPtr->type == Module)
-      context = _flow_visitor->previousContext;
+      context = Flow_previousContext(_flow_visitor);
    else
       context = _flow_visitor->context;
 
@@ -795,8 +936,15 @@ out:
 ********************************************************************************/
 void Flow_print_state(FlowVisitorPtr _flow_visitor, int trace_level)
 {
-   SeqUtil_TRACE( trace_level , "Current Node Name: %s\n", _flow_visitor->context->node->name);
+   SeqUtil_TRACE( trace_level , "Current context->node->name: %s\n", _flow_visitor->context->node->name);
    SeqUtil_TRACE( trace_level , "Current currentFlowNode: %s\n", _flow_visitor->currentFlowNode);
+   SeqUtil_TRACE( trace_level , "Current taskPath: %s\n", _flow_visitor->taskPath);
+   SeqUtil_TRACE( trace_level , "Current suiteName: %s\n", _flow_visitor->suiteName);
+   SeqUtil_TRACE( trace_level , "Current module: %s\n", _flow_visitor->module);
+   SeqUtil_TRACE( trace_level , "Current intramodulePath: %s\n", _flow_visitor->intramodulePath);
+   SeqUtil_TRACE( trace_level , "Current expHome: %s\n", _flow_visitor->expHome);
+   SeqUtil_TRACE( trace_level , "Current currentNodeType: %d\n", _flow_visitor->currentNodeType);
+   SeqUtil_TRACE( trace_level , "Current _stackSize: %d\n", _flow_visitor->_stackSize);
 }
 
 

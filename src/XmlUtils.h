@@ -45,6 +45,15 @@
         ++__i\
       )
 
+#define for_results_em(node, results, i) \
+   xmlNodePtr node = NULL;\
+   int i;\
+   if( results != NULL )\
+   for ( i = 0, node = results->nodesetval->nodeTab[0];\
+         (i < results->nodesetval->nodeNr) && ( node = results->nodesetval->nodeTab[i]);\
+         ++i\
+       )
+
 
 xmlDocPtr XmlUtils_getdoc (const char *_docname);
 
