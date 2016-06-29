@@ -45,16 +45,19 @@ typedef struct _FlowVisitor{
    char * module;
    char * intramodulePath;
    int currentNodeType;
-   xmlDocPtr doc;
    xmlXPathContextPtr context;
-   xmlDocPtr previousDoc;
-   xmlXPathContextPtr previousContext;
 
    xmlXPathContextPtr _context_stack[MAX_CONTEXT_STACK_SIZE];
    int _stackSize;
 } FlowVisitor;
 
 typedef FlowVisitor* FlowVisitorPtr;
+
+int _pushContext(FlowVisitorPtr fv, xmlXPathContextPtr context);
+int Flow_saveContext(FlowVisitorPtr fv);
+xmlXPathContextPtr _popContext(FlowVisitorPtr fv);
+int Flow_restoreContext(FlowVisitorPtr fv);
+xmlXPathContextPtr Flow_previousContext(FlowVisitorPtr fv);
 
 /********************************************************************************
  * Initializes the flow_visitor to the entry module;

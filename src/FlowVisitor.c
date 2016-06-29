@@ -57,18 +57,16 @@ FlowVisitorPtr Flow_newVisitor(const char * _seq_exp_home)
       char * postfix = "/EntryModule/flow.xml";
       char * xmlFilename = (char *) malloc ( strlen(_seq_exp_home) + strlen(postfix) + 1 );
       sprintf(xmlFilename, "%s%s", _seq_exp_home,postfix);
-      new_flow_visitor->doc = XmlUtils_getdoc(xmlFilename);
-      new_flow_visitor->context = xmlXPathNewContext(new_flow_visitor->doc);
+      xmlDocPtr doc = XmlUtils_getdoc(xmlFilename);
+      new_flow_visitor->context = xmlXPathNewContext(doc);
       free(xmlFilename);
    }
 
    new_flow_visitor->expHome = _seq_exp_home;
 
 
-   new_flow_visitor->context->node = new_flow_visitor->doc->children;
+   new_flow_visitor->context->node = new_flow_visitor->context->doc->children;
 
-   new_flow_visitor->previousDoc = NULL;
-   new_flow_visitor->previousContext = NULL;
    new_flow_visitor->currentFlowNode = NULL;
    new_flow_visitor->suiteName = NULL;
    new_flow_visitor->taskPath = NULL;
@@ -76,10 +74,21 @@ FlowVisitorPtr Flow_newVisitor(const char * _seq_exp_home)
    new_flow_visitor->intramodulePath = NULL;
    new_flow_visitor->currentNodeType = Task;
 
+   new_flow_visitor->_stackSize = 0;
+
 out_free:
 out:
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_newVisitor() end\n");
    return new_flow_visitor;
+}
+
+void _freeStack(FlowVisitorPtr fv)
+{
+   xmlXPathContextPtr context;
+   while ( (context = _popContext(fv)) != NULL){
+      xmlFreeDoc(context->doc);
+      xmlXPathFreeContext(context);
+   }
 }
 
 /********************************************************************************
@@ -88,15 +97,12 @@ out:
 int Flow_deleteVisitor(FlowVisitorPtr _flow_visitor)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_deleteVisitor() begin\n");
+   if( _flow_visitor->context->doc != NULL )
+      xmlFreeDoc(_flow_visitor->context->doc);
    if( _flow_visitor->context != NULL )
       xmlXPathFreeContext(_flow_visitor->context);
-   if( _flow_visitor->doc != NULL )
-      xmlFreeDoc(_flow_visitor->doc);
 
-   if( _flow_visitor->previousContext != NULL )
-      xmlXPathFreeContext(_flow_visitor->previousContext);
-   if( _flow_visitor->previousDoc != NULL )
-      xmlFreeDoc(_flow_visitor->previousDoc);
+   _freeStack(_flow_visitor);
 
    free(_flow_visitor->currentFlowNode);
    free(_flow_visitor->taskPath);
@@ -318,7 +324,6 @@ int Flow_restoreContext(FlowVisitorPtr fv)
    if( (fv->context = _popContext(fv)) == NULL ){
       return FLOW_FAILURE;
    } else {
-      fv->doc = fv->context->doc;
       return FLOW_SUCCESS;
    }
 }
@@ -341,13 +346,14 @@ xmlXPathContextPtr Flow_previousContext(FlowVisitorPtr fv)
 int Flow_changeXmlFile(FlowVisitorPtr _flow_visitor, const char * xmlFilename)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_changeXmlFile(): begin : xmlFilename=%s\n", xmlFilename);
+   xmlDocPtr doc = NULL;
 
    Flow_saveContext(_flow_visitor);
 
-   if( (_flow_visitor->doc = XmlUtils_getdoc(xmlFilename)) == NULL ){
+   if( (doc = XmlUtils_getdoc(xmlFilename)) == NULL ){
       return FLOW_FAILURE;
    }
-   _flow_visitor->context = xmlXPathNewContext(_flow_visitor->doc);
+   _flow_visitor->context = xmlXPathNewContext(doc);
 
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_changeXmlFile(): end\n");
    return FLOW_SUCCESS;
@@ -676,7 +682,7 @@ int Flow_setPathData(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr)
 int Flow_setPathToModule(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_setPathToModule() begin\n");
-   int entryModule = (_flow_visitor->previousDoc == NULL);
+   int entryModule = (_flow_visitor->_stackSize == 0);
    char pathToModule[SEQ_MAXFIELD] = {'\0'};
 
    if( _flow_visitor->intramodulePath != NULL && ! entryModule ){
@@ -720,7 +726,7 @@ int Flow_parseDependencies(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDat
    xmlXPathContextPtr context = NULL;
 
    if (_flow_visitor->currentNodeType == Module){
-      context = _flow_visitor->previousContext;
+      context = Flow_previousContext(_flow_visitor);
    } else {
       context = _flow_visitor->context;
    }
