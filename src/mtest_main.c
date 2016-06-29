@@ -132,8 +132,9 @@ LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head)
       xmlNodePtr node = result->nodesetval->nodeTab[0];
 
       if( strcmp(node->name, "MODULE") == 0){
-
-         Flow_changeModule(fv, (const char *) path);
+         Flow_changeModule(fv, (const char *) sub_name);
+         parseFlowTree_internal(fv, list_head);
+         Flow_restoreContext(fv);
       }
 
 

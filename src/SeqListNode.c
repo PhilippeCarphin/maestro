@@ -165,7 +165,7 @@ void SeqListNode_printList(LISTNODEPTR list_head)
       SeqUtil_TRACE(TL_FULL_TRACE,"List is empty.\n");
    } else {
       for ( current = list_head; current != NULL; current = current->nextPtr)
-         SeqUtil_TRACE(TL_FULL_TRACE," %s", current->data);
+         SeqUtil_TRACE(TL_FULL_TRACE," %s\n", current->data);
    }
 }
 
