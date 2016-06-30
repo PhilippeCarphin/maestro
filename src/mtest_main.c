@@ -109,13 +109,15 @@ LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head, i
 
    SeqUtil_TRACE(TL_FULL_TRACE, "Name found is %s\n",basePath);
 
-   xmlXPathObjectPtr results = XmlUtils_getnodeset("(child::SUBMITS)", fv->context);
+   xmlXPathObjectPtr results = XmlUtils_getnodeset("(child::TASK|child::SWITCH|child::MODULE|child::LOOP|child::NPASS_TASK|child::FOR_EACH)", fv->context);
 
-   SeqUtil_TRACE(TL_FULL_TRACE, "Printing results for basePath %s, at depth %d\n", basePath, depth);
-   {
-      for_results( xmlNode, results ){
-         SeqUtil_TRACE(TL_FULL_TRACE, "   xmlNode->name=%s, name attrib=%s\n",
-                                             xmlNode->name,xmlGetProp(xmlNode,"sub_name"));
+   { /* IRRELEVANT, this is just some printing for me to know what I'm doing.*/
+      SeqUtil_TRACE(TL_FULL_TRACE, "Printing results for basePath %s, at depth %d\n", basePath, depth);
+      {
+         for_results( xmlNode, results ){
+            SeqUtil_TRACE(TL_FULL_TRACE, "   xmlNode->name=%s, name attrib=%s\n",
+                                                xmlNode->name,xmlGetProp(xmlNode,"name"));
+         }
       }
    }
 
@@ -127,7 +129,7 @@ LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head, i
       SeqUtil_TRACE(TL_FULL_TRACE, "== xmlNode->name=%s, name attrib=%s\n",
                                              xmlNode->name,xmlGetProp(xmlNode,"sub_name"));
                                              */
-      const char * sub_name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"sub_name");
+      const char * sub_name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
       char path[SEQ_MAXFIELD] = {0};
       sprintf( path, "%s/%s", basePath,sub_name);
       SeqListNode_pushFront(list_head, path);
@@ -155,6 +157,13 @@ LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head, i
             xmlNodePtr previousNode = fv->context->node;
             fv->context->node = node;
             parseFlowTree_internal(fv, list_head,depth+1);
+            fv->context->node = previousNode;
+         }
+
+         if( strcmp(node->name, "SWITCH") == 0 ){
+            xmlNodePtr previousNode = fv->context->node;
+            fv->context->node = node;
+            SeqListNode_pushFront( list_head, "COCK" );
             fv->context->node = previousNode;
          }
       }
@@ -237,7 +246,8 @@ from the maestro directory.\n");
    sprintf( testDir, "%s%s" , PWD, suffix);
 
    puts ( testDir );
-   seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/");
+   /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/"); */
+   seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/bug6268_switch/");
 
    runTests(seq_exp_home,node,datestamp);
 
