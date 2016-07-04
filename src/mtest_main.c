@@ -85,18 +85,35 @@ void header(const char * test){
    SeqUtil_TRACE(TL_CRITICAL, "\n=================== UNIT TEST FOR %s ===================\n",test);
 }
 
+const char * nodeDataPtr_to_info_line(SeqNodeDataPtr ndp)
+{
 
-LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,const char * basePath, int depth);
+}
+
+
+const char * path_to_info_line(const char * expHome, const char * path)
+{
+   SeqNodeDataPtr node = nodeinfo(path, "all", NULL,expHome,NULL,NULL);
+
+   return nodeDataPtr_to_info_line(node);
+}
+
+
+LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
+                                    const char * basePath, int depth);
 LISTNODEPTR parseFlowTree(const char * seq_exp_home)
 {
    LISTNODEPTR list_head = NULL;
    FlowVisitorPtr fv = Flow_newVisitor(seq_exp_home);
 
-   const char * basePath = (const char *) xmlGetProp(fv->context->node, (const xmlChar *)"name");
+   const char * basePath = (const char *) xmlGetProp(fv->context->node,
+                                                      (const xmlChar *)"name");
    SeqListNode_pushFront(&list_head, basePath);
 
    parseFlowTree_internal(fv, &list_head,basePath, 0);
 
+   free((char*)basePath);
+   Flow_deleteVisitor(fv);
    return list_head;
 
 }
@@ -108,14 +125,21 @@ void indent(int depth)
       fprintf(stderr, "    ");
 }
 
-LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head, const char * basePath, int depth)
+LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
+                                    const char * basePath, int depth)
 {
-   indent(depth);SeqUtil_TRACE(TL_CRITICAL, "============== ParseFlowTree_internal depth %d BEGIN =================\n", depth);
+   indent(depth);SeqUtil_TRACE(TL_CRITICAL,
+         "============== ParseFlowTree_internal depth %d BEGIN =================\n", depth);
 
-   /* Our father who art in heaven, please forgive us our trespasses (making
+   /*
+    * Our father who art in heaven, please forgive us our trespasses (making
     * this ugly ass query which amounts to saying "all children except SUBMITS")
-    * */
-   xmlXPathObjectPtr results = XmlUtils_getnodeset("(child::FAMILY|child::TASK|child::SWITCH|child::SWITCH_ITEM|child::MODULE|child::LOOP|child::NPASS_TASK|child::FOR_EACH)", fv->context);
+    */
+   xmlXPathObjectPtr results = XmlUtils_getnodeset("(child::FAMILY|child::TASK\
+                                                     |child::SWITCH|child::SWITCH_ITEM\
+                                                     |child::MODULE|child::LOOP\
+                                                     |child::NPASS_TASK|child::FOR_EACH)"
+                                                      , fv->context);
 
 
    for_results( xmlNode, results ){
@@ -128,7 +152,8 @@ LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head, c
        * */
       xmlNodePtr node = xmlNode;
 
-      indent(depth);SeqUtil_TRACE(TL_CRITICAL, "Current iterator node : %s\n", xmlNode->name);
+      indent(depth);SeqUtil_TRACE(TL_CRITICAL, "Current iterator node : %s\n",
+                                  xmlNode->name);
 
       if( strcmp(node->name, "TASK") == 0 || strcmp(node->name, "NPASS_TASK") == 0){
          char path[SEQ_MAXFIELD] = {0};
@@ -178,7 +203,9 @@ LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head, c
       }
 
 
+      free((char *)name);
    }
+   xmlXPathFreeObject(results);
    indent(depth);SeqUtil_TRACE(TL_CRITICAL, "============== ParseFlowTree_internal depth %d END =================\n", depth);
 }
 
@@ -190,10 +217,12 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
 
    SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\n");
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
+   SeqListNode_reverseList(&list_head);
    SeqListNode_printList(list_head);
 
 
 
+   SeqListNode_deleteWholeList(&list_head);
    SeqUtil_TRACE(TL_CRITICAL, "============== ALL TESTS HAVE PASSED =====================\n");
    return 0;
 }
@@ -261,8 +290,8 @@ from the maestro directory.\n");
 
    puts ( testDir );
    /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/"); */
-   seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/bug6268_switch/");
-
+   /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/bug6268_switch/"); */
+   seq_exp_home = strdup("/home/ops/afsi/dor/.suites/release_tests/sample_1.4.3.bak");
    runTests(seq_exp_home,node,datestamp);
 
    free(node);
