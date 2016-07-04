@@ -87,20 +87,20 @@ void header(const char * test){
 
 const char * nodeDataPtr_to_info_line(SeqNodeDataPtr ndp)
 {
-
+   return NULL;
 }
 
 
 const char * path_to_info_line(const char * expHome, const char * path)
 {
    SeqNodeDataPtr node = nodeinfo(path, "all", NULL,expHome,NULL,NULL);
-
    return nodeDataPtr_to_info_line(node);
 }
 
 
-LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
+void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
                                     const char * basePath, int depth);
+
 LISTNODEPTR parseFlowTree(const char * seq_exp_home)
 {
    LISTNODEPTR list_head = NULL;
@@ -125,12 +125,9 @@ void indent(int depth)
       fprintf(stderr, "    ");
 }
 
-LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
+void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
                                     const char * basePath, int depth)
 {
-   indent(depth);SeqUtil_TRACE(TL_CRITICAL,
-         "============== ParseFlowTree_internal depth %d BEGIN =================\n", depth);
-
    /*
     * Our father who art in heaven, please forgive us our trespasses (making
     * this ugly ass query which amounts to saying "all children except SUBMITS")
@@ -141,36 +138,24 @@ LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
                                                      |child::NPASS_TASK|child::FOR_EACH)"
                                                       , fv->context);
 
-
    for_results( xmlNode, results ){
-
       const char * name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
-
-      char query[SEQ_MAXFIELD] = {0};
-      /* Look for an XML node that has an attribute "name" whose value is equal
-       * to that of name
-       * */
       xmlNodePtr node = xmlNode;
-
-      indent(depth);SeqUtil_TRACE(TL_CRITICAL, "Current iterator node : %s\n",
-                                  xmlNode->name);
 
       if( strcmp(node->name, "TASK") == 0 || strcmp(node->name, "NPASS_TASK") == 0){
          char path[SEQ_MAXFIELD] = {0};
          sprintf( path, "%s/%s", basePath,name);
          SeqListNode_pushFront(list_head, path);
-      }
-
-      if( strcmp(node->name, "MODULE") == 0){
+      } else if( strcmp(node->name, "MODULE") == 0){
          char path[SEQ_MAXFIELD] = {0};
          sprintf( path, "%s/%s", basePath,name);
          SeqListNode_pushFront(list_head, path);
          Flow_changeModule(fv, (const char *) name);
          parseFlowTree_internal(fv, list_head,path, depth+1);
          Flow_restoreContext(fv);
-      }
-
-      if( strcmp(node->name, "LOOP") == 0 || strcmp(node->name, "FAMILY") == 0){
+      } else if( strcmp(node->name, "LOOP") == 0
+          || strcmp(node->name, "FAMILY") == 0
+          || strcmp(node->name, "SWITCH") == 0){
          char path[SEQ_MAXFIELD] = {0};
          sprintf( path, "%s/%s", basePath,name);
          SeqListNode_pushFront(list_head, path);
@@ -178,35 +163,15 @@ LISTNODEPTR parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
          fv->context->node = node;
          parseFlowTree_internal(fv, list_head,path,depth+1);
          fv->context->node = previousNode;
-      }
-
-      if( strcmp(node->name, "SWITCH") == 0 ){
-         char path[SEQ_MAXFIELD] = {0};
-         sprintf( path, "%s/%s", basePath,name);
-         SeqListNode_pushFront(list_head, path);
-         indent(depth);SeqUtil_TRACE(TL_CRITICAL, "++++ DOING SWITCH BEGIN +++++\n");
+      } else if( strcmp(node->name, "SWITCH_ITEM") == 0 ){
          xmlNodePtr previousNode = fv->context->node;
          fv->context->node = node;
-         parseFlowTree_internal(fv, list_head,path,depth+1);
-         fv->context->node = previousNode;
-         indent(depth);SeqUtil_TRACE(TL_CRITICAL, "++++ DOING SWITCH END +++++\n");
-      }
-
-      if( strcmp(node->name, "SWITCH_ITEM") == 0 ){
-         indent(depth);SeqUtil_TRACE(TL_CRITICAL, "++++ DOING SWITCH_ITEM BEGIN +++++\n");
-         xmlNodePtr previousNode = fv->context->node;
-         fv->context->node = node;
-         /* SeqListNode_pushFront( list_head, "COCK" ); */
          parseFlowTree_internal(fv, list_head,basePath, depth+1);
          fv->context->node = previousNode;
-         indent(depth);SeqUtil_TRACE(TL_CRITICAL, "++++ DOING SWITCH_ITEM END +++++\n");
       }
-
-
       free((char *)name);
    }
    xmlXPathFreeObject(results);
-   indent(depth);SeqUtil_TRACE(TL_CRITICAL, "============== ParseFlowTree_internal depth %d END =================\n", depth);
 }
 
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
@@ -230,7 +195,9 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
 int main ( int argc, char * argv[] )
 {
    char * short_opts = "n:f:l:o:d:e:v";
-   char *node = NULL, *seq_exp_home = NULL, *outputFile=NULL, *datestamp=NULL ;
+   char *node = NULL, *seq_exp_home = NULL;
+   /* char *outputFile=NULL; */
+   char *datestamp=NULL;
    extern char *optarg;
 
    extern char *optarg;
