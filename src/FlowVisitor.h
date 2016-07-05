@@ -21,6 +21,8 @@
 #ifndef _FLOW_VISITOR_H_
 #define _FLOW_VISITOR_H_
 
+#include "SeqNode.h"
+
 #define MAX_CONTEXT_STACK_SIZE 20
 
 #define FLOW_SUCCESS 0

@@ -102,10 +102,10 @@ void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
     * Our father who art in heaven, please forgive us our trespasses (making
     * this ugly ass query which amounts to saying "all children except SUBMITS")
     */
-   xmlXPathObjectPtr results = XmlUtils_getnodeset("(child::FAMILY|child::TASK\
-                                                     |child::SWITCH|child::SWITCH_ITEM\
-                                                     |child::MODULE|child::LOOP\
-                                                     |child::NPASS_TASK|child::FOR_EACH)" , fv->context);
+   xmlXPathObjectPtr results =
+   XmlUtils_getnodeset("(child::FAMILY|child::TASK|child::SWITCH\
+                          |child::SWITCH_ITEM|child::MODULE|child::LOOP\
+                          |child::NPASS_TASK|child::FOR_EACH)" , fv->context);
 
    for_results( xmlNode, results ){
       const char * name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
@@ -140,6 +140,7 @@ void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
          fv->context->node = node;
          parseFlowTree_internal(fv, list_head,path, depth+1);
          fv->context->node = previousNode;
+         free((char*)switch_item_name);
       }
       free((char *)name);
    }

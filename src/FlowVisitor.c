@@ -454,6 +454,48 @@ out_free:
    return retval;
 }
 
+int Flow_parseSwitchItemAttributes(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr, int isLast)
+{
+   int retval = FLOW_SUCCESS;
+
+   xmlXPathObjectPtr switch_items = XmlUtils_getnodeset("child::SWITCH_ITEM",fv->context);
+
+   for_results(switchItem, switch_items){
+      /* if switchItem has a child with the given name, set that as the current
+       * context node.*/
+   }
+
+   return retval;
+
+}
+
+int newGetFlowInfo(){
+   /* Get to the node and screw the context */
+      /* Flow_doNodeQuery(...) */
+
+      /* UpdatePaths */
+
+      /* Retrieve node specific attributes
+       *
+       * Still do checkWorkUnit,
+       *
+       * DIFFERENT: if we're on a switch, stay there, don't try to find the
+       * switchItem.  We need the next token.
+       *
+       *    At the next iteration, if we're on a switch, we find the SWITCH_ITEM
+       *    that has a child whose name matches the token.  And we move on from
+       *    there.  For example, bug6268_switch:
+       *
+       *    Switch123, OH, that's a switch, do whatever we can from here.
+       *    Next iteration: token is y6, find the SWITCH_ITEM that has a child
+       *    named y6.
+       *
+       *    Continue as usual.
+       */
+
+   return 0;
+}
+
 /********************************************************************************
  * This function returns the switch type of the current node in the XML XPath
  * context
@@ -502,6 +544,29 @@ out_free:
 out:
    SeqUtil_TRACE(TL_FULL_TRACE,"Flow_findSwitchItem(): end\n");
    return retval;
+}
+
+int Flow_findSwitchItemWithNode( FlowVisitorPtr fv, const char *nodeLeaf )
+{
+   xmlXPathObjectPtr switchItemResults = NULL;
+   switchItemResults = XmlUtils_getnodeset("(child::SWITCH_ITEM[not(@name='default)])",
+                                             fv->context );
+   char nodeQuery[SEQ_MAXFIELD];
+   sprintf(nodeQuery,"(child::*[@name='%s'])",nodeLeaf);
+
+   for_results( switchItem, switchItemResults ){
+      /* Check if this switch item has a node whose name matchs nodeleaf */
+      xmlXPathObjectPtr nodeResult = XmlUtils_getnodeset(nodeQuery,switchItem);
+      if(nodeResult == NULL) return -1;
+      /* If it does, set THAT node (not the switchItem)
+       *
+       * This is crap.  Even if I do that, two SWITCH_ITEMs may have nodeLeaf as
+       * a child, but in one of them, the child could submit another task, and
+       * in the other one, it might not.
+       *
+       */
+   }
+   return 0;
 }
 
 /********************************************************************************
