@@ -86,6 +86,15 @@ void header(const char * test){
    SeqUtil_TRACE(TL_CRITICAL, "\n=================== UNIT TEST FOR %s ===================\n",test);
 }
 
+int test_Flow_parsePath_db(const char * expHome)
+{
+   /* FlowVisitorPtr fv = Flow_newVisitor(expHome); */
+   /* SeqNodeDataPtr ndp = SeqNode_createNode("PHIL"); */
+
+   /* Flow_parsePath_db(fv,ndp,"cock"); */
+   return 0;
+}
+
 
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
@@ -100,6 +109,9 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
 
    char * path = absolutePath("test_file.txt");
    /* nodeList_to_infoFile(list_head,seq_exp_home, path); */
+
+   test_Flow_parsePath_db(seq_exp_home);
+
 
    free(path);
 

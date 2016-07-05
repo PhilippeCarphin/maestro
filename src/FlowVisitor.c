@@ -163,6 +163,25 @@ out:
    return retval;
 }
 
+int Flow_parsePath_db(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr,
+                                                         const char * _nodePath)
+{
+   int retval = FLOW_SUCCESS;
+   /* int total_count = SeqUtil_tokenCount(_nodePath, "/"); */
+   int count = 0;
+
+   for_tokens(token, _nodePath, "/[]",sp){
+
+      if ( fv->currentNodeType == Switch ){
+         SeqUtil_TRACE(TL_CRITICAL, "BONER");
+      } else {
+         Flow_doNodeQuery(fv, token, count == 0);
+         count++;
+      }
+   }
+
+   return retval;
+}
 
 /********************************************************************************
  * Tries to get to the node specified by nodePath.
@@ -550,6 +569,7 @@ int Flow_findDefaultSwitchItem( FlowVisitorPtr _flow_visitor)
       retval = FLOW_FAILURE;
       goto out;
    } else {
+      SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findDefaultSwitchItem(): changing to default SWITCH_ITEM\n");
       _flow_visitor->context->node = switchItemResult->nodesetval->nodeTab[0];
       retval = FLOW_SUCCESS;
       goto out_free;
