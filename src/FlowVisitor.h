@@ -221,4 +221,10 @@ int Flow_parseSpecifics(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPt
 ********************************************************************************/
 void Flow_print_state(FlowVisitorPtr _flow_visitor, int trace_level);
 
+
+
+
+
+int Flow_parsePath_db(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr,
+                                                         const char * _nodePath);
 #endif /* _FLOW_VISITOR_H */

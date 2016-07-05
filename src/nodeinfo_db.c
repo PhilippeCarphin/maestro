@@ -46,11 +46,6 @@ const char * path_to_info_line(const char * expHome, const char * path)
 }
 #endif
 
-#define for_list(iterator, list_head) \
-   LISTNODEPTR iterator;\
-   for( iterator = list_head; iterator != NULL; iterator = iterator->nextPtr)
-
-
 int nodeList_to_infoFile(LISTNODEPTR path_list, const char *expHome,
                            const char * filePath)
 {
@@ -58,7 +53,7 @@ int nodeList_to_infoFile(LISTNODEPTR path_list, const char *expHome,
    FILE * fp = fopen(filePath,"w");
 
    for_list(nodePath, path_list){
-      nodeDataPtr_to_info_line(expHome,nodePath->data,fp);
+      nodeDataPtr_to_info_line(expHome,nodePath,fp);
    }
 
    fclose(fp);
@@ -80,9 +75,10 @@ LISTNODEPTR parseFlowTree(const char * seq_exp_home)
 
    const char * basePath = (const char *) xmlGetProp(fv->context->node,
                                                       (const xmlChar *)"name");
-   SeqListNode_pushFront(&list_head, basePath);
+   const char * fixedBasePath = SeqUtil_fixPath(basePath);
+   SeqListNode_pushFront(&list_head, fixedBasePath);
 
-   parseFlowTree_internal(fv, &list_head,basePath, 0);
+   parseFlowTree_internal(fv, &list_head,fixedBasePath, 0);
 
    free((char*)basePath);
    Flow_deleteVisitor(fv);

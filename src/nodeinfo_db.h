@@ -5,3 +5,9 @@ void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
 LISTNODEPTR parseFlowTree(const char * seq_exp_home);
 int nodeList_to_infoFile(LISTNODEPTR path_list, const char *expHome,
                            const char * filePath);
+
+#define for_list(iterator, list_head) \
+   LISTNODEPTR __node;\
+   const char *iterator;\
+   for( __node = list_head; ((__node != NULL) && ((iterator = __node->data) || 1)); __node = __node->nextPtr)
+

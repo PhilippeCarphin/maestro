@@ -167,19 +167,82 @@ int Flow_parsePath_db(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr,
                                                          const char * _nodePath)
 {
    int retval = FLOW_SUCCESS;
-   /* int total_count = SeqUtil_tokenCount(_nodePath, "/"); */
+   int totalCount = SeqUtil_tokenCount(_nodePath, "/");
    int count = 0;
 
    for_tokens(token, _nodePath, "/[]",sp){
 
+      /* Flow_doNodeQuery part */
       if ( fv->currentNodeType == Switch ){
-         SeqUtil_TRACE(TL_CRITICAL, "BONER");
-      } else {
-         Flow_doNodeQuery(fv, token, count == 0);
-         count++;
+         {
+            xmlXPathObjectPtr switch_items = XmlUtils_getnodeset("(child::SWITCH_ITEM)", fv->context);
+            for_results(switch_item, switch_items){
+               const char * switch_name = xmlGetProp(switch_item, (const char *)"name");
+               if( strcmp( token,switch_name) == 0){
+                  fv->context->node = switch_item;
+                  fv->currentNodeType = SwitchItem;
+                  free((char*)switch_name);
+                  goto tmp_out;
+               }
+               free((char*)switch_name);
+
+            }
+            tmp_out: ;
+            xmlXPathFreeObject(switch_items);
+         }
+         goto next;
       }
+      Flow_doNodeQuery(fv, token, count == 0);
+      Flow_updatePaths(fv, token, count != totalCount );
+
+      if( fv->currentNodeType == Module ){
+         if ( Flow_changeModule(fv, token) == FLOW_FAILURE ){
+            retval = FLOW_FAILURE;
+            goto out;
+         }
+      }
+
+      /*
+       * Data Collection part.
+       *
+       * NOTE: ParseSwitchAttributes in Flow_parsePath finds the correct switch
+       * item.  Since we're going to have to replace that part
+       */
+      /* retrieve node specific attributes */
+      if( fv->currentNodeType != Task && fv->currentNodeType != NpassTask )
+         Flow_checkWorkUnit(fv, _nodeDataPtr);
+
+      if( fv->currentNodeType == Switch ){
+         /* Flow_parseSwitchAttributes(fv, _nodeDataPtr, count == totalCount );
+          * */
+         const char * switchType = NULL;
+         if( (switchType = Flow_findSwitchType(fv)) == NULL )
+            raiseError("Flow_parseSwitchAttributes(): switchType not found\n");
+         char * switchValue = switchReturn(_nodeDataPtr, switchType);
+         char * fixedSwitchPath = SeqUtil_fixPath( fv->currentFlowNode );
+         SeqNameValues_insertItem(&(_nodeDataPtr->switchAnswers), fixedSwitchPath , switchValue );
+         int isLast = (count == totalCount);
+         if(isLast){
+            SeqNode_addSpecificData(_nodeDataPtr, "VALUE", switchValue);
+            /* PHIL: do this outside of the while instead of using isLast */
+            _nodeDataPtr->type = Switch;
+         } else {
+            SeqNode_addSpecificData( _nodeDataPtr, "SWITCH_TYPE", switchType );
+            SeqNode_addSwitch(_nodeDataPtr,fixedSwitchPath , switchType, switchValue);
+         }
+         free(switchValue);
+         free(fixedSwitchPath);
+      }
+
+      if( fv->currentNodeType == Loop && count != totalCount ){
+         getNodeLoopContainersAttr(_nodeDataPtr, fv->expHome, fv->currentFlowNode);
+      }
+      count++;
+
+   next:;
    }
 
+out:
    return retval;
 }
 

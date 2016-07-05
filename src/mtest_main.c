@@ -88,10 +88,19 @@ void header(const char * test){
 
 int test_Flow_parsePath_db(const char * expHome)
 {
-   /* FlowVisitorPtr fv = Flow_newVisitor(expHome); */
-   /* SeqNodeDataPtr ndp = SeqNode_createNode("PHIL"); */
+   header("test_Flow_parsePath_db");
+   const char *path = "sample_module/Switches/Hour_switch[default]/br00_loop/br00_loop_default_t";
+   SeqUtil_TRACE(TL_FULL_TRACE, "PATH IS : %s\n", path);
 
-   /* Flow_parsePath_db(fv,ndp,"cock"); */
+   FlowVisitorPtr fv = Flow_newVisitor(expHome);
+   SeqNodeDataPtr ndp = SeqNode_createNode("PHIL");
+   SeqNode_setSeqExpHome(ndp,expHome);
+
+   Flow_parsePath_db(fv,ndp,path);
+   SeqNode_printNode(ndp,"all",NULL);
+
+   SeqNode_freeNode(ndp);
+   Flow_deleteVisitor(fv);
    return 0;
 }
 
@@ -106,11 +115,18 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
    SeqListNode_reverseList(&list_head);
    SeqListNode_printList(list_head);
+   /* getchar(); */
 
    char * path = absolutePath("test_file.txt");
    /* nodeList_to_infoFile(list_head,seq_exp_home, path); */
 
    test_Flow_parsePath_db(seq_exp_home);
+
+   for_list(pathNode, list_head){
+      SeqNodeDataPtr ndp = SeqNode_createNode(pathNode);
+      SeqNode_printNode(ndp,"all",NULL);
+      getchar();
+   }
 
 
    free(path);
