@@ -25,6 +25,7 @@
 #include <libxml/xpath.h>
 #include <libxml/tree.h>
 #include <libxml/xpathInternals.h>
+#include "nodeinfo_db.h"
 #include "ResourceVisitor.h"
 #include "FlowVisitor.h"
 #include "SeqUtil.h"
@@ -85,94 +86,6 @@ void header(const char * test){
    SeqUtil_TRACE(TL_CRITICAL, "\n=================== UNIT TEST FOR %s ===================\n",test);
 }
 
-const char * nodeDataPtr_to_info_line(SeqNodeDataPtr ndp)
-{
-   return NULL;
-}
-
-
-const char * path_to_info_line(const char * expHome, const char * path)
-{
-   SeqNodeDataPtr node = nodeinfo(path, "all", NULL,expHome,NULL,NULL);
-   return nodeDataPtr_to_info_line(node);
-}
-
-
-void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
-                                    const char * basePath, int depth);
-
-LISTNODEPTR parseFlowTree(const char * seq_exp_home)
-{
-   LISTNODEPTR list_head = NULL;
-   FlowVisitorPtr fv = Flow_newVisitor(seq_exp_home);
-
-   const char * basePath = (const char *) xmlGetProp(fv->context->node,
-                                                      (const xmlChar *)"name");
-   SeqListNode_pushFront(&list_head, basePath);
-
-   parseFlowTree_internal(fv, &list_head,basePath, 0);
-
-   free((char*)basePath);
-   Flow_deleteVisitor(fv);
-   return list_head;
-
-}
-
-void indent(int depth)
-{
-   int i;
-   for(i = depth; i--;)
-      fprintf(stderr, "    ");
-}
-
-void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
-                                    const char * basePath, int depth)
-{
-   /*
-    * Our father who art in heaven, please forgive us our trespasses (making
-    * this ugly ass query which amounts to saying "all children except SUBMITS")
-    */
-   xmlXPathObjectPtr results = XmlUtils_getnodeset("(child::FAMILY|child::TASK\
-                                                     |child::SWITCH|child::SWITCH_ITEM\
-                                                     |child::MODULE|child::LOOP\
-                                                     |child::NPASS_TASK|child::FOR_EACH)"
-                                                      , fv->context);
-
-   for_results( xmlNode, results ){
-      const char * name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
-      xmlNodePtr node = xmlNode;
-
-      if( strcmp(node->name, "TASK") == 0 || strcmp(node->name, "NPASS_TASK") == 0){
-         char path[SEQ_MAXFIELD] = {0};
-         sprintf( path, "%s/%s", basePath,name);
-         SeqListNode_pushFront(list_head, path);
-      } else if( strcmp(node->name, "MODULE") == 0){
-         char path[SEQ_MAXFIELD] = {0};
-         sprintf( path, "%s/%s", basePath,name);
-         SeqListNode_pushFront(list_head, path);
-         Flow_changeModule(fv, (const char *) name);
-         parseFlowTree_internal(fv, list_head,path, depth+1);
-         Flow_restoreContext(fv);
-      } else if( strcmp(node->name, "LOOP") == 0
-          || strcmp(node->name, "FAMILY") == 0
-          || strcmp(node->name, "SWITCH") == 0){
-         char path[SEQ_MAXFIELD] = {0};
-         sprintf( path, "%s/%s", basePath,name);
-         SeqListNode_pushFront(list_head, path);
-         xmlNodePtr previousNode = fv->context->node;
-         fv->context->node = node;
-         parseFlowTree_internal(fv, list_head,path,depth+1);
-         fv->context->node = previousNode;
-      } else if( strcmp(node->name, "SWITCH_ITEM") == 0 ){
-         xmlNodePtr previousNode = fv->context->node;
-         fv->context->node = node;
-         parseFlowTree_internal(fv, list_head,basePath, depth+1);
-         fv->context->node = previousNode;
-      }
-      free((char *)name);
-   }
-   xmlXPathFreeObject(results);
-}
 
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
@@ -184,6 +97,11 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
    SeqListNode_reverseList(&list_head);
    SeqListNode_printList(list_head);
+
+   char * path = absolutePath("test_file.txt");
+   /* nodeList_to_infoFile(list_head,seq_exp_home, path); */
+
+   free(path);
 
 
 
@@ -256,9 +174,9 @@ from the maestro directory.\n");
    sprintf( testDir, "%s%s" , PWD, suffix);
 
    puts ( testDir );
-   /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/"); */
+   seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/");
    /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/bug6268_switch/"); */
-   seq_exp_home = strdup("/home/ops/afsi/dor/.suites/release_tests/sample_1.4.3.bak");
+   /* seq_exp_home = strdup("/home/ops/afsi/dor/.suites/release_tests/sample_1.4.3.bak"); */
    runTests(seq_exp_home,node,datestamp);
 
    free(node);

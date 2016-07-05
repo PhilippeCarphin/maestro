@@ -99,6 +99,9 @@ l2d2_socket.o: l2d2_socket.h l2d2_socket.c
 expcatchup.o:	expcatchup.c expcatchup.h
 	$(CC) -g -I $(INCDIR) -I $(XML_INCLUDE_DIR) -c expcatchup.c
 
+nodeinfo_db.o: nodeinfo_db.c FlowVisitor.h nodeinfo.h
+	$(CC) -g $(WERROR_FLAGS) -I $(INCDIR) -I $(XML_INCLUDE_DIR) -c $<
+
 FlowVisitor.o:  FlowVisitor.c FlowVisitor.h nodeinfo.c nodeinfo.h ResourceVisitor.h ResourceVisitor.c
 	$(CC) -g $(WERROR_FLAGS) -I $(INCDIR) -I $(XML_INCLUDE_DIR) -c $<
 
@@ -212,8 +215,9 @@ madmin: $(L2D2AOBJECTS)
 TEST_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o \
 	QueryServer.o l2d2_socket.o SeqListNode.o SeqDatesUtil.o SeqUtilServer.o \
 	tictac.o SeqNameValues.o nodeinfo.o getopt_long.o FlowVisitor.o \
-	ResourceVisitor.o
+	ResourceVisitor.o nodeinfo_db.o
 
 mtest:	mtest_main.c $(TEST_OBJECTS)
 	$(CC) -g $(WERROR_FLAGS) $^ -I $(XML_INCLUDE_DIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@
 	cp $@ $(BINDIR)
+
