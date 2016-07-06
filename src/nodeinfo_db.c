@@ -146,17 +146,24 @@ void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
 #if 1
 char * SI_path_to_path(const char *path_SI)
 {
-   char output[SEQ_MAXFIELD] = {0};
+   SeqUtil_TRACE(TL_FULL_TRACE, "SI_path_to_path() begin\n");
+   char output[SEQ_MAXFIELD] = {'\0'};
    const char * src = path_SI;
    char * dst = output;
-   char c;
+   SeqUtil_TRACE(TL_FULL_TRACE,"SI_path_to_path():input : %s\n",path_SI);
+   /* char c; */
 
-   while( *src != 0){
+   while( *src != '\0'){
       /* copy until open bracked */
-      while( (c = *src++) != 0 && c != '[' ) *dst++ = c;
+      /* while( (c = *src++) != 0 && c != '[' ) *dst++ = c */
+      while( *src != '\0' && *src != '[' ) *dst++ = *src++;
 
       /* skip until after close bracket */
-      while( (c = *src++) != 0 && c != ']' );
+      /* whilc( (c = *src++) != 0 && c != ']' ) src++; */
+      while( *src != '\0' && *src != ']' ) src++;
+
+      if( *src != '\0' )
+         src++;
 
       /* continue under right conditions */
    }
