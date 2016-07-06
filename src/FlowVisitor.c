@@ -128,7 +128,6 @@ int Flow_parsePath(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr, co
          goto out;
       }
 
-      Flow_updatePaths(_flow_visitor, pathToken, count != totalCount );
 
       if( _flow_visitor->currentNodeType == Module ){
          if ( Flow_changeModule(_flow_visitor, pathToken) == FLOW_FAILURE ){
@@ -136,6 +135,8 @@ int Flow_parsePath(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr, co
             goto out;
          }
       }
+
+      Flow_updatePaths(_flow_visitor, pathToken, count != totalCount );
 
       /* retrieve node specific attributes */
       if( _flow_visitor->currentNodeType != Task && _flow_visitor->currentNodeType != NpassTask )
