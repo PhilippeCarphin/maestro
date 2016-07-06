@@ -104,36 +104,65 @@ int test_Flow_parsePath_db(const char * expHome)
    return 0;
 }
 
-
-int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
+int test_global_idea(const char *seq_exp_home)
 {
-
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_CRITICAL);
    LISTNODEPTR list_head = parseFlowTree(seq_exp_home);
 
-   SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\n");
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
+   SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\n");
    SeqListNode_reverseList(&list_head);
    SeqListNode_printList(list_head);
-   /* getchar(); */
+   getchar();
 
-   char * path = absolutePath("test_file.txt");
-   /* nodeList_to_infoFile(list_head,seq_exp_home, path); */
+/* #define _FILE_STUFF_ */
+#ifdef _FILE_STUFF_
+   char * FilePath = absolutePath("test_file.txt");
+   nodeList_to_infoFile(list_head,seq_exp_home, FilePath);
+#endif
 
    test_Flow_parsePath_db(seq_exp_home);
 
-   for_list(pathNode, list_head){
-      SeqNodeDataPtr ndp = SeqNode_createNode(pathNode);
+   for_list(path_SI, list_head){
+      /* SeqNodeDataPtr ndp = SeqNode_createNode(path_SI); */
+      /* char * path = NULL; */
+
+      const char * path = SI_path_to_path(path_SI);
+      SeqNodeDataPtr ndp = nodeinfo_db(seq_exp_home,path);
       SeqNode_printNode(ndp,"all",NULL);
       getchar();
    }
 
 
-   free(path);
+#ifdef _FILE_STUFF_
+   free(FilePath);
+#endif
 
 
 
    SeqListNode_deleteWholeList(&list_head);
+   return 0;
+}
+
+int test_SIPath_to_path()
+{
+   const char * SI_path = "/some/say/love[it/is/a/river]/that/leads/your/soul/to/bleed";
+
+   const char * path = SI_path_to_path(SI_path);
+
+   const char * expected = "/some/say/love/that/leads/your/soul/to/bleed";
+   if(strcmp(path,expected) != 0) raiseError("TEST_FAILED");
+
+   free((char*)path);
+
+   return 0;
+}
+
+int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
+{
+
+   test_SIPath_to_path();
+   test_global_idea(seq_exp_home);
    SeqUtil_TRACE(TL_CRITICAL, "============== ALL TESTS HAVE PASSED =====================\n");
    return 0;
 }

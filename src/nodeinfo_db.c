@@ -143,10 +143,26 @@ void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
    xmlXPathFreeObject(results);
 }
 
-int PhilFlowInfo( SeqNodeDataPtr _nodeDataPtr, const char *_nodePath, const char *_seq_exp_home)
+#if 1
+char * SI_path_to_path(const char *path_SI)
 {
-   /* Flow_parsePath_db(); */
-   return 0;
+   char output[SEQ_MAXFIELD] = {0};
+   const char * src = path_SI;
+   char * dst = output;
+   char c;
+
+   while( *src != 0){
+      /* copy until open bracked */
+      while( (c = *src++) != 0 && c != '[' ) *dst++ = c;
+
+      /* skip until after close bracket */
+      while( (c = *src++) != 0 && c != ']' );
+
+      /* continue under right conditions */
+   }
+
+   /* copy into dynamically allocated string and return the pointer */
+   return strdup(output);
 
 }
-
+#endif
