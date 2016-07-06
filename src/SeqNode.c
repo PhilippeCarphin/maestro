@@ -837,6 +837,9 @@ void SeqNode_printNode ( SeqNodeDataPtr node_ptr, const char* filters, const cha
    LISTNODEPTR submitsPtr = NULL, siblingsPtr = NULL, abortsPtr = NULL;
    SeqLoopsPtr loopsPtr = NULL;
    SeqUtil_TRACE(TL_FULL_TRACE, "SeqNode.SeqNode_printNode() called\n" );
+   /* PHIL PHIL */
+   SeqUtil_printOrWrite(tmpFile, "node.pathToModule=%s\n",node_ptr->pathToModule);
+   SeqUtil_printOrWrite(tmpFile, "node.taskPath=%s\n",node_ptr->taskPath);
 
    if( filename != NULL ) {
       removeFile_nfs(filename);
