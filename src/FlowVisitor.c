@@ -936,8 +936,15 @@ out:
 ********************************************************************************/
 void Flow_print_state(FlowVisitorPtr _flow_visitor, int trace_level)
 {
-   SeqUtil_TRACE( trace_level , "Current Node Name: %s\n", _flow_visitor->context->node->name);
+   SeqUtil_TRACE( trace_level , "Current context->node->name: %s\n", _flow_visitor->context->node->name);
    SeqUtil_TRACE( trace_level , "Current currentFlowNode: %s\n", _flow_visitor->currentFlowNode);
+   SeqUtil_TRACE( trace_level , "Current taskPath: %s\n", _flow_visitor->taskPath);
+   SeqUtil_TRACE( trace_level , "Current suiteName: %s\n", _flow_visitor->suiteName);
+   SeqUtil_TRACE( trace_level , "Current module: %s\n", _flow_visitor->module);
+   SeqUtil_TRACE( trace_level , "Current intramodulePath: %s\n", _flow_visitor->intramodulePath);
+   SeqUtil_TRACE( trace_level , "Current expHome: %s\n", _flow_visitor->expHome);
+   SeqUtil_TRACE( trace_level , "Current currentNodeType: %d\n", _flow_visitor->currentNodeType);
+   SeqUtil_TRACE( trace_level , "Current _stackSize: %d\n", _flow_visitor->_stackSize);
 }
 
 
