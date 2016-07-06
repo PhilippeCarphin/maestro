@@ -174,6 +174,7 @@ int Flow_parsePath_db(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr,
 
       /* Flow_doNodeQuery part */
       if ( fv->currentNodeType == Switch ){
+         /* int go_into_switch_item(FlowVisitorPtr fv, const char *switch_item_name */
          {
             xmlXPathObjectPtr switch_items = XmlUtils_getnodeset("(child::SWITCH_ITEM)", fv->context);
             for_results(switch_item, switch_items){
@@ -213,25 +214,38 @@ int Flow_parsePath_db(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr,
          Flow_checkWorkUnit(fv, _nodeDataPtr);
 
       if( fv->currentNodeType == Switch ){
-         /* Flow_parseSwitchAttributes(fv, _nodeDataPtr, count == totalCount );
-          * */
-         const char * switchType = NULL;
-         if( (switchType = Flow_findSwitchType(fv)) == NULL )
-            raiseError("Flow_parseSwitchAttributes(): switchType not found\n");
-         char * switchValue = switchReturn(_nodeDataPtr, switchType);
-         char * fixedSwitchPath = SeqUtil_fixPath( fv->currentFlowNode );
-         SeqNameValues_insertItem(&(_nodeDataPtr->switchAnswers), fixedSwitchPath , switchValue );
+         /* Flow_parseSwitchAttributes(fv, _nodeDataPtr, count == totalCount );*/
+         /*
+          * This should be the actual function Flow_parseSwitchAttributes.
+          * The current function, as it stands does two things (which is wrong
+          * and warrants a beating from Linus Torvalds.
+          *
+          * The call to Flow_parseSwitchAttributes will become
+          * 1) A call to Flow_parseSwitchAttributes but the version below.
+          *
+          * 2) A call to a new function that will, based on the nodeDataPtr's
+          * datestamp, and the switch type, will go to the correct switch item.
+          */
+         /* Flow_parseSwitchAttributes(FlowVisitorPtr fv, SeqNodeDataPtr ndp, int isLast)*/
          int isLast = (count == totalCount);
-         if(isLast){
-            SeqNode_addSpecificData(_nodeDataPtr, "VALUE", switchValue);
-            /* PHIL: do this outside of the while instead of using isLast */
-            _nodeDataPtr->type = Switch;
-         } else {
-            SeqNode_addSpecificData( _nodeDataPtr, "SWITCH_TYPE", switchType );
-            SeqNode_addSwitch(_nodeDataPtr,fixedSwitchPath , switchType, switchValue);
+         {
+            const char * switchType = NULL;
+            if( (switchType = Flow_findSwitchType(fv)) == NULL )
+               raiseError("Flow_parseSwitchAttributes(): switchType not found\n");
+            char * switchValue = switchReturn(_nodeDataPtr, switchType);
+            char * fixedSwitchPath = SeqUtil_fixPath( fv->currentFlowNode );
+            SeqNameValues_insertItem(&(_nodeDataPtr->switchAnswers), fixedSwitchPath , switchValue );
+            if(isLast){
+               SeqNode_addSpecificData(_nodeDataPtr, "VALUE", switchValue);
+               /* PHIL: do this outside of the while instead of using isLast */
+               _nodeDataPtr->type = Switch;
+            } else {
+               SeqNode_addSpecificData( _nodeDataPtr, "SWITCH_TYPE", switchType );
+               SeqNode_addSwitch(_nodeDataPtr,fixedSwitchPath , switchType, switchValue);
+            }
+            free(switchValue);
+            free(fixedSwitchPath);
          }
-         free(switchValue);
-         free(fixedSwitchPath);
       }
 
       if( fv->currentNodeType == Loop && count != totalCount ){
