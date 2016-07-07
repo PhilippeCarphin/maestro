@@ -167,11 +167,12 @@ int Flow_parsePath_db(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr,
                                                          const char * _nodePath)
 {
    int retval = FLOW_SUCCESS;
-   int totalCount = SeqUtil_tokenCount(_nodePath, "/");
+   int totalCount = SeqUtil_tokenCount(_nodePath, "/") - 1;
    int count = 0;
 
    for_tokens(token, _nodePath, "/[]",sp){
 
+      SeqUtil_TRACE(TL_FULL_TRACE, "\n ======== CURREN TOKEN : %s, count = %d, totalCount %d =============\n  (working on path:%s\n",token, count, totalCount,_nodePath);
       /* Flow_doNodeQuery part */
       if ( fv->currentNodeType == Switch ){
          /* int go_into_switch_item(FlowVisitorPtr fv, const char *switch_item_name */
