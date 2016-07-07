@@ -657,6 +657,7 @@ void parseForEachTarget(xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr) 
    free(t_hour);
    }
 }
+
 void PhilFlowInfo( SeqNodeDataPtr _nodeDataPtr, const char *_seq_exp_home,
                                                 const char *_nodePath_SI)
 {
@@ -679,6 +680,9 @@ SeqNodeDataPtr nodeinfo_db(const char *_seq_exp_home, const char *_nodePath_SI)
    const char * path = SI_path_to_path(_nodePath_SI);
 
    SeqNodeDataPtr ndp = SeqNode_createNode(path);
+   SeqNode_setSeqExpHome(ndp,_seq_exp_home);
+
+
    PhilFlowInfo( ndp, _seq_exp_home, _nodePath_SI);
    /* getNodeResources( ndp, _seq_exp_home, ndp->name); */
 

@@ -86,23 +86,6 @@ void header(const char * test){
    SeqUtil_TRACE(TL_CRITICAL, "\n=================== UNIT TEST FOR %s ===================\n",test);
 }
 
-int test_Flow_parsePath_db(const char * expHome)
-{
-   header("test_Flow_parsePath_db");
-   const char *path = "sample_module/Switches/Hour_switch[default]/br00_loop/br00_loop_default_t";
-   SeqUtil_TRACE(TL_FULL_TRACE, "PATH IS : %s\n", path);
-
-   FlowVisitorPtr fv = Flow_newVisitor(expHome);
-   SeqNodeDataPtr ndp = SeqNode_createNode("PHIL");
-   SeqNode_setSeqExpHome(ndp,expHome);
-
-   Flow_parsePath_db(fv,ndp,path);
-   SeqNode_printNode(ndp,"all",NULL);
-
-   SeqNode_freeNode(ndp);
-   Flow_deleteVisitor(fv);
-   return 0;
-}
 
 int test_global_idea(const char *seq_exp_home)
 {
@@ -120,8 +103,6 @@ int test_global_idea(const char *seq_exp_home)
    char * FilePath = absolutePath("test_file.txt");
    nodeList_to_infoFile(list_head,seq_exp_home, FilePath);
 #endif
-
-   test_Flow_parsePath_db(seq_exp_home);
 
    for_list(path_SI, list_head){
       /* SeqNodeDataPtr ndp = SeqNode_createNode(path_SI); */

@@ -191,10 +191,10 @@ int Flow_parsePath_db(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr,
             tmp_out: ;
             xmlXPathFreeObject(switch_items);
          }
-         goto next;
+
+         goto next_token;
       }
       Flow_doNodeQuery(fv, token, count == 0);
-      Flow_updatePaths(fv, token, count != totalCount );
 
       if( fv->currentNodeType == Module ){
          if ( Flow_changeModule(fv, token) == FLOW_FAILURE ){
@@ -203,6 +203,7 @@ int Flow_parsePath_db(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr,
          }
       }
 
+      Flow_updatePaths(fv, token, count != totalCount );
       /*
        * Data Collection part.
        *
@@ -253,7 +254,7 @@ int Flow_parsePath_db(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr,
       }
       count++;
 
-   next:;
+   next_token:;
    }
 
 out:
@@ -779,11 +780,13 @@ int Flow_setPathData(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr)
 int Flow_setPathToModule(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_setPathToModule() begin\n");
-   int entryModule = (_flow_visitor->_stackSize == 0);
+   int entryModule = (_flow_visitor->_stackSize == 1);
    char pathToModule[SEQ_MAXFIELD] = {'\0'};
 
    if( _flow_visitor->intramodulePath != NULL && ! entryModule ){
       int lengthDiff = strlen(_nodeDataPtr->container) - strlen( _flow_visitor->intramodulePath);
+      SeqUtil_TRACE(TL_FULL_TRACE, "Flow_setPathToModule(): lengthDiff = %d\n",lengthDiff);
+      SeqUtil_TRACE(TL_FULL_TRACE, "Flow_setPathToModule(): _nodeDataPtr->container = %s\n",_nodeDataPtr->container);
       strncpy(pathToModule, _nodeDataPtr->container, lengthDiff);
    } else {
       strcpy(pathToModule, _nodeDataPtr->container );
