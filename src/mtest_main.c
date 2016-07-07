@@ -96,7 +96,7 @@ int test_global_idea(const char *seq_exp_home)
    SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\n");
    SeqListNode_reverseList(&list_head);
    SeqListNode_printList(list_head);
-   getchar();
+   /* getchar(); */
 
 /* #define _FILE_STUFF_ */
 #ifdef _FILE_STUFF_
@@ -111,7 +111,7 @@ int test_global_idea(const char *seq_exp_home)
       const char * path = SI_path_to_path(path_SI);
       SeqNodeDataPtr ndp = nodeinfo_db(seq_exp_home,path);
       SeqNode_printNode(ndp,"all",NULL);
-      getchar();
+      /* getchar(); */
    }
 
 
