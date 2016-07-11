@@ -150,12 +150,45 @@ char * get_script_output(const char *script_path, size_t buffer_size)
       } else {
          totalCount += count;
          buffer[totalCount] = 0;
+         SeqUtil_TRACE(TL_FULL_TRACE,"Buffer is : %s\n",buffer);
       }
    }
    close(switch_script_fd[0]);
    wait(0);
    /* Equivalent of 'return strdup(buffer);'*/
    return strdup(buffer);
+}
+
+const char *popen_get_script_output(const char * script_path, size_t buffer_size)
+{
+   FILE *fp;
+   int status;
+   char buffer[buffer_size];
+   int count = 0, totalCount = 0;
+
+   fp = popen(script_path, "r");
+   if( fp == NULL )
+      goto err;
+
+   while (fgets( &(buffer[totalCount]), buffer_size - totalCount, fp) != NULL){
+      totalCount = strlen(buffer);
+      SeqUtil_TRACE(TL_FULL_TRACE,"Buffer is : %s\n", buffer);
+   }
+
+   status = pclose(fp);
+   if( status == -1 ){
+      goto err;
+   } else {
+      SeqUtil_TRACE(TL_FULL_TRACE, "should inspect status according to the documentation\n");
+   }
+
+   return strdup(buffer);
+
+
+
+
+err:
+   return NULL;
 }
 
 void test_genSwitch()
@@ -189,6 +222,8 @@ void test_genSwitch()
       /* Take script path, return a string containing output */
       const char * output_of_script = NULL;
       output_of_script = get_script_output(containerTaskPath, SEQ_MAXFIELD);
+      SeqUtil_TRACE(TL_FULL_TRACE, "\n=======================================\n");
+      output_of_script = popen_get_script_output(containerTaskPath, SEQ_MAXFIELD);
       SeqUtil_TRACE(TL_FULL_TRACE, "output_of_script=%s\n",output_of_script);
    }
 
