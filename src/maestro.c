@@ -2606,22 +2606,40 @@ int processDepStatus( const SeqNodeDataPtr _nodeDataPtr, SeqDependsScope _dep_sc
    /* if I'm dependant on a loop iteration, need to process it */
    if( _dep_index != NULL && strlen( _dep_index ) > 0 ) {
        SeqUtil_TRACE(TL_FULL_TRACE, "maestro.processDepStatus() depIndex=%s length:%d\n", _dep_index, strlen(_dep_index) );
+       /*
+        * These two next lines are to do 
+        *   extString = indexToExt(_dep_index);
+        */
        SeqLoops_parseArgs(&loopArgsPtr, _dep_index);
        extString = (char*) SeqLoops_getExtFromLoopArgs(loopArgsPtr);
+       /* I made a function called hasWildcard that should be used here */
        if( strstr( extString, "+*" ) != NULL ) {
            depWildcard  = 1;
        }
    } else {
+      /* If I'm here, that is because either _dep_index == NULL OR because
+       * strlen(_dep_index) == 0 (because !(strlen() > 0) <==> strlen() == 0)
+       */
           SeqUtil_stringAppend( &extString, "" );
    }
 
+   /*
+    * De Morgan's theorem: !(A || B) <===> (!A && !B)
+    */
    SeqUtil_TRACE(TL_FULL_TRACE, "processDepStatus _dep_name=%s _extString=%s _dep_datestamp=%s _dep_status=%s _dep_exp=%s _dep_scope=%d _dep_prot=%s \n", 
        _dep_name, extString, _dep_datestamp, _dep_status, _dep_exp, _dep_scope , _dep_prot ); 
 
    if( _dep_index == NULL || strlen( _dep_index ) == 0 ) {
       SeqUtil_stringAppend( &depExtension, "" );
    } else {
+      /*
+       * If I'm here it's because _dep_index != NULL AND strlen(_dep_index) > 0
+       */
       SeqUtil_stringAppend( &depExtension, "." );
+      /*
+       * SeqUtil_stringAppend copies it's second argument.  There 
+       * is no need to duplicate it
+       */
       SeqUtil_stringAppend( &depExtension, strdup( extString ) ); 
    }
 
@@ -2635,6 +2653,10 @@ int processDepStatus( const SeqNodeDataPtr _nodeDataPtr, SeqDependsScope _dep_sc
               nodelogger( _nodeDataPtr->name, "info", _nodeDataPtr->extension, msg ,_nodeDataPtr->datestamp, _nodeDataPtr->expHome); 
               return(0);
        }
+       /*
+        * Here is a problem: we can't get to the right switch item.  The switch
+        * will only know it's value when it begins
+        */
        depNodeDataPtr = nodeinfo( _dep_name, "all", NULL, _dep_exp, NULL, _dep_datestamp );
        /* check catchup value of the node */
        SeqUtil_TRACE(TL_FULL_TRACE,"dependant node catchup= %d discretionary catchup = %d  \n",depNodeDataPtr->catchup, CatchupDiscretionary );
@@ -2645,19 +2667,29 @@ int processDepStatus( const SeqNodeDataPtr _nodeDataPtr, SeqDependsScope _dep_sc
        SeqUtil_TRACE(TL_FULL_TRACE, "processDepStatus(): depWildcard=%d\n",depWildcard);
        if( ! depWildcard ) {
            /* no wilcard, we check only one iteration */
-           if( _dep_exp != NULL ) { 
-               sprintf(statusFile,"%s/sequencing/status/%s/%s%s.%s", _dep_exp, _dep_datestamp,  _dep_name, depExtension, _dep_status );
-           } else {
-               sprintf(statusFile,"%s/sequencing/status/%s/%s%s.%s", _nodeDataPtr->workdir, _dep_datestamp, _dep_name, depExtension, _dep_status );
+
+           /* Status_filename( dep_struct, dep_struct->extension ) */
+           {
+              if( _dep_exp != NULL ) { 
+                  sprintf(statusFile,"%s/sequencing/status/%s/%s%s.%s", _dep_exp, _dep_datestamp,  _dep_name, depExtension, _dep_status );
+              } else {
+                  sprintf(statusFile,"%s/sequencing/status/%s/%s%s.%s", _nodeDataPtr->workdir, _dep_datestamp, _dep_name, depExtension, _dep_status );
+              }
            }
 
            SeqUtil_TRACE(TL_FULL_TRACE,"processDepStatus(): statusFile=%s\n",statusFile);
            ret=_lock( statusFile ,_nodeDataPtr->datestamp, _nodeDataPtr->expHome ); 
+           /*
+            * undoneIteration: I don't understand what this is 
+            */
            if ( (undoneIteration=! _isFileExists( statusFile, "maestro.processDepStatus()", _nodeDataPtr->expHome)) ) {
-              if( _dep_scope == InterUser ) {
-                   isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, _dep_name, _dep_index, depExtension, _dep_datestamp, _dep_status, _dep_exp, _dep_prot, statusFile, _flow);
-              } else {
-                   isWaiting = writeNodeWaitedFile( _nodeDataPtr, _dep_exp, _dep_name, _dep_status, depExtension, _dep_datestamp, _dep_scope, statusFile);
+              /* do_waited_file_thing(_nodeDataPtr, statusFile, dep_struct, dep->extension) */
+              {
+                 if( _dep_scope == InterUser ) {
+                      isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, _dep_name, _dep_index, depExtension, _dep_datestamp, _dep_status, _dep_exp, _dep_prot, statusFile, _flow);
+                 } else {
+                      isWaiting = writeNodeWaitedFile( _nodeDataPtr, _dep_exp, _dep_name, _dep_status, depExtension, _dep_datestamp, _dep_scope, statusFile);
+                 }
               }
            }
            SeqUtil_TRACE(TL_FULL_TRACE,"processDepStatus(): After checking calling Write...WaitedFile(), isWaiting=%d\n",isWaiting);
@@ -2665,15 +2697,27 @@ int processDepStatus( const SeqNodeDataPtr _nodeDataPtr, SeqDependsScope _dep_sc
        } else {
            /* wildcard, we need to check for all iterations and stop on the first iteration that is not done */
            /* get all the node extensions to be checked */
+
+          /*
+           * I see what this is.  We get a list of all possible iterations that
+           * match the wildcard expression.  Then we go through the list and
+           * check if every single one is done.
+           *
+           * If they're all done, the result will be that isWaiting will be 0
+           * and otherwise it will be 1
+           */
           SeqUtil_TRACE(TL_FULL_TRACE,"processDepStatus(): calling SeqLoops_getLoopContainerExtensionsInReverse( depNodeDataPtr, dep_index)\n");
            extensions = (LISTNODEPTR) SeqLoops_getLoopContainerExtensionsInReverse( depNodeDataPtr, _dep_index );
  
            /* loop iterations until we find one that is not satisfied */
            while( extensions != NULL && undoneIteration == 0 ) {
-              if( _dep_exp != NULL ) { 
-                 sprintf(statusFile,"%s/sequencing/status/%s/%s.%s.%s", _dep_exp, _dep_datestamp, _dep_name, extensions->data, _dep_status );
-              } else {
-                 sprintf(statusFile,"%s/sequencing/status/%s/%s.%s.%s", _nodeDataPtr->workdir, _dep_datestamp, _dep_name, extensions->data, _dep_status );
+              /* Status_filename( dep_struct, extension->data ) */
+              {
+                 if( _dep_exp != NULL ) { 
+                    sprintf(statusFile,"%s/sequencing/status/%s/%s.%s.%s", _dep_exp, _dep_datestamp, _dep_name, extensions->data, _dep_status );
+                 } else {
+                    sprintf(statusFile,"%s/sequencing/status/%s/%s.%s.%s", _nodeDataPtr->workdir, _dep_datestamp, _dep_name, extensions->data, _dep_status );
+                 }
               }
 
               SeqUtil_TRACE(TL_FULL_TRACE, "processDepStatus(): Iterating over extensions list: current=%s, filename=%s\n",extensions->data,statusFile);
@@ -2683,14 +2727,32 @@ int processDepStatus( const SeqNodeDataPtr _nodeDataPtr, SeqDependsScope _dep_sc
                  extensions = extensions->nextPtr; /* the iteration status file exists, go to next */
               } else {
                  currentIndexPtr = extensions->data;
-                 if( _dep_scope == InterUser ) {
-                    isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, _dep_name, _dep_index, currentIndexPtr, _dep_datestamp, _dep_status, _dep_exp, _dep_prot, statusFile, _flow);
-                 } else {
-                    isWaiting = writeNodeWaitedFile( _nodeDataPtr, _dep_exp, _dep_name, _dep_status, currentIndexPtr, _dep_datestamp, _dep_scope, statusFile);
+                 /* do_waited_file_thing(_nodeDataPtr, statusFile, dep_struct, extension->data) */
+                 {
+                    if( _dep_scope == InterUser ) {
+                       isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, _dep_name, _dep_index, currentIndexPtr, _dep_datestamp, _dep_status, _dep_exp, _dep_prot, statusFile, _flow);
+                    } else {
+                       isWaiting = writeNodeWaitedFile( _nodeDataPtr, _dep_exp, _dep_name, _dep_status, currentIndexPtr, _dep_datestamp, _dep_scope, statusFile);
+                    }
                  }
               }
               ret=_unlock( statusFile , _nodeDataPtr->datestamp, _nodeDataPtr->expHome ); 
            }
+
+           /*
+            * I would prefer if this function simply returned the status of the
+            * dependency instead of taking action based on said status.
+            *
+            * To me it would be more clear if in validateDependencies, we had
+            * if( getDepStatus(nodeDataPtr, depInfoStruct) )
+            *     submit();
+            * else
+            *     writeInTheRightWaitedFile(nodeDataPtr, depInfoStruct);
+            *
+            * where writeInTheRightWaitedFile() would either call
+            * writeInter...() or writeNode...().
+            *
+            */
        }
 
    } else {
