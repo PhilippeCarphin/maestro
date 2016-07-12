@@ -21,6 +21,7 @@
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <stdarg.h>
 #include <libxml/parser.h>
 #include <libxml/xpath.h>
 #include <libxml/tree.h>
@@ -98,6 +99,7 @@ void header(const char * test){
    SeqUtil_TRACE(TL_CRITICAL, "\n=================== UNIT TEST FOR %s ===================\n",test);
 }
 
+
 char * get_script_output(const char *script_path, size_t buffer_size)
 {
    /* Maybe check that we have permission to run the script befor continuing */
@@ -106,21 +108,38 @@ char * get_script_output(const char *script_path, size_t buffer_size)
    int switch_script_fd[2];
    if(pipe(switch_script_fd) == -1){
       perror("pipe");
-      exit(1);
+      raiseError("get_script_output() could not create pipe\n");
    }
 
    /* Fork the process */
    pid_t pid = fork();
    if (pid == -1){
       perror("fork");
-      exit(1);
+      raiseError("get_script_output() could not create fork\n");
    }
 
    /* Code for the child : change STDOUT to the pipe entrance */
    if (pid == 0){
-       /* Copy the file descriptor switch_script_fd[1] into STDOUT_FILENO. */
+      /*
+       * Copy the file descriptor switch_script_fd[1] into STDOUT_FILENO.
+       * Note that we could also redirect STDERR to the pipe by doing the same
+       * kind of thing
+       */
       while ((dup2(switch_script_fd[1], STDOUT_FILENO) == -1)
                && (errno == EINTR));
+      /*
+       * As I understand it, there is a file descriptor table fd_table not
+       * unlike an array that has pointers to opaque data structures that hold
+       * the actual information.  fd_table[STDOUT_FILENO] points to this
+       * structure for STDOUT.  When we call dup2, the data of the pipe entry is
+       * copied at the location pointed to by fd_table[STDOUT_FILENO].
+       * Something like that; I would need to re-read that section of the Linux
+       * Programming Interface
+       *
+       * We can then close the pipe entrance fd because we 
+       */
+
+
       /* Now, stuff sent to SDTOUT will go to the pipe, so we don't need the
        * pipe entrance fd */
       close(switch_script_fd[1]);
@@ -143,19 +162,18 @@ char * get_script_output(const char *script_path, size_t buffer_size)
             continue;
          }else{
             perror("read");
-            exit(1);
+            raiseError("get_script_output() : parent : Error reading from pipe\n");
          }
       } else if (count == 0) {
          break;
       } else {
          totalCount += count;
          buffer[totalCount] = 0;
-         SeqUtil_TRACE(TL_FULL_TRACE,"Buffer is : %s\n",buffer);
       }
    }
    close(switch_script_fd[0]);
    wait(0);
-   /* Equivalent of 'return strdup(buffer);'*/
+
    return strdup(buffer);
 }
 
@@ -171,21 +189,20 @@ const char *popen_get_script_output(const char * script_path, size_t buffer_size
       goto err;
 
    while (fgets( &(buffer[totalCount]), buffer_size - totalCount, fp) != NULL){
+      /* The one where I explicitely create the pipe seems like it's better
+       * since I get the byte count for each read, instead of having to
+       * redundantly call strlen(); */
       totalCount = strlen(buffer);
-      SeqUtil_TRACE(TL_FULL_TRACE,"Buffer is : %s\n", buffer);
    }
 
    status = pclose(fp);
    if( status == -1 ){
       goto err;
    } else {
-      SeqUtil_TRACE(TL_FULL_TRACE, "should inspect status according to the documentation\n");
+      ;/* should inspect status according to the documentation */
    }
 
    return strdup(buffer);
-
-
-
 
 err:
    return NULL;
@@ -222,16 +239,23 @@ void test_genSwitch()
       /* Take script path, return a string containing output */
       const char * output_of_script = NULL;
       output_of_script = get_script_output(containerTaskPath, SEQ_MAXFIELD);
-      SeqUtil_TRACE(TL_FULL_TRACE, "\n=======================================\n");
-      output_of_script = popen_get_script_output(containerTaskPath, SEQ_MAXFIELD);
-      SeqUtil_TRACE(TL_FULL_TRACE, "output_of_script=%s\n",output_of_script);
+
+      /*
+       * That takes care of the reading of the script part.  Now back to
+       * implementing the desired behavior.  We have to look at the original
+       * function.  This function needs to be divided so that we have one part
+       * that doesn't depend on the switch value, and one part that does.
+       *
+       * Lets inspect the actual version of Flow_parseSwitchAttributes().  Then
+       * we can break it up, into two functions: one that takes the info from
+       * the SWITCH node which will be called for both types of switches, then
+       * one set of two functions: one that will be called for generic switches,
+       * and the other that will be called for generic switches
+       *
+       * This is done in a flow-chart.
+       *
+       */
    }
-
-
-
-
-
-
 }
 
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
