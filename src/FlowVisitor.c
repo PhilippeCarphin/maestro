@@ -419,6 +419,8 @@ const char * Flow_findSwitchType(const FlowVisitorPtr _flow_visitor ){
    xmlXPathObjectPtr attributesResult = NULL;
    const char * switchType = NULL;
 
+   /* This should totally be done with xmlGetProp(), then I wouldn't need that
+    * ridiculous function XmlUtils_firstResultName(). */
    if( (attributesResult = XmlUtils_getnodeset( "(@type)" , _flow_visitor->context)) == NULL )
       goto out;
 
@@ -441,7 +443,7 @@ int Flow_findSwitchItem( FlowVisitorPtr _flow_visitor,const char *switchValue )
 {
    SeqUtil_TRACE(TL_FULL_TRACE,"Flow_findSwitchItem(): begin\n");
    int retval = FLOW_SUCCESS;
-   /* Look for SWITCH_ITEMs whose name attribute contains switchValue as one of
+   /* Look for SWITCH_ITEM whose name attribute contains switchValue as one of
     * it's comma separated tokens */
    if ( Flow_findSwitchItemWithValue(_flow_visitor, switchValue ) == FLOW_SUCCESS ){
       retval = FLOW_SUCCESS;
