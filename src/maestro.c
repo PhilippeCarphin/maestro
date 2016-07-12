@@ -2668,27 +2668,35 @@ int processDepStatus( const SeqNodeDataPtr _nodeDataPtr, SeqDependsScope _dep_sc
        if( ! depWildcard ) {
            /* no wilcard, we check only one iteration */
 
-           /* Status_filename( dep_struct, dep_struct->extension ) */
+           /* This function checks the status file, and sings us (the
+            * nodeDataPtr) into the depNode's waited file if the status file is
+            * not there.  Returns 0 if the status file is not there (meaning we
+            * have to wait, and returns 1 if the status file was there and we
+            * can start
+            */
+           /* doesnt_have_a_name_yet(nodeDataPtr, dep_struct = dep_struct, extension = dep->extension ) */
            {
+              /* depExtension --> extension (received as a function argument) */
               if( _dep_exp != NULL ) { 
                   sprintf(statusFile,"%s/sequencing/status/%s/%s%s.%s", _dep_exp, _dep_datestamp,  _dep_name, depExtension, _dep_status );
               } else {
                   sprintf(statusFile,"%s/sequencing/status/%s/%s%s.%s", _nodeDataPtr->workdir, _dep_datestamp, _dep_name, depExtension, _dep_status );
               }
-           }
 
-           SeqUtil_TRACE(TL_FULL_TRACE,"processDepStatus(): statusFile=%s\n",statusFile);
-           ret=_lock( statusFile ,_nodeDataPtr->datestamp, _nodeDataPtr->expHome ); 
-           /*
-            * undoneIteration: I don't understand what this is 
-            */
-           if ( (undoneIteration=! _isFileExists( statusFile, "maestro.processDepStatus()", _nodeDataPtr->expHome)) ) {
-              /* do_waited_file_thing(_nodeDataPtr, statusFile, dep_struct, dep->extension) */
-              {
-                 if( _dep_scope == InterUser ) {
-                      isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, _dep_name, _dep_index, depExtension, _dep_datestamp, _dep_status, _dep_exp, _dep_prot, statusFile, _flow);
-                 } else {
-                      isWaiting = writeNodeWaitedFile( _nodeDataPtr, _dep_exp, _dep_name, _dep_status, depExtension, _dep_datestamp, _dep_scope, statusFile);
+              SeqUtil_TRACE(TL_FULL_TRACE,"processDepStatus(): statusFile=%s\n",statusFile);
+              ret=_lock( statusFile ,_nodeDataPtr->datestamp, _nodeDataPtr->expHome ); 
+              /*
+               * undoneIteration: I don't understand what this is 
+               */
+              if ( (undoneIteration=! _isFileExists( statusFile, "maestro.processDepStatus()", _nodeDataPtr->expHome)) ) {
+                 /* do_waited_file_thing(_nodeDataPtr, statusFile, dep_struct, extension) */
+                 {
+                    /* depExtension --> extension (received as a function argument) */
+                    if( _dep_scope == InterUser ) {
+                         isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, _dep_name, _dep_index, depExtension, _dep_datestamp, _dep_status, _dep_exp, _dep_prot, statusFile, _flow);
+                    } else {
+                         isWaiting = writeNodeWaitedFile( _nodeDataPtr, _dep_exp, _dep_name, _dep_status, depExtension, _dep_datestamp, _dep_scope, statusFile);
+                    }
                  }
               }
            }
@@ -2711,13 +2719,17 @@ int processDepStatus( const SeqNodeDataPtr _nodeDataPtr, SeqDependsScope _dep_sc
  
            /* loop iterations until we find one that is not satisfied */
            while( extensions != NULL && undoneIteration == 0 ) {
-              /* Status_filename( dep_struct, extension->data ) */
-              {
-                 if( _dep_exp != NULL ) { 
-                    sprintf(statusFile,"%s/sequencing/status/%s/%s.%s.%s", _dep_exp, _dep_datestamp, _dep_name, extensions->data, _dep_status );
-                 } else {
-                    sprintf(statusFile,"%s/sequencing/status/%s/%s.%s.%s", _nodeDataPtr->workdir, _dep_datestamp, _dep_name, extensions->data, _dep_status );
-                 }
+              /*
+               * why in the 'else' we need the nodeDataPtr's workdir.  It seems
+               * to me that checking the status filename of the depNode
+               * shouldn't require us to know about the nodeDataPtr
+               *
+               * In other words, what is workdir?
+               */
+              if( _dep_exp != NULL ) { 
+                 sprintf(statusFile,"%s/sequencing/status/%s/%s.%s.%s", _dep_exp, _dep_datestamp, _dep_name, extensions->data, _dep_status );
+              } else {
+                 sprintf(statusFile,"%s/sequencing/status/%s/%s.%s.%s", _nodeDataPtr->workdir, _dep_datestamp, _dep_name, extensions->data, _dep_status );
               }
 
               SeqUtil_TRACE(TL_FULL_TRACE, "processDepStatus(): Iterating over extensions list: current=%s, filename=%s\n",extensions->data,statusFile);
@@ -2727,16 +2739,29 @@ int processDepStatus( const SeqNodeDataPtr _nodeDataPtr, SeqDependsScope _dep_sc
                  extensions = extensions->nextPtr; /* the iteration status file exists, go to next */
               } else {
                  currentIndexPtr = extensions->data;
-                 /* do_waited_file_thing(_nodeDataPtr, statusFile, dep_struct, extension->data) */
-                 {
-                    if( _dep_scope == InterUser ) {
-                       isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, _dep_name, _dep_index, currentIndexPtr, _dep_datestamp, _dep_status, _dep_exp, _dep_prot, statusFile, _flow);
-                    } else {
-                       isWaiting = writeNodeWaitedFile( _nodeDataPtr, _dep_exp, _dep_name, _dep_status, currentIndexPtr, _dep_datestamp, _dep_scope, statusFile);
-                    }
+                 if( _dep_scope == InterUser ) {
+                    isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, _dep_name, _dep_index, currentIndexPtr, _dep_datestamp, _dep_status, _dep_exp, _dep_prot, statusFile, _flow);
+                 } else {
+                    isWaiting = writeNodeWaitedFile( _nodeDataPtr, _dep_exp, _dep_name, _dep_status, currentIndexPtr, _dep_datestamp, _dep_scope, statusFile);
                  }
               }
               ret=_unlock( statusFile , _nodeDataPtr->datestamp, _nodeDataPtr->expHome ); 
+
+              /*
+               * for( extNode= extensions; extNode!= NULL; extNode= * extNode->nextPtr){
+               *     status = doesnt_have_a_name_yet(nodeDataPtr,
+               *                                     dep_struct = dep_struct,
+               *                                     extension = extNode->data)
+               *     if( status == 1 ){
+               *        // we found an undone iteration and
+               *        // doesnt_have_a_name_yet wrote us into the waited file
+               *        return 1; // we return 1 for "is waiting"
+               *     }
+               *  }
+               *  // We made it through the whole for loop without finding an
+               *  // undone iteration, therefore the nodeDataPtr can begin
+               *  return 0; // for "is not waiting" or "you can go"
+               */
            }
 
            /*
@@ -2756,6 +2781,28 @@ int processDepStatus( const SeqNodeDataPtr _nodeDataPtr, SeqDependsScope _dep_sc
        }
 
    } else {
+
+      /*
+       * char *depExtension = malloc(strlen(dep->ext) + 1 );
+       * sprintf(depExtension, ".%s",dep->ext);
+       *
+       * This would be some kind of patch.  This OCM stuff is not something I
+       * want to modify.  But for the maestro part, having the '.' be part of
+       * depExtension makes me feel weird.  To me it's clearer to say 
+       * status file =
+       * ${exp_home}/sequencing/status/${datestamp}/${name}.${extension}.${status}
+       * than
+       * ${exp_home}/sequencing/status/${datestamp}/${name}${extension}.${status}
+       * and have the '.' be part of the extension.  The extension is not
+       * '.+8+13', it's '+8+13' and the filename is
+       * 'node dot extension dot status'.
+       *
+       * But I see one thing: if I'm not careful, I could make a mistake: if
+       * there is no extension, then the filename is 'node dot status' and not
+       * 'node dot dot status' so having depExtension being either 'dot
+       * extension' or '' takes this into account.  That's fine just gotta make
+       * sure not to forget it.
+       */
 
       /* check catchup value of the ocm node */
       memset(dhour,'\0',sizeof(dhour));
