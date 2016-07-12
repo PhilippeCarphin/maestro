@@ -258,9 +258,23 @@ void test_genSwitch()
    }
 }
 
+int test_SLGLCEIR()
+{
+   SeqNodeDataPtr ndp = SeqNode_createNode("PHIL");
+   SeqNode_setSeqExpHome(ndp,"Inigo_montoya");
+   SeqNode_addNumLoop(ndp,"loop1","10","2","1","20","");
+   SeqNode_addNumLoop(ndp,"loop2","11","2","1","21","");
+   const char * index = "loop1=8,loop2=13";
+   LISTNODEPTR ext_list = SeqLoops_getLoopContainerExtensionsInReverse(ndp,index);
+   SeqUtil_TRACE(TL_FULL_TRACE,"================================\n");
+   SeqListNode_printList(ext_list);
+   SeqUtil_TRACE(TL_FULL_TRACE,"\n");
+   return 0;
+}
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
-   test_genSwitch();
+   /* test_genSwitch(); */
+   test_SLGLCEIR();
 
    SeqUtil_TRACE(TL_CRITICAL, "============== ALL TESTS HAVE PASSED =====================\n");
    return 0;
