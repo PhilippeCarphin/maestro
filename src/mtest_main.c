@@ -271,10 +271,121 @@ int test_SLGLCEIR()
    SeqUtil_TRACE(TL_FULL_TRACE,"\n");
    return 0;
 }
+
+struct streets {
+   char * philippe;
+   char * gilles;
+   char * marie_eve;
+   char * thomas;
+   char * dominic;
+   char * francois;
+   char * jean;
+   char * benoit;
+   char * benny;
+   char * bennito;
+};
+
+int test_SeqNameValues_lookup()
+{
+   SeqNameValuesPtr nvp = NULL;
+   SeqNameValues_insertItem(&nvp, "Philippe", "de Poutrincourt");
+   SeqNameValues_insertItem(&nvp, "Gilles", "Jean-Bourdon");
+   SeqNameValues_insertItem(&nvp, "Marie-Eve", "rue Cadieux");
+   SeqNameValues_insertItem(&nvp, "Thomas", "Henri-Bourassa");
+   SeqNameValues_insertItem(&nvp, "Dominic", "Dorval");
+   SeqNameValues_insertItem(&nvp, "Francois", "Montreal");
+   SeqNameValues_insertItem(&nvp, "Jean", "Beaubien");
+   SeqNameValues_insertItem(&nvp, "Benoit", "Jarry");
+   SeqNameValues_insertItem(&nvp, "Benny", "Jarry");
+   SeqNameValues_insertItem(&nvp, "Bennito", "Jarry");
+
+   struct streets my_streets_auto = {"de Poutrincourt", "Jean-Bourdon", "rue Cadieux", "Henri-Bourassa", "Des Sources", "Jean-Bourdon","Beaubien","Jarry"};
+
+   struct streets *my_streets = &my_streets_auto;
+   char * currentStreet;
+   int i = 0;
+
+#define MAX 10000000
+   SeqUtil_setTraceFlag(TF_TIMESTAMP,TF_ON);
+   SeqUtil_TRACE(TL_FULL_TRACE, "Start nvp\n");
+   for( i = 0; i < MAX; ++i){
+      currentStreet = SeqNameValues_getValue( nvp, "Philippe");free(currentStreet);
+      currentStreet = SeqNameValues_getValue( nvp, "Gilles");free(currentStreet);
+      currentStreet = SeqNameValues_getValue( nvp, "Marie-Eve");free(currentStreet);
+      currentStreet = SeqNameValues_getValue( nvp, "Thomas");free(currentStreet);
+      currentStreet = SeqNameValues_getValue( nvp, "Dominic");free(currentStreet);
+      currentStreet = SeqNameValues_getValue( nvp, "Francois");free(currentStreet);
+      currentStreet = SeqNameValues_getValue( nvp, "Jean");free(currentStreet);
+      currentStreet = SeqNameValues_getValue( nvp, "Benoit");free(currentStreet);
+      currentStreet = SeqNameValues_getValue( nvp, "Benny");free(currentStreet);
+      currentStreet = SeqNameValues_getValue( nvp, "Bennito");free(currentStreet);
+      /* programmer error (typo) : still compiles, and while you're on call,
+       * they're going to wake you up in the middle of the night because this
+       * will make a job abort, also, the free() is not going to catch it for
+       * you because free(NULL) is OK */
+      currentStreet = SeqNameValues_getValue( nvp, "Francous");free(currentStreet);
+   }
+   SeqUtil_TRACE(TL_FULL_TRACE, "end nvp\n");
+
+   SeqUtil_TRACE(TL_FULL_TRACE, "Start struct\n");
+   for( i = 0; i < MAX; ++i){
+      currentStreet = my_streets->philippe;
+      currentStreet = my_streets->gilles;
+      currentStreet = my_streets->marie_eve;
+      currentStreet = my_streets->thomas;
+      currentStreet = my_streets->dominic;
+      currentStreet = my_streets->francois;
+      currentStreet = my_streets->jean;
+      currentStreet = my_streets->benoit;
+      currentStreet = my_streets->benny;
+      currentStreet = my_streets->bennito;
+      /* programmer error (typo) : caught at compilation.  Enjoy your nights of
+       * undisturbed sleep :).
+       * The line has to be commented because it would prevent the test from
+       * compiling.*/
+      /* currentStreet = my_streets->francous; */
+   }
+   SeqUtil_TRACE(TL_FULL_TRACE, "end struct (100 times faster on Phil's machine\n");
+   getchar();
+   SeqUtil_TRACE(TL_FULL_TRACE, "\n\
+   This test doesn't give the whole picture, lookup in a linked list is O(n)\n\
+whereas it is O(1) in the case of looking up a field in a struct.\n\
+\n\
+And really, I don't care ont bit about performance.  Even if performance were the\n\
+same, like if we were using a hashmap, the problem is ROBUSTNESS, MAINTAINABILITY\n\
+and EXTENSIBILITY.\n\
+\n\
+ROBUSTNESS: Typoes don't generate compilation errors. Nuff said.\n\
+MAINTAINABILITY and EXTENSIBILITY: Take a look at SeqNode_addNodeDependency() and\n\
+how many arguments it takes.  Not only that, take a look at all the subroutines\n\
+that take dep_exp, dep_node, dep_this, dep_that.  If I want to add dep_color\n\
+I have to modify a whole bunch of function declarations.\n\
+\n\
+ROBUTSTNESS(again): Mixing up argument order.  All these are char* so if I change\n\
+mix up the order of arguments, the compiler won't mind.  However if I do\n\
+\n\
+   someFunc( dep_struct, nodeDataPtr );\n\
+\n\
+with a function whose declaration is\n\
+\n\
+   someFunc( SeqNodeDataPtr ndp, struct DepData dep);\n\
+\n\
+guess what: compilation error! (that's assuming that I have declared the function\n\
+before using it, which SHOULD ALWAYS BE THE CASE and in fact, the compiler should\n\
+be set to abort compilation when encountering an undeclared function\n\
+   -Werror=implicit-function-declaration)\n\
+\n\
+good luck finding why the program behaves weirdly when you switch valid_hour and\n\
+hour in the argument list of SeqNode_addNodeDependency.\n\
+\n");
+   SeqNameValues_deleteWholeList(&nvp);
+}
+
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
    /* test_genSwitch(); */
-   test_SLGLCEIR();
+   /* test_SLGLCEIR(); */
+   test_SeqNameValues_lookup();
 
    SeqUtil_TRACE(TL_CRITICAL, "============== ALL TESTS HAVE PASSED =====================\n");
    return 0;
