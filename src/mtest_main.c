@@ -91,6 +91,21 @@ void printListWithLinefeed(LISTNODEPTR list_head, int trace_level){
    }
 }
 
+struct list_pair{
+   LISTNODEPTR paths;
+   LISTNODEPTR switch_args;
+};
+
+void print_lp( struct list_pair *lp)
+{
+   LISTNODEPTR path = lp->paths,
+               switch_args = lp->switch_args;
+
+   for(;path != NULL; path = path->nextPtr, switch_args = switch_args->nextPtr){
+      SeqUtil_TRACE(TL_FULL_TRACE, "%s {%s}\n", path->data, switch_args->data);
+   }
+}
+
 
 /*
  * SOME NOTES ABOUT THIS TEST:
@@ -110,19 +125,17 @@ void printListWithLinefeed(LISTNODEPTR list_head, int trace_level){
  * entries in our 'node census'.
  */
 
-struct list_pair{
-   LISTNODEPTR paths;
-   LISTNODEPTR switch_args;
-};
-
 
 void parseFlowTree_internal(FlowVisitorPtr fv, struct list_pair *lp,
-                                    const char * basePath, int depth);
+                            const char * basePath, const char * baseSwitchArgs,
+                                                                     int depth);
 
 LISTNODEPTR parseFlowTree(const char * seq_exp_home)
 {
    /* LISTNODEPTR list_head = NULL; */
    struct list_pair * lp = malloc(sizeof(*lp));
+   lp->paths = lp->switch_args = NULL;
+
    FlowVisitorPtr fv = Flow_newVisitor(seq_exp_home);
 
    const char * basePath = (const char *) xmlGetProp(fv->context->node,
@@ -130,12 +143,18 @@ LISTNODEPTR parseFlowTree(const char * seq_exp_home)
    SeqListNode_pushFront(&lp->paths, basePath);
    SeqListNode_pushFront(&lp->switch_args,"");
 
-   parseFlowTree_internal(fv, lp ,basePath, 0);
+   parseFlowTree_internal(fv, lp ,basePath,"", 0);
 
    free((char*)basePath);
    Flow_deleteVisitor(fv);
    return lp;
+}
 
+int lp_push(struct list_pair *lp, const char *path, const char *switch_args)
+{
+   SeqListNode_pushFront(&lp->paths, path);
+   SeqListNode_pushFront(&lp->switch_args, switch_args);
+   return 0;
 }
 
 void indent(int depth)
@@ -146,7 +165,8 @@ void indent(int depth)
 }
 
 void parseFlowTree_internal(FlowVisitorPtr fv, struct list_pair *lp,
-                                    const char * basePath, int depth)
+                            const char * basePath, const char * baseSwitchArgs,
+                                                                     int depth)
 {
    /*
     * Oh heavenly Father, I pray to thee to forgive me for this inelegant query
@@ -166,33 +186,39 @@ void parseFlowTree_internal(FlowVisitorPtr fv, struct list_pair *lp,
       if( strcmp(node->name, "TASK") == 0 || strcmp(node->name, "NPASS_TASK") == 0){
          char path[SEQ_MAXFIELD] = {0};
          sprintf( path, "%s/%s", basePath,name);
-         SeqListNode_pushFront(&(lp->paths), path);
+         /* SeqListNode_pushFront(&(lp->paths), path); */
+         lp_push( lp, path, baseSwitchArgs );
       } else if( strcmp(node->name, "MODULE") == 0){
          char path[SEQ_MAXFIELD] = {0};
          sprintf( path, "%s/%s", basePath,name);
-         SeqListNode_pushFront(&(lp->paths), path);
+         /* SeqListNode_pushFront(&(lp->paths), path); */
+         lp_push( lp, path, baseSwitchArgs );
          Flow_changeModule(fv, (const char *) name);
-         parseFlowTree_internal(fv, lp ,path, depth+1);
+         parseFlowTree_internal(fv, lp ,path,baseSwitchArgs, depth+1);
          Flow_restoreContext(fv);
-      } else if( strcmp(node->name, "LOOP") == 0
-          || strcmp(node->name, "FAMILY") == 0
-          || strcmp(node->name, "SWITCH") == 0){
+      } else if(   strcmp(node->name, "LOOP") == 0
+                || strcmp(node->name, "FAMILY") == 0
+                || strcmp(node->name, "SWITCH") == 0){
          char path[SEQ_MAXFIELD] = {0};
          sprintf( path, "%s/%s", basePath,name);
-         SeqListNode_pushFront(&(lp->paths), path);
+         /* SeqListNode_pushFront(&(lp->paths), path); */
+         lp_push( lp, path, baseSwitchArgs );
          xmlNodePtr previousNode = fv->context->node;
          fv->context->node = node;
-         parseFlowTree_internal(fv, lp ,path,depth+1);
+         parseFlowTree_internal(fv, lp ,path,baseSwitchArgs,depth+1);
          fv->context->node = previousNode;
       } else if( strcmp(node->name, "SWITCH_ITEM") == 0 ){
-         char path[SEQ_MAXFIELD] = {0};
+         /* char path[SEQ_MAXFIELD] = {0}; */
+         char switch_args[SEQ_MAXFIELD] = {0};
          const char * switch_item_name = xmlGetProp(xmlNode, (const xmlChar *)"name");
-         sprintf( path, "%s[%s]", basePath,switch_item_name);
+         const char * switch_name = SeqUtil_getPathLeaf(basePath);
+         sprintf( switch_args, "%s=%s,",switch_name,switch_item_name );
          xmlNodePtr previousNode = fv->context->node;
          fv->context->node = node;
-         parseFlowTree_internal(fv, lp ,path, depth+1);
+         parseFlowTree_internal(fv, lp ,basePath,switch_args, depth+1);
          fv->context->node = previousNode;
          free((char*)switch_item_name);
+         free((char*)switch_name);
       }
       free((char *)name);
    }
@@ -209,12 +235,15 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
    SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\nNote that this test is dependent on an experiment that is not in the test directory.\n\n");
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
    SeqListNode_reverseList(&lp->paths);
-   printListWithLinefeed(lp->paths,TL_FULL_TRACE);
+   SeqListNode_reverseList(&lp->switch_args);
+   /* printListWithLinefeed(lp->paths,TL_FULL_TRACE); */
+   print_lp(lp);
 
 
 
    SeqListNode_deleteWholeList(&lp->paths);
    SeqListNode_deleteWholeList(&lp->switch_args);
+   free(lp);
    SeqUtil_TRACE(TL_CRITICAL, "============== ALL TESTS HAVE PASSED =====================\n");
    return 0;
 }
@@ -280,6 +309,8 @@ from the maestro directory.\n");
    sprintf( testDir, "%s%s" , PWD, suffix);
 
    puts ( testDir );
+   /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/"); */
+
    seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/");
 
    runTests(seq_exp_home,node,datestamp);
