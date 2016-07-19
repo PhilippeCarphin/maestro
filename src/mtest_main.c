@@ -109,23 +109,32 @@ void printListWithLinefeed(LISTNODEPTR list_head, int trace_level){
  * instead of weird hackish paths, we could use a (path,loop_args) pair as
  * entries in our 'node census'.
  */
-void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
+
+struct list_pair{
+   LISTNODEPTR paths;
+   LISTNODEPTR switch_args;
+};
+
+
+void parseFlowTree_internal(FlowVisitorPtr fv, struct list_pair *lp,
                                     const char * basePath, int depth);
 
 LISTNODEPTR parseFlowTree(const char * seq_exp_home)
 {
-   LISTNODEPTR list_head = NULL;
+   /* LISTNODEPTR list_head = NULL; */
+   struct list_pair * lp = malloc(sizeof(*lp));
    FlowVisitorPtr fv = Flow_newVisitor(seq_exp_home);
 
    const char * basePath = (const char *) xmlGetProp(fv->context->node,
                                                       (const xmlChar *)"name");
-   SeqListNode_pushFront(&list_head, basePath);
+   SeqListNode_pushFront(&lp->paths, basePath);
+   SeqListNode_pushFront(&lp->switch_args,"");
 
-   parseFlowTree_internal(fv, &list_head,basePath, 0);
+   parseFlowTree_internal(fv, lp ,basePath, 0);
 
    free((char*)basePath);
    Flow_deleteVisitor(fv);
-   return list_head;
+   return lp;
 
 }
 
@@ -136,7 +145,7 @@ void indent(int depth)
       fprintf(stderr, "    ");
 }
 
-void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
+void parseFlowTree_internal(FlowVisitorPtr fv, struct list_pair *lp,
                                     const char * basePath, int depth)
 {
    /*
@@ -157,23 +166,23 @@ void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
       if( strcmp(node->name, "TASK") == 0 || strcmp(node->name, "NPASS_TASK") == 0){
          char path[SEQ_MAXFIELD] = {0};
          sprintf( path, "%s/%s", basePath,name);
-         SeqListNode_pushFront(list_head, path);
+         SeqListNode_pushFront(&(lp->paths), path);
       } else if( strcmp(node->name, "MODULE") == 0){
          char path[SEQ_MAXFIELD] = {0};
          sprintf( path, "%s/%s", basePath,name);
-         SeqListNode_pushFront(list_head, path);
+         SeqListNode_pushFront(&(lp->paths), path);
          Flow_changeModule(fv, (const char *) name);
-         parseFlowTree_internal(fv, list_head,path, depth+1);
+         parseFlowTree_internal(fv, lp ,path, depth+1);
          Flow_restoreContext(fv);
       } else if( strcmp(node->name, "LOOP") == 0
           || strcmp(node->name, "FAMILY") == 0
           || strcmp(node->name, "SWITCH") == 0){
          char path[SEQ_MAXFIELD] = {0};
          sprintf( path, "%s/%s", basePath,name);
-         SeqListNode_pushFront(list_head, path);
+         SeqListNode_pushFront(&(lp->paths), path);
          xmlNodePtr previousNode = fv->context->node;
          fv->context->node = node;
-         parseFlowTree_internal(fv, list_head,path,depth+1);
+         parseFlowTree_internal(fv, lp ,path,depth+1);
          fv->context->node = previousNode;
       } else if( strcmp(node->name, "SWITCH_ITEM") == 0 ){
          char path[SEQ_MAXFIELD] = {0};
@@ -181,7 +190,7 @@ void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
          sprintf( path, "%s[%s]", basePath,switch_item_name);
          xmlNodePtr previousNode = fv->context->node;
          fv->context->node = node;
-         parseFlowTree_internal(fv, list_head,path, depth+1);
+         parseFlowTree_internal(fv, lp ,path, depth+1);
          fv->context->node = previousNode;
          free((char*)switch_item_name);
       }
@@ -194,17 +203,18 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
 {
 
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_CRITICAL);
-   LISTNODEPTR list_head = parseFlowTree(seq_exp_home);
+   struct list_pair *lp = parseFlowTree(seq_exp_home);
 
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
    SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\nNote that this test is dependent on an experiment that is not in the test directory.\n\n");
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
-   SeqListNode_reverseList(&list_head);
-   printListWithLinefeed(list_head,TL_FULL_TRACE);
+   SeqListNode_reverseList(&lp->paths);
+   printListWithLinefeed(lp->paths,TL_FULL_TRACE);
 
 
 
-   SeqListNode_deleteWholeList(&list_head);
+   SeqListNode_deleteWholeList(&lp->paths);
+   SeqListNode_deleteWholeList(&lp->switch_args);
    SeqUtil_TRACE(TL_CRITICAL, "============== ALL TESTS HAVE PASSED =====================\n");
    return 0;
 }
