@@ -52,5 +52,6 @@ xmlXPathObjectPtr
 XmlUtils_getnodeset (const xmlChar *_xpathQuery, xmlXPathContextPtr _context);
 
 void XmlUtils_resolve (const char *_docname, xmlXPathContextPtr _context, const char *_deffile, const char* _seq_exp_home);
+XmlUtils_getnodesetf( xmlXPathContextPtr context, const char * fmt, ...);
 
 #endif

@@ -771,14 +771,11 @@ int Flow_parseSiblings(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parseSiblings begin\n");
    SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo.getFlowInfo() *********** node siblings **********\n");
-   int switchItemFound = 0;
-   switchItemFound = (strcmp(_flow_visitor->context->node->name, "SWITCH_ITEM") == 0);
    xmlXPathObjectPtr result = NULL;
    xmlXPathContextPtr context = NULL;
-   char query[SEQ_MAXFIELD] = {'\0'};
    char * switchPrefix = NULL;
 
-   if (switchItemFound)
+   if (strcmp(_flow_visitor->context->node->name, "SWITCH_ITEM") == 0)
       switchPrefix = strdup("../");
    else
       switchPrefix = strdup("");
@@ -788,16 +785,14 @@ int Flow_parseSiblings(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr
    else
       context = _flow_visitor->context;
 
-   sprintf( query, "(%spreceding-sibling::*[@name])", switchPrefix);
-   result =  XmlUtils_getnodeset (query, context);
+   result =  XmlUtils_getnodesetf(context,"(%spreceding-sibling::*[@name])",switchPrefix);
    if (result) {
       SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo.getFlowInfo() *********** preceding siblings found**********\n");
    }
    parseNodeSiblings( result, _nodeDataPtr);
    xmlXPathFreeObject (result);
 
-   sprintf( query, "(%sfollowing-sibling::*[@name])", switchPrefix);
-   result =  XmlUtils_getnodeset (query, context);
+   result =  XmlUtils_getnodesetf(context,"(%sfollowing-sibling::*[@name])",switchPrefix);
    if (result) {
       SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo.getFlowInfo() *********** following siblings found**********\n");
    }

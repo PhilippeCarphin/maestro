@@ -50,6 +50,18 @@ XmlUtils_getnodeset (const xmlChar *_xpathQuery, xmlXPathContextPtr _context) {
    return result;
 }
 
+XmlUtils_getnodesetf( xmlXPathContextPtr context, const char * fmt, ...)
+{
+   char query[SEQ_MAXFIELD] = {0};
+   va_list ap;
+   va_start(ap,fmt);
+   vsprintf( query, fmt, ap);
+   va_end(ap);
+
+   return XmlUtils_getnodeset( query, context);
+}
+
+
 /* Resolve keywords in xml files.  To use a definition file (format defined by
    SeqUtils_getdef(), provide the _deffile name; a NULL value passed to _deffile 
    causes the resolver to search in the environment for the key definition.*/
