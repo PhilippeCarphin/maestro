@@ -988,7 +988,7 @@ void SeqNode_printNode ( SeqNodeDataPtr node_ptr, unsigned int filters, const ch
       }
    }
 
-   if( filters == NULL ) {
+   if( filters == 0 ) {
       filters |= NI_SHOW_ALL;
    }
 
