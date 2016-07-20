@@ -64,7 +64,7 @@ FlowVisitorPtr Flow_newVisitor(const char *nodePath, const char *seq_exp_home,
 
    new_flow_visitor->nodePath = (nodePath ? strdup(nodePath) : NULL );
    new_flow_visitor->expHome = seq_exp_home;
-   new_flow_visitor->switch_args = (switch_args ? strdup(switch_args): NULL);
+   new_flow_visitor->switch_args = (switch_args && strlen(switch_args) ? strdup(switch_args): NULL);
 
 
    new_flow_visitor->context->node = new_flow_visitor->context->doc->children;
@@ -416,15 +416,26 @@ int Flow_updatePaths(FlowVisitorPtr _flow_visitor, const char * pathToken, const
 
 char *Flow_findSwitchArg(FlowVisitorPtr fv)
 {
+   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchArg() begin, fv->switch_args=%s\n",fv->switch_args);
+   char *retval = NULL;
 
    char *switchName = SeqUtil_getPathLeaf(fv->currentFlowNode);
-   for_tokens(token,fv->switch_args,",",sp1){
-      
-      if(switchName)
-         ;
-
+   for_tokens(token_pair,fv->switch_args,",",sp1){
+      char *tok_name = token_pair;
+      char *tok_value;
+      tok_value = strstr(token_pair,"=");
+      *tok_value++ = '\0';
+      SeqUtil_TRACE(TL_FULL_TRACE,"tok_name=%s, tok_value=%s\n",tok_name, tok_value);
+      getchar();
+      if(strcmp(tok_name,switchName)==0){
+         retval = strdup(tok_value);
+         goto out;
+      }
    }
-   return NULL;
+
+out:
+   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchArg() end\n");
+   return retval;
 }
 /********************************************************************************
  * Parses the attributes of a switch node into the nodeDataPtr.

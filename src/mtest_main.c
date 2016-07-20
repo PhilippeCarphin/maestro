@@ -268,19 +268,22 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
    SeqListNode_reverseList(&lp);
    /* printListWithLinefeed(lp->paths,TL_FULL_TRACE); */
    PathArgNode_printList(lp);
-   PathArgNode_deleteList(&lp);
-#if 0
-   SeqUtil_setTraceFlag(TRACE_LEVEL, TL_CRITICAL);
+#if 1
+   /* SeqUtil_setTraceFlag(TRACE_LEVEL, TL_CRITICAL); */
    SeqNodeDataPtr ndp = NULL;
    for_list(itr,lp){
       PathArgNodePtr pap_itr = (PathArgNodePtr) itr;
+      SeqUtil_TRACE(TL_FULL_TRACE,"calling nodeinfo with path=%s, switch_args=%s\n",
+                                    pap_itr->path, pap_itr->switch_args);
+      /* getchar(); */
       ndp = nodeinfo(pap_itr->path, NI_SHOW_ALL, NULL, seq_exp_home,
-                     NULL, NULL,pap_itr->siwtch_args );
+                     NULL, NULL,pap_itr->switch_args );
       SeqNode_printNode(ndp,NI_SHOW_ALL,NULL);
       SeqNode_freeNode(ndp);
    }
 #endif
 
+   PathArgNode_deleteList(&lp);
    SeqUtil_TRACE(TL_CRITICAL, "============== ALL TESTS HAVE PASSED =====================\n");
    return 0;
 }
