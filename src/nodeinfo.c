@@ -600,8 +600,9 @@ void parseForEachTarget(xmlXPathObjectPtr _result, SeqNodeDataPtr _nodeDataPtr) 
 void getFlowInfo ( SeqNodeDataPtr _nodeDataPtr, const char *_seq_exp_home,
                      const char *_nodePath,const char *switch_args, unsigned int filters)
 {
-   if (strcmp(_nodePath, "") == 0) raiseError("Calling getFlowInfo() with an empty path'\n");
-   FlowVisitorPtr flow_visitor = Flow_newVisitor(_seq_exp_home);
+   if (_nodePath == NULL || strcmp(_nodePath, "") == 0)
+      raiseError("Calling getFlowInfo() with an empty path'\n");
+   FlowVisitorPtr flow_visitor = Flow_newVisitor(_nodePath,_seq_exp_home,switch_args);
 
    if ( Flow_parsePath(flow_visitor,_nodeDataPtr, _nodePath) == FLOW_FAILURE )
       raiseError("Unable to get to the specified node %s\n",_nodePath);
@@ -628,7 +629,7 @@ void getFlowInfo ( SeqNodeDataPtr _nodeDataPtr, const char *_seq_exp_home,
 int doesNodeExist (const char *_nodePath, const char *_seq_exp_home , const char * _datestamp) {
 
    SeqUtil_TRACE(TL_FULL_TRACE, "doesNodeExist() begin\n");
-   FlowVisitorPtr flow_visitor = Flow_newVisitor( _seq_exp_home);
+   FlowVisitorPtr flow_visitor = Flow_newVisitor(_nodePath, _seq_exp_home, NULL);
    int nodeExists = FLOW_FALSE;
    char * newNode = (char*) SeqUtil_fixPath( _nodePath );
    SeqNodeDataPtr tempNode = (SeqNodeDataPtr) SeqNode_createNode ( newNode );

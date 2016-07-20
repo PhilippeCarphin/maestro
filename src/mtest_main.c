@@ -119,6 +119,24 @@ int PathArgNode_pushFront(PathArgNodePtr *list_head, const char *path, const cha
    return 0;
 }
 
+int PathArgNode_deleteList(PathArgNodePtr *list_head)
+{
+   if(*list_head == NULL )
+      return 0;
+
+   PathArgNodePtr current = *list_head, tmp_next = *list_head;
+
+   while( current != NULL ){
+      tmp_next = current->nextPtr;
+      free(current->path);
+      free(current->switch_args);
+      free(current);
+      current = tmp_next;
+   }
+   *list_head = NULL;
+   return 0;
+}
+
 void PathArgNode_printList(PathArgNodePtr list_head)
 {
    for_list(itr,list_head){
@@ -150,12 +168,12 @@ void parseFlowTree_internal(FlowVisitorPtr fv, PathArgNodePtr *lp,
                             const char * basePath, const char * baseSwitchArgs,
                                                                      int depth);
 
-LISTNODEPTR parseFlowTree(const char * seq_exp_home)
+PathArgNodePtr parseFlowTree(const char * seq_exp_home)
 {
    /* LISTNODEPTR list_head = NULL; */
    PathArgNodePtr pap = NULL;
 
-   FlowVisitorPtr fv = Flow_newVisitor(seq_exp_home);
+   FlowVisitorPtr fv = Flow_newVisitor(NULL,seq_exp_home,NULL);
 
    const char * basePath = (const char *) xmlGetProp(fv->context->node,
                                                       (const xmlChar *)"name");
@@ -250,7 +268,7 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
    SeqListNode_reverseList(&lp);
    /* printListWithLinefeed(lp->paths,TL_FULL_TRACE); */
    PathArgNode_printList(lp);
-
+   PathArgNode_deleteList(&lp);
 #if 0
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_CRITICAL);
    SeqNodeDataPtr ndp = NULL;
