@@ -36,7 +36,6 @@
 #include "FlowVisitor.h"
 #include "ResourceVisitor.h"
 
-extern char * switchReturn( SeqNodeDataPtr _nodeDataPtr, const char* switchType );
 
 const char * XmlUtils_firstResultName(xmlXPathObjectPtr queryResult){
    return (const char *) queryResult->nodesetval->nodeTab[0]->children->content;
@@ -46,7 +45,8 @@ const char * XmlUtils_firstResultName(xmlXPathObjectPtr queryResult){
  * Initializes the flow_visitor to the entry module;
  * Caller should check if the return pointer is NULL.
 ********************************************************************************/
-FlowVisitorPtr Flow_newVisitor(const char * _seq_exp_home)
+FlowVisitorPtr Flow_newVisitor(const char *nodePath, const char *seq_exp_home,
+                                                     const char *switch_args)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_newVisitor() begin\n");
    FlowVisitorPtr new_flow_visitor = (FlowVisitorPtr) malloc(sizeof(FlowVisitor));
@@ -55,14 +55,16 @@ FlowVisitorPtr Flow_newVisitor(const char * _seq_exp_home)
 
    {
       char * postfix = "/EntryModule/flow.xml";
-      char * xmlFilename = (char *) malloc ( strlen(_seq_exp_home) + strlen(postfix) + 1 );
-      sprintf(xmlFilename, "%s%s", _seq_exp_home,postfix);
+      char * xmlFilename = (char *) malloc ( strlen(seq_exp_home) + strlen(postfix) + 1 );
+      sprintf(xmlFilename, "%s%s", seq_exp_home,postfix);
       xmlDocPtr doc = XmlUtils_getdoc(xmlFilename);
       new_flow_visitor->context = xmlXPathNewContext(doc);
       free(xmlFilename);
    }
 
-   new_flow_visitor->expHome = _seq_exp_home;
+   new_flow_visitor->nodePath = (nodePath ? strdup(nodePath) : NULL );
+   new_flow_visitor->expHome = seq_exp_home;
+   new_flow_visitor->switch_args = (switch_args ? strdup(switch_args): NULL);
 
 
    new_flow_visitor->context->node = new_flow_visitor->context->doc->children;
@@ -82,7 +84,7 @@ out:
    return new_flow_visitor;
 }
 
-void _freeStack(FlowVisitorPtr fv)
+static void _freeStack(FlowVisitorPtr fv)
 {
    xmlXPathContextPtr context;
    while ( (context = _popContext(fv)) != NULL){
@@ -412,12 +414,24 @@ int Flow_updatePaths(FlowVisitorPtr _flow_visitor, const char * pathToken, const
    return FLOW_SUCCESS;
 }
 
+char *Flow_findSwitchArg(FlowVisitorPtr fv)
+{
+
+   char *switchName = SeqUtil_getPathLeaf(fv->currentFlowNode);
+   for_tokens(token,fv->switch_args,",",sp1){
+      
+      if(switchName)
+         ;
+
+   }
+   return NULL;
+}
 /********************************************************************************
  * Parses the attributes of a switch node into the nodeDataPtr.
  * Returns FLOW_SUCCESS if the right switch item (or default) is found.
  * Returns FLOW_FAILURE otherwise.
 ********************************************************************************/
-int Flow_parseSwitchAttributes(FlowVisitorPtr _flow_visitor,
+int Flow_parseSwitchAttributes(FlowVisitorPtr fv,
                                  SeqNodeDataPtr _nodeDataPtr, int isLast )
 {
 
@@ -427,14 +441,18 @@ int Flow_parseSwitchAttributes(FlowVisitorPtr _flow_visitor,
 
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parseSwitchAttributes(): begin\n");
 
-   if( (switchType = Flow_findSwitchType(_flow_visitor)) == NULL )
+   if( (switchType = Flow_findSwitchType(fv)) == NULL )
       raiseError("Flow_parseSwitchAttributes(): switchType not found\n");
 
-   switchValue = switchReturn(_nodeDataPtr, switchType);
-   char * fixedSwitchPath = SeqUtil_fixPath( _flow_visitor->currentFlowNode );
+   if( fv->switch_args == NULL ){
+      switchValue = switchReturn(_nodeDataPtr, switchType);
+   } else {
+      switchValue = Flow_findSwitchArg(fv);
+   }
+   char * fixedSwitchPath = SeqUtil_fixPath( fv->currentFlowNode );
    SeqNameValues_insertItem(&(_nodeDataPtr->switchAnswers), fixedSwitchPath , switchValue );
 
-   if( Flow_findSwitchItem(_flow_visitor, switchValue) == FLOW_FAILURE ){
+   if( Flow_findSwitchItem(fv, switchValue) == FLOW_FAILURE ){
       SeqUtil_TRACE(TL_FULL_TRACE,"Flow_parseSwitchAttributes(): no SWITCH_ITEM found containing value=%s and no SWITCH_ITEM found containing value=%s\n", switchValue);
       retval = FLOW_FAILURE;
       goto out_free;
