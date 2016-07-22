@@ -251,6 +251,7 @@ void pft_int_task(FlowVisitorPtr fv, PathArgNode *pathArgList,
    /*
     * Recursion does ends with Task or NpassTask nodes
     */
+   free((char *)name);
 }
 
 /********************************************************************************
@@ -391,10 +392,11 @@ const char *node_to_line(SeqNodeDataPtr ndp)
 
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
-
+#define MANY_TIMES
+/* #define USE_GETCHAR */
 #ifdef MANY_TIMES
    int i = 0;
-   for( i = 0; i < 100 ; i++){
+   for( i = 0; i < 1 ; i++){
 #endif
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_CRITICAL);
    PathArgNodePtr lp = parseFlowTree(seq_exp_home);
@@ -403,11 +405,14 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
    /* SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\nNote that this test is dependent on an experiment that is not in the test directory.\n\n"); */
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
    SeqListNode_reverseList(&lp);
-   /* printListWithLinefeed(lp->paths,TL_FULL_TRACE); */
-   PathArgNode_printList(lp);
+   /* PathArgNode_printList(lp); */
+#ifdef USE_GETCHAR
    getchar();
+#endif
 #if 1
-   /* SeqUtil_setTraceFlag(TRACE_LEVEL, TL_CRITICAL); */
+#ifdef MANY_TIMES
+   SeqUtil_setTraceFlag(TRACE_LEVEL, TL_CRITICAL);
+#endif
    SeqNodeDataPtr ndp = NULL;
    for_list(itr,lp){
       /*
@@ -427,8 +432,12 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
 
       ndp = nodeinfo(pap_itr->path, NI_SHOW_ALL, NULL, seq_exp_home,
                                           NULL, NULL,pap_itr->switch_args );
+#ifndef MANY_TIMES
       SeqNode_printNode(ndp,NI_SHOW_ALL,NULL);
-      getchar();
+#endif
+#ifdef USE_GETCHAR
+   getchar();
+#endif
       /* SeqUtil_TRACE(TL_CRITICAL, "%s\n", node_to_line(ndp)); */
 
       SeqNode_freeNode(ndp);
