@@ -865,11 +865,12 @@ char* SeqUtil_keysub( const char* _str, const char* _deffile, const char* _srcfi
   char *saveptr1,*saveptr2;
   static char newstr[SEQ_MAXFIELD];
   int start,isvar;
+  int getFromEnv = (_deffile == NULL);
 
-  if (_deffile == NULL){
-    SeqUtil_stringAppend( &source, "environment" );}
-  else{
-    SeqUtil_stringAppend( &source, "definition" );
+  if (getFromEnv){
+    source = "environment";
+  }else{
+    source = "definition";
   }
   SeqUtil_TRACE(TL_FULL_TRACE,"XmlUtils_resolve(): performing %s replacements in string \"%s\"\n",source, _str);
 
@@ -880,9 +881,9 @@ char* SeqUtil_keysub( const char* _str, const char* _deffile, const char* _srcfi
   while (substr != NULL){
     isvar = (strstr(substr,"}") == NULL) ? 0 : 1;
     var = strtok_r(substr,"}",&saveptr2);
-    if (strcmp(source,"environment") == 0){
-      env = getenv(var);}
-    else{
+    if (getFromEnv){
+      env = getenv(var);
+    }else{
       env = SeqUtil_getdef(_deffile,var,_seq_exp_home);
     }
     post = strtok_r(NULL,"\0",&saveptr2);
@@ -905,8 +906,9 @@ char* SeqUtil_keysub( const char* _str, const char* _deffile, const char* _srcfi
     }
     newstr[start]=0;
     substr = strtok_r(NULL,"${",&saveptr1);
+    if(!getFromEnv)
+       free(env);
   }
-  free(source);
   free(strtmp);
   return newstr;
 }  

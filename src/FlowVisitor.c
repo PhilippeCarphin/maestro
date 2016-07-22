@@ -459,7 +459,7 @@ int Flow_parseSwitchAttributes(FlowVisitorPtr fv,
    if( (switchType = Flow_findSwitchType(fv)) == NULL )
       raiseError("Flow_parseSwitchAttributes(): switchType not found\n");
 
-   if( fv->switch_args == NULL || isLast){
+   if( fv->switch_args == NULL || isLast ){
       switchValue = switchReturn(_nodeDataPtr, switchType);
    } else {
       switchValue = Flow_findSwitchArg(fv);
