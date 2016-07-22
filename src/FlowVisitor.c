@@ -111,6 +111,8 @@ int Flow_deleteVisitor(FlowVisitorPtr _flow_visitor)
    free(_flow_visitor->module);
    free(_flow_visitor->intramodulePath);
    free(_flow_visitor->suiteName);
+   free(_flow_visitor->nodePath);
+   free(_flow_visitor->switch_args);
 
    free(_flow_visitor);
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_deleteVisitor() end\n");
@@ -419,24 +421,26 @@ int Flow_updatePaths(FlowVisitorPtr _flow_visitor, const char * pathToken, const
 
 char *Flow_findSwitchArg(FlowVisitorPtr fv)
 {
-   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchArg() begin, fv->switch_args=%s\n",fv->switch_args);
+   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchArg() begin,fv->nodePath:%s fv->switch_args=%s\n",fv->nodePath,fv->switch_args);
    char *retval = NULL;
 
    char *switchName = SeqUtil_getPathLeaf(fv->currentFlowNode);
    for_tokens(token_pair,fv->switch_args,",",sp1){
+      SeqUtil_TRACE(TL_FULL_TRACE,"token_pair:%s\n",token_pair);
       char *tok_name = token_pair;
       char *tok_value;
       tok_value = strstr(token_pair,"=");
       *tok_value++ = '\0';
       SeqUtil_TRACE(TL_FULL_TRACE,"tok_name=%s, tok_value=%s\n",tok_name, tok_value);
-      getchar();
+      /* getchar(); */
       if(strcmp(tok_name,switchName)==0){
          retval = strdup(tok_value);
-         goto out;
+         goto out_free;
       }
    }
 
-out:
+out_free:
+   free(switchName);
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchArg() end\n");
    return retval;
 }
@@ -458,7 +462,7 @@ int Flow_parseSwitchAttributes(FlowVisitorPtr fv,
    if( (switchType = Flow_findSwitchType(fv)) == NULL )
       raiseError("Flow_parseSwitchAttributes(): switchType not found\n");
 
-   if( fv->switch_args == NULL ){
+   if( fv->switch_args == NULL || isLast){
       switchValue = switchReturn(_nodeDataPtr, switchType);
    } else {
       switchValue = Flow_findSwitchArg(fv);

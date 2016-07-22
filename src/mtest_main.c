@@ -85,17 +85,10 @@ void header(const char * test){
    SeqUtil_TRACE(TL_CRITICAL, "\n=================== UNIT TEST FOR %s ===================\n",test);
 }
 
-void printListWithLinefeed(LISTNODEPTR list_head, int trace_level){
-   for_list(itr,list_head){
-      SeqUtil_TRACE(trace_level, "%s\n", itr->data);
-   }
-}
 
-struct list_pair{
-   LISTNODEPTR paths;
-   LISTNODEPTR switch_args;
-};
-
+/********************************************************************************
+ *
+********************************************************************************/
 typedef struct _PathArgNode{
    struct _PathArgNode *nextPtr;
    const char * path;
@@ -104,6 +97,14 @@ typedef struct _PathArgNode{
 
 typedef PathArgNode *PathArgNodePtr;
 
+
+void parseFlowTree_internal(FlowVisitorPtr fv, PathArgNodePtr *lp,
+                            const char * basePath, const char * baseSwitchArgs,
+                                                                     int depth);
+
+/********************************************************************************
+ *
+********************************************************************************/
 int PathArgNode_pushFront(PathArgNodePtr *list_head, const char *path, const char *switch_args)
 {
    PathArgNodePtr newNode = NULL;
@@ -119,6 +120,9 @@ int PathArgNode_pushFront(PathArgNodePtr *list_head, const char *path, const cha
    return 0;
 }
 
+/********************************************************************************
+ *
+********************************************************************************/
 int PathArgNode_deleteList(PathArgNodePtr *list_head)
 {
    if(*list_head == NULL )
@@ -137,6 +141,9 @@ int PathArgNode_deleteList(PathArgNodePtr *list_head)
    return 0;
 }
 
+/********************************************************************************
+ *
+********************************************************************************/
 void PathArgNode_printList(PathArgNodePtr list_head)
 {
    for_list(itr,list_head){
@@ -144,6 +151,180 @@ void PathArgNode_printList(PathArgNodePtr list_head)
       printf("%s {%s}\n", pap_itr->path, pap_itr->switch_args);
    }
 }
+
+/********************************************************************************
+ *
+********************************************************************************/
+PathArgNodePtr parseFlowTree(const char * seq_exp_home)
+{
+   /* LISTNODEPTR list_head = NULL; */
+   PathArgNodePtr pap = NULL;
+
+   FlowVisitorPtr fv = Flow_newVisitor(NULL,seq_exp_home,NULL);
+
+   const char * basePath = (const char *) xmlGetProp(fv->context->node,
+                                                      (const xmlChar *)"name");
+   PathArgNode_pushFront(&pap, basePath, "" );
+
+   parseFlowTree_internal(fv, &pap ,basePath,"", 0);
+
+
+   free((char*)basePath);
+   Flow_deleteVisitor(fv);
+   return pap;
+}
+
+/********************************************************************************
+ *
+********************************************************************************/
+void pft_int_container(FlowVisitorPtr fv, PathArgNode *pathArgList ,
+                        const char *basePath,const char *baseSwitchArgs,
+                        int depth,xmlNodePtr xmlNode)
+{
+   char path[SEQ_MAXFIELD] = {0};
+   const char * container_name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
+   sprintf( path, "%s/%s", basePath,container_name);
+   PathArgNode_pushFront( pathArgList, path, baseSwitchArgs );
+   xmlNodePtr previousNode = fv->context->node;
+   fv->context->node = xmlNode;
+   parseFlowTree_internal(fv, pathArgList ,path,baseSwitchArgs,depth+1);
+   fv->context->node = previousNode;
+   free((char*)container_name);
+}
+
+/********************************************************************************
+ *
+********************************************************************************/
+void pft_int_module(FlowVisitorPtr fv, PathArgNode *pathArgList,
+                        const char *basePath,const char *baseSwitchArgs,
+                        int depth,xmlNodePtr xmlNode)
+{
+   char path[SEQ_MAXFIELD] = {0};
+   const char * module_name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
+   sprintf( path, "%s/%s", basePath,module_name);
+   PathArgNode_pushFront( pathArgList, path, baseSwitchArgs );
+   Flow_changeModule(fv, module_name);
+   parseFlowTree_internal(fv, pathArgList ,path,baseSwitchArgs, depth+1);
+   Flow_restoreContext(fv);
+   free((char*)module_name);
+}
+
+/********************************************************************************
+ *
+********************************************************************************/
+void pft_int_task(FlowVisitorPtr fv, PathArgNode *pathArgList,
+                        const char *basePath,const char *baseSwitchArgs,
+                        int depth,xmlNodePtr xmlNode)
+{
+   char path[SEQ_MAXFIELD] = {0};
+   const char * name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
+   sprintf( path, "%s/%s", basePath,name);
+   PathArgNode_pushFront( pathArgList , path, baseSwitchArgs );
+}
+
+/********************************************************************************
+ *
+********************************************************************************/
+void pft_int_switch_item(FlowVisitorPtr fv, PathArgNode *pathArgList,
+                        const char *basePath,const char *baseSwitchArgs,
+                        int depth,xmlNodePtr xmlNode)
+{
+   char switch_args[SEQ_MAXFIELD] = {0};
+   const char * switch_item_name = xmlGetProp(xmlNode, (const xmlChar *)"name");
+   const char * switch_name = SeqUtil_getPathLeaf(basePath);
+
+   char * first_comma = strstr(switch_item_name,",");
+   if( first_comma != NULL ) *first_comma = 0;
+
+   sprintf( switch_args, "%s%s=%s,",baseSwitchArgs,switch_name,switch_item_name );
+
+   xmlNodePtr previousNode = fv->context->node;
+   fv->context->node = xmlNode;
+   parseFlowTree_internal(fv, pathArgList ,basePath,switch_args, depth+1);
+   fv->context->node = previousNode;
+
+out:
+   free((char*)switch_item_name);
+   free((char*)switch_name);
+}
+
+/********************************************************************************
+ *
+********************************************************************************/
+void parseFlowTree_internal(FlowVisitorPtr fv, PathArgNodePtr *lp,
+                            const char * basePath, const char * baseSwitchArgs,
+                                                                     int depth)
+{
+   /*
+    * Oh heavenly Father, I pray to thee to forgive me for this inelegant query
+    * which amounts to saying "all children except SUBMITS".  There has to be a
+    * way of saying something like child::!SUBMITS or something.
+    */
+   xmlXPathObjectPtr results = XmlUtils_getnodeset("(child::FAMILY|child::TASK\
+                                                     |child::SWITCH|child::SWITCH_ITEM\
+                                                     |child::MODULE|child::LOOP\
+                                                     |child::NPASS_TASK|child::FOR_EACH)"
+                                                      , fv->context);
+   for_results( xmlNode, results ){
+      xmlNodePtr node = xmlNode;
+      if( strcmp(node->name, "TASK") == 0 || strcmp(node->name, "NPASS_TASK") == 0)
+      {
+         pft_int_task(fv,lp,basePath,baseSwitchArgs,depth,xmlNode);
+      }
+      else if( strcmp(node->name, "MODULE") == 0)
+      {
+         pft_int_module(fv,lp,basePath,baseSwitchArgs,depth,xmlNode);
+      }
+      else if(   strcmp(node->name, "LOOP") == 0
+                || strcmp(node->name, "FAMILY") == 0
+                || strcmp(node->name, "SWITCH") == 0)
+      {
+         pft_int_container(fv,lp,basePath,baseSwitchArgs,depth,xmlNode);
+      }
+      else if( strcmp(node->name, "SWITCH_ITEM") == 0 )
+      {
+         pft_int_switch_item(fv,lp,basePath,baseSwitchArgs,depth,xmlNode);
+      }
+   }
+   xmlXPathFreeObject(results);
+}
+
+#define COPY_TO_LINE(dst,src,len)                                              \
+   memcpy((dst),(src),(len)=strlen((src)));                                    \
+   (dst)+=(len);                                                               \
+   *(dst)++ = '\t';                                                            \
+
+#define LONG_LINE 10000
+const char *node_to_line(SeqNodeDataPtr ndp)
+{
+   static char buffer[LONG_LINE];
+   static char small_buffer[50];
+
+   char *dst = buffer;
+   size_t len;
+
+
+
+      COPY_TO_LINE(dst,ndp->name,len)
+
+      char *type_str = SeqNode_getTypeString(ndp->type);
+      COPY_TO_LINE(dst,type_str,len)
+
+      COPY_TO_LINE(dst,ndp->cpu,len)
+
+      sprintf(small_buffer,"%d",ndp->mpi);
+      COPY_TO_LINE(dst,small_buffer,len)
+
+      /* COPY_TO_LINE(dst,ndp-> */
+
+      /* ET CETERA */
+
+   *dst = 0;
+
+   return (const char *)buffer;
+}
+
+
 
 /*
  * SOME NOTES ABOUT THIS TEST:
@@ -164,126 +345,60 @@ void PathArgNode_printList(PathArgNodePtr list_head)
  */
 
 
-void parseFlowTree_internal(FlowVisitorPtr fv, PathArgNodePtr *lp,
-                            const char * basePath, const char * baseSwitchArgs,
-                                                                     int depth);
-
-PathArgNodePtr parseFlowTree(const char * seq_exp_home)
-{
-   /* LISTNODEPTR list_head = NULL; */
-   PathArgNodePtr pap = NULL;
-
-   FlowVisitorPtr fv = Flow_newVisitor(NULL,seq_exp_home,NULL);
-
-   const char * basePath = (const char *) xmlGetProp(fv->context->node,
-                                                      (const xmlChar *)"name");
-   PathArgNode_pushFront(&pap, basePath, "" );
-
-   parseFlowTree_internal(fv, &pap ,basePath,"", 0);
-
-
-   free((char*)basePath);
-   Flow_deleteVisitor(fv);
-   return pap;
-}
-
-
-void indent(int depth)
-{
-   int i;
-   for(i = depth; i--;)
-      fprintf(stderr, "    ");
-}
-
-void parseFlowTree_internal(FlowVisitorPtr fv, PathArgNodePtr *lp,
-                            const char * basePath, const char * baseSwitchArgs,
-                                                                     int depth)
-{
-   /*
-    * Oh heavenly Father, I pray to thee to forgive me for this inelegant query
-    * which amounts to saying "all children except SUBMITS".  There has to be a
-    * way of saying something like child::!SUBMITS or something.
-    */
-   xmlXPathObjectPtr results = XmlUtils_getnodeset("(child::FAMILY|child::TASK\
-                                                     |child::SWITCH|child::SWITCH_ITEM\
-                                                     |child::MODULE|child::LOOP\
-                                                     |child::NPASS_TASK|child::FOR_EACH)"
-                                                      , fv->context);
-
-   for_results( xmlNode, results ){
-      const char * name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
-      xmlNodePtr node = xmlNode;
-
-      if( strcmp(node->name, "TASK") == 0 || strcmp(node->name, "NPASS_TASK") == 0){
-         char path[SEQ_MAXFIELD] = {0};
-         sprintf( path, "%s/%s", basePath,name);
-         /* SeqListNode_pushFront(&(lp->paths), path); */
-         PathArgNode_pushFront( lp, path, baseSwitchArgs );
-      } else if( strcmp(node->name, "MODULE") == 0){
-         char path[SEQ_MAXFIELD] = {0};
-         sprintf( path, "%s/%s", basePath,name);
-         /* SeqListNode_pushFront(&(lp->paths), path); */
-         PathArgNode_pushFront( lp, path, baseSwitchArgs );
-         Flow_changeModule(fv, (const char *) name);
-         parseFlowTree_internal(fv, lp ,path,baseSwitchArgs, depth+1);
-         Flow_restoreContext(fv);
-      } else if(   strcmp(node->name, "LOOP") == 0
-                || strcmp(node->name, "FAMILY") == 0
-                || strcmp(node->name, "SWITCH") == 0){
-         char path[SEQ_MAXFIELD] = {0};
-         sprintf( path, "%s/%s", basePath,name);
-         /* SeqListNode_pushFront(&(lp->paths), path); */
-         PathArgNode_pushFront( lp, path, baseSwitchArgs );
-         xmlNodePtr previousNode = fv->context->node;
-         fv->context->node = node;
-         parseFlowTree_internal(fv, lp ,path,baseSwitchArgs,depth+1);
-         fv->context->node = previousNode;
-      } else if( strcmp(node->name, "SWITCH_ITEM") == 0 ){
-         /* char path[SEQ_MAXFIELD] = {0}; */
-         char switch_args[SEQ_MAXFIELD] = {0};
-         const char * switch_item_name = xmlGetProp(xmlNode, (const xmlChar *)"name");
-         const char * switch_name = SeqUtil_getPathLeaf(basePath);
-         sprintf( switch_args, "%s=%s,",switch_name,switch_item_name );
-         xmlNodePtr previousNode = fv->context->node;
-         fv->context->node = node;
-         parseFlowTree_internal(fv, lp ,basePath,switch_args, depth+1);
-         fv->context->node = previousNode;
-         free((char*)switch_item_name);
-         free((char*)switch_name);
-      }
-      free((char *)name);
-   }
-   xmlXPathFreeObject(results);
-}
 
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
 
+#ifdef MANY_TIMES
+   int i = 0;
+   for( i = 0; i < 100 ; i++){
+#endif
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_CRITICAL);
    PathArgNodePtr lp = parseFlowTree(seq_exp_home);
 
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
-   SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\nNote that this test is dependent on an experiment that is not in the test directory.\n\n");
+   /* SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\nNote that this test is dependent on an experiment that is not in the test directory.\n\n"); */
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
    SeqListNode_reverseList(&lp);
    /* printListWithLinefeed(lp->paths,TL_FULL_TRACE); */
    PathArgNode_printList(lp);
+   getchar();
 #if 1
    /* SeqUtil_setTraceFlag(TRACE_LEVEL, TL_CRITICAL); */
    SeqNodeDataPtr ndp = NULL;
    for_list(itr,lp){
+      /*
+       * Some offset manipulation trickery, if you're not 100% sure of how this
+       * works, just don't do it! I can iterate over a LISTNODEPTR list the same
+       * way as with a PathArgNodePtr because the nextPtr of both structs is the
+       * first member, so ->nextPtr adds the same offset. If you don't know how
+       * the compiler translates the instruction ptr = current->field to
+       * assembler code, forget about this or go learn it.
+       *
+       * In fact, this isn't trickery, this is just advanced.
+       */
       PathArgNodePtr pap_itr = (PathArgNodePtr) itr;
+
       SeqUtil_TRACE(TL_FULL_TRACE,"calling nodeinfo with path=%s, switch_args=%s\n",
                                     pap_itr->path, pap_itr->switch_args);
-      /* getchar(); */
+
       ndp = nodeinfo(pap_itr->path, NI_SHOW_ALL, NULL, seq_exp_home,
-                     NULL, NULL,pap_itr->switch_args );
+                                          NULL, NULL,pap_itr->switch_args );
       SeqNode_printNode(ndp,NI_SHOW_ALL,NULL);
+      getchar();
+      /* SeqUtil_TRACE(TL_CRITICAL, "%s\n", node_to_line(ndp)); */
+
       SeqNode_freeNode(ndp);
+
+      /* getchar(); */
    }
 #endif
-
    PathArgNode_deleteList(&lp);
+#ifdef MANY_TIMES
+   }
+#endif
+   printf("DONE\n");
+
    SeqUtil_TRACE(TL_CRITICAL, "============== ALL TESTS HAVE PASSED =====================\n");
    return 0;
 }
@@ -351,8 +466,8 @@ from the maestro directory.\n");
    puts ( testDir );
    /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/"); */
 
-   seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/");
-
+   /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/"); */
+   seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/bug6268_switch");
    runTests(seq_exp_home,node,datestamp);
 
    free(node);
