@@ -181,8 +181,9 @@ void pft_int_container(FlowVisitorPtr fv, PathArgNode *pathArgList ,
                         const char *basePath,const char *baseSwitchArgs,
                         int depth,xmlNodePtr xmlNode)
 {
-   char path[SEQ_MAXFIELD] = {0};
+   char path[SEQ_MAXFIELD];
    const char * container_name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
+
    sprintf( path, "%s/%s", basePath,container_name);
    PathArgNode_pushFront( pathArgList, path, baseSwitchArgs );
    xmlNodePtr previousNode = fv->context->node;
@@ -199,7 +200,7 @@ void pft_int_module(FlowVisitorPtr fv, PathArgNode *pathArgList,
                         const char *basePath,const char *baseSwitchArgs,
                         int depth,xmlNodePtr xmlNode)
 {
-   char path[SEQ_MAXFIELD] = {0};
+   char path[SEQ_MAXFIELD];
    const char * module_name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
    sprintf( path, "%s/%s", basePath,module_name);
    PathArgNode_pushFront( pathArgList, path, baseSwitchArgs );
@@ -216,7 +217,7 @@ void pft_int_task(FlowVisitorPtr fv, PathArgNode *pathArgList,
                         const char *basePath,const char *baseSwitchArgs,
                         int depth,xmlNodePtr xmlNode)
 {
-   char path[SEQ_MAXFIELD] = {0};
+   char path[SEQ_MAXFIELD];
    const char * name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
    sprintf( path, "%s/%s", basePath,name);
    PathArgNode_pushFront( pathArgList , path, baseSwitchArgs );
@@ -229,7 +230,7 @@ void pft_int_switch_item(FlowVisitorPtr fv, PathArgNode *pathArgList,
                         const char *basePath,const char *baseSwitchArgs,
                         int depth,xmlNodePtr xmlNode)
 {
-   char switch_args[SEQ_MAXFIELD] = {0};
+   char switch_args[SEQ_MAXFIELD];
    const char * switch_item_name = xmlGetProp(xmlNode, (const xmlChar *)"name");
    const char * switch_name = SeqUtil_getPathLeaf(basePath);
 
