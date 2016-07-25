@@ -9,12 +9,59 @@
 #include "SeqUtil.h"
 
 #include "SeqNodeCensus.h"
-void parseFlowTree_internal(FlowVisitorPtr fv, PathArgNodePtr *lp,
+void getNodeList_internal(FlowVisitorPtr fv, PathArgNodePtr *lp,
                             const char * basePath, const char * baseSwitchArgs,
                                                                      int depth);
+void gnl_module(FlowVisitorPtr fv, PathArgNodePtr *pathArgList ,
+                        const char *basePath,const char *baseSwitchArgs,
+                        int depth,xmlNodePtr xmlNode);
+void gnl_task(FlowVisitorPtr fv, PathArgNodePtr *pathArgList ,
+                        const char *basePath,const char *baseSwitchArgs,
+                        int depth,xmlNodePtr xmlNode);
+void gnl_container(FlowVisitorPtr fv, PathArgNodePtr *pathArgList ,
+                        const char *basePath,const char *baseSwitchArgs,
+                        int depth,xmlNodePtr xmlNode);
+void gnl_switch_item(FlowVisitorPtr fv, PathArgNodePtr *pathArgList ,
+                        const char *basePath,const char *baseSwitchArgs,
+                        int depth,xmlNodePtr xmlNode);
+
+int PathArgNode_pushFront(PathArgNodePtr *list_head, const char *path, const char *switch_args);
+
 
 /********************************************************************************
- *
+ * Returns a list of nodes for a given experiment.
+ * The format of the list is as a pair consisting of
+ * path : The path to the node
+ * switch_args : The branches of switches that must be taken to get to the node.
+ * NOTE: The caller is responsible for deleting the list.
+********************************************************************************/
+PathArgNodePtr getNodeList(const char * seq_exp_home)
+{
+   PathArgNodePtr pap = NULL;
+   FlowVisitorPtr fv = Flow_newVisitor(NULL,seq_exp_home,NULL);
+
+   const char * basePath = (const char *) xmlGetProp(fv->context->node,
+                                                      (const xmlChar *)"name");
+
+   /*
+    * Base step of recursion
+    */
+   PathArgNode_pushFront(&pap, basePath, "" );
+
+   /*
+    * Start recursion
+    */
+   getNodeList_internal(fv, &pap ,basePath,"", 0);
+
+out_free:
+   free((char*)basePath);
+   Flow_deleteVisitor(fv);
+   return pap;
+}
+
+/********************************************************************************
+ * Inserts a PathArgNodePtr at the front of the list pointed to by *list_head
+ * and stores the address of the new element in list_head.
 ********************************************************************************/
 int PathArgNode_pushFront(PathArgNodePtr *list_head, const char *path, const char *switch_args)
 {
@@ -32,7 +79,8 @@ int PathArgNode_pushFront(PathArgNodePtr *list_head, const char *path, const cha
 }
 
 /********************************************************************************
- *
+ * Frees the entire list pointed to by *list_head.  For good measure, we set
+ * *list_head to NULL.
 ********************************************************************************/
 int PathArgNode_deleteList(PathArgNodePtr *list_head)
 {
@@ -53,144 +101,17 @@ int PathArgNode_deleteList(PathArgNodePtr *list_head)
 }
 
 /********************************************************************************
- *
+ * Prints the nodes of the list if the trace level is sufficient
 ********************************************************************************/
-void PathArgNode_printList(PathArgNodePtr list_head)
+void PathArgNode_printList(PathArgNodePtr list_head, int trace_level)
 {
+   if( trace_level < SeqUtil_getTraceLevel())
+      return;
+
    for_pap_list(itr,list_head){
       PathArgNodePtr pap_itr = (PathArgNodePtr) itr;
-      printf("%s {%s}\n", pap_itr->path, pap_itr->switch_args);
+      fprintf(stderr,"%s {%s}\n", pap_itr->path, pap_itr->switch_args);
    }
-}
-
-/********************************************************************************
- *
-********************************************************************************/
-PathArgNodePtr parseFlowTree(const char * seq_exp_home)
-{
-   PathArgNodePtr pap = NULL;
-   FlowVisitorPtr fv = Flow_newVisitor(NULL,seq_exp_home,NULL);
-
-   const char * basePath = (const char *) xmlGetProp(fv->context->node,
-                                                      (const xmlChar *)"name");
-
-   /*
-    * Base step of recursion
-    */
-   PathArgNode_pushFront(&pap, basePath, "" );
-
-   /*
-    * Start recursion
-    */
-   parseFlowTree_internal(fv, &pap ,basePath,"", 0);
-
-out_free:
-   free((char*)basePath);
-   Flow_deleteVisitor(fv);
-   return pap;
-}
-
-/********************************************************************************
- * Recursive subroutine for container nodes.  we append the xmlNode's name to
- * the basePath to construct the path of the node and we continue the recursion.
-********************************************************************************/
-void pft_int_container(FlowVisitorPtr fv, PathArgNodePtr *pathArgList ,
-                        const char *basePath,const char *baseSwitchArgs,
-                        int depth,xmlNodePtr xmlNode)
-{
-   char path[SEQ_MAXFIELD];
-   const char * container_name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
-
-   /*
-    * Append current node name to basePath and add list entry
-    */
-   sprintf( path, "%s/%s", basePath,container_name);
-   PathArgNode_pushFront( pathArgList, path, baseSwitchArgs );
-
-   /*
-    * Continue recursion
-    */
-   parseFlowTree_internal(fv, pathArgList ,path,baseSwitchArgs,depth+1);
-
-out_free:
-   free((char*)container_name);
-}
-
-/********************************************************************************
- *
-********************************************************************************/
-void pft_int_module(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
-                        const char *basePath,const char *baseSwitchArgs,
-                        int depth,xmlNodePtr xmlNode)
-{
-   char path[SEQ_MAXFIELD];
-   const char * module_name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
-
-   /*
-    * Append current node name to basePath and add list entry
-    */
-   sprintf( path, "%s/%s", basePath,module_name);
-   PathArgNode_pushFront( pathArgList, path, baseSwitchArgs );
-
-   /*
-    * Continue recursion
-    */
-   Flow_changeModule(fv, module_name);
-   parseFlowTree_internal(fv, pathArgList ,path,baseSwitchArgs, depth+1);
-   Flow_restoreContext(fv);
-
-out_free:
-   free((char*)module_name);
-}
-
-/********************************************************************************
- *
-********************************************************************************/
-void pft_int_task(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
-                        const char *basePath,const char *baseSwitchArgs,
-                        int depth,xmlNodePtr xmlNode)
-{
-   char path[SEQ_MAXFIELD];
-   const char * name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
-
-   /*
-    * Append current node name to basePath and add list entry
-    */
-   sprintf( path, "%s/%s", basePath,name);
-   PathArgNode_pushFront( pathArgList , path, baseSwitchArgs );
-
-   /*
-    * Recursion does ends with Task or NpassTask nodes
-    */
-   free((char *)name);
-}
-
-/********************************************************************************
- *
-********************************************************************************/
-void pft_int_switch_item(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
-                        const char *basePath,const char *baseSwitchArgs,
-                        int depth,xmlNodePtr xmlNode)
-{
-   char switch_args[SEQ_MAXFIELD];
-   const char * switch_item_name = (const char *)xmlGetProp(xmlNode, (const xmlChar *)"name");
-   const char * switch_name = SeqUtil_getPathLeaf(basePath);
-
-   /*
-    * Append current switch_item_name=first_switch_arg' to baseSwitchArgs
-    */
-   char * first_comma = strstr(switch_item_name,",");
-   if( first_comma != NULL ) *first_comma = 0;
-   sprintf( switch_args, "%s%s=%s,",baseSwitchArgs,switch_name,switch_item_name );
-
-   /*
-    * Continue recursion
-    */
-   parseFlowTree_internal(fv, pathArgList ,basePath,switch_args, depth+1);
-
-out:
-   free((char*)switch_item_name);
-   free((char*)switch_name);
 }
 
 /********************************************************************************
@@ -201,7 +122,7 @@ out:
  * through one of the pft_int_${nodeType}() functions, and these functions
  * continue the recursion.
 ********************************************************************************/
-void parseFlowTree_internal(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
+void getNodeList_internal(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
                             const char * basePath, const char * baseSwitchArgs,
                                                                      int depth)
 {
@@ -222,21 +143,21 @@ void parseFlowTree_internal(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
 
       if( strcmp(xmlNode->name, "TASK") == 0 || strcmp(xmlNode->name, "NPASS_TASK") == 0)
       {
-         pft_int_task(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
+         gnl_task(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
       }
       else if( strcmp(xmlNode->name, "MODULE") == 0)
       {
-         pft_int_module(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
+         gnl_module(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
       }
       else if(   strcmp(xmlNode->name, "LOOP") == 0
                 || strcmp(xmlNode->name, "FAMILY") == 0
                 || strcmp(xmlNode->name, "SWITCH") == 0)
       {
-         pft_int_container(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
+         gnl_container(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
       }
       else if( strcmp(xmlNode->name, "SWITCH_ITEM") == 0 )
       {
-         pft_int_switch_item(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
+         gnl_switch_item(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
       }
 
       fv->context->node = previousNode;
@@ -244,38 +165,105 @@ void parseFlowTree_internal(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
 
    xmlXPathFreeObject(results);
 }
-
-#define COPY_TO_LINE(dst,src,len)                                              \
-   memcpy((dst),(src),(len)=strlen((src)));                                    \
-   (dst)+=(len);                                                               \
-   *(dst)++ = '\t';                                                            \
-
-#define LONG_LINE 10000
-const char *node_to_line(SeqNodeDataPtr ndp)
+/********************************************************************************
+ * Recursion stop for container nodes (except modules)
+********************************************************************************/
+void gnl_container(FlowVisitorPtr fv, PathArgNodePtr *pathArgList ,
+                        const char *basePath,const char *baseSwitchArgs,
+                        int depth,xmlNodePtr xmlNode)
 {
-   static char buffer[LONG_LINE];
-   static char small_buffer[50];
+   char path[SEQ_MAXFIELD];
+   const char * container_name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
 
-   char *dst = buffer;
-   size_t len;
+   /*
+    * Append current node name to basePath and add list entry
+    */
+   sprintf( path, "%s/%s", basePath,container_name);
+   PathArgNode_pushFront( pathArgList, path, baseSwitchArgs );
 
+   /*
+    * Continue recursion
+    */
+   getNodeList_internal(fv, pathArgList ,path,baseSwitchArgs,depth+1);
 
-
-      COPY_TO_LINE(dst,ndp->name,len)
-
-      char *type_str = SeqNode_getTypeString(ndp->type);
-      COPY_TO_LINE(dst,type_str,len)
-
-      COPY_TO_LINE(dst,ndp->cpu,len)
-
-      sprintf(small_buffer,"%d",ndp->mpi);
-      COPY_TO_LINE(dst,small_buffer,len)
-
-      /* COPY_TO_LINE(dst,ndp-> */
-
-      /* ET CETERA */
-
-   *dst = 0;
-
-   return (const char *)buffer;
+out_free:
+   free((char*)container_name);
 }
+
+/********************************************************************************
+ * Recursion step for modules
+********************************************************************************/
+void gnl_module(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
+                        const char *basePath,const char *baseSwitchArgs,
+                        int depth,xmlNodePtr xmlNode)
+{
+   char path[SEQ_MAXFIELD];
+   const char * module_name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
+
+   /*
+    * Append current node name to basePath and add list entry
+    */
+   sprintf( path, "%s/%s", basePath,module_name);
+   PathArgNode_pushFront( pathArgList, path, baseSwitchArgs );
+
+   /*
+    * Continue recursion
+    */
+   Flow_changeModule(fv, module_name);
+   getNodeList_internal(fv, pathArgList ,path,baseSwitchArgs, depth+1);
+   Flow_restoreContext(fv);
+
+out_free:
+   free((char*)module_name);
+}
+
+/********************************************************************************
+ * Recursion step for Task and NpassTask nodes
+********************************************************************************/
+void gnl_task(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
+                        const char *basePath,const char *baseSwitchArgs,
+                        int depth,xmlNodePtr xmlNode)
+{
+   char path[SEQ_MAXFIELD];
+   const char * name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
+
+   /*
+    * Append current node name to basePath and add list entry
+    */
+   sprintf( path, "%s/%s", basePath,name);
+   PathArgNode_pushFront( pathArgList , path, baseSwitchArgs );
+
+   /*
+    * Recursion does ends with Task or NpassTask nodes
+    */
+   free((char *)name);
+}
+
+/********************************************************************************
+ * Recursion step for switch items
+********************************************************************************/
+void gnl_switch_item(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
+                        const char *basePath,const char *baseSwitchArgs,
+                        int depth,xmlNodePtr xmlNode)
+{
+   char switch_args[SEQ_MAXFIELD];
+   const char * switch_item_name = (const char *)xmlGetProp(xmlNode, (const xmlChar *)"name");
+   const char * switch_name = SeqUtil_getPathLeaf(basePath);
+
+   /*
+    * Append current switch_item_name=first_switch_arg' to baseSwitchArgs
+    */
+   char * first_comma = strstr(switch_item_name,",");
+   if( first_comma != NULL ) *first_comma = 0;
+   sprintf( switch_args, "%s%s=%s,",baseSwitchArgs,switch_name,switch_item_name );
+
+   /*
+    * Continue recursion
+    */
+   getNodeList_internal(fv, pathArgList ,basePath,switch_args, depth+1);
+
+out:
+   free((char*)switch_item_name);
+   free((char*)switch_name);
+}
+

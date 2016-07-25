@@ -109,11 +109,46 @@ void header(const char * test){
  */
 
 
+#define COPY_TO_LINE(dst,src,len)                                              \
+   memcpy((dst),(src),(len)=strlen((src)));                                    \
+   (dst)+=(len);                                                               \
+   *(dst)++ = '\t';                                                            \
+
+#define LONG_LINE 10000
+const char *node_to_line(SeqNodeDataPtr ndp)
+{
+   static char buffer[LONG_LINE];
+   static char small_buffer[50];
+
+   char *dst = buffer;
+   size_t len;
+
+
+
+      COPY_TO_LINE(dst,ndp->name,len)
+
+      char *type_str = SeqNode_getTypeString(ndp->type);
+      COPY_TO_LINE(dst,type_str,len)
+
+      COPY_TO_LINE(dst,ndp->cpu,len)
+
+      sprintf(small_buffer,"%d",ndp->mpi);
+      COPY_TO_LINE(dst,small_buffer,len)
+
+      /* COPY_TO_LINE(dst,ndp-> */
+
+      /* ET CETERA */
+
+   *dst = 0;
+
+   return (const char *)buffer;
+}
+
 
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_CRITICAL);
-   PathArgNodePtr lp = parseFlowTree(seq_exp_home);
+   PathArgNodePtr lp = getNodeList(seq_exp_home);
 
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
    SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\nNote that this test is dependent on an experiment that is not in the test directory.\n\n");
