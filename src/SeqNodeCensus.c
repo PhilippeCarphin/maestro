@@ -43,8 +43,8 @@ int PathArgNode_deleteList(PathArgNodePtr *list_head)
 
    while( current != NULL ){
       tmp_next = current->nextPtr;
-      free(current->path);
-      free(current->switch_args);
+      free((char*)current->path);
+      free((char*)current->switch_args);
       free(current);
       current = tmp_next;
    }
@@ -57,7 +57,7 @@ int PathArgNode_deleteList(PathArgNodePtr *list_head)
 ********************************************************************************/
 void PathArgNode_printList(PathArgNodePtr list_head)
 {
-   for_list(itr,list_head){
+   for_pap_list(itr,list_head){
       PathArgNodePtr pap_itr = (PathArgNodePtr) itr;
       printf("%s {%s}\n", pap_itr->path, pap_itr->switch_args);
    }
@@ -94,7 +94,7 @@ out_free:
  * Recursive subroutine for container nodes.  we append the xmlNode's name to
  * the basePath to construct the path of the node and we continue the recursion.
 ********************************************************************************/
-void pft_int_container(FlowVisitorPtr fv, PathArgNode *pathArgList ,
+void pft_int_container(FlowVisitorPtr fv, PathArgNodePtr *pathArgList ,
                         const char *basePath,const char *baseSwitchArgs,
                         int depth,xmlNodePtr xmlNode)
 {
@@ -119,7 +119,7 @@ out_free:
 /********************************************************************************
  *
 ********************************************************************************/
-void pft_int_module(FlowVisitorPtr fv, PathArgNode *pathArgList,
+void pft_int_module(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
                         const char *basePath,const char *baseSwitchArgs,
                         int depth,xmlNodePtr xmlNode)
 {
@@ -146,7 +146,7 @@ out_free:
 /********************************************************************************
  *
 ********************************************************************************/
-void pft_int_task(FlowVisitorPtr fv, PathArgNode *pathArgList,
+void pft_int_task(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
                         const char *basePath,const char *baseSwitchArgs,
                         int depth,xmlNodePtr xmlNode)
 {
@@ -168,12 +168,12 @@ void pft_int_task(FlowVisitorPtr fv, PathArgNode *pathArgList,
 /********************************************************************************
  *
 ********************************************************************************/
-void pft_int_switch_item(FlowVisitorPtr fv, PathArgNode *pathArgList,
+void pft_int_switch_item(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
                         const char *basePath,const char *baseSwitchArgs,
                         int depth,xmlNodePtr xmlNode)
 {
    char switch_args[SEQ_MAXFIELD];
-   const char * switch_item_name = xmlGetProp(xmlNode, (const xmlChar *)"name");
+   const char * switch_item_name = (const char *)xmlGetProp(xmlNode, (const xmlChar *)"name");
    const char * switch_name = SeqUtil_getPathLeaf(basePath);
 
    /*
@@ -201,7 +201,7 @@ out:
  * through one of the pft_int_${nodeType}() functions, and these functions
  * continue the recursion.
 ********************************************************************************/
-void parseFlowTree_internal(FlowVisitorPtr fv, PathArgNodePtr *lp,
+void parseFlowTree_internal(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
                             const char * basePath, const char * baseSwitchArgs,
                                                                      int depth)
 {
@@ -210,7 +210,8 @@ void parseFlowTree_internal(FlowVisitorPtr fv, PathArgNodePtr *lp,
     * which amounts to saying "all children except SUBMITS".  There has to be a
     * way of saying something like child::!SUBMITS or something.
     */
-   xmlXPathObjectPtr results = XmlUtils_getnodeset("(child::FAMILY|child::TASK\
+   xmlXPathObjectPtr results = XmlUtils_getnodeset((const xmlChar*)
+                                                    "(child::FAMILY|child::TASK\
                                                      |child::SWITCH|child::SWITCH_ITEM\
                                                      |child::MODULE|child::LOOP\
                                                      |child::NPASS_TASK|child::FOR_EACH)"
@@ -221,21 +222,21 @@ void parseFlowTree_internal(FlowVisitorPtr fv, PathArgNodePtr *lp,
 
       if( strcmp(xmlNode->name, "TASK") == 0 || strcmp(xmlNode->name, "NPASS_TASK") == 0)
       {
-         pft_int_task(fv,lp,basePath,baseSwitchArgs,depth,xmlNode);
+         pft_int_task(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
       }
       else if( strcmp(xmlNode->name, "MODULE") == 0)
       {
-         pft_int_module(fv,lp,basePath,baseSwitchArgs,depth,xmlNode);
+         pft_int_module(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
       }
       else if(   strcmp(xmlNode->name, "LOOP") == 0
                 || strcmp(xmlNode->name, "FAMILY") == 0
                 || strcmp(xmlNode->name, "SWITCH") == 0)
       {
-         pft_int_container(fv,lp,basePath,baseSwitchArgs,depth,xmlNode);
+         pft_int_container(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
       }
       else if( strcmp(xmlNode->name, "SWITCH_ITEM") == 0 )
       {
-         pft_int_switch_item(fv,lp,basePath,baseSwitchArgs,depth,xmlNode);
+         pft_int_switch_item(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
       }
 
       fv->context->node = previousNode;

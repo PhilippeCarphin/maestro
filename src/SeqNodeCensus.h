@@ -10,6 +10,13 @@ typedef struct _PathArgNode{
 } PathArgNode;
 typedef PathArgNode *PathArgNodePtr;
 
+#define for_pap_list(iterator, list_head)                                      \
+   PathArgNodePtr iterator;                                                    \
+   for( iterator = list_head;                                                  \
+        iterator != NULL;                                                      \
+        iterator = iterator->nextPtr                                           \
+      )
+
 PathArgNodePtr parseFlowTree(const char * seq_exp_home);
 int PathArgNode_deleteList(PathArgNodePtr *list_head);
 void PathArgNode_printList(PathArgNodePtr list_head);

@@ -118,7 +118,7 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
    SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\nNote that this test is dependent on an experiment that is not in the test directory.\n\n");
    SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
-   SeqListNode_reverseList(&lp);
+   SeqListNode_reverseList((LISTNODEPTR*)&lp); /* Understanding how inheritance is implemented */
    PathArgNode_printList(lp);
 
    SeqUtil_TRACE(TL_FULL_TRACE, "Press ENTER to do nodeinfo on all these nodes\n");
@@ -126,12 +126,11 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
 
    SeqUtil_setTraceFlag(TRACE_LEVEL,TL_CRITICAL);
    SeqNodeDataPtr ndp = NULL;
-   for_list(itr,lp){
-      PathArgNodePtr pap_itr = (PathArgNodePtr) itr;
+   for_pap_list(itr,lp){
       SeqUtil_TRACE(TL_CRITICAL,"calling nodeinfo with path=%s, switch_args=%s\n",
-                                    pap_itr->path, pap_itr->switch_args);
-      ndp = nodeinfo(pap_itr->path, NI_SHOW_ALL, NULL, seq_exp_home,
-                                          NULL, NULL,pap_itr->switch_args );
+                                    itr->path, itr->switch_args);
+      ndp = nodeinfo(itr->path, NI_SHOW_ALL, NULL, seq_exp_home,
+                                          NULL, NULL,itr->switch_args );
       SeqNode_printNode(ndp,NI_SHOW_ALL,NULL);
       getchar();
       SeqNode_freeNode(ndp);
