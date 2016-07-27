@@ -115,64 +115,159 @@ void header(const char * test){
    *(dst)++ = '\t';                                                            \
 
 #define LONG_LINE 10000
-const char *node_to_line(SeqNodeDataPtr ndp)
-{
-   static char buffer[LONG_LINE];
-   static char small_buffer[50];
 
-   char *dst = buffer;
+
+
+/********************************************************************************
+ * Write key.  If I'm going to be writing this straight to STDOUT, then there is
+ * no point in doing all this crazy pointer stuff.  Just do some putchars and
+ * some printfs.  I don't even need this function.  Same thing if I'm outputting
+ * to a file.  I open the file and do fprintfs.
+********************************************************************************/
+void write_key( char **dst,const char *key_name, const char *key_value )
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "write_key() writing key_name:%s key_value:%s\n",
+                                          key_name,key_value);
+   SeqUtil_TRACE(TL_FULL_TRACE, "&dst=%p dst=%p, *dst=%p, **dst=%c\n",&dst, dst,*dst,**dst);
    size_t len;
 
+   *((*dst)++) = '{';
 
+   SeqUtil_TRACE(TL_FULL_TRACE, "dst=%p, *dst=%p\n",dst,*dst);
 
-      COPY_TO_LINE(dst,ndp->name,len)
+   memcpy(*dst,key_name,len=strlen(key_name));
+   *dst += len;
 
-      char *type_str = SeqNode_getTypeString(ndp->type);
-      COPY_TO_LINE(dst,type_str,len)
+   *((*dst)++) = ' ';
+   *((*dst)++) = '{';
 
-      COPY_TO_LINE(dst,ndp->cpu,len)
+   memcpy(*dst,key_value,len=strlen(key_value));
+   *dst += len;
 
-      sprintf(small_buffer,"%d",ndp->mpi);
-      COPY_TO_LINE(dst,small_buffer,len)
+   *((*dst)++) = '}';
+   *((*dst)++) = '}';
+}
 
-      /* COPY_TO_LINE(dst,ndp-> */
+#define _OUTPUT_TO_FILE_
+const char *node_to_keylist_line(SeqNodeDataPtr ndp)
+{
+   static char buffer[LONG_LINE];
 
-      /* ET CETERA */
+   char * dst = buffer;
+   SeqUtil_TRACE(TL_FULL_TRACE, "&dst=%p, &buffer=%p\n", &dst, &buffer);
 
-   *dst = 0;
+   /*
+    * Begin the entry for the node with a brace and the node's name
+    */
+#ifdef _OUTPUT_TO_FILE_
+   printf("{%s", ndp->name);
+#else
+   char small_buffer[50];
+   *dst++ = '{';
+   size_t len;
+   memcpy(dst,ndp->name,len=strlen(ndp->name));
+   dst += len;
+   *dst++ = ' ';
+#endif
+
+   /*
+    * Write the keys with their values separated by a space using small buffer
+    * to convert integers to strings when necessary.
+    */
+#ifdef _OUTPUT_TO_FILE_
+   printf(" {CPU {%s}}",ndp->cpu);
+#else
+   write_key(&dst,"CPU",ndp->cpu);
+   *dst++ = ' ';
+#endif
+
+#ifdef _OUTPUT_TO_FILE_
+   printf(" {MPI {%d}}",ndp->mpi);
+#else
+   sprintf(small_buffer, "%d", ndp->mpi);
+   write_key(&dst,"MPI",small_buffer);
+#endif
+
+#ifdef OUTPUT_TO_FILE_
+   printf("}\n");
+#else
+   *dst++ = '}';
+   *dst = '\0';
+#endif
 
    return (const char *)buffer;
+}
+
+FILE *hr_output_file(const char *hr_filename)
+{
+   FILE *output_file = NULL;
+
+   /*
+    * Check for errors:
+    * -Empty filename
+    * -Unaccessible filename
+    *
+    * and replace hr_filename with fallback filename
+    */
+
+   output_file = fopen( hr_filename, "w" );
+
+   return output_file;
+
+}
+
+
+
+
+
+int write_db_file(const char *seq_exp_home, const char *hr_filename)
+{
+   /*
+    * Open file for writing.  Do some error checks.  What are some errors that
+    * could occur?  Could be stdout.  Following the logreader interface (not
+    * Antoine Macia's implementation), I could output TSV ready stuff to STDOUT
+    * and output more human readable stuff to an output file.
+    *
+    * For now, it's going to go to STDOUT since that is easy to pick catch in
+    * the TCL part.
+    */
+
+   /* FILE *hr_output = NULL; */
+   /* FILE *tcl_output = stdout; */
+
+
+   /*
+    * Get list of nodes in experiment
+    */
+   PathArgNodePtr nodeList = getNodeList(seq_exp_home);
+   PathArgNode_printList( nodeList , TL_FULL_TRACE );
+
+   /*
+    * For each node in the list, write an entry in the file
+    */
+   SeqNodeDataPtr ndp = NULL;
+   for_pap_list(itr,nodeList){
+      ndp = nodeinfo(itr->path, NI_SHOW_ALL, NULL, seq_exp_home,
+                                             NULL, NULL,itr->switch_args );
+#ifdef _OUTPUT_TO_FILE_
+      node_to_keylist_line(ndp);
+      getchar();
+#else
+      fprintf(stdout, "%s\n", node_to_keylist_line(ndp));
+#endif
+   }
+
+
+
+out_free:
+   PathArgNode_deleteList(nodeList);
+   return 0;
 }
 
 
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
-   SeqUtil_setTraceFlag(TRACE_LEVEL, TL_CRITICAL);
-   PathArgNodePtr lp = getNodeList(seq_exp_home);
-
-   SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
-   SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\nNote that this test is dependent on an experiment that is not in the test directory.\n\n");
-   SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
-   SeqListNode_reverseList((LISTNODEPTR*)&lp); /* Understanding how inheritance is implemented */
-   PathArgNode_printList(lp);
-
-   SeqUtil_TRACE(TL_FULL_TRACE, "Press ENTER to do nodeinfo on all these nodes\n");
-   getchar();
-
-   SeqUtil_setTraceFlag(TRACE_LEVEL,TL_CRITICAL);
-   SeqNodeDataPtr ndp = NULL;
-   for_pap_list(itr,lp){
-      SeqUtil_TRACE(TL_CRITICAL,"calling nodeinfo with path=%s, switch_args=%s\n",
-                                    itr->path, itr->switch_args);
-      ndp = nodeinfo(itr->path, NI_SHOW_ALL, NULL, seq_exp_home,
-                                          NULL, NULL,itr->switch_args );
-      SeqNode_printNode(ndp,NI_SHOW_ALL,NULL);
-      getchar();
-      SeqNode_freeNode(ndp);
-   }
-   PathArgNode_deleteList(&lp);
-
-   SeqUtil_TRACE(TL_CRITICAL, "============== ALL TESTS HAVE PASSED =====================\n");
+   write_db_file(seq_exp_home, "/home/ops/afsi/phc/node_database.txt");
    return 0;
 }
 int main ( int argc, char * argv[] )
