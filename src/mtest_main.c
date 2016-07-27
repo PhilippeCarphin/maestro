@@ -108,94 +108,38 @@ void header(const char * test){
  * entries in our 'node census'.
  */
 
+#define printkeys(key_name,key_value)\
+   printf(" { {%s}}",(key_name),(key_value))
 
-#define COPY_TO_LINE(dst,src,len)                                              \
-   memcpy((dst),(src),(len)=strlen((src)));                                    \
-   (dst)+=(len);                                                               \
-   *(dst)++ = '\t';                                                            \
-
-#define LONG_LINE 10000
-
-
-
-/********************************************************************************
- * Write key.  If I'm going to be writing this straight to STDOUT, then there is
- * no point in doing all this crazy pointer stuff.  Just do some putchars and
- * some printfs.  I don't even need this function.  Same thing if I'm outputting
- * to a file.  I open the file and do fprintfs.
-********************************************************************************/
-void write_key( char **dst,const char *key_name, const char *key_value )
+void node_to_keylist(SeqNodeDataPtr ndp)
 {
-   SeqUtil_TRACE(TL_FULL_TRACE, "write_key() writing key_name:%s key_value:%s\n",
-                                          key_name,key_value);
-   SeqUtil_TRACE(TL_FULL_TRACE, "&dst=%p dst=%p, *dst=%p, **dst=%c\n",&dst, dst,*dst,**dst);
-   size_t len;
-
-   *((*dst)++) = '{';
-
-   SeqUtil_TRACE(TL_FULL_TRACE, "dst=%p, *dst=%p\n",dst,*dst);
-
-   memcpy(*dst,key_name,len=strlen(key_name));
-   *dst += len;
-
-   *((*dst)++) = ' ';
-   *((*dst)++) = '{';
-
-   memcpy(*dst,key_value,len=strlen(key_value));
-   *dst += len;
-
-   *((*dst)++) = '}';
-   *((*dst)++) = '}';
-}
-
-#define _OUTPUT_TO_FILE_
-const char *node_to_keylist_line(SeqNodeDataPtr ndp)
-{
-   static char buffer[LONG_LINE];
-
-   char * dst = buffer;
-   SeqUtil_TRACE(TL_FULL_TRACE, "&dst=%p, &buffer=%p\n", &dst, &buffer);
-
    /*
     * Begin the entry for the node with a brace and the node's name
     */
-#ifdef _OUTPUT_TO_FILE_
    printf("{%s", ndp->name);
-#else
-   char small_buffer[50];
-   *dst++ = '{';
-   size_t len;
-   memcpy(dst,ndp->name,len=strlen(ndp->name));
-   dst += len;
-   *dst++ = ' ';
-#endif
 
    /*
     * Write the keys with their values separated by a space using small buffer
     * to convert integers to strings when necessary.
     */
-#ifdef _OUTPUT_TO_FILE_
-   printf(" {CPU {%s}}",ndp->cpu);
-#else
-   write_key(&dst,"CPU",ndp->cpu);
-   *dst++ = ' ';
+#ifdef _TESTING_
+   printf("\n\t\t");
 #endif
+   /* printf(" {CPU {%s}}",ndp->cpu); */
+   printkeys("CPU",ndp->cpu);
 
-#ifdef _OUTPUT_TO_FILE_
+#ifdef _TESTING_
+   printf("\n\t\t");
+#endif
    printf(" {MPI {%d}}",ndp->mpi);
-#else
-   sprintf(small_buffer, "%d", ndp->mpi);
-   write_key(&dst,"MPI",small_buffer);
-#endif
 
-#ifdef OUTPUT_TO_FILE_
-   printf("}\n");
-#else
-   *dst++ = '}';
-   *dst = '\0';
+   /*
+    * End the line with a '}' and a '\n'
+    */
+#ifdef _TESTING_
+   printf("\n\t");
 #endif
-
-   return (const char *)buffer;
+   printf("}");
 }
 
 FILE *hr_output_file(const char *hr_filename)
@@ -218,6 +162,7 @@ FILE *hr_output_file(const char *hr_filename)
 
 
 
+#define _TESTING_
 
 
 int write_db_file(const char *seq_exp_home, const char *hr_filename)
@@ -246,16 +191,29 @@ int write_db_file(const char *seq_exp_home, const char *hr_filename)
     * For each node in the list, write an entry in the file
     */
    SeqNodeDataPtr ndp = NULL;
+   putchar('{');
+#ifdef _TESTING_
+   putchar('\n');
+#endif
    for_pap_list(itr,nodeList){
       ndp = nodeinfo(itr->path, NI_SHOW_ALL, NULL, seq_exp_home,
                                              NULL, NULL,itr->switch_args );
-#ifdef _OUTPUT_TO_FILE_
-      node_to_keylist_line(ndp);
-      getchar();
-#else
-      fprintf(stdout, "%s\n", node_to_keylist_line(ndp));
+#ifdef _TESTING_
+      putchar('\t');
 #endif
+      node_to_keylist(ndp);
+      if(itr->nextPtr != NULL)
+#ifdef _TESTING_
+         putchar('\n');
+#endif
+         putchar(' ');
+      /* getchar(); */
+      SeqNode_freeNode(ndp);
    }
+#ifdef _TESTING_
+   putchar('\n');
+#endif
+   putchar('}');
 
 
 
@@ -267,7 +225,10 @@ out_free:
 
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
-   write_db_file(seq_exp_home, "/home/ops/afsi/phc/node_database.txt");
+   SeqUtil_setTraceFlag(TRACE_LEVEL,TL_CRITICAL);
+   int i;
+   for(i = 0; i < 50; ++i)
+      write_db_file(seq_exp_home, "/home/ops/afsi/phc/node_database.txt");
    return 0;
 }
 int main ( int argc, char * argv[] )
@@ -334,8 +295,8 @@ from the maestro directory.\n");
    puts ( testDir );
    /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/"); */
 
-   /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/"); */
-   seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/bug6268_switch");
+   seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/");
+   /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/bug6268_switch"); */
    runTests(seq_exp_home,node,datestamp);
 
    free(node);
