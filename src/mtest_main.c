@@ -112,40 +112,54 @@ char c = 'a';
 #define printkeys(key_name,key_value)\
    printf(" { {%s}}",(key_name),(key_value))
 
-void node_to_keylist(SeqNodeDataPtr ndp)
+void resource_keylist(SeqNodeDataPtr ndp, FILE * fp, int human_readable)
 {
    /*
-    * Begin the entry for the node with a brace and the node's name
+    * All keys exept the last one must be followed by a space
     */
-   /* printf("%s ", ndp->name); */
-   printf("%c ", c++);
+   if( human_readable ){
+      fprintf(fp, "        .CPU = %s\n", ndp->cpu);
+      fprintf(fp, "        .MPI = %d\n", ndp->mpi);
+   } else {
+      fprintf(fp, "{");
+      fprintf(fp, "{CPU %s} ",ndp->cpu);
+      fprintf(fp, "{MPI %d}",ndp->mpi);
+      fprintf(fp, "}");
+   }
+}
 
-#ifdef _TESTING_
-   printf("\n\t\t");
-#endif
+void dependency_keylist(SeqNodeDataPtr ndp, FILE *fp, int human_readable)
+{
+   if( human_readable ){
+      fprintf(fp, "        .dpename1 = %s\n", "depvalue1");
+      fprintf(fp, "        .dpename2 = %s\n", "depvalue2");
+   } else {
+      fprintf(fp,"{{depname1 depvalue1} {depname2 depvalue2}}");
+   }
+}
 
+void node_to_keylist(SeqNodeDataPtr ndp,FILE *fp, int human_readable)
+{
+   if( human_readable ){
+      fprintf(fp, "%s\n", ndp->name);
+      fprintf(fp, "    .resources\n");
+      resource_keylist(ndp,fp, human_readable);
 
-   /*
-    * Write the keys with their values separated by a space using small buffer
-    * to convert integers to strings when necessary.
-    */
-   putchar('{');
+      fprintf(fp, "    .depends\n");
+      dependency_keylist(ndp,fp, human_readable);
+   } else {
+      fprintf(fp, "%s {", ndp->name);
 
-   printf("{CPU %s} ",ndp->cpu);
-   /* printkeys("CPU",ndp->cpu); */
+      fprintf(fp,"{resources ",ndp->name);
+      resource_keylist(ndp,fp,human_readable);
+      fprintf(fp,"}");
 
-#ifdef _TESTING_
-   printf("\n\t\t");
-#endif
-   printf("{MPI %d}",ndp->mpi);
-
-   /*
-    * End the line with a '}' and a '\n'
-    */
-#ifdef _TESTING_
-   printf("\n\t");
-#endif
-   putchar('}');
+      fprintf(fp, " {depends ");
+      dependency_keylist(ndp, fp,human_readable);
+      fprintf(fp, "}");
+      
+      fprintf(fp,"}");
+   }
 }
 
 FILE *hr_output_file(const char *hr_filename)
@@ -197,34 +211,16 @@ int write_db_file(const char *seq_exp_home, const char *hr_filename)
     * For each node in the list, write an entry in the file
     */
    SeqNodeDataPtr ndp = NULL;
-   printf("nodes ");
-   putchar('{');
-#ifdef _TESTING_
-   putchar('\n');
-#endif
    for_pap_list(itr,nodeList){
       ndp = nodeinfo(itr->path, NI_SHOW_ALL, NULL, seq_exp_home,
                                              NULL, NULL,itr->switch_args );
-#ifdef _TESTING_
-      putchar('\t');
-#endif
-      putchar('{');
-      node_to_keylist(ndp);
-      putchar('}');
-#ifdef _TESTING_
-      putchar('\n');
-#endif
-
+      node_to_keylist(ndp, stdout, 0);
       if(itr->nextPtr != NULL){
          putchar(' ');
       }
+
       SeqNode_freeNode(ndp);
    }
-#ifdef _TESTING_
-   putchar('\n');
-#endif
-   putchar('}');
-
 
 
 out_free:
