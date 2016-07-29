@@ -107,6 +107,7 @@ void header(const char * test){
  * instead of weird hackish paths, we could use a (path,loop_args) pair as
  * entries in our 'node census'.
  */
+char c = 'a';
 
 #define printkeys(key_name,key_value)\
    printf(" { {%s}}",(key_name),(key_value))
@@ -116,22 +117,27 @@ void node_to_keylist(SeqNodeDataPtr ndp)
    /*
     * Begin the entry for the node with a brace and the node's name
     */
-   printf("{%s", ndp->name);
+   /* printf("%s ", ndp->name); */
+   printf("%c ", c++);
+
+#ifdef _TESTING_
+   printf("\n\t\t");
+#endif
+
 
    /*
     * Write the keys with their values separated by a space using small buffer
     * to convert integers to strings when necessary.
     */
-#ifdef _TESTING_
-   printf("\n\t\t");
-#endif
-   /* printf(" {CPU {%s}}",ndp->cpu); */
-   printkeys("CPU",ndp->cpu);
+   putchar('{');
+
+   printf("{CPU %s} ",ndp->cpu);
+   /* printkeys("CPU",ndp->cpu); */
 
 #ifdef _TESTING_
    printf("\n\t\t");
 #endif
-   printf(" {MPI {%d}}",ndp->mpi);
+   printf("{MPI %d}",ndp->mpi);
 
    /*
     * End the line with a '}' and a '\n'
@@ -139,7 +145,7 @@ void node_to_keylist(SeqNodeDataPtr ndp)
 #ifdef _TESTING_
    printf("\n\t");
 #endif
-   printf("}");
+   putchar('}');
 }
 
 FILE *hr_output_file(const char *hr_filename)
@@ -162,7 +168,7 @@ FILE *hr_output_file(const char *hr_filename)
 
 
 
-#define _TESTING_
+/* #define _TESTING_ */
 
 
 int write_db_file(const char *seq_exp_home, const char *hr_filename)
@@ -191,6 +197,7 @@ int write_db_file(const char *seq_exp_home, const char *hr_filename)
     * For each node in the list, write an entry in the file
     */
    SeqNodeDataPtr ndp = NULL;
+   printf("nodes ");
    putchar('{');
 #ifdef _TESTING_
    putchar('\n');
@@ -201,13 +208,16 @@ int write_db_file(const char *seq_exp_home, const char *hr_filename)
 #ifdef _TESTING_
       putchar('\t');
 #endif
+      putchar('{');
       node_to_keylist(ndp);
-      if(itr->nextPtr != NULL)
+      putchar('}');
 #ifdef _TESTING_
-         putchar('\n');
+      putchar('\n');
 #endif
+
+      if(itr->nextPtr != NULL){
          putchar(' ');
-      /* getchar(); */
+      }
       SeqNode_freeNode(ndp);
    }
 #ifdef _TESTING_
@@ -222,12 +232,10 @@ out_free:
    return 0;
 }
 
-
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
    SeqUtil_setTraceFlag(TRACE_LEVEL,TL_CRITICAL);
-   int i;
-   for(i = 0; i < 50; ++i)
+   /* int i; for(i = 0; i < 50; ++i) */
       write_db_file(seq_exp_home, "/home/ops/afsi/phc/node_database.txt");
    return 0;
 }
@@ -277,6 +285,7 @@ int main ( int argc, char * argv[] )
    const char * p = PWD;
    while(*p++ != 0 );
    while(*(p-1) != '/') --p;
+#if 0
    if( strcmp(p,"maestro") != 0 ){
       SeqUtil_TRACE(TL_FULL_TRACE, "\
 Main function for doing tests, please run this from the maestro directory so\n\
@@ -292,10 +301,12 @@ from the maestro directory.\n");
    testDir = (char *) malloc( sizeof(char) * (strlen(PWD) + strlen(suffix) + 1));
    sprintf( testDir, "%s%s" , PWD, suffix);
 
-   puts ( testDir );
+   /* puts ( testDir ); */
    /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/"); */
-
-   seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/");
+#endif
+   /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/");
+    * */
+   seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/HelloWorldPhil/");
    /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/bug6268_switch"); */
    runTests(seq_exp_home,node,datestamp);
 
