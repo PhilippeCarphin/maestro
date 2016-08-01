@@ -28,6 +28,7 @@
 #include "ResourceVisitor.h"
 #include "FlowVisitor.h"
 #include "SeqUtil.h"
+#include "SeqLoopsUtil.h"
 #include "nodeinfo.h"
 #include "getopt.h"
 #include "SeqNode.h"
@@ -90,42 +91,91 @@ void header(const char * test){
 
 
 
-/*
- * SOME NOTES ABOUT THIS TEST:
- * This test was made in another commit to develop an algorithm for getting the
- * list of all the nodes in an experiment.  I include it here as a means to test
- * the Flow_changeModule() function that uses a stack of xmlXPathContextPtr.
- *
- * This algorithm was going to be used for bug4689 but I ended up having to do
- * too many hackish things for my liking.  Therefore I'm going to wait until
- * Dominic gets back from vacation and discuss things like changing the desired
- * behavior so that it can be implemented with good design/coding practices.
- *
- * The root of the hackishness is switches, and the starting hack is to put
- * switch item names in square brackets.  As I worked on generic switches
- * (bug7312) I noticed that I hadn't thought about using loop_args.  So maybe
- * instead of weird hackish paths, we could use a (path,loop_args) pair as
- * entries in our 'node census'.
- */
-char c = 'a';
-
-#define printkeys(key_name,key_value)\
-   printf(" { {%s}}",(key_name),(key_value))
 
 void resource_keylist(SeqNodeDataPtr ndp, FILE * fp, int human_readable)
 {
    /*
     * All keys exept the last one must be followed by a space
+    * catchup
+    * cpu
+    * machine queue
+    * memory
+    * mpi
+    * wallclock
     */
+
    if( human_readable ){
-      fprintf(fp, "        .CPU = %s\n", ndp->cpu);
-      fprintf(fp, "        .MPI = %d\n", ndp->mpi);
+      fprintf(fp, "        .CATCHUP   = %d\n", ndp->catchup);
+      fprintf(fp, "        .CPU       = %s\n", ndp->cpu);
+      fprintf(fp, "        .QUEUE     = %s\n", ndp->queue);
+      fprintf(fp, "        .MPI       = %d\n", ndp->mpi);
+      fprintf(fp, "        .MEMORY    = %s\n", ndp->memory);
+      fprintf(fp, "        .WALLCLOCK = %d\n", ndp->wallclock);
    } else {
+      fprintf(fp,"{resources ",ndp->name);
+
       fprintf(fp, "{");
+      fprintf(fp, "{CATCHUP %d} ",ndp->catchup);
       fprintf(fp, "{CPU %s} ",ndp->cpu);
-      fprintf(fp, "{MPI %d}",ndp->mpi);
+      fprintf(fp, "{QUEUE %s} ",ndp->queue);
+      fprintf(fp, "{MPI %d} ",ndp->mpi);
+      fprintf(fp, "{MEMORY %s} ",ndp->memory);
+      fprintf(fp, "{WALLCLOCK %d}",ndp->wallclock);
+      fprintf(fp, "}");
+      
       fprintf(fp, "}");
    }
+}
+
+void loop_keylist(SeqNodeDataPtr ndp, FILE *fp, int human_readable)
+{
+   char *start = SeqLoops_getLoopAttribute( ndp->data, "START" ),
+        *end = SeqLoops_getLoopAttribute( ndp->data, "END" ),
+        *step = SeqLoops_getLoopAttribute( ndp->data, "STEP" ),
+        *set = SeqLoops_getLoopAttribute( ndp->data, "SET" ),
+        *expression = SeqLoops_getLoopAttribute( ndp->data, "EXPRESSION" );
+
+   /*
+    * To be as light as possible, nodeinfo can be called with the filter
+    * NI_RESOURCES_ONLY which only looks through the resource xml files.
+    * Therefore a sure way of knowing if the nodes is a loop is to check if it
+    * has loop information.
+    */
+   if(ndp->type != Loop)
+   {
+      return;
+   }
+
+   if( human_readable ){
+      if( expression == NULL ){
+         fprintf(fp, "        .START = %s\n", start);
+         fprintf(fp, "        .END = %s\n", end);
+         fprintf(fp, "        .STEP = %s\n", step);
+         fprintf(fp, "        .SET = %s\n", set);
+      } else {
+         fprintf(fp, "        .EXPRESSION = %s\n", expression);
+      }
+   } else {
+      /*
+       * {loop {{START 8} {END 18} {STEP 2} {SET 2}}}
+       */
+      fprintf(fp, " {loop {");
+      if( expression == NULL ){
+         fprintf(fp, "{START %s} ", start );
+         fprintf(fp, "{END %s} ", end );
+         fprintf(fp, "{STEP %s} ", step );
+         fprintf(fp, "{SET %s}", set );
+      } else {
+         fprintf(fp, "{EXPRESSION %s}", expression );
+      }
+      fprintf(fp, "}}");
+   }
+
+   free(start);
+   free(end);
+   free(step);
+   free(set);
+   free(expression);
 }
 
 void dependency_keylist(SeqNodeDataPtr ndp, FILE *fp, int human_readable)
@@ -134,12 +184,21 @@ void dependency_keylist(SeqNodeDataPtr ndp, FILE *fp, int human_readable)
       fprintf(fp, "        .dpename1 = %s\n", "depvalue1");
       fprintf(fp, "        .dpename2 = %s\n", "depvalue2");
    } else {
-      fprintf(fp,"{{depname1 depvalue1} {depname2 depvalue2}}");
+      fprintf(fp, "{depends ");
+      fprintf(fp, "{{depname1 depvalue1} {depname2 depvalue2}}");
+      fprintf(fp, "}");
    }
 }
 
 void node_to_keylist(SeqNodeDataPtr ndp,FILE *fp, int human_readable)
 {
+   /*
+    * For the loop part, it is required that getFlowInfo be called so that the
+    * ndp->type can be known.  If we want to do it without calling getFlowInfo
+    * for performance reasons, then I can arrange that.  Simply check if there
+    * is info there.  Instead of using node->type, we can just do if( start ==
+    * NULL && expression == NULL ) then the node is not a loop.
+    */
    if( human_readable ){
       fprintf(fp, "%s\n", ndp->name);
       fprintf(fp, "    .resources\n");
@@ -147,18 +206,24 @@ void node_to_keylist(SeqNodeDataPtr ndp,FILE *fp, int human_readable)
 
       fprintf(fp, "    .depends\n");
       dependency_keylist(ndp,fp, human_readable);
+
+      if( ndp->type == Loop ){
+         fprintf(fp, "    .loop\n");
+         loop_keylist(ndp,fp,human_readable);
+      }
    } else {
       fprintf(fp, "%s {", ndp->name);
 
-      fprintf(fp,"{resources ",ndp->name);
       resource_keylist(ndp,fp,human_readable);
+
+      fprintf(fp, " ");
+      dependency_keylist(ndp, fp,human_readable);
+
+      fprintf(fp, " ");
+      loop_keylist(ndp, fp, human_readable);
+
       fprintf(fp,"}");
 
-      fprintf(fp, " {depends ");
-      dependency_keylist(ndp, fp,human_readable);
-      fprintf(fp, "}");
-      
-      fprintf(fp,"}");
    }
 }
 
@@ -300,9 +365,8 @@ from the maestro directory.\n");
    /* puts ( testDir ); */
    /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/"); */
 #endif
-   /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/");
-    * */
-   seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/HelloWorldPhil/");
+   seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/");
+   /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/HelloWorldPhil/"); */
    /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/bug6268_switch"); */
    runTests(seq_exp_home,node,datestamp);
 
