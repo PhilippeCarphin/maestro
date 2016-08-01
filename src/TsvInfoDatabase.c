@@ -184,6 +184,7 @@ int write_db_file(const char *seq_exp_home, FILE *tsv_output_fp, FILE *hr_output
 
       if( hr_output_fp != NULL ){
          node_to_keylist(ndp, hr_output_fp, 1);
+         fprintf(hr_output_fp,"\n");
       }
 
       SeqNode_freeNode(ndp);
