@@ -25,144 +25,120 @@
 #include "SeqUtil.h"
 #include "TsvInfoDatabase.h"
 
-static char * testDir = NULL;
+
 int MLLServerConnectionFid=0;
 
-/********************************************************************************
- * MAESTRO TEST FILE
- *
- * This file is intended as a place to do unit testing and experimentation
- * during development and bug solving in maestro.
- *
- * This file assumes that the executable is being run from the maestro directory
- * so that paths can be relative to that directory:
- *
- * testDir is the location to look in for whaterver files are being used for
- * these tests.
- *
- * It is encouraged to put all files that need to be accessed in
- * that directory, so that, for example, if one must modify resourceVisitor
- * functions, they can checkout the mtest_main.c file from a previous commit and
- * run the tests periodically to make sure that all the functions still fulfill
- * their contract, and to catch runtime errors at the earliest possible moment.
- *
- * The base of the test file is the main(), the runTests() function and the
- * absolutePath() function, and the header() function.  The rest is the actual
- * tests, which should have a SETUP, and some TESTS where the result of the test
- * is verified, and raiseError() should be called if the result is different
- * from the expected result.
- *
- * Lower level functions should be tested first so that they may be known to
- * work when testing the higher level functions that use them.
- *
-********************************************************************************/
-
-/********************************************************************************
- * Creates an absolute path by appending the relative path to testDir, where
- * testDir = ${MAESTRO_REPO_LOCATION}/testDir/
- * This should be used for any paths so that the tests can be portable to
- * different users who keep their maestro stuff in different places.
-********************************************************************************/
-char * absolutePath(const char * relativePath)
+static void printUsage()
 {
-   SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() begin\n");
-   char * absPath = (char *) malloc( strlen(testDir) + 1 + strlen(relativePath) + 1);
-   sprintf( absPath, "%s%c%s", testDir,'/', relativePath);
-   SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() end, returning %s\n", absPath);
-   return absPath;
-}
-
-
-void header(const char * test){
-   SeqUtil_TRACE(TL_CRITICAL, "\n=================== UNIT TEST FOR %s ===================\n",test);
-}
-
-
-
-
-
-
-
-int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
-{
-   SeqUtil_setTraceFlag(TRACE_LEVEL,TL_CRITICAL);
-   /* int i; for(i = 0; i < 50; ++i) */
-      write_db_file(seq_exp_home, stdout, stderr);
-   return 0;
+   char * usage = "\
+DESCRIPTION: tsvinfo\n\
+\n\
+        Creates a file containing data on the nodes of an experiment for the GUI\n\
+        to use to speed up the process of getting information on node resources.\n\
+        The tsv output is formatted to be read in one line into a tsv (TCL thread\n\
+        package) keyed list.  The program will also output human readable output\n\
+        for human inspection.\n\
+\n\
+USAGE\n\
+\n\
+    tsvinfo -e SEQ_EXP_HOME [-t tsv-output-file -h human-readable-file]\n\
+\n\
+OPTIONS\n\
+\n\
+    -e, --exp \n\
+        Experiment path.  If it is not supplied, the environment variable \n\
+        SEQ_EXP_HOME will be used.\n\
+\n\
+    -t, --tsv-file \n\
+        Specify the filename for the tsv formatted output.  If no filename is\n\
+        is specified, output will go to stdout\n\
+\n\
+    -r, --readable-file \n\
+        Specify the filename for the human readable output.  If no filename is\n\
+        is specified, output will go to stderr\n\
+\n\
+    -v, --verbose\n\
+        Turn on full tracing\n\
+\n\
+    -h, --help\n\
+        Show this help screen\n\
+\n\
+EXAMPLES:\n\
+\n\
+    tsvinfo -e /home/ops/afsi/phc/.suites/sample -t /home/ops/afsi/phc/.suites/sample/resources/tsv_resources.txt\n\
+            Creates an info file for the experiment 'sample' and stores the file\n\
+            in the resources directory of that experiment where the GUI expects\n\
+            it to be.\n\
+\n\
+    tsvinfo -e /home/ops/afsi/phc/.suites/sample -t /home/ops/afsi/phc/.suites/sample/resources/tsv_resources.txt -r ~/tmp/tmp_human_readable_output.c\n\
+            Creates a tsv readable file for the GUI to use and a human readable\n\
+            file for human inspection.  Making it a .c file will have have the\n\
+            editor highlight the C-like syntax of the file nicely\n";
+puts(usage);
 }
 int main ( int argc, char * argv[] )
 {
-   char * short_opts = "n:f:l:o:d:e:v";
-   char *node = NULL, *seq_exp_home = NULL, *datestamp=NULL ;
-   extern char *optarg;
+   char * short_opts = "e:t:r:vh";
 
+   extern char *optarg;
    extern char *optarg;
    extern int   optind;
    struct       option long_opts[] =
    { /*  NAME        ,    has_arg       , flag  val(ID) */
 
-      {"exp"         , required_argument,   0,     'e'},
-      {"node"        , required_argument,   0,     'n'},
-      {"loop-args"   , required_argument,   0,     'l'},
-      {"datestamp"   , required_argument,   0,     'd'},
-      {"outputfile"  , required_argument,   0,     'o'},
-      {"filters"     , required_argument,   0,     'f'},
-      {"verbose"     , no_argument      ,   0,     'v'},
+      {"exp"            , required_argument,   0,     'e'},
+      {"tsv-file"       , required_argument,   0,     't'},
+      {"readable-output", required_argument,   0,     'r'},
+      {"verbose"        , no_argument      ,   0,     'v'},
+      {"help"           , no_argument      ,   0,     'h'},
       {NULL,0,0,0} /* End indicator */
    };
    int opt_index, c = 0;
 
+   char *seq_exp_home = NULL;
+
+   FILE *human_output_fp = stderr,
+        *tsv_output_fp = stdout;
+
    while ((c = getopt_long(argc, argv, short_opts, long_opts, &opt_index )) != -1) {
       switch(c) {
-         case 'n':
-            node = strdup(optarg);
-            break;
          case 'e':
             seq_exp_home = strdup(optarg);
             break;
-         case 'd':
-            datestamp = strdup(optarg);
+         case 'r':
+            if(!(human_output_fp = fopen(optarg, "w")))
+               raiseError("Error : unable to open file %s for writing\n", optarg);
+            break;
+         case 't':
+            if(!(tsv_output_fp = fopen(optarg, "w")))
+               raiseError("Error : unable to open file %s for writing\n", optarg);
+            break;
+         case 'v':
+            SeqUtil_setTraceFlag(TRACE_LEVEL,TL_FULL_TRACE);
+            SeqUtil_setTraceFlag(TF_TIMESTAMP,TF_ON);
+            break;
+         case 'h':
+            printUsage();
+            exit(0);
             break;
          case '?':
             exit(1);
       }
    }
 
-   SeqUtil_setTraceFlag( TRACE_LEVEL , TL_FULL_TRACE );
-
-   const char * PWD = getenv("PWD");
-   /* Check that the path PWD ends with maestro.  It's the best we can do to
-    * make sure that mtest is being run from the right place. */
-   const char * p = PWD;
-   while(*p++ != 0 );
-   while(*(p-1) != '/') --p;
-#if 0
-   if( strcmp(p,"maestro") != 0 ){
-      SeqUtil_TRACE(TL_FULL_TRACE, "\
-Main function for doing tests, please run this from the maestro directory so\n\
-that the location of the test files may be known.  Eg by doing \n\
-   'make install; mtest'\n\
-or\n\
-   'make; ./src/mtest\n\
-from the maestro directory.\n");
-      exit(1);
+   if( seq_exp_home == NULL ){
+      if( seq_exp_home = getenv("SEQ_EXP_HOME") != NULL ){
+         seq_exp_home = strdup(seq_exp_home);
+      } else {
+         raiseError("Error : Experiment home must either be set as an argument of option -e (--exp) \n        or through the environment variable SEQ_EXP_HOME\n");
+      }
    }
 
-   char * suffix = "/src/testDir";
-   testDir = (char *) malloc( sizeof(char) * (strlen(PWD) + strlen(suffix) + 1));
-   sprintf( testDir, "%s%s" , PWD, suffix);
 
-   /* puts ( testDir ); */
-   /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/"); */
-#endif
-   seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/");
-   /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/HelloWorldPhil/"); */
-   /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/bug6268_switch"); */
-   runTests(seq_exp_home,node,datestamp);
+   write_db_file(seq_exp_home, tsv_output_fp , human_output_fp);
 
-   free(node);
+
    free(seq_exp_home);
-   free(datestamp);
    return 0;
 }
 
