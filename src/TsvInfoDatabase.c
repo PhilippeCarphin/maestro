@@ -8,15 +8,6 @@
 #include "nodeinfo.h"
 void resource_keylist(SeqNodeDataPtr ndp, FILE * fp, int human_readable)
 {
-   /*
-    * All keys exept the last one must be followed by a space
-    * catchup
-    * cpu
-    * machine queue
-    * memory
-    * mpi
-    * wallclock
-    */
 
    if( human_readable ){
       fprintf(fp, "        .CATCHUP   = %d\n", ndp->catchup);
@@ -36,7 +27,7 @@ void resource_keylist(SeqNodeDataPtr ndp, FILE * fp, int human_readable)
       fprintf(fp, "{MEMORY %s} ",ndp->memory);
       fprintf(fp, "{WALLCLOCK %d}",ndp->wallclock);
       fprintf(fp, "}");
-      
+
       fprintf(fp, "}");
    }
 }
@@ -49,12 +40,6 @@ void loop_keylist(SeqNodeDataPtr ndp, FILE *fp, int human_readable)
         *set = SeqLoops_getLoopAttribute( ndp->data, "SET" ),
         *expression = SeqLoops_getLoopAttribute( ndp->data, "EXPRESSION" );
 
-   /*
-    * To be as light as possible, nodeinfo can be called with the filter
-    * NI_RESOURCES_ONLY which only looks through the resource xml files.
-    * Therefore a sure way of knowing if the nodes is a loop is to check if it
-    * has loop information.
-    */
    if(ndp->type != Loop)
    {
       return;
@@ -106,13 +91,6 @@ void dependency_keylist(SeqNodeDataPtr ndp, FILE *fp, int human_readable)
 
 void node_to_keylist(SeqNodeDataPtr ndp,FILE *fp, int human_readable)
 {
-   /*
-    * For the loop part, it is required that getFlowInfo be called so that the
-    * ndp->type can be known.  If we want to do it without calling getFlowInfo
-    * for performance reasons, then I can arrange that.  Simply check if there
-    * is info there.  Instead of using node->type, we can just do if( start ==
-    * NULL && expression == NULL ) then the node is not a loop.
-    */
    if( human_readable ){
       fprintf(fp, "%s\n", ndp->name);
       fprintf(fp, "    .resources\n");
@@ -141,23 +119,6 @@ void node_to_keylist(SeqNodeDataPtr ndp,FILE *fp, int human_readable)
    }
 }
 
-FILE *hr_output_file(const char *hr_filename)
-{
-   FILE *output_file = NULL;
-
-   /*
-    * Check for errors:
-    * -Empty filename
-    * -Unaccessible filename
-    *
-    * and replace hr_filename with fallback filename
-    */
-
-   output_file = fopen( hr_filename, "w" );
-
-   return output_file;
-
-}
 
 int write_db_file(const char *seq_exp_home, FILE *tsv_output_fp, FILE *hr_output_fp)
 {
@@ -177,6 +138,12 @@ int write_db_file(const char *seq_exp_home, FILE *tsv_output_fp, FILE *hr_output
 
       if( tsv_output_fp != NULL ){
          node_to_keylist(ndp, tsv_output_fp, 0);
+         /*
+          * It seems to work even if I don't put the check (i.e. having a space
+          * after the last element in the list), but TCL does do some funny
+          * things sometimes with extra spaces, so as a matter of consistency,
+          * let's avoid the extra space after the last element
+          */
          if(itr->nextPtr != NULL){
             putchar(' ');
          }
