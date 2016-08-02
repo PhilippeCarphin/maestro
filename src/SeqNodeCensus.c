@@ -43,18 +43,19 @@ PathArgNodePtr getNodeList(const char * seq_exp_home)
 
    const char * basePath = (const char *) xmlGetProp(fv->context->node,
                                                       (const xmlChar *)"name");
-
+   const char * fixedBasePath = SeqUtil_fixPath(basePath);
    /*
     * Base step of recursion
     */
-   PathArgNode_pushFront(&pap, basePath, "", Module );
+   PathArgNode_pushFront(&pap, fixedBasePath, "", Module );
 
    /*
     * Start recursion
     */
-   getNodeList_internal(fv, &pap ,basePath,"", 0);
+   getNodeList_internal(fv, &pap ,fixedBasePath,"", 0);
 
 out_free:
+   free((char*)fixedBasePath);
    free((char*)basePath);
    Flow_deleteVisitor(fv);
    return pap;
