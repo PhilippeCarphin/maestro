@@ -88,17 +88,12 @@ void header(const char * test){
    SeqUtil_TRACE(TL_CRITICAL, "\n=================== UNIT TEST FOR %s ===================\n",test);
 }
 
-
-
-
-
+/* Define tests here */
 
 
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
-   SeqUtil_setTraceFlag(TRACE_LEVEL,TL_CRITICAL);
-   /* int i; for(i = 0; i < 50; ++i) */
-      write_db_file(seq_exp_home, stdout, stderr);
+   /* Call the tests here */
    return 0;
 }
 int main ( int argc, char * argv[] )
@@ -147,7 +142,7 @@ int main ( int argc, char * argv[] )
    const char * p = PWD;
    while(*p++ != 0 );
    while(*(p-1) != '/') --p;
-#if 0
+
    if( strcmp(p,"maestro") != 0 ){
       SeqUtil_TRACE(TL_FULL_TRACE, "\
 Main function for doing tests, please run this from the maestro directory so\n\
@@ -163,9 +158,8 @@ from the maestro directory.\n");
    testDir = (char *) malloc( sizeof(char) * (strlen(PWD) + strlen(suffix) + 1));
    sprintf( testDir, "%s%s" , PWD, suffix);
 
-   /* puts ( testDir ); */
+   puts ( testDir );
    /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/"); */
-#endif
    seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/sample/");
    /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/HelloWorldPhil/"); */
    /* seq_exp_home = strdup("/home/ops/afsi/phc/Documents/Experiences/bug6268_switch"); */
