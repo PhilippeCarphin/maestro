@@ -231,7 +231,7 @@ TSVINFO_OBJECTS = TsvInfoDatabase.o SeqNodeCensus.o nodeinfo.o SeqUtil.o       \
 	QueryServer.o l2d2_socket.o SeqUtilServer.o getopt_long.o
 
 tsvinfo: TsvInfo_main.c $(TSVINFO_OBJECTS)
-	$(CC) -g $^ $(WERROR_FLAGS) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@; \
+	$(CC) -g $^ $(WERROR_FLAGS) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@
 	cp $@ $(BINDIR);
 
 TEST_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o     \
