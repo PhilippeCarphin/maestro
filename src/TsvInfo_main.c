@@ -162,8 +162,11 @@ int main ( int argc, char * argv[] )
 
    write_db_file(seq_exp_home, tsv_output_fp , human_output_fp);
 
-   fclose(human_output_fp);
-   fclose(tsv_output_fp);
+   if( human_output_fp != NULL )
+      fclose(human_output_fp);
+
+   if( tsv_output_fp != NULL )
+      fclose(tsv_output_fp);
 
 
    free(seq_exp_home);
