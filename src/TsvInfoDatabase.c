@@ -7,6 +7,8 @@
 #include "SeqNodeCensus.h"
 #include "nodeinfo.h"
 
+static const char *indent = "    ";
+static const char *doubleIndent = "        ";
 /********************************************************************************
  * Creates the batch resourse keylist:
  * Ex: "{resources {{CATCHUP 4} {CPU 2} {QUEUE null} {MPI 8} {MEMORY 500M} {WALLCLOCK 5}}}
@@ -22,13 +24,17 @@ void resource_keylist(SeqNodeDataPtr ndp, FILE * fp, int human_readable)
 {
 
    if( human_readable ){
-      fprintf(fp, "        .CATCHUP   = %d\n", ndp->catchup);
-      fprintf(fp, "        .CPU       = %s\n", ndp->cpu);
-      fprintf(fp, "        .QUEUE     = %s\n", ndp->queue);
-      fprintf(fp, "        .MPI       = %d\n", ndp->mpi);
-      fprintf(fp, "        .MEMORY    = %s\n", ndp->memory);
-      fprintf(fp, "        .WALLCLOCK = %d\n", ndp->wallclock);
+      fprintf(fp, "    .resources\n");
+      fprintf(fp, "%s.CATCHUP   = %d\n", doubleIndent, ndp->catchup);
+      fprintf(fp, "%s.CPU       = %s\n", doubleIndent, ndp->cpu);
+      fprintf(fp, "%s.QUEUE     = %s\n", doubleIndent, ndp->queue);
+      fprintf(fp, "%s.MPI       = %d\n", doubleIndent, ndp->mpi);
+      fprintf(fp, "%s.MEMORY    = %s\n", doubleIndent, ndp->memory);
+      fprintf(fp, "%s.WALLCLOCK = %d\n", doubleIndent, ndp->wallclock);
    } else {
+      /*
+       * {resources {{CATCHUP 1} {CPU 8} ... {WALLCLOCK 5}}}
+       */
       fprintf(fp,"{resources ");
 
       fprintf(fp, "{");
@@ -61,25 +67,25 @@ void loop_keylist(SeqNodeDataPtr ndp, FILE *fp, int human_readable)
         *set = SeqLoops_getLoopAttribute( ndp->data, "SET" ),
         *expression = SeqLoops_getLoopAttribute( ndp->data, "EXPRESSION" );
 
-   if(ndp->type != Loop)
-   {
-      return;
-   }
-
    if( human_readable ){
+      fprintf(fp, "%s.loop\n",indent);
       if( expression == NULL ){
-         fprintf(fp, "        .START = %s\n", start);
-         fprintf(fp, "        .END = %s\n", end);
-         fprintf(fp, "        .STEP = %s\n", step);
-         fprintf(fp, "        .SET = %s\n", set);
+         fprintf(fp, "%s.START = %s\n",doubleIndent, start);
+         fprintf(fp, "%s.END   = %s\n",doubleIndent, end);
+         fprintf(fp, "%s.STEP  = %s\n",doubleIndent, step);
+         fprintf(fp, "%s.SET   = %s\n",doubleIndent, set);
       } else {
-         fprintf(fp, "        .EXPRESSION = %s\n", expression);
+         fprintf(fp, "%s.EXPRESSION = %s\n",doubleIndent, expression);
       }
    } else {
       /*
        * {loop {{START 8} {END 18} {STEP 2} {SET 2}}}
        */
-      fprintf(fp, " {loop {");
+
+#define OPTION 4
+
+      fprintf(fp, "{loop {");
+#if OPTION == 1 || OPTION == 2
       if( expression == NULL ){
          fprintf(fp, "{START %s} ", start );
          fprintf(fp, "{END %s} ", end );
@@ -88,7 +94,15 @@ void loop_keylist(SeqNodeDataPtr ndp, FILE *fp, int human_readable)
       } else {
          fprintf(fp, "{EXPRESSION %s}", expression );
       }
+#elif OPTION == 3 || OPTION == 4
+      fprintf(fp, "{START %s} ", start );
+      fprintf(fp, "{END %s} ", end );
+      fprintf(fp, "{STEP %s} ", step );
+      fprintf(fp, "{SET %s} ", set ); /* Notice the space that is not there in options 1 and 2 */
+      fprintf(fp, "{EXPRESSION %s}", expression );
+#endif
       fprintf(fp, "}}");
+
    }
 
    free(start);
@@ -111,8 +125,9 @@ void loop_keylist(SeqNodeDataPtr ndp, FILE *fp, int human_readable)
 void dependency_keylist(SeqNodeDataPtr ndp, FILE *fp, int human_readable)
 {
    if( human_readable ){
-      fprintf(fp, "        .dpename1 = %s\n", "depvalue1");
-      fprintf(fp, "        .dpename2 = %s\n", "depvalue2");
+      fprintf(fp, "%s.depends\n",indent);
+      fprintf(fp, "%s.dpename1 = %s\n", doubleIndent, "depvalue1");
+      fprintf(fp, "%s.dpename2 = %s\n", doubleIndent, "depvalue2");
    } else {
       fprintf(fp, "{depends {");
       fprintf(fp, "{%s %s} ","depname1","depvalue1");
@@ -125,18 +140,15 @@ void node_to_keylist(SeqNodeDataPtr ndp,FILE *fp, int human_readable)
 {
    if( human_readable ){
       fprintf(fp, "%s\n", ndp->name);
-      fprintf(fp, "    .resources\n");
       resource_keylist(ndp,fp, human_readable);
 
       /* Template for adding info to the human readable version of the TCL-ready
        * output:
        *
-       * fprintf(fp, "    .depends\n");
        * dependency_keylist(ndp,fp, human_readable);
        */
 
       if( ndp->type == Loop ){
-         fprintf(fp, "    .loop\n");
          loop_keylist(ndp,fp,human_readable);
       }
    } else {
@@ -147,21 +159,38 @@ void node_to_keylist(SeqNodeDataPtr ndp,FILE *fp, int human_readable)
       /*
        * This is a tmplate for adding new keys to the master keyed list: a space
        * character, and a call to a function following the template of the other
-       * functions.
+       * functions. The space can't be part of the function because the the
+       * first one would have a superfluous space: 
+       * /module/node { resources {{CPU 1} ... }}
+       * and the subfunctions don't know if they are called first or not.
        *
        * fprintf(fp, " ");
        * dependency_keylist(ndp, fp,human_readable);
        */
 
+#if OPTION == 1 || OPTION == 4
+      if( ndp->type == Loop ){
+         fprintf(fp, " ");
+         loop_keylist(ndp, fp, human_readable);
+      }
+#elif OPTION == 2 || OPTION == 3
+      /* Always print, but put either {{START 1} {END 2} {STEP 2} {SET 1}} or
+       * {{expression 1:2:3:4}}(option2)  or both (option3) */
       fprintf(fp, " ");
       loop_keylist(ndp, fp, human_readable);
+#endif
+
+
 
       fprintf(fp,"}");
 
    }
 }
 
-
+enum {
+   TSV = 0,
+   HUMAN = 1
+};
 /********************************************************************************
  * Creates the tsv compatible and human readable files for storing info on nodes
  * of the experiment.
@@ -185,11 +214,16 @@ int write_db_file(const char *seq_exp_home, FILE *tsv_output_fp, FILE *hr_output
     */
    SeqNodeDataPtr ndp = NULL;
    for_pap_list(itr,nodeList){
+
       ndp = nodeinfo(itr->path, NI_SHOW_ALL, NULL, seq_exp_home,
                                              NULL, NULL,itr->switch_args );
-
+      /*
+       * Note that fprintf(NULL,...) is OK, but testing it here avoids testing
+       * for every subsequent fprintf() that results from calling
+       * node_to_keylist().
+       */
       if( tsv_output_fp != NULL ){
-         node_to_keylist(ndp, tsv_output_fp, 0);
+         node_to_keylist(ndp, tsv_output_fp, TSV);
          /*
           * It seems to work even if I don't put the check (i.e. having a space
           * after the last element in the list), but TCL does do some funny
@@ -197,12 +231,12 @@ int write_db_file(const char *seq_exp_home, FILE *tsv_output_fp, FILE *hr_output
           * let's avoid the extra space after the last element
           */
          if(itr->nextPtr != NULL){
-            putchar(' ');
+            fprintf(tsv_output_fp, " ");
          }
       }
 
       if( hr_output_fp != NULL ){
-         node_to_keylist(ndp, hr_output_fp, 1);
+         node_to_keylist(ndp, hr_output_fp, HUMAN);
          fprintf(hr_output_fp,"\n");
       }
 
