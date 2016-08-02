@@ -51,11 +51,11 @@ OPTIONS\n\
 \n\
     -t, --tsv-file \n\
         Specify the filename for the tsv formatted output.  If no filename is\n\
-        is specified, output will go to stdout\n\
+        is specified, no output will be generated.\n\
 \n\
     -r, --readable-file \n\
         Specify the filename for the human readable output.  If no filename is\n\
-        is specified, output will go to stderr\n\
+        is specified, no output will be generated.\n\
 \n\
     -v, --verbose\n\
         Turn on full tracing\n\
@@ -63,19 +63,46 @@ OPTIONS\n\
     -h, --help\n\
         Show this help screen\n\
 \n\
+NOTE:   The keywords 'stderr' and 'stdout' in place of filenames for options -t\n\
+        and -r will be recognized and can be used instead of file paths to direct\n\
+        output to stderr or stdout respectively.\n\
+\n\
 EXAMPLES:\n\
 \n\
     tsvinfo -e /home/ops/afsi/phc/.suites/sample -t /home/ops/afsi/phc/.suites/sample/resources/tsv_resources.txt\n\
-            Creates an info file for the experiment 'sample' and stores the file\n\
-            in the resources directory of that experiment where the GUI expects\n\
-            it to be.\n\
 \n\
-    tsvinfo -e /home/ops/afsi/phc/.suites/sample -t /home/ops/afsi/phc/.suites/sample/resources/tsv_resources.txt -r ~/tmp/tmp_human_readable_output.c\n\
-            Creates a tsv readable file for the GUI to use and a human readable\n\
-            file for human inspection.  Making it a .c file will have have the\n\
-            editor highlight the C-like syntax of the file nicely\n";
+        Creates an info file for the experiment 'sample' and stores the file\n\
+        in the resources directory of that experiment where the GUI expects\n\
+        it to be.\n\
+\n\
+    tsvinfo -e /home/ops/afsi/phc/.suites/sample -t /home/ops/afsi/phc/.suites/sample/resources/tsv_resources.txt -r ~/tmp/tmp_human_readable_output.txt\n\
+\n\
+        Creates a tsv readable file for the GUI to use and a human readable\n\
+        file for human inspection.\n\
+\n\
+    tsvinfo -e /home/ops/afsi/phc/.suites/sample -t stdout -r stderr\n\
+\n\
+        Send TSV ready output to STDOUT and send human readable output to \n\
+        STDERR.\n";
 puts(usage);
 }
+
+static
+FILE *open_filename( const char *filename)
+{
+   FILE * fp = NULL;
+   if ( strcmp(filename,"stderr") == 0 )
+      fp = stderr;
+   else if ( strcmp(filename,"stdout") == 0)
+      fp = stdout;
+   else if(!(fp = fopen(filename, "w")))
+      raiseError("Error : unable to open file %s for writing\n", optarg);
+
+   return fp;
+}
+
+
+
 int main ( int argc, char * argv[] )
 {
    char * short_opts = "e:t:r:vh";
@@ -97,8 +124,8 @@ int main ( int argc, char * argv[] )
 
    char *seq_exp_home = NULL;
 
-   FILE *human_output_fp = stderr,
-        *tsv_output_fp = stdout;
+   FILE *human_output_fp = NULL,
+        *tsv_output_fp = NULL;
 
    while ((c = getopt_long(argc, argv, short_opts, long_opts, &opt_index )) != -1) {
       switch(c) {
@@ -106,12 +133,10 @@ int main ( int argc, char * argv[] )
             seq_exp_home = strdup(optarg);
             break;
          case 'r':
-            if(!(human_output_fp = fopen(optarg, "w")))
-               raiseError("Error : unable to open file %s for writing\n", optarg);
+            human_output_fp = open_filename( optarg );
             break;
          case 't':
-            if(!(tsv_output_fp = fopen(optarg, "w")))
-               raiseError("Error : unable to open file %s for writing\n", optarg);
+            tsv_output_fp = open_filename( optarg );
             break;
          case 'v':
             SeqUtil_setTraceFlag(TRACE_LEVEL,TL_FULL_TRACE);
@@ -127,7 +152,7 @@ int main ( int argc, char * argv[] )
    }
 
    if( seq_exp_home == NULL ){
-      if( seq_exp_home = getenv("SEQ_EXP_HOME") != NULL ){
+      if( (seq_exp_home = getenv("SEQ_EXP_HOME")) != NULL ){
          seq_exp_home = strdup(seq_exp_home);
       } else {
          raiseError("Error : Experiment home must either be set as an argument of option -e (--exp) \n        or through the environment variable SEQ_EXP_HOME\n");
@@ -136,6 +161,9 @@ int main ( int argc, char * argv[] )
 
 
    write_db_file(seq_exp_home, tsv_output_fp , human_output_fp);
+
+   fclose(human_output_fp);
+   fclose(tsv_output_fp);
 
 
    free(seq_exp_home);

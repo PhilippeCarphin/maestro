@@ -83,20 +83,36 @@ proc getInfo { nodeName subkey } {
 }
 
 
+
 # THE TEST ITSELF BEGINS HERE:
 
 # Read the file into the keyed list
 readNodeinfoDB
 
 # Try out the syntax with a random node.
-
+puts "======= Trying the tsv::keylget syntax ====="
+puts "== getting $testNode.resources.CPU"
 set value [tsv::keylget the_shared_var the_keyed_list $testNode.resources.CPU]
 puts "resources.CPU of $testNode : $value"
 
-set value [tsv::keylget the_shared_var the_keyed_list $testNode.depends.depname1]
-puts "depends.depname1 of $testNode : $value"
+# Note that this is not super robust: if the key doesn't exist, then the program
+# will crash.  Specify a return variable so that keylget returns 1 or 0
+# depending on whether the key exists.  This is done in getInfoPlus which is
+# what I will take as the wrapper function
+
+puts "== Looking for non-existing key $testNode.CMC.PHIL"
+# This line will make the script crash:
+# set value [tsv::keylget the_shared_var the_keyed_list $testNode.CMC.PHIL]
+
+# This is why we prefer the following syntax (see getInfoPlus command below).
+set retval [tsv::keylget the_shared_var the_keyed_list $testNode.CMC.PHIL value]
+puts "Key doesn't exist, retval is $retval and value is $value. The script didn't crash"
+# It is possible to replace "retval" with "{}" to have the same effect without
+# using a variable.  See haskey command below.
+
 
 # Try out the wrapper functions
+puts "======== Trying wrapper functions to get same key's value ====="
 set value [getCPU $testNode]
 puts "Value using wrapper function : $value"
 
@@ -127,6 +143,37 @@ foreach key $keys {
 puts "Loop keyed list [tsv::keylget the_shared_var the_keyed_list $testLoopNode.loop]"
 
 
+proc getInfoPlus { nodeName subkey retvar_name } {
+
+   upvar $retvar_name retvar
+   return [tsv::keylget the_shared_var the_keyed_list $nodeName.$subkey retvar]
+}
+
+
+proc haskey { nodeName subkey } {
+   return [tsv::keylget the_shared_var the_keyed_list $nodeName.$subkey {}]
+}
+
+
+set my_retvar ""
+
+puts "Trying getInfoPlus with subkey loop.PHIL"
+set retval [getInfoPlus $testNode loop.PHIL my_retvar]
+puts "my_retvar $my_retvar"
+puts "retval    $retval"
+
+puts "========================================"
+puts "Trying getInfoPlus with subkey loop.PHIL"
+set retval [getInfoPlus $testLoopNode loop.START my_retvar]
+puts "my_retvar $my_retvar"
+
+puts "========================================"
+puts "Trying haskey"
+if { [haskey $testLoopNode loop.PHIL] } {
+   puts "Shouldn't be in the if, should be in the else"
+} else {
+   puts "We're in the else, all good :)"
+}
 
 
 
