@@ -90,10 +90,20 @@ void header(const char * test){
 
 /* Define tests here */
 
+int test_nodeCensus(const char * seq_exp_home, const char * node, const char * datestamp)
+{
+   PathArgNodePtr nodeList = getNodeList(seq_exp_home,datestamp);
+   PathArgNode_printList( nodeList , TL_FULL_TRACE );
+   PathArgNode_deleteList(&nodeList);
+   return 0;
+}
+
+
 
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
    /* Call the tests here */
+   test_nodeCensus(seq_exp_home,node,NULL);
    return 0;
 }
 int main ( int argc, char * argv[] )

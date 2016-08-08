@@ -36,10 +36,11 @@ int PathArgNode_pushFront(PathArgNodePtr *list_head, const char *path, const cha
  * switch_args : The branches of switches that must be taken to get to the node.
  * NOTE: The caller is responsible for deleting the list.
 ********************************************************************************/
-PathArgNodePtr getNodeList(const char * seq_exp_home)
+PathArgNodePtr getNodeList(const char * seq_exp_home, const char *datestamp)
 {
    PathArgNodePtr pap = NULL;
    FlowVisitorPtr fv = Flow_newVisitor(NULL,seq_exp_home,NULL);
+   fv->datestamp = datestamp;
 
    const char * basePath = (const char *) xmlGetProp(fv->context->node,
                                                       (const xmlChar *)"name");
@@ -161,6 +162,32 @@ void getNodeList_internal(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
       {
          gnl_switch_item(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
       }
+
+      /*
+       * else if( strcmp(xmlNode->name, "SWITCH") == 0 ){
+       *    gnl_switch(fv, pathArgList, basePath, baseSwitchArgs, depth, xmlNode);
+       *
+       * gnl_swtich(.......){
+       *    do the same thing as gnl_container (except continuing the recursion)
+       *    then use Flow_findSwitchItem functions to move to the right switch item,
+       *    then continue the recursion.
+       * }
+       *
+       * ** Remove SWITH_ITEM from query, or actually leave it there, and in the
+       * else if( strcmp(xmlNode->name, "SWITCH_ITEM" )
+       *    raiseError: can't happen.  gnl_switch() should have moved us into
+       *    the right switch item.  Also, if no valid switch item is found,
+       *    because we have 
+       *    <SWITCH x="y" ... >
+       *       *nothing here*
+       *    </SWITCH> 
+       *    then we gnl_switch should just return.  So that else if(SWITCH_ITEM)
+       *    block should really really never be entered.
+       *
+       *    Flow_visitor will need to have a datestamp attribute added, but
+       *    THAT'S WHY YOU WORK WITH STRUCS: mofifying the code is easy when
+       *    related things are grouped together.
+       */
 
       fv->context->node = previousNode;
    }

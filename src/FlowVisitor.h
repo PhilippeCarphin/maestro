@@ -51,6 +51,7 @@ typedef struct _FlowVisitor{
    char * nodePath;
    char * switch_args;
    const char * expHome;
+   const char * datestamp;
    char * currentFlowNode;
    char * taskPath;
    char * suiteName;

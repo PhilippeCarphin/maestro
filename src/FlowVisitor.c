@@ -64,6 +64,7 @@ FlowVisitorPtr Flow_newVisitor(const char *nodePath, const char *seq_exp_home,
 
    new_flow_visitor->nodePath = (nodePath ? strdup(nodePath) : NULL );
    new_flow_visitor->expHome = seq_exp_home;
+   new_flow_visitor->datestamp = NULL;
    new_flow_visitor->switch_args = (switch_args && strlen(switch_args) ? strdup(switch_args): NULL);
 
 
@@ -106,6 +107,7 @@ int Flow_deleteVisitor(FlowVisitorPtr _flow_visitor)
 
    _freeStack(_flow_visitor);
 
+   /* I'm thinking of not copying the datestamp, so not going to free it */
    free(_flow_visitor->currentFlowNode);
    free(_flow_visitor->taskPath);
    free(_flow_visitor->module);
