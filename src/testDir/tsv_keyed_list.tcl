@@ -41,14 +41,14 @@ proc readNodeinfoDB { expHome } {
    # after changing the experiment.  But for testing purposes, I do it here, and
    # the rest of the function is going to stay.
    
-   exec ../tsvinfo -t nodeinfo_keyedlist.tsv -e $expHome
+   set data_list [exec ../tsvinfo -t stdout -e $expHome]
 
    # Read the file (The file path will need to be constructed with the
    # experiment path, and a static path within the experiment). Something like
    # ${testExpPath}/resources/nodeinfo_keyed_list.tsv
-   set fp [open nodeinfo_keyedlist.tsv]
-   set data_list [read $fp]
-   close $fp
+   # set fp [open nodeinfo_keyedlist.tsv]
+   # set data_list [read $fp]
+   # close $fp
 
    # Temporary, show the content
    puts $data_list
