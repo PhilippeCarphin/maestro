@@ -85,127 +85,41 @@ void header(const char * test){
    SeqUtil_TRACE(TL_CRITICAL, "\n=================== UNIT TEST FOR %s ===================\n",test);
 }
 
-void printListWithLinefeed(LISTNODEPTR list_head, int trace_level){
-   for_list(itr,list_head){
-      SeqUtil_TRACE(trace_level, "%s\n", itr->data);
-   }
-}
+/* typedef char* (*valueFinder)(const char *var_name);
+char * keysub(const char *str, const char *frontDelim, const char *endDelim, valueFinder vf); */
 
-
-/*
- * SOME NOTES ABOUT THIS TEST:
- * This test was made in another commit to develop an algorithm for getting the
- * list of all the nodes in an experiment.  I include it here as a means to test
- * the Flow_changeModule() function that uses a stack of xmlXPathContextPtr.
- *
- * This algorithm was going to be used for bug4689 but I ended up having to do
- * too many hackish things for my liking.  Therefore I'm going to wait until
- * Dominic gets back from vacation and discuss things like changing the desired
- * behavior so that it can be implemented with good design/coding practices.
- *
- * The root of the hackishness is switches, and the starting hack is to put
- * switch item names in square brackets.  As I worked on generic switches
- * (bug7312) I noticed that I hadn't thought about using loop_args.  So maybe
- * instead of weird hackish paths, we could use a (path,loop_args) pair as
- * entries in our 'node census'.
- */
-void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
-                                    const char * basePath, int depth);
-
-LISTNODEPTR parseFlowTree(const char * seq_exp_home)
-{
-   LISTNODEPTR list_head = NULL;
-   FlowVisitorPtr fv = Flow_newVisitor(seq_exp_home);
-
-   const char * basePath = (const char *) xmlGetProp(fv->context->node,
-                                                      (const xmlChar *)"name");
-   SeqListNode_pushFront(&list_head, basePath);
-
-   parseFlowTree_internal(fv, &list_head,basePath, 0);
-
-   free((char*)basePath);
-   Flow_deleteVisitor(fv);
-   return list_head;
-
-}
-
-void indent(int depth)
-{
-   int i;
-   for(i = depth; i--;)
-      fprintf(stderr, "    ");
-}
-
-void parseFlowTree_internal(FlowVisitorPtr fv, LISTNODEPTR * list_head,
-                                    const char * basePath, int depth)
-{
-   /*
-    * Oh heavenly Father, I pray to thee to forgive me for this inelegant query
-    * which amounts to saying "all children except SUBMITS".  There has to be a
-    * way of saying something like child::!SUBMITS or something.
-    */
-   xmlXPathObjectPtr results = XmlUtils_getnodeset("(child::FAMILY|child::TASK\
-                                                     |child::SWITCH|child::SWITCH_ITEM\
-                                                     |child::MODULE|child::LOOP\
-                                                     |child::NPASS_TASK|child::FOR_EACH)"
-                                                      , fv->context);
-
-   for_results( xmlNode, results ){
-      const char * name = (const char *)xmlGetProp( xmlNode, (const xmlChar *)"name");
-      xmlNodePtr node = xmlNode;
-
-      if( strcmp(node->name, "TASK") == 0 || strcmp(node->name, "NPASS_TASK") == 0){
-         char path[SEQ_MAXFIELD] = {0};
-         sprintf( path, "%s/%s", basePath,name);
-         SeqListNode_pushFront(list_head, path);
-      } else if( strcmp(node->name, "MODULE") == 0){
-         char path[SEQ_MAXFIELD] = {0};
-         sprintf( path, "%s/%s", basePath,name);
-         SeqListNode_pushFront(list_head, path);
-         Flow_changeModule(fv, (const char *) name);
-         parseFlowTree_internal(fv, list_head,path, depth+1);
-         Flow_restoreContext(fv);
-      } else if( strcmp(node->name, "LOOP") == 0
-          || strcmp(node->name, "FAMILY") == 0
-          || strcmp(node->name, "SWITCH") == 0){
-         char path[SEQ_MAXFIELD] = {0};
-         sprintf( path, "%s/%s", basePath,name);
-         SeqListNode_pushFront(list_head, path);
-         xmlNodePtr previousNode = fv->context->node;
-         fv->context->node = node;
-         parseFlowTree_internal(fv, list_head,path,depth+1);
-         fv->context->node = previousNode;
-      } else if( strcmp(node->name, "SWITCH_ITEM") == 0 ){
-         char path[SEQ_MAXFIELD] = {0};
-         const char * switch_item_name = xmlGetProp(xmlNode, (const xmlChar *)"name");
-         sprintf( path, "%s[%s]", basePath,switch_item_name);
-         xmlNodePtr previousNode = fv->context->node;
-         fv->context->node = node;
-         parseFlowTree_internal(fv, list_head,path, depth+1);
-         fv->context->node = previousNode;
-         free((char*)switch_item_name);
-      }
-      free((char *)name);
-   }
-   xmlXPathFreeObject(results);
-}
+char * keysub(const char *str, const char *frontDelim, const char *endDelim,
+               const char *deffile, const char *exp_home, const char * srcfile);
 
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
 
-   SeqUtil_setTraceFlag(TRACE_LEVEL, TL_CRITICAL);
-   LISTNODEPTR list_head = parseFlowTree(seq_exp_home);
+   SeqUtil_setTraceFlag(TRACE_LEVEL,TL_CRITICAL);
+   char *input = "This ${word} contains ${var_name}\n";
+   putenv("var_name=variables");
+   putenv("word=string");
+   SeqUtil_TRACE(TL_CRITICAL,"%s",keysub(input,"${","}",NULL,NULL,NULL));
+   SeqUtil_TRACE(TL_CRITICAL,"%s",SeqUtil_keysub( input, NULL, NULL,NULL));
+#if 1
+#define MAX 10000000
+   int i;
+   SeqUtil_setTraceFlag(TF_TIMESTAMP,TF_ON);
+   SeqUtil_TRACE(TL_CRITICAL, "Phil_begin\n");
+   for(i = 0; i < MAX; i++){
+      keysub(input,"${","}",NULL,NULL,NULL);
+   }
+   SeqUtil_TRACE(TL_CRITICAL, "Phil_end\n");
 
-   SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
-   SeqUtil_TRACE(TL_FULL_TRACE, "===============================================================\nNote that this test is dependent on an experiment that is not in the test directory.\n\n");
-   SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
-   SeqListNode_reverseList(&list_head);
-   printListWithLinefeed(list_head,TL_FULL_TRACE);
+   SeqUtil_TRACE(TL_CRITICAL, "SeqUtil_begin\n");
+   for(i = 0; i < MAX; i++){
+      SeqUtil_keysub( input, NULL, NULL,NULL);
+   }
+   SeqUtil_TRACE(TL_CRITICAL, "SeqUtil_end\n");
+   SeqUtil_setTraceFlag(TF_TIMESTAMP,TF_OFF);
+   SeqUtil_TRACE(TL_CRITICAL, "On my computer it's less than 3 seconds for Phil, and over 7 seconds for SeqUtil\n");
+#endif
 
 
-
-   SeqListNode_deleteWholeList(&list_head);
-   SeqUtil_TRACE(TL_CRITICAL, "============== ALL TESTS HAVE PASSED =====================\n");
    return 0;
 }
 int main ( int argc, char * argv[] )

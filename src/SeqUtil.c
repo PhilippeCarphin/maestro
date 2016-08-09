@@ -1408,3 +1408,67 @@ const char * SeqUtil_resourceDefFilename(const char * _seq_exp_home)
 }
 
 
+/********************************************************************************
+ * Performs variable stubstitution by getting variable names written between
+ * delimiters and replacing them with a value given by a call to the specified
+ * function.
+********************************************************************************/
+char * keysub(const char *str, const char *frontDelim, const char *endDelim,
+               const char *deffile, const char *exp_home, const char * srcfile)
+{
+   static
+   char output[SEQ_MAXFIELD]; /* Char array in which we construct the output */
+   char * dst = output;       /* Iterator on output array */
+   char var_name[100];        /* Array into which we copy the variable name */
+   const char *src=str,       /* Iterator on the characters of the input string */
+              *value,         /* Value that will replace variable name */
+              *stopPoint;     /* Used to locate occurrence of delimiter string */
+
+   size_t len, fl = strlen(frontDelim), el = strlen(endDelim);
+
+   while( *src != 0 ){
+   /* PART 1 : COPY UNTIL NEXT VARIABLE */
+      stopPoint = strstr(src,frontDelim);
+      if(stopPoint != NULL){
+         memcpy(dst,src,len=stopPoint-src);
+         src+=len+fl; dst+=len;
+      } else {
+         memcpy(dst,src,len=strlen(src));
+         dst += len;
+         goto done; /* I don't like breaks because it's less obvious where it goes */
+      }
+
+   /* PART 2 : COPY THE VARIABLE NAME */
+      stopPoint = strstr(src,endDelim);
+      if(stopPoint != NULL){
+         memcpy(var_name,src,len=stopPoint-src);var_name[len] = '\0';
+         src += len + el;
+      }else{
+         goto delim_mismatch;
+      }
+
+   /* PART 3 : GET THE VALUE OF THE VARIABLE */
+      /* value = vf(var_name); */
+      if( deffile == NULL )
+         value = getenv(var_name);
+      else
+         value = SeqUtil_getdef(deffile,var_name,exp_home);
+
+      if( value == NULL )
+         raiseError("Variable %s is referenced but no value was found\n", var_name);
+
+   /* PART 4 : COPY THE VARIABLE'S VALUE IN THE OUTPUT STRING */
+      /* Possible error: value may not have been found */
+      memcpy(dst,value,len=strlen(value));
+      dst += len;
+   }
+
+done:
+   *dst = '\0';
+   return output;
+
+delim_mismatch:
+   SeqUtil_TRACE(TL_ERROR,"Front variable token %s must be accompanied by matching ending variable token %s\n",
+                                                         frontDelim, endDelim);
+   return NULL;
+}
