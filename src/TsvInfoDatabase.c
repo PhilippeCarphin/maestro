@@ -198,12 +198,13 @@ enum {
  * Creates the tsv compatible and human readable files for storing info on nodes
  * of the experiment.
 ********************************************************************************/
-int write_db_file(const char *seq_exp_home, FILE *tsv_output_fp, FILE *hr_output_fp)
+int write_db_file(const char *seq_exp_home, const char *datestamp,
+                                       FILE *tsv_output_fp, FILE *hr_output_fp)
 {
    /*
     * Get list of nodes in experiment
     */
-   PathArgNodePtr nodeList = getNodeList(seq_exp_home,NULL);
+   PathArgNodePtr nodeList = getNodeList(seq_exp_home,datestamp);
    PathArgNode_printList( nodeList , TL_FULL_TRACE );
 
    /*

@@ -12,6 +12,8 @@ set testNode /sample_module/Different_Hosts/I.have.aperiod.in.my.name
 # - A node path to a loop node (with leading slash and no trailing slash)
 set testLoopNode /geps_mod/forecast_mod/gem_loop
 set testLoopNode /sample_module/Loop_Examples/outerloop/innerloop
+
+set testDatestamp 20160102030000
 #
 # Eventually, an experiment for testing should be packaged with the maestro
 # source.
@@ -35,13 +37,13 @@ package require Thread
 
 # The TCL portion expects to find a file with the data for a tsv keyed list.  It
 # will read this data into a keyed list using tsv::keylset.
-proc readNodeinfoDB { expHome } {
+proc readNodeinfoDB { expHome datestamp } {
 
    # Normally, generating this info file would be done when quitting the GUI
    # after changing the experiment.  But for testing purposes, I do it here, and
    # the rest of the function is going to stay.
    
-   set data_list [exec ../tsvinfo -t stdout -e $expHome]
+   set data_list [exec ../tsvinfo --tsv-file stdout --exp $expHome --datestamp $datestamp]
 
    # Read the file (The file path will need to be constructed with the
    # experiment path, and a static path within the experiment). Something like
@@ -91,7 +93,7 @@ proc getInfo { nodeName subkey } {
 # THE TEST ITSELF BEGINS HERE:
 
 # Read the file into the keyed list
-readNodeinfoDB $testExpPath
+readNodeinfoDB $testExpPath $testDatestamp
 
 # Try out the syntax with a random node.
 puts "======= Trying the tsv::keylget syntax ====="

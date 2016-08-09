@@ -142,6 +142,14 @@ void getNodeList_internal(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
                                                       , fv->context);
    for_results( xmlNode, results ){
       xmlNodePtr previousNode = fv->context->node;
+      /*
+       * Just noticed some redundance in the code, we set
+       *    fv->context->node = xmlNode
+       * yet we pass the xmlNode to the functions.  For now, I want to get my
+       * thing working, but in the future, the extra parameter should be removed
+       * in favor of the more elegant way of using the visitor the way it was
+       * designed to be used.
+       */
       fv->context->node = xmlNode;
 
       if( strcmp(xmlNode->name, "TASK") == 0 || strcmp(xmlNode->name, "NPASS_TASK") == 0)
@@ -160,6 +168,7 @@ void getNodeList_internal(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
       }
       else if( strcmp(xmlNode->name, "SWITCH_ITEM") == 0 )
       {
+         raiseError("ERROR: We shouldn't get here with the change I just made\n");
          gnl_switch_item(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
       }
 
@@ -210,6 +219,26 @@ void gnl_container(FlowVisitorPtr fv, PathArgNodePtr *pathArgList ,
     */
    sprintf( path, "%s/%s", basePath,container_name);
    PathArgNode_pushFront( pathArgList, path, baseSwitchArgs, type);
+
+   /*
+    * If switch, enter the correct switch item.
+    */
+   if( strcmp( xmlNode->name, "SWITCH" ) == 0 ){
+      /* Get the switch type */
+      const char *switch_type = Flow_findSwitchType(fv);
+      /* Get the switch answer */
+      SeqNodeData nd; /* Artificial node, because switchReturn takes a nodeDataPtr
+                       * and not a datestamp, so we pass it a datestamp through
+                       * this artificial SeqNodeData object */
+      SeqUtil_TRACE(TL_FULL_TRACE, "fv datestamp: %s\n",fv->datestamp);
+      nd.datestamp = fv->datestamp;
+      SeqUtil_TRACE(TL_FULL_TRACE, "Node datestamp: %s\n",(&nd)->datestamp);
+      const char *switch_value = switchReturn(&nd,switch_type);
+      if( Flow_findSwitchItem(fv,switch_value) == FLOW_FAILURE ){
+         SeqUtil_TRACE(TL_FULL_TRACE, "No switch branch matches value %s for switch %s and no default switch branch\n",switch_value, path);
+         goto out_free;
+      }
+   }
 
    /*
     * Continue recursion
