@@ -37,10 +37,6 @@
 #include "ResourceVisitor.h"
 
 
-const char * XmlUtils_firstResultName(xmlXPathObjectPtr queryResult){
-   return (const char *) queryResult->nodesetval->nodeTab[0]->children->content;
-};
-
 /********************************************************************************
  * Initializes the flow_visitor to the entry module;
  * Caller should check if the return pointer is NULL.
@@ -107,7 +103,12 @@ int Flow_deleteVisitor(FlowVisitorPtr _flow_visitor)
 
    _freeStack(_flow_visitor);
 
-   /* I'm thinking of not copying the datestamp, so not going to free it */
+   /*
+    * Same as with exp_home, I don't copy the string, so the memory for
+    * datestamp belongs to the caller of Flow_newVisitor(), so I don't free it
+    * here.
+    */
+
    free(_flow_visitor->currentFlowNode);
    free(_flow_visitor->taskPath);
    free(_flow_visitor->module);
@@ -464,14 +465,27 @@ int Flow_parseSwitchAttributes(FlowVisitorPtr fv,
    if( (switchType = Flow_findSwitchType(fv)) == NULL )
       raiseError("Flow_parseSwitchAttributes(): switchType not found\n");
 
+   /*
+    * Switch args are here to allow us to select a SWITCH_ITEM by simply
+    * specifying it in the special switch_args string instead of relying on the
+    * context
+    */
    if( fv->switch_args == NULL || isLast){
       switchValue = switchReturn(_nodeDataPtr, switchType);
    } else {
       switchValue = Flow_findSwitchArg(fv);
    }
+
+   /*
+    * Insert the switch_path=switchValue key-value pair into the node's switch
+    * answers list.
+    */
    char * fixedSwitchPath = SeqUtil_fixPath( fv->currentFlowNode );
    SeqNameValues_insertItem(&(_nodeDataPtr->switchAnswers), fixedSwitchPath , switchValue );
 
+   /*
+    * Enter the correct switch item
+    */
    if( Flow_findSwitchItem(fv, switchValue) == FLOW_FAILURE ){
       SeqUtil_TRACE(TL_FULL_TRACE,"Flow_parseSwitchAttributes(): no SWITCH_ITEM found containing value=%s and no SWITCH_ITEM found containing value=%s\n", switchValue);
       retval = FLOW_FAILURE;
@@ -499,20 +513,11 @@ out_free:
  * This function returns the switch type of the current node in the XML XPath
  * context
 ********************************************************************************/
-const char * Flow_findSwitchType(const FlowVisitorPtr _flow_visitor ){
+const char * Flow_findSwitchType(const FlowVisitorPtr fv ){
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchType() begin\n");
-   xmlXPathObjectPtr attributesResult = NULL;
-   const char * switchType = NULL;
-
-   if( (attributesResult = XmlUtils_getnodeset( "(@type)" , _flow_visitor->context)) == NULL )
-      goto out;
-
-   switchType = XmlUtils_firstResultName(attributesResult);
-
-out_free:
-   xmlXPathFreeObject(attributesResult);
+   const char * switchType = xmlGetProp(fv->context->node,"type");
 out:
-   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchType() end\n");
+   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchType() end, returning %s\n",switchType);
    return switchType;
 }
 
