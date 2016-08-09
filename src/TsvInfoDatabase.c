@@ -1,5 +1,6 @@
 #include <stdio.h>
 #include <stdlib.h>
+#include <string.h>
 
 #include "SeqNode.h"
 #include "SeqUtil.h"
@@ -219,8 +220,9 @@ int write_db_file(const char *seq_exp_home, const char *datestamp,
    SeqNodeDataPtr ndp = NULL;
    for_pap_list(itr,nodeList){
 
-      /* ndp = nodeinfo(itr->path, NI_RESOURCE_ONLY, NULL, seq_exp_home, NULL, NULL,itr->switch_args ); */
+      /* ndp = nodeinfo(itr->path, NI_RESOURCE_ONLY, NULL, seq_exp_home, NULL, datestamp,NULL ); */
       ndp = SeqNode_createNode(itr->path);
+      ndp->datestamp = strdup(datestamp);
       SeqNode_setSeqExpHome(ndp,seq_exp_home);
       ndp->type = itr->type;
       getNodeResources(ndp,seq_exp_home,itr->path);

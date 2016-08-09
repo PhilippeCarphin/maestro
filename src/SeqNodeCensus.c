@@ -168,35 +168,25 @@ void getNodeList_internal(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
       }
       else if( strcmp(xmlNode->name, "SWITCH_ITEM") == 0 )
       {
-         raiseError("ERROR: We shouldn't get here with the change I just made\n");
+         if( fv->datestamp != NULL ){
+            /*
+             * This because if a datestamp is set, gnl_container() should move
+             * the flow visitor into the correct switch item based on the
+             * datestamp.
+             *
+             * An extension to this would be to have a
+             * struct SwitchContext {
+             *    char * datestamp
+             *    char * color
+             *    char * mood
+             * }
+             * if we want to add properties that change the the switch branch
+             * that is taken. See comments at the top of FlowVisitor.c.
+             */
+            raiseError("ERROR: A datestamp was specified but getNodeList_internal reached a SWITCH_ITEM\n");
+         }
          gnl_switch_item(fv,pathArgList,basePath,baseSwitchArgs,depth,xmlNode);
       }
-
-      /*
-       * else if( strcmp(xmlNode->name, "SWITCH") == 0 ){
-       *    gnl_switch(fv, pathArgList, basePath, baseSwitchArgs, depth, xmlNode);
-       *
-       * gnl_swtich(.......){
-       *    do the same thing as gnl_container (except continuing the recursion)
-       *    then use Flow_findSwitchItem functions to move to the right switch item,
-       *    then continue the recursion.
-       * }
-       *
-       * ** Remove SWITH_ITEM from query, or actually leave it there, and in the
-       * else if( strcmp(xmlNode->name, "SWITCH_ITEM" )
-       *    raiseError: can't happen.  gnl_switch() should have moved us into
-       *    the right switch item.  Also, if no valid switch item is found,
-       *    because we have 
-       *    <SWITCH x="y" ... >
-       *       *nothing here*
-       *    </SWITCH> 
-       *    then we gnl_switch should just return.  So that else if(SWITCH_ITEM)
-       *    block should really really never be entered.
-       *
-       *    Flow_visitor will need to have a datestamp attribute added, but
-       *    THAT'S WHY YOU WORK WITH STRUCS: mofifying the code is easy when
-       *    related things are grouped together.
-       */
 
       fv->context->node = previousNode;
    }
@@ -221,9 +211,9 @@ void gnl_container(FlowVisitorPtr fv, PathArgNodePtr *pathArgList ,
    PathArgNode_pushFront( pathArgList, path, baseSwitchArgs, type);
 
    /*
-    * If switch, enter the correct switch item.
+    * If a datestamp is specified, use it to enter the correct switch item
     */
-   if( strcmp( xmlNode->name, "SWITCH" ) == 0 ){
+   if( fv->datestamp != NULL && strcmp( xmlNode->name, "SWITCH" ) == 0){
       /* Get the switch type */
       const char *switch_type = Flow_findSwitchType(fv);
       /* Get the switch answer */

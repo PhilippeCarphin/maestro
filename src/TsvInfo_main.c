@@ -23,6 +23,7 @@
 #include <unistd.h>
 #include "getopt.h"
 #include "SeqUtil.h"
+#include "SeqDatesUtil.h"
 #include "TsvInfoDatabase.h"
 
 
@@ -138,7 +139,8 @@ int main ( int argc, char * argv[] )
             seq_exp_home = strdup(optarg);
             break;
          case 'd':
-            datestamp = strdup(optarg);
+            datestamp = malloc(PADDED_DATE_LENGTH + 1);
+            SeqUtil_addPadding(datestamp,optarg,'0',PADDED_DATE_LENGTH);
             break;
          case 'r':
             human_output_fp = open_filename( optarg );
