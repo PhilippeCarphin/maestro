@@ -2661,7 +2661,7 @@ int processDepStatus_MAESTRO( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr d
 {
 
    int undoneIteration = 0, isWaiting = 0, depWildcard=0, ret=0;
-   char *waitingMsg = NULL, *depExtension = NULL, *currentIndexPtr = NULL;
+   char *waitingMsg = NULL, *lastCheckedExt = NULL;
 
    dep->ext = SeqLoops_indexToExt(dep->index);
    depWildcard = ( strstr(dep->ext,"+*") != NULL);
@@ -2669,12 +2669,6 @@ int processDepStatus_MAESTRO( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr d
    SeqUtil_TRACE(TL_FULL_TRACE, "processDepStatus dep->node_name=%s dep->ext=%s dep->datestamp=%s dep->status=%s dep->exp=%s dep->exp_scope=%d dep->protocol=%s \n", 
          dep->node_name,dep->ext, dep->datestamp, dep->status, dep->exp, dep->exp_scope , dep->protocol ); 
 
-   if( dep->index == NULL || strlen( dep->index ) == 0 ) {
-      SeqUtil_stringAppend( &depExtension, "" );
-   } else {
-      SeqUtil_stringAppend( &depExtension, "." );
-      SeqUtil_stringAppend( &depExtension, strdup(dep->ext ) ); 
-   }
    /* maestro stuff */
    if  (! doesNodeExist(dep->node_name, dep->exp, dep->datestamp)) {
       char msg[1024];
@@ -2693,23 +2687,24 @@ int processDepStatus_MAESTRO( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr d
    }
    SeqUtil_TRACE(TL_FULL_TRACE, "processDepStatus(): depWildcard=%d\n",depWildcard);
    if( ! depWildcard ) {
+      lastCheckedExt = dep->ext;
       {
          char statusFile[SEQ_MAXFIELD];
          memset( statusFile, '\0', sizeof statusFile);
          /* no wilcard, we check only one iteration */
          if( dep->exp != NULL ) { 
-            sprintf(statusFile,"%s/sequencing/status/%s/%s%s.%s", dep->exp, dep->datestamp,  dep->node_name, depExtension, dep->status );
+            sprintf(statusFile,"%s/sequencing/status/%s/%s%s.%s", dep->exp, dep->datestamp,  dep->node_name, dep->ext, dep->status );
          } else {
-            sprintf(statusFile,"%s/sequencing/status/%s/%s%s.%s", _nodeDataPtr->workdir, dep->datestamp, dep->node_name, depExtension, dep->status );
+            sprintf(statusFile,"%s/sequencing/status/%s/%s%s.%s", _nodeDataPtr->workdir, dep->datestamp, dep->node_name, dep->ext, dep->status );
          }
 
          SeqUtil_TRACE(TL_FULL_TRACE,"processDepStatus(): statusFile=%s\n",statusFile);
          ret=_lock( statusFile ,_nodeDataPtr->datestamp, _nodeDataPtr->expHome ); 
          if ( (undoneIteration=! _isFileExists( statusFile, "maestro.processDepStatus()", _nodeDataPtr->expHome)) ) {
             if( dep->exp_scope == InterUser ) {
-               isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, dep->node_name, dep->index, depExtension, dep->datestamp, dep->status, dep->exp, dep->protocol, statusFile, _flow);
+               isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, dep->node_name, dep->index, dep->ext, dep->datestamp, dep->status, dep->exp, dep->protocol, statusFile, _flow);
             } else {
-               isWaiting = writeNodeWaitedFile( _nodeDataPtr, dep->exp, dep->node_name, dep->status, depExtension, dep->datestamp, dep->exp_scope, statusFile);
+               isWaiting = writeNodeWaitedFile( _nodeDataPtr, dep->exp, dep->node_name, dep->status, dep->ext, dep->datestamp, dep->exp_scope, statusFile);
             }
          }
          SeqUtil_TRACE(TL_FULL_TRACE,"processDepStatus(): After checking calling Write...WaitedFile(), isWaiting=%d\n",isWaiting);
@@ -2724,8 +2719,9 @@ int processDepStatus_MAESTRO( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr d
 
       /* loop iterations until we find one that is not satisfied */
       while( extensions != NULL && undoneIteration == 0 ) {
-         currentIndexPtr = extensions->data;
+         lastCheckedExt = extensions->data;
          {
+            char *ext = extensions->data; /* Will receive this as argument */
             char statusFile[SEQ_MAXFIELD];
             memset( statusFile, '\0', sizeof statusFile);
             if( dep->exp != NULL ) { 
@@ -2741,9 +2737,9 @@ int processDepStatus_MAESTRO( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr d
                extensions = extensions->nextPtr; /* the iteration status file exists, go to next */
             } else {
                if( dep->exp_scope == InterUser ) {
-                  isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, dep->node_name, dep->index, currentIndexPtr, dep->datestamp, dep->status, dep->exp, dep->protocol, statusFile, _flow);
+                  isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, dep->node_name, dep->index, ext, dep->datestamp, dep->status, dep->exp, dep->protocol, statusFile, _flow);
                } else {
-                  isWaiting = writeNodeWaitedFile( _nodeDataPtr, dep->exp, dep->node_name, dep->status, currentIndexPtr, dep->datestamp, dep->exp_scope, statusFile);
+                  isWaiting = writeNodeWaitedFile( _nodeDataPtr, dep->exp, dep->node_name, dep->status, ext, dep->datestamp, dep->exp_scope, statusFile);
                }
             }
             ret=_unlock( statusFile , _nodeDataPtr->datestamp, _nodeDataPtr->expHome ); 
@@ -2754,16 +2750,11 @@ int processDepStatus_MAESTRO( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr d
 
    if( undoneIteration ) {
       isWaiting = 1;
-      if ( depWildcard ) {
-         waitingMsg = formatWaitingMsg(  dep->exp_scope, dep->exp, dep->node_name, currentIndexPtr, dep->datestamp ); 
-      } else {
-         waitingMsg = formatWaitingMsg(  dep->exp_scope, dep->exp, dep->node_name, depExtension, dep->datestamp ); 
-      }
+      waitingMsg = formatWaitingMsg(  dep->exp_scope, dep->exp, dep->node_name, lastCheckedExt, dep->datestamp ); 
       setWaitingState( _nodeDataPtr, waitingMsg, dep->status );
    }
 
    free( waitingMsg );
-   free( depExtension);
 
    return isWaiting;
 }
