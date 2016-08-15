@@ -196,6 +196,11 @@ int main (int argc, char * argv [])
    }
    fprintf(stderr, "maestro_main calling maestro with SEQ_EXP_HOME=%s\n",seq_exp_home);
    /* printf( "node=%s signal=%s\n", node, sign ); */
+   /* Should go in main function */
+   if (getenv("SEQ_TRACE_LEVEL") != NULL){
+		 SeqUtil_setTraceEnv();
+		 SeqUtil_showTraceInfo();
+   }
    status = maestro( node, sign, flow, loopsArgs, ignoreAllDeps, extraArgs, datestamp,seq_exp_home );
 
    free(flow);
