@@ -252,17 +252,11 @@ Inputs:
 */
 
 static int go_abort(char *_signal, char *_flow ,const SeqNodeDataPtr _nodeDataPtr) {
-   char *extName = NULL, *extensionBase = NULL;
-   LISTNODEPTR tempPtr=NULL;
    char *current_action=NULL;
-   char filename[SEQ_MAXFIELD];
-   char jobID[50];
-   char tmpString[SEQ_MAXFIELD];
 
    SeqUtil_TRACE(TL_FULL_TRACE, "maestro.go_abort() node=%s signal=%s flow=%s\n", _nodeDataPtr->name, _signal, _flow );
    actions( _signal, _flow, _nodeDataPtr->name );
 
-   extName = (char *) SeqNode_extension( _nodeDataPtr );
 
    /*
    Go through the list of _nodeDataPtr->abort_actions to find the current status.
@@ -273,8 +267,10 @@ static int go_abort(char *_signal, char *_flow ,const SeqNodeDataPtr _nodeDataPt
    will be "stop". 
    */
    if (strcmp(_signal,"abort")==0 && strcmp(_flow, "continue") == 0 ){
-      tempPtr = _nodeDataPtr->abort_actions;
+      LISTNODEPTR tempPtr = _nodeDataPtr->abort_actions;
       while ( tempPtr != NULL ) {
+         char *extName = (char *) SeqNode_extension( _nodeDataPtr );
+         char filename[SEQ_MAXFIELD];
          if (current_action = (char *) malloc(strlen(tempPtr->data)+1)){
              strcpy(current_action,tempPtr->data);
          } else {
@@ -311,6 +307,7 @@ static int go_abort(char *_signal, char *_flow ,const SeqNodeDataPtr _nodeDataPt
             /* next action, we're not at the end of the list yet */
             tempPtr = tempPtr->nextPtr;
          }
+         free(extName);
       }
    }
    /*
@@ -336,6 +333,8 @@ static int go_abort(char *_signal, char *_flow ,const SeqNodeDataPtr _nodeDataPt
       /* issue an appropriate message, then rerun the node */
       if (strcmp(_signal,"abort")==0 && strcmp(_flow, "continue") == 0 ) {
 
+         char jobID[50];
+         char tmpString[SEQ_MAXFIELD];
          memset(jobID, '\0', sizeof jobID);
          if (getenv("JOB_ID") != NULL){
              sprintf(jobID,"%s",getenv("JOB_ID"));
@@ -393,8 +392,6 @@ static int go_abort(char *_signal, char *_flow ,const SeqNodeDataPtr _nodeDataPt
    }
 
    if (current_action != NULL) free( current_action ); 
-   free( extName );
-   free( extensionBase );
    actionsEnd( _signal, _flow, _nodeDataPtr->name );
    return 0;
 }
@@ -474,9 +471,6 @@ Inputs:
 static int go_initialize(char *_signal, char *_flow ,const SeqNodeDataPtr _nodeDataPtr) {
    
     /* clears all the datestamped status files starting from the current node, if node was submitted with xfer, else just the current node */
-   char *extName = NULL ;
-   char cmd[SEQ_MAXFIELD];
-   int returnValue=0;
    actions( _signal, _flow , _nodeDataPtr->name );
    SeqUtil_TRACE(TL_FULL_TRACE, "maestro.go_initialize() node=%s signal=%s flow=%s\n", _nodeDataPtr->name, _signal, _flow );
 
@@ -485,14 +479,19 @@ static int go_initialize(char *_signal, char *_flow ,const SeqNodeDataPtr _nodeD
    }
    setInitState( _nodeDataPtr ); 
    /* TODO this method might not work when doing a foreach container...*/
-   SeqUtil_stringAppend( &extName, "" );
-   if( strlen( _nodeDataPtr->extension ) > 0 ) {
-      SeqUtil_stringAppend( &extName, "." );
-      SeqUtil_stringAppend( &extName, _nodeDataPtr->extension );
-   }      
 
    /* delete lockfiles in branches under current node */
    if (  strcmp (_signal,"initbranch" ) == 0 ) {
+      /* initBranch */
+      {
+      int returnValue=0;
+      char cmd[SEQ_MAXFIELD];
+      char *extName = NULL ;
+      SeqUtil_stringAppend( &extName, "" );
+      if( strlen( _nodeDataPtr->extension ) > 0 ) {
+         SeqUtil_stringAppend( &extName, "." );
+         SeqUtil_stringAppend( &extName, _nodeDataPtr->extension );
+      }      
        memset( cmd, '\0' , sizeof cmd);
        SeqUtil_TRACE(TL_FULL_TRACE, "maestro.go_initialize() deleting end lockfiles starting at node=%s\n", _nodeDataPtr->name);
        sprintf(cmd, "find %s/%s/%s/%s -name \"*%s.end\" -type f -print -delete -o -name \"*%s.begin\"  -type f -print -delete  -o -name \"*%s.abort.*\"  -type f -print -delete -o -name \"*%s.submit\" -type f -print -delete -o -name \"*%s.waiting*\" -type f -print -delete",_nodeDataPtr->workdir, _nodeDataPtr->datestamp ,_nodeDataPtr->container, _nodeDataPtr->nodeName, extName,extName,extName,extName,extName);
@@ -506,14 +505,19 @@ static int go_initialize(char *_signal, char *_flow ,const SeqNodeDataPtr _nodeD
        sprintf(cmd, "find %s/%s/%s/%s -name \"*%s+*.end\"  -type f -print -delete -o -name \"*%s+*.begin\"  -type f -print -delete -o  -name \"*%s+*.abort.*\"  -type f -print -delete -o -name \"*%s+*.submit\"  -type f -print -delete -o -name \"*%s+*.waiting*\"  -type f -print -delete",_nodeDataPtr->workdir, _nodeDataPtr->datestamp, _nodeDataPtr->container, _nodeDataPtr->nodeName, extName, extName, extName, extName, extName);
        SeqUtil_TRACE(TL_FULL_TRACE,"cmd=%s\n",cmd); 
        returnValue=system(cmd);
-
+      }
    } else if  ( strcmp (_signal,"initnode" ) == 0 ) {
+      /* initNode() */
+      {
+       int returnValue=0;
+       char cmd[SEQ_MAXFIELD];
        memset( cmd, '\0' , sizeof cmd);
        SeqUtil_TRACE(TL_FULL_TRACE, "maestro.go_initialize() deleting waiting.InterUser lockfiles starting for node=%s\n", _nodeDataPtr->name); 
        sprintf(cmd, "find %s%s%s%s -name \"*.waiting*\" -type f -print -delete",_nodeDataPtr->expHome, INTER_DEPENDS_DIR, _nodeDataPtr->datestamp, _nodeDataPtr->container);
        SeqUtil_TRACE(TL_FULL_TRACE,"cmd=%s\n",cmd); 
        printf("Following status files are being deleted: \n");
        returnValue=system(cmd);
+      }
    }
 
    nodelogger(_nodeDataPtr->name,"init",_nodeDataPtr->extension,"",_nodeDataPtr->datestamp, _nodeDataPtr->expHome);
