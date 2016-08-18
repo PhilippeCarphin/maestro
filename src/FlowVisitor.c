@@ -484,37 +484,47 @@ int Flow_parseSwitchAttributes(FlowVisitorPtr fv,
    if( switchType == NULL )
       raiseError("Flow_parseSwitchAttributes(): switchType not found\n");
 
-   char * switchValue = Flow_getSwitchValue(fv,_nodeDataPtr, switchType,isLast);
-
-   /*
-    * Insert the switch_path=switchValue key-value pair into the node's switch
-    * answers list.
-    */
-   char * fixedSwitchPath = SeqUtil_fixPath( fv->currentFlowNode );
-   SeqNameValues_insertItem(&(_nodeDataPtr->switchAnswers), fixedSwitchPath , switchValue );
-
-   /*
-    * Enter the correct switch item
-    */
-   if( Flow_findSwitchItem(fv, switchValue) == FLOW_FAILURE ){
-      SeqUtil_TRACE(TL_FULL_TRACE,"Flow_parseSwitchAttributes(): no SWITCH_ITEM found containing value=%s and no SWITCH_ITEM found containing value=%s\n", switchValue);
-      retval = FLOW_FAILURE;
-      goto out_free;
-   }
-
    if(isLast){
-      SeqNode_addSpecificData(_nodeDataPtr, "VALUE", switchValue);
+      /* SeqNode_addSpecificData(_nodeDataPtr, "VALUE", switchValue); */
       /* PHIL: do this outside of the while instead of using isLast */
+      char * pathLeaf = SeqUtil_getPathLeaf(fv->currentFlowNode);
+      char * switchValue = SeqNameValues_getValue(_nodeDataPtr->loop_args, pathLeaf);
+      SeqUtil_TRACE(TL_FULL_TRACE,"%s() pathLeaf:%s, switchValue:%s\n",__func__,pathLeaf,switchValue);
+      if( switchValue != NULL ){
+         if( Flow_findSwitchItem(fv, switchValue) == FLOW_FAILURE ){
+            SeqUtil_TRACE(TL_FULL_TRACE,"Flow_parseSwitchAttributes(): no SWITCH_ITEM found containing value=%s and no SWITCH_ITEM found containing value=%s\n", switchValue);
+            retval = FLOW_FAILURE;
+            goto out_free;
+         }
+      }
+      _nodeDataPtr->switchType = switchType;
       _nodeDataPtr->type = Switch;
    } else {
+      char * switchValue = Flow_getSwitchValue(fv,_nodeDataPtr, switchType,isLast);
+
+      /*
+       * Insert the switch_path=switchValue key-value pair into the node's switch
+       * answers list.
+       */
+      char * fixedSwitchPath = SeqUtil_fixPath( fv->currentFlowNode );
+      SeqNameValues_insertItem(&(_nodeDataPtr->switchAnswers), fixedSwitchPath , switchValue );
+
+      /*
+       * Enter the correct switch item
+       */
+      if( Flow_findSwitchItem(fv, switchValue) == FLOW_FAILURE ){
+         SeqUtil_TRACE(TL_FULL_TRACE,"Flow_parseSwitchAttributes(): no SWITCH_ITEM found containing value=%s and no SWITCH_ITEM found containing value=%s\n", switchValue);
+         retval = FLOW_FAILURE;
+         goto out_free;
+      }
       SeqNode_addSpecificData( _nodeDataPtr, "SWITCH_TYPE", switchType );
       SeqNode_addSwitch(_nodeDataPtr,fixedSwitchPath , switchType, switchValue);
+      free(switchValue);
+      free(fixedSwitchPath);
    }
 
 out_free:
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parseSwitchAttributes(): end\n");
-   free(switchValue);
-   free(fixedSwitchPath);
    return retval;
 }
 
