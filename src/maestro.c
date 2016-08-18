@@ -633,7 +633,12 @@ static int evaluateAndSubmit(SeqNodeDataPtr _nodeDataPtr)
    }
    /* then add the current loop argument */
    SeqNameValues_printList(_nodeDataPtr->switchAnswers);
-   SeqNameValues_insertItem( &newArgs, _nodeDataPtr->nodeName, SeqNameValues_getValue(_nodeDataPtr->switchAnswers,_nodeDataPtr->name ));
+
+   /* New stuff: evaluate the switch */
+   char *switchValue = evaluateSwitch(_nodeDataPtr);
+
+   SeqNameValues_insertItem( &newArgs, _nodeDataPtr->nodeName, switchValue);
+
    /*now submit the child nodes */
    SeqUtil_TRACE(TL_FULL_TRACE, "go_begin calling maestro -n %s -s submit -l %s -f continue\n", _nodeDataPtr->name, SeqLoops_getLoopArgs( newArgs ));
    maestro ( _nodeDataPtr->name, "submit", "continue" , newArgs, 0, NULL,
@@ -642,6 +647,7 @@ static int evaluateAndSubmit(SeqNodeDataPtr _nodeDataPtr)
 out_free:
    SeqNameValues_deleteWholeList( &containerArgs );
    SeqNameValues_deleteWholeList( &newArgs );
+   free(switchValue);
 out:
    SeqUtil_TRACE(TL_FULL_TRACE, "%s() end\n",__func__);
    return 0;
