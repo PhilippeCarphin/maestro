@@ -170,6 +170,10 @@ int Flow_updatePaths(FlowVisitorPtr _flow_visitor, const char * pathToken, const
 ********************************************************************************/
 int Flow_parseSwitchAttributes(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr, int isLast );
 
+char *Flow_getSwitchValue(FlowVisitorPtr fv, SeqNodeDataPtr ndp, const char *switchType, int isLast);
+int Flow_processLeafSwitch(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr);
+int Flow_processContainerSwitch(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr, const char *switchType, int isLast);
+char *Flow_findSwitchArg(FlowVisitorPtr fv);
 /********************************************************************************
  * This function returns the switch type of the current node in the XML XPath
  * context
