@@ -670,6 +670,12 @@ int switchIsEvaluated(SeqNodeDataPtr _nodeDataPtr)
    return retval;
 }
 
+/********************************************************************************
+ * This is the switch specific part of go_begin:
+ * If the switch is evaluated (it is S[i] as opposed to S),
+ * then we submit it's SUBMITS by calling submitNodeList(), other wise, we
+ * evaluate the switch and submit the evaluated switch.
+********************************************************************************/
 static int go_begin_switch(SeqNodeDataPtr _nodeDataPtr)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "%s() begin\n",__func__);
@@ -685,6 +691,42 @@ out:
    return 0;
 }
 
+/********************************************************************************
+ * Does the loop specific part of go_begin.
+********************************************************************************/
+int go_begin_loop(SeqNodeDataPtr _nodeDataPtr)
+{
+   FUNCBEGIN;
+   SeqNameValuesPtr loopArgs = NULL, loopSetArgs = NULL;
+   /* L submits first set of loops, L(i) just submits its submits */
+   if((char*) SeqLoops_getLoopAttribute( _nodeDataPtr->loop_args, _nodeDataPtr->nodeName ) != NULL) { 
+      submitNodeList(_nodeDataPtr);
+   } else {
+      /* we might have to submit a set of iterations instead of only one */
+      /* get the list of iterations to submit */
+      if( _nodeDataPtr->type == Loop ) { 
+         loopSetArgs = (SeqNameValuesPtr) SeqLoops_getLoopSetArgs( _nodeDataPtr, _nodeDataPtr->loop_args, 0 );
+         SeqUtil_TRACE(TL_FULL_TRACE, "maestro.go_begin() doing loop iteration submissions\n");
+      } else if ( _nodeDataPtr->type == ForEach ){
+         /* FE ->  check ForEach target for launched iterations, launch corresponding  */   
+         loopSetArgs = (SeqNameValuesPtr) processForEachTarget(_nodeDataPtr);
+         SeqUtil_TRACE(TL_FULL_TRACE, "maestro.go_begin() doing for_each iteration submissions or tagging \n");
+      }
+      loopArgs = (SeqNameValuesPtr) SeqLoops_getContainerArgs( _nodeDataPtr, _nodeDataPtr->loop_args );
+      submitLoopSetNodeList(_nodeDataPtr, loopArgs, loopSetArgs);
+      SeqNameValues_deleteWholeList( &loopArgs );
+      SeqNameValues_deleteWholeList( &loopSetArgs );
+   }
+   FUNCEND;
+   return 0;
+}
+
+/********************************************************************************
+ * go_begin puts the node in begin state, then does loop-specific or
+ * switch-specific or Family/Module-specific work on the nodes, then submits the
+ * nodes waiting for this one to begin.  Finally, processContainerBegin is
+ * called to update the state of the node's container.
+********************************************************************************/
 static int go_begin(char *_signal, char *_flow, const SeqNodeDataPtr _nodeDataPtr) {
    SeqUtil_TRACE(TL_FULL_TRACE, "maestro.go_begin() node=%s signal=%s flow=%s loopargs=%s\n", _nodeDataPtr->name, _signal, _flow, SeqLoops_getLoopArgs(_nodeDataPtr->loop_args));
 
@@ -704,26 +746,7 @@ static int go_begin(char *_signal, char *_flow, const SeqNodeDataPtr _nodeDataPt
       /* containers will submit their direct submits in begin */
       /* Check if it is with or without own loop argument -> L,FE or L(i),FE(i) */
       if( _nodeDataPtr->type == Loop || _nodeDataPtr->type == ForEach  ) {
-         SeqNameValuesPtr loopArgs = NULL, loopSetArgs = NULL;
-          /* L submits first set of loops, L(i) just submits its submits */
-         if((char*) SeqLoops_getLoopAttribute( _nodeDataPtr->loop_args, _nodeDataPtr->nodeName ) != NULL) { 
-            submitNodeList(_nodeDataPtr);
-         } else {
-             /* we might have to submit a set of iterations instead of only one */
-             /* get the list of iterations to submit */
-            if( _nodeDataPtr->type == Loop ) { 
-               loopSetArgs = (SeqNameValuesPtr) SeqLoops_getLoopSetArgs( _nodeDataPtr, _nodeDataPtr->loop_args, 0 );
-               SeqUtil_TRACE(TL_FULL_TRACE, "maestro.go_begin() doing loop iteration submissions\n", _nodeDataPtr->name, _signal );
-            } else if ( _nodeDataPtr->type == ForEach ){
-               /* FE ->  check ForEach target for launched iterations, launch corresponding  */   
-               loopSetArgs = (SeqNameValuesPtr) processForEachTarget(_nodeDataPtr);
-               SeqUtil_TRACE(TL_FULL_TRACE, "maestro.go_begin() doing for_each iteration submissions or tagging \n", _nodeDataPtr->name, _signal );
-            }
-            loopArgs = (SeqNameValuesPtr) SeqLoops_getContainerArgs( _nodeDataPtr, _nodeDataPtr->loop_args );
-            submitLoopSetNodeList(_nodeDataPtr, loopArgs, loopSetArgs);
-            SeqNameValues_deleteWholeList( &loopArgs );
-            SeqNameValues_deleteWholeList( &loopSetArgs );
-         }
+         go_begin_loop(_nodeDataPtr);
       }
       if ( _nodeDataPtr->type == Switch ) {   
          go_begin_switch(_nodeDataPtr);
