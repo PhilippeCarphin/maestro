@@ -422,6 +422,57 @@ int Flow_updatePaths(FlowVisitorPtr _flow_visitor, const char * pathToken, const
    return FLOW_SUCCESS;
 }
 
+
+
+/********************************************************************************
+ * Parses the attributes of a switch node into the nodeDataPtr.
+ * Returns FLOW_SUCCESS if the right switch item (or default) is found.
+ * Returns FLOW_FAILURE otherwise.
+********************************************************************************/
+int Flow_parseSwitchAttributes(FlowVisitorPtr fv,
+                                 SeqNodeDataPtr _nodeDataPtr, int isLast )
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parseSwitchAttributes(): begin\n");
+   int retval = FLOW_SUCCESS;
+
+
+   const char * switchType = Flow_findSwitchType(fv);
+   if( switchType == NULL )
+      raiseError("Flow_parseSwitchAttributes(): switchType not found\n");
+
+   if(isLast){
+      /* COMMENTING * THIS BREAKS the fix of bug6268 */
+      /* SeqNode_addSpecificData(_nodeDataPtr, "VALUE", switchValue); */
+      _nodeDataPtr->switchType = switchType;
+      /* PHIL: do this outside of the while instead of using isLast */
+      _nodeDataPtr->type = Switch;
+      retval = Flow_processLeafSwitch(fv, _nodeDataPtr) ;
+
+   } else {
+      retval = Flow_processContainerSwitch(fv,_nodeDataPtr,switchType,1);
+   }
+
+out_free:
+   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parseSwitchAttributes(): end\n");
+   return retval;
+}
+
+/********************************************************************************
+ * This function returns the switch type of the current node in the XML XPath
+ * context
+********************************************************************************/
+const char * Flow_findSwitchType(const FlowVisitorPtr fv ){
+   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchType() begin\n");
+   const char * switchType = xmlGetProp(fv->context->node,"type");
+out:
+   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchType() end, returning %s\n",switchType);
+   return switchType;
+}
+
+/********************************************************************************
+ * Finds the arg corresponding to the switch in the special field
+ * fv->switch_args.
+********************************************************************************/
 char *Flow_findSwitchArg(FlowVisitorPtr fv)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchArg() begin,fv->nodePath:%s fv->switch_args=%s\n",fv->nodePath,fv->switch_args);
@@ -468,78 +519,64 @@ char *Flow_getSwitchValue(FlowVisitorPtr fv, SeqNodeDataPtr ndp,
    }
    return switchValue;
 }
+
 /********************************************************************************
- * Parses the attributes of a switch node into the nodeDataPtr.
- * Returns FLOW_SUCCESS if the right switch item (or default) is found.
- * Returns FLOW_FAILURE otherwise.
+ * Enters the correct switch item based on loopargs if the switch has loop args
+ * to it's name.
 ********************************************************************************/
-int Flow_parseSwitchAttributes(FlowVisitorPtr fv,
-                                 SeqNodeDataPtr _nodeDataPtr, int isLast )
+int Flow_processLeafSwitch(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr)
 {
-   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parseSwitchAttributes(): begin\n");
    int retval = FLOW_SUCCESS;
-
-
-   const char * switchType = Flow_findSwitchType(fv);
-   if( switchType == NULL )
-      raiseError("Flow_parseSwitchAttributes(): switchType not found\n");
-
-   if(isLast){
-      /* SeqNode_addSpecificData(_nodeDataPtr, "VALUE", switchValue); */
-      /* PHIL: do this outside of the while instead of using isLast */
-      char * pathLeaf = SeqUtil_getPathLeaf(fv->currentFlowNode);
-      char * switchValue = SeqNameValues_getValue(_nodeDataPtr->loop_args, pathLeaf);
-      SeqUtil_TRACE(TL_FULL_TRACE,"%s() pathLeaf:%s, switchValue:%s\n",__func__,pathLeaf,switchValue);
-      if( switchValue != NULL ){
-         if( Flow_findSwitchItem(fv, switchValue) == FLOW_FAILURE ){
-            SeqUtil_TRACE(TL_FULL_TRACE,"Flow_parseSwitchAttributes(): no SWITCH_ITEM found containing value=%s and no SWITCH_ITEM found containing value=%s\n", switchValue);
-            retval = FLOW_FAILURE;
-            goto out_free;
-         }
-      }
-      _nodeDataPtr->switchType = switchType;
-      _nodeDataPtr->type = Switch;
-   } else {
-      char * switchValue = Flow_getSwitchValue(fv,_nodeDataPtr, switchType,isLast);
-
-      /*
-       * Insert the switch_path=switchValue key-value pair into the node's switch
-       * answers list.
-       */
-      char * fixedSwitchPath = SeqUtil_fixPath( fv->currentFlowNode );
-      SeqNameValues_insertItem(&(_nodeDataPtr->switchAnswers), fixedSwitchPath , switchValue );
-
-      /*
-       * Enter the correct switch item
-       */
+   char * pathLeaf = SeqUtil_getPathLeaf(fv->currentFlowNode);
+   char * switchValue = SeqNameValues_getValue(_nodeDataPtr->loop_args, pathLeaf);
+   SeqUtil_TRACE(TL_FULL_TRACE,"%s() pathLeaf:%s, switchValue:%s\n",__func__,pathLeaf,switchValue);
+   if( switchValue != NULL ){
       if( Flow_findSwitchItem(fv, switchValue) == FLOW_FAILURE ){
-         SeqUtil_TRACE(TL_FULL_TRACE,"Flow_parseSwitchAttributes(): no SWITCH_ITEM found containing value=%s and no SWITCH_ITEM found containing value=%s\n", switchValue);
+         SeqUtil_TRACE(TL_FULL_TRACE,"%s(): no SWITCH_ITEM found containing value=%s and no default\n",__func__,switchValue);
          retval = FLOW_FAILURE;
          goto out_free;
       }
-      SeqNode_addSpecificData( _nodeDataPtr, "SWITCH_TYPE", switchType );
-      SeqNode_addSwitch(_nodeDataPtr,fixedSwitchPath , switchType, switchValue);
-      free(switchValue);
-      free(fixedSwitchPath);
    }
-
 out_free:
-   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parseSwitchAttributes(): end\n");
+   free(pathLeaf);
+   free(switchValue);
    return retval;
 }
 
 /********************************************************************************
- * This function returns the switch type of the current node in the XML XPath
- * context
+ * This function processes container switches. It uses the context to find the
+ * correct switch branch. (whereas 
 ********************************************************************************/
-const char * Flow_findSwitchType(const FlowVisitorPtr fv ){
-   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchType() begin\n");
-   const char * switchType = xmlGetProp(fv->context->node,"type");
-out:
-   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchType() end, returning %s\n",switchType);
-   return switchType;
-}
+int Flow_processContainerSwitch(FlowVisitorPtr fv, SeqNodeDataPtr _nodeDataPtr,
+                                             const char *switchType, int isLast)
+{
+   FUNCBEGIN;
+   int retval;
+   char * switchValue = Flow_getSwitchValue(fv,_nodeDataPtr, switchType,isLast);
+   /*
+    * Insert the switch_path=switchValue key-value pair into the node's switch
+    * answers list.
+    */
+   char * fixedSwitchPath = SeqUtil_fixPath( fv->currentFlowNode );
+   SeqNameValues_insertItem(&(_nodeDataPtr->switchAnswers), fixedSwitchPath , switchValue );
 
+   /*
+    * Enter the correct switch item
+    */
+   if( Flow_findSwitchItem(fv, switchValue) == FLOW_FAILURE ){
+      SeqUtil_TRACE(TL_FULL_TRACE,"Flow_parseSwitchAttributes(): no SWITCH_ITEM found containing value=%s and no SWITCH_ITEM found containing value=%s\n", switchValue);
+      retval = FLOW_FAILURE;
+      goto out_free;
+   }
+   SeqNode_addSpecificData( _nodeDataPtr, "SWITCH_TYPE", switchType );
+   SeqNode_addSwitch(_nodeDataPtr,fixedSwitchPath , switchType, switchValue);
+
+out_free:
+   free(switchValue);
+   free(fixedSwitchPath);
+   FUNCEND;
+   return retval;
+}
 /********************************************************************************
  * Moves the flow visitor to the switch item of the current node whose name
  * contains switchValue or to the default if no switch item matches switchValue.
