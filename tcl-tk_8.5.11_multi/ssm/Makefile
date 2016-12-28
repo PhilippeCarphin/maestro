@@ -1,16 +1,24 @@
-SSMPACKAGE=tcl-tk_8.5.11_multi
+
+# common section definition                                                                                                                                                                                                                  
+include ../config/config.mk              
 
 ssm:
 	echo "Creating SSM package $(SSMPACKAGE)..."
 	if [ ! -d $(SSMPACKAGE) ]; then \
 	   mkdir $(SSMPACKAGE); \
 	fi;
-	cp -r ../src $(SSMPACKAGE); 
+	cp -r ../src $(SSMPACKAGE);
 	cp -r ../maint $(SSMPACKAGE); 
+	cp -r ../lib $(SSMPACKAGE); 
+	cp ../LICENSE.txt $(SSMPACKAGE);
+	cp -r ../bin $(SSMPACKAGE);
+	mkdir -p $(SSMPACKAGE)/.ssm.d;
+	mkdir -p $(SSMPACKAGE)/ssm;
+	cp Makefile $(SSMPACKAGE)/ssm;
 	mkdir -p $(SSMPACKAGE)/.ssm.d;
 	echo "Package: $(SSMPACKAGE)" > $(SSMPACKAGE)/.ssm.d/control; \
 	echo "Version: ${VERSION}" >> $(SSMPACKAGE)/.ssm.d/control; \
-	echo "Platform: multi" >> $(SSMPACKAGE)/.ssm.d/control; \
+	echo "Platform: ${ORDENV_PLAT}" >> $(SSMPACKAGE)/.ssm.d/control; \
 	echo "Maintainer: $(shell whoami)" >> $(SSMPACKAGE)/.ssm.d/control; \
 	echo "BuildInfo:" >> $(SSMPACKAGE)/.ssm.d/control; \
 	echo "Description: maestro tcl-tk 8.5" >> $(SSMPACKAGE)/.ssm.d/control; \

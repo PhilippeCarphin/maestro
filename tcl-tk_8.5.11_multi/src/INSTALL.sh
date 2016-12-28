@@ -95,3 +95,9 @@ if [[ ! -d tkimg1.4 ]] ; then
   make 
   make install
 fi
+
+cd $ICI
+echo === installation successful, cleaning up ===
+find . -mindepth 1 -maxdepth 1  -type d -exec rm -rf {} \;
+
+
