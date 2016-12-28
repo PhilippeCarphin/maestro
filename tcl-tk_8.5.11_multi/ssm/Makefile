@@ -16,7 +16,7 @@ ssm:
 	mkdir -p $(SSMPACKAGE)/ssm;
 	cp Makefile $(SSMPACKAGE)/ssm;
 	mkdir -p $(SSMPACKAGE)/.ssm.d;
-	echo "Package: $(SSMPACKAGE)" > $(SSMPACKAGE)/.ssm.d/control; \
+	echo "Package: tcl-tk" > $(SSMPACKAGE)/.ssm.d/control; \
 	echo "Version: ${VERSION}" >> $(SSMPACKAGE)/.ssm.d/control; \
 	echo "Platform: ${ORDENV_PLAT}" >> $(SSMPACKAGE)/.ssm.d/control; \
 	echo "Maintainer: $(shell whoami)" >> $(SSMPACKAGE)/.ssm.d/control; \
