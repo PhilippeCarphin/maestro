@@ -16,7 +16,7 @@ if [[ ! -d tcl8.5.11 ]] ; then
   make install
 fi
 cd ${InstallPrefix}/bin
-rm -f wish tclsh maestro_wish8.5 maestro_tcl8.5
+rm -f wish tclsh tclsh8.5 wish8.5 maestro_wish8.5 maestro_tcl8.5
 ln -s wish8.5 wish
 ln -s tclsh8.5 tclsh
 ln -s wish8.5 maestro_wish8.5
