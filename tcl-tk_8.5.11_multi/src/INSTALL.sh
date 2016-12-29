@@ -16,11 +16,11 @@ if [[ ! -d tcl8.5.11 ]] ; then
   make install
 fi
 cd ${InstallPrefix}/bin
-rm -f wish tclsh tclsh8.5 wish8.5 maestro_wish8.5 maestro_tcl8.5
-ln -s wish8.5 wish
-ln -s tclsh8.5 tclsh
-ln -s wish8.5 maestro_wish8.5
-ln -s tclsh8.5 maestro_tclsh8.5
+rm -f wish tclsh 
+ln -sf wish8.5 wish
+ln -sf tclsh8.5 tclsh
+ln -sf wish8.5 maestro_wish8.5
+ln -sf tclsh8.5 maestro_tclsh8.5
 cd $ICI
 export PATH=${InstallPrefix}/bin:$PATH
 if [[ ! -d thread2.6.7 ]] ; then
