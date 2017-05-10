@@ -91,7 +91,7 @@ if [[ ! -d tkimg1.4 ]] ; then
   tar zxf tkimg1.4.tar.gz
   cd tkimg1.4
   ./configure --enable-threads --enable-shared --prefix=${InstallPrefix} -with-tcl=${InstallPrefix}/lib --with-tclinclude=${InstallPrefix}/include \
-              --with-tk=${InstallPrefix}/lib
+              --with-tk=${InstallPrefix}/lib 
   make 
   make install
 fi
