@@ -23,6 +23,24 @@ const char * XmlUtils_firstResultName(xmlXPathObjectPtr queryResult){
    return (const char *) queryResult->nodesetval->nodeTab[0]->children->content;
 };
 
+#define for_list(iterator) \
+   for(iterator = list_head;\
+         iterator != NULL;\
+         iterator = iterator->nextPtr)
+
+
+#define for_listNode(iterator, list_head) \
+   LISTNODEPTR iterator = list_head;\
+   for_list
+
+#define for_nameValues(iterator, list_head) \
+   SeqNameValuesPtr iterator = list_head;\
+   for_list(iterator)
+
+#define for_loops(iterator, list_head) \
+   SeqLoopsPtr iterator = list_head;\
+   for_list(iterator)
+
 /********************************************************************************
  * Initializes the flow_visitor to the entry module;
  * Caller should check if the return pointer is NULL.
@@ -316,6 +334,8 @@ int Flow_updatePaths(FlowVisitorPtr _flow_visitor, const char * pathToken, const
          case Module:
             free(_flow_visitor->taskPath);
             _flow_visitor->taskPath = NULL;
+            free(_flow_visitor->pathToModule);
+            _flow_visitor->pathToModule = strdup(currentFlowNode);
          case Family:
          case Loop:
          case Switch:
