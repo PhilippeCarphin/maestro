@@ -1,0 +1,17 @@
+all:
+	$(MAKE) -C xflow/ssm clean
+	$(MAKE) -C xflow/ssm
+
+	$(MAKE) -C maestro-utils/ssm clean
+	$(MAKE) -C maestro-utils/ssm
+
+	$(MAKE) -C maestro-manager/ssm clean
+	$(MAKE) -C maestro-manager/ssm
+
+	./hare-compile.sh
+
+	$(MAKE) -C maestro clean
+	$(MAKE) -C maestro all
+
+	./soft-link-ssm.sh
+
