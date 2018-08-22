@@ -14,7 +14,7 @@ export ORDENV_PLAT=sles-11-amd64-64
 
 # Compile with dynamic libs:
 make clean
-make -f Makefile.dynamic
+make
 
 # Create ssm package:
 cd $MAESTRO_CORE/ssm
