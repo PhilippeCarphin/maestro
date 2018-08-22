@@ -1,19 +1,29 @@
 
 MAESTRO_CORE="$PWD/maestro"
+MAESTRO_TCL="$PWD/maestro-tcl/tcl-tk_8.5.11_multi"
 
-ssh hare "cd $MAESTRO_CORE/src
+ssh hare "
 
-# load gnu compiler instead of default intel:
+cd $MAESTRO_CORE/src
+
+# Load gnu compiler instead of default intel:
 module switch PrgEnv-intel/5.2.82 PrgEnv-gnu
 
-# put a generic environment tag instead of chipset specific name
+# Put a generic environment tag instead of chipset specific name
 export ORDENV_PLAT=sles-11-amd64-64
 
-# compile with dynamic libs:
+# Compile with dynamic libs:
 make clean
 make -f Makefile.dynamic
 
-# create ssm package:
+# Create ssm package:
 cd $MAESTRO_CORE/ssm
 make clean
-make"
+make
+
+# Now compile tcl for SLES
+cd $MAESTRO_TCL/ssm
+make clean
+make
+
+"
