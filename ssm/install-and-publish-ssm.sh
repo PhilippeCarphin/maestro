@@ -1,4 +1,4 @@
-#!/bin/ksh
+#!/bin/bash
 
 if [ -z "$1" ] || [ -z  "$2" ] ; then
 		echo "Usage:"
@@ -9,30 +9,7 @@ fi
 destination_domain=$1 
 version=$2 
 
-# Verify that we have all required packages
-
-for platform in sles-11-amd64-64 ubuntu-14.04-amd64-64 ; do 
-  package=maestro
-  [[ -f ./${package}_${version}_${platform}.ssm ]] || missing_packages="$missing_packages ${package}_${version}_${platform}.ssm" 
-  package=tcl-tk 
-  [[ -f ./${package}_8.5.11_${platform}.ssm ]] || missing_packages="$missing_packages ${package}_${version}_${platform}.ssm" 
-done  
-
-platform=all 
-
-for package in maestro-manager maestro-utils xflow ; do 
-   [[ -f ./${package}_${version}_${platform}.ssm ]] || missing_packages="$missing_packages ${package}_${version}_${platform}.ssm" 
-done 
-
-if [ -n "$missing_packages" ] ; then
-	echo "Missing packages:"
-	for package in $missing_packages
-	do
-			echo "$package"
-	done
-
-	exit 1 
-fi
+./verify-ssm-packages.sh
 
 set -ex 
 ssm created -d $destination_domain || exit 1 
