@@ -1,10 +1,9 @@
 
 MAESTRO_CORE="$PWD/maestro-core"
 MAESTRO_TCL="$PWD/maestro-tcl"
+ssm_folder="ssm"
 
 ssh hare "
-
-
 
 # Load gnu compiler instead of default intel:
 module switch PrgEnv-intel/5.2.82 PrgEnv-gnu
