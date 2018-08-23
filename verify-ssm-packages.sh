@@ -26,14 +26,11 @@ for package in maestro-manager maestro-utils xflow ; do
 		platform=all 
 		required_packages="${package}_${package_version}_${platform}.ssm $required_packages"
 done 
-
-if [ $verbose=="1" ] ; then
-		echo
-		echo "Required packages:"
-		for package in $required_packages ; do
-				echo "${SPACES}${package}"
-		done
-fi
+echo
+echo "Required packages:"
+for package in $required_packages ; do
+		echo "${SPACES}${package}"
+done
 
 # Print all missing packages.
 has_missing=""
@@ -44,7 +41,7 @@ for package in $required_packages ; do
 						echo "Missing packages:"
 				fi
 				echo "${SPACES}${package}"
-				has_missing="true"
+				has_missing="1"
 		fi
 done
 
