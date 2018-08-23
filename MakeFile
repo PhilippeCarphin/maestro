@@ -14,7 +14,7 @@ all:
 	./hare-compile.sh
 
 	$(MAKE) -C maestro-core clean
-	$(MAKE) -C maestro-core all
+	$(MAKE) -C maestro-core
 
 	./soft-link-ssm.sh
 
