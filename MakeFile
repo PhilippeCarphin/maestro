@@ -8,13 +8,13 @@ all:
 	$(MAKE) -C maestro-manager/ssm clean
 	$(MAKE) -C maestro-manager/ssm
 
-	$(MAKE) -C maestro-tcl/tcl-tk_8.5.11_multi/ssm clean
-	$(MAKE) -C maestro-tcl/tcl-tk_8.5.11_multi/ssm
+	$(MAKE) -C maestro-tcl/ssm clean
+	$(MAKE) -C maestro-tcl/ssm
 
 	./hare-compile.sh
 
-	$(MAKE) -C maestro clean
-	$(MAKE) -C maestro all
+	$(MAKE) -C maestro-core clean
+	$(MAKE) -C maestro-core all
 
 	./soft-link-ssm.sh
 

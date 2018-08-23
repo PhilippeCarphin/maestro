@@ -22,10 +22,7 @@
 # */
 
 
-
-tcl-tk_8.5.11_multi :
-
-   contains the source code and libraries to generate the tcl-tk_8.5.11_multi ssm package.
+   This folder contains the source code and libraries to generate the tcl-tk_8.5.11_multi ssm package.
    This package is to be installed on the target ssm domain. It is used as a place holder
    for the target specifi ssm packages below.
 

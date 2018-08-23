@@ -1,6 +1,6 @@
 
 MAESTRO_CORE="$PWD/maestro"
-MAESTRO_TCL="$PWD/maestro-tcl/tcl-tk_8.5.11_multi"
+MAESTRO_TCL="$PWD/maestro-tcl"
 
 ssh hare "
 
