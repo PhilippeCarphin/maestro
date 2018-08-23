@@ -1,5 +1,5 @@
 
-MAESTRO_CORE="$PWD/maestro"
+MAESTRO_CORE="$PWD/maestro-core"
 MAESTRO_TCL="$PWD/maestro-tcl"
 
 ssh hare "
