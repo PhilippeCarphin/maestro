@@ -41,17 +41,8 @@ ssm install -f $ssm_folder/tcl-tk_*_${publish_platform}.ssm -d $ssm_domain_path
 #hare/brooks
 
 publish_platform=sles-11-amd64-64
-
-for package in maestro-manager maestro-utils xflow ; do 
-
-   #ssm install -f $ssm_folder/${package}_${version}_${platform}.ssm -d $ssm_domain_path
-   #ssm publish -p ${package}_${version}_${platform} -d $ssm_domain_path -pp $publish_platform 
-
-done 
- 
 ssm install -f $ssm_folder/maestro_${version}_${publish_platform}.ssm -d $ssm_domain_path
 ssm publish -p maestro_${version}_${publish_platform} -d $ssm_domain_path 
-
  
 ssh hare "
 
