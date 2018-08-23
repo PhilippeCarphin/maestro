@@ -17,7 +17,7 @@ if [ -z "$ssm_domain_path" ] || [ -z "$version" ] ; then
 		show_usage
 fi
 
-./verify-ssm-packages.sh $version
+./verify-ssm-packages.sh $version || exit 1
 
 set -ex 
 ssm created -d $ssm_domain_path || exit 1 
