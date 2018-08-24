@@ -11,10 +11,9 @@ all:
 	$(MAKE) -C maestro-tcl/ssm clean
 	$(MAKE) -C maestro-tcl/ssm
 
-	./hare-compile.sh || exit 1
-
 	$(MAKE) -C maestro-core clean
 	$(MAKE) -C maestro-core
 
+	./hare-compile.sh || exit 1
 	./soft-link-ssm.sh || exit 1
 
