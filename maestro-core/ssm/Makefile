@@ -7,6 +7,8 @@ SHELL := bash
 .DELETE_ON_ERROR:
 	.SUFFIXES:
 
+all: ssm
+
 ssm:	profile.sh  ../bin/$(BASE_ARCH)
 	echo "Creating SSM package $(SSMPACKAGE)..."
 	if [ ! -d $(SSMPACKAGE) ]; then \
