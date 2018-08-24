@@ -13,11 +13,11 @@ export ORDENV_PLAT=sles-11-amd64-64
 
 cd $MAESTRO_CORE/ssm
 make clean
-make
+make || exit 1
 
 # Now compile tcl for SLES
 cd $MAESTRO_TCL/ssm
 make clean
-make
+make || exit 1
 
 "
