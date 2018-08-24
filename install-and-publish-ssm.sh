@@ -43,8 +43,8 @@ ssm install -f $ssm_folder/tcl-tk_*_${publish_platform}.ssm -d $ssm_domain_path
 publish_platform=sles-11-amd64-64
 ssm install -f $ssm_folder/maestro_${version}_${publish_platform}.ssm -d $ssm_domain_path
 ssm publish -p maestro_${version}_${publish_platform} -d $ssm_domain_path 
- 
-ssh hare "
+
+echo "
 
 # Load gnu compiler instead of default intel:
 module switch PrgEnv-intel/5.2.82 PrgEnv-gnu
@@ -53,4 +53,6 @@ module switch PrgEnv-intel/5.2.82 PrgEnv-gnu
 export ORDENV_PLAT=${publish_platform}
 
 cd $PWD ; 
-ssm install -f $ssm_folder/tcl-tk_*_${publish_platform}.ssm -d  $ssm_domain_path "
+ssm install -f $ssm_folder/tcl-tk_*_${publish_platform}.ssm -d  $ssm_domain_path 
+
+" | ssh hare bash --login
