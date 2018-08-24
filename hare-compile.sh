@@ -3,7 +3,7 @@ MAESTRO_CORE="$PWD/maestro-core"
 MAESTRO_TCL="$PWD/maestro-tcl"
 ssm_folder="ssm"
 
-ssh hare "
+echo "
 
 # Load gnu compiler instead of default intel:
 module switch PrgEnv-intel/5.2.82 PrgEnv-gnu
@@ -20,4 +20,4 @@ cd $MAESTRO_TCL/ssm
 make clean
 make || exit 1
 
-"
+" | ssh hare bash --login
