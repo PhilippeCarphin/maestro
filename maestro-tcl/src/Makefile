@@ -15,7 +15,3 @@ all:
 clean: 
 	rm -rf $(PACKAGES)
 	rm -rf ../bin/* ../lib/* ../include/*
-
-distclean: clean
-	rm -fr bin/$(BASE_ARCH) ; \
-	find . -name "*~" -exec rm -f {} \;
