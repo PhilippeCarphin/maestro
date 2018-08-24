@@ -32,11 +32,10 @@ MAKEFILE:=$(lastword $(MAKEFILE_LIST))
 include ../config/config.mk
 
 WERROR_FLAGS= -Wall -Werror=implicit-function-declaration -Werror=return-type -Werror=unused-but-set-variable -Werror=unused-variable -Werror=strict-aliasing=3
-CFLAGS = -g -Wall -Wimplicit-function-declaration -Wl,--allow-multiple-definition 
+CFLAGS = -Wall -Wimplicit-function-declaration -Wl,--allow-multiple-definition 
 LIB=-lc -lcrypto -lz -ldl -dynamic 
 LIBTH=-lpthread
-CFLAGS1 = -g
-CFLAGS2 = -lefence -g -I../inc -DREENTRANT -Wall -Wextra -Wno-unused -D__DEBUG -DIGNORE_EMPTY_TEXT_NODES
+CFLAGS = -lefence -I../inc -DREENTRANT -Wall -Wextra -Wno-unused -D__DEBUG -DIGNORE_EMPTY_TEXT_NODES
 ROXML_OBJECTS = l2d2_roxml.o l2d2_roxml-internal.o l2d2_roxml-parse-engine.o
 L2D2SOBJECTS  = l2d2_server.o l2d2_socket.o l2d2_Util.o l2d2_commun.o l2d2_lists.o $(ROXML_OBJECTS) SeqUtil.o SeqLoopsUtil.o SeqNameValues.o SeqNode.o SeqListNode.o SeqDepends.o
 L2D2AOBJECTS  = l2d2_admin.o l2d2_socket.o l2d2_Util.o l2d2_commun.o l2d2_lists.o $(ROXML_OBJECTS)  SeqUtil.o SeqLoopsUtil.o SeqNameValues.o SeqNode.o SeqListNode.o SeqDepends.o
