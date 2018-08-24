@@ -1,8 +1,3 @@
-# ATTENTION!
-# YOU NEED TO USE THE GMAKE IN /users/dor/afsi/sul/ovbin/gmake for this
-# Makefile to work, other versions installed are currently too old!
-#
-# common section definition
 include ../config/config.mk
 
 MAKEFLAGS += --warn-undefined-variables
@@ -11,6 +6,8 @@ SHELL := bash
 .DEFAULT_GOAL := all
 .DELETE_ON_ERROR:
 	.SUFFIXES:
+
+all: ssm
 
 ssm: profile.sh
 	echo "Creating SSM package $(SSMPACKAGE)..."

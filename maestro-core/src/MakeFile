@@ -24,6 +24,7 @@ SHELL := bash
 .DEFAULT_GOAL := all
 .DELETE_ON_ERROR:
 .SUFFIXES:
+.SUFFIXES: .c .o
 
 MAKEFILE:=$(lastword $(MAKEFILE_LIST))
 
