@@ -11,9 +11,6 @@ all:
 clean: 
 	$(MAKE) -C ssm $@
 
-distclean: clean
-	find . -name "*~" -exec rm -f {} \;
-
 install: all
 	cd ssm ; $(MAKE) $@
 
