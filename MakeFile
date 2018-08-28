@@ -21,6 +21,6 @@ all:
 	$(MAKE) -C maestro-core clean
 	$(MAKE) -C maestro-core
 
-	./hare-compile.sh || exit 1
-	./soft-link-ssm.sh || exit 1
+	./setup/hare-compile.sh || exit 1
+	./setup/soft-link-ssm.sh || exit 1
 
