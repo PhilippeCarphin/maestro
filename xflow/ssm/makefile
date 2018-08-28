@@ -9,40 +9,30 @@ SHELL := bash
 
 all: ssm
 
-ssm:	profile.sh  ../bin/$(BASE_ARCH)
+ssm: profile.sh
 	echo "Creating SSM package $(SSMPACKAGE)..."
 	if [ ! -d $(SSMPACKAGE) ]; then \
 	   mkdir $(SSMPACKAGE); \
 	fi;
-	cp -r $(SWDEST)/* $(SSMPACKAGE); 
-	cp ../Makefile $(SSMPACKAGE); 
-	cp ../LICENSE.txt $(SSMPACKAGE); 
-	cp -r ../config $(SSMPACKAGE); 
+	cp -r $(SWDEST)/bin $(SSMPACKAGE); 
+	cp -r $(SWDEST)/lib $(SSMPACKAGE); 
+	cp -r $(SWDEST)/etc $(SSMPACKAGE); 
 	mkdir -p $(SSMPACKAGE)/.ssm.d;
-	mkdir -p $(SSMPACKAGE)/ssm;
-	cp Makefile post-install $(SSMPACKAGE)/ssm; 
-	cp -r post-install profile.sh $(SSMPACKAGE)/.ssm.d;
-	mkdir -p $(SSMPACKAGE)/src;
-	cp ../src/Makefile ../src/*.c ../src/*.h $(SSMPACKAGE)/src;
-	cp -r ../src/wrappers $(SSMPACKAGE)/src;
-	echo "Package: maestro" > $(SSMPACKAGE)/.ssm.d/control; \
+	cp -r post-install $(SSMPACKAGE)/.ssm.d;
+	cp -r profile.sh $(SSMPACKAGE)/.ssm.d;
+	echo "Package: xflow" > $(SSMPACKAGE)/.ssm.d/control; \
 	echo "Version: ${VERSION}" >> $(SSMPACKAGE)/.ssm.d/control; \
-	echo "Platform: ${ORDENV_PLAT}" >> $(SSMPACKAGE)/.ssm.d/control; \
-	echo "Maintainer: ${WHO_I_AM}" >> $(SSMPACKAGE)/.ssm.d/control; \
+	echo "Platform: all" >> $(SSMPACKAGE)/.ssm.d/control; \
+	echo "Maintainer: $(shell whoami)" >> $(SSMPACKAGE)/.ssm.d/control; \
 	echo "BuildInfo:" >> $(SSMPACKAGE)/.ssm.d/control; \
-	echo "Description: Unified Task Sequencer" >> $(SSMPACKAGE)/.ssm.d/control; \
+	echo "Description: Unified Tasks Monitor" >> $(SSMPACKAGE)/.ssm.d/control; \
 	tar cvf - $(SSMPACKAGE) | gzip -> $(SSMPACKAGE).ssm
 
-profile.sh: Makefile ../config/config.mk
-	touch profile ;\
-	echo "export SEQ_MAESTRO_VERSION=${VERSION}" >>$@ ;\
-	cat profile >>$@
-
-../bin/$(BASE_ARCH):
-	$(MAKE) -C ../src all
+profile.sh: makefile ../config/config.mk
+	echo "export SEQ_XFLOW_VERSION=${VERSION}" >$@
 
 clean:
-	rm -rf $(SSMPACKAGE).ssm $(SSMPACKAGE) profile.sh
+	rm -fr profile.sh $(SSMPACKAGE).ssm $(SSMPACKAGE)
 
 install: ssm
 	if [ ! $(domain) ] ; then \

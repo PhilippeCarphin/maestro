@@ -21,7 +21,7 @@ ssm:
 	cp -r ../bin $(SSMPACKAGE);
 	mkdir -p $(SSMPACKAGE)/.ssm.d;
 	mkdir -p $(SSMPACKAGE)/ssm;
-	cp post-install Makefile $(SSMPACKAGE)/ssm;
+	cp post-install makefile $(SSMPACKAGE)/ssm;
 	mkdir -p $(SSMPACKAGE)/.ssm.d;
 	cp post-install $(SSMPACKAGE)/.ssm.d;
 	echo "Package: tcl-tk" > $(SSMPACKAGE)/.ssm.d/control; \
