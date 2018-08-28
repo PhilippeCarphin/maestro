@@ -9,8 +9,8 @@ all:
 	$(MAKE) -C xflow/ssm clean
 	$(MAKE) -C xflow/ssm
 
-	$(MAKE) -C utils/ssm clean
-	$(MAKE) -C utils/ssm
+	$(MAKE) -C utilities/ssm clean
+	$(MAKE) -C utilities/ssm
 
 	$(MAKE) -C manager/ssm clean
 	$(MAKE) -C manager/ssm
