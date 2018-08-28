@@ -13,31 +13,28 @@ ssm: profile.sh
 	echo "Creating SSM package $(SSMPACKAGE)..."
 	if [ ! -d $(SSMPACKAGE) ]; then \
 	   mkdir $(SSMPACKAGE); \
-	   mkdir $(SSMPACKAGE)/ssm; \
 	fi;
-	cp -r $(SWDEST)/bin $(SSMPACKAGE);
-	cp -r $(SWDEST)/lib $(SSMPACKAGE);
-	cp -r $(SWDEST)/data $(SSMPACKAGE);
-	cp ../Makefile $(SSMPACKAGE);
-	cp ../LICENSE.txt $(SSMPACKAGE);
-	cp Makefile $(SSMPACKAGE)/ssm;
+	cp -r $(SWDEST)/bin $(SSMPACKAGE); 
+	cp -r $(SWDEST)/lib $(SSMPACKAGE); 
+	cp -r $(SWDEST)/etc $(SSMPACKAGE); 
+	cp -r $(SWDEST)/data $(SSMPACKAGE); 
+	cp -r ../LICENSE.txt $(SSMPACKAGE); 
 	mkdir -p $(SSMPACKAGE)/.ssm.d;
-	cp -r post-install profile.sh $(SSMPACKAGE)/.ssm.d;
-	echo "Package: maestro-utils" > $(SSMPACKAGE)/.ssm.d/control; \
+	cp -r post-install $(SSMPACKAGE)/.ssm.d;
+	cp -r profile.sh $(SSMPACKAGE)/.ssm.d;
+	echo "Package: maestro-manager" > $(SSMPACKAGE)/.ssm.d/control; \
 	echo "Version: ${VERSION}" >> $(SSMPACKAGE)/.ssm.d/control; \
 	echo "Platform: all" >> $(SSMPACKAGE)/.ssm.d/control; \
 	echo "Maintainer: $(shell whoami)" >> $(SSMPACKAGE)/.ssm.d/control; \
 	echo "BuildInfo:" >> $(SSMPACKAGE)/.ssm.d/control; \
-	echo "Description: Maestro Utilities" >> $(SSMPACKAGE)/.ssm.d/control; \
+	echo "Description: Maestro Manager" >> $(SSMPACKAGE)/.ssm.d/control; \
 	tar cvf - $(SSMPACKAGE) | gzip -> $(SSMPACKAGE).ssm
 
-profile.sh: Makefile ../config/config.mk
-	touch profile ;\
-	echo "export SEQ_UTILS_VERSION=${VERSION}" >$@ ;\
-	cat profile >>$@
+profile.sh: makefile ../config/config.mk
+	echo "export SEQ_MANAGER_VERSION=${VERSION}" >$@
 
 clean:
-	rm -rf $(SSMPACKAGE).ssm $(SSMPACKAGE) profile.sh
+	rm -fr profile.sh $(SSMPACKAGE).ssm $(SSMPACKAGE)
 
 install: ssm
 	if [ ! $(domain) ] ; then \
