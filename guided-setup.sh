@@ -58,5 +58,6 @@ make
 cd $MAESTRO_ROOT
 ./setup/hare-compile.sh
 ./setup/soft-link-ssm.sh
+./setup/install-and-publish-ssm.sh $HOME/ssm/maestro/1.5.1 1.5.1
 
 echo "Success!"
