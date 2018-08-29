@@ -33,7 +33,7 @@ include ../config/config.mk
 
 WERROR_FLAGS= -Wall -Werror=implicit-function-declaration -Werror=return-type -Werror=unused-but-set-variable -Werror=unused-variable -Werror=strict-aliasing=3
 CFLAGS = -Wall -Wimplicit-function-declaration -Wl,--allow-multiple-definition 
-LIB=-lc -lcrypto -lz -ldl -dynamic 
+LIB=-lc -lcrypto -lz -ldl
 LIBTH=-lpthread
 CFLAGS1 = 
 CFLAGS2 = -lefence -I../inc -DREENTRANT -Wall -Wextra -Wno-unused -D__DEBUG -DIGNORE_EMPTY_TEXT_NODES
