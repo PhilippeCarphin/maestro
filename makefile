@@ -10,12 +10,15 @@ all: clean
 			echo "Aborted. You must first run the 'configure-make.sh' script to generate the 'config.mk' file." ;\
 			exit 1 ;\
 	fi;
+	
 	mkdir -p build ssm
-	$(MAKE) -C xflow
-	$(MAKE) -C utilities
-	$(MAKE) -C xm
-	$(MAKE) -C tcl
-	$(MAKE) -C core
+	
+	cp -r xflow/* build/xflow/	
+	cp -r utilities/* build/utilities/	
+	cp -r xm/* build/xm/
+	cp -r tcl/* build/tcl/
+	cp -r core/* build/core/
+	
 	./setup/hare-compile.sh ;\
 
 clean:

@@ -11,7 +11,3 @@ PACKAGES=Tktable2.10 bwidget-1.9.5 keynav1.0 tDOM-0.8.3 tablelist5.5 tcl8.5.11 t
 
 all:
 	./INSTALL.sh
-
-clean: 
-	rm -rf $(PACKAGES)
-	rm -rf ../bin/* ../lib/* ../include/*
