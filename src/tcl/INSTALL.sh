@@ -2,7 +2,7 @@
 cd ${0%/*}
 ICI=`pwd -P`
 echo Current dir=$ICI
-cd ..
+
 InstallPrefix=`pwd -P`
 echo Install dir=$InstallPrefix
 set -e
