@@ -1,3 +1,5 @@
+include config.mk        
+
 MAKEFLAGS += --warn-undefined-variables
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
@@ -13,7 +15,7 @@ all: clean
 	
 	mkdir -p build
 	
-	echo "Creating ssm package."
+	echo "Creating ssm package: ${SSMPACKAGE}"
 	cp -r src/* build/
 	
 	./hare-compile.sh ;\

@@ -1,6 +1,5 @@
 /bin
 /ssm
-/build
 
 # IBM network file system files
 .nfs*
@@ -67,3 +66,5 @@ Module.symvers
 Mkfile.old
 dkms.conf
 
+# Do not ignore the ssm metadata folder
+!.ssm.d
