@@ -6,12 +6,11 @@ SHELL := bash
 .SUFFIXES:
 
 all: clean
-	if [ ! -f config.mk ]; then ;\
+	if [ ! -f config.mk ] ; then \
 			echo "Aborted. You must first run the 'configure-make.sh' script to generate the 'config.mk' file." ;\
 			exit 1 ;\
-	fi ;\
-	
-	mkdir -p build ssm ;\
+	fi;
+	mkdir -p build ssm
 	$(MAKE) -C xflow
 	$(MAKE) -C utilities
 	$(MAKE) -C xm
