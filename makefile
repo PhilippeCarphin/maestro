@@ -11,15 +11,12 @@ all: clean
 			exit 1 ;\
 	fi;
 	
-	mkdir -p build ssm
+	mkdir -p build
 	
-	cp -r xflow/* build/xflow/	
-	cp -r utilities/* build/utilities/	
-	cp -r xm/* build/xm/
-	cp -r tcl/* build/tcl/
-	cp -r core/* build/core/
+	echo "Creating ssm package."
+	cp -r src/* build/
 	
-	./setup/hare-compile.sh ;\
+	./hare-compile.sh ;\
 
 clean:
-	rm -rf build ssm
+	rm -rf build
