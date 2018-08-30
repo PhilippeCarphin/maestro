@@ -5,22 +5,19 @@ SHELL := bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
-all:
-	$(MAKE) -C xflow/ssm clean
-	$(MAKE) -C xflow/ssm
+all: clean
+	if [ ! -f config.mk ]; then ;\
+			echo "Aborted. You must first run the 'configure-make.sh' script to generate the 'config.mk' file." ;\
+			exit 1 ;\
+	fi ;\
+	
+	mkdir -p build ssm ;\
+	$(MAKE) -C xflow
+	$(MAKE) -C utilities
+	$(MAKE) -C xm
+	$(MAKE) -C tcl
+	$(MAKE) -C core
+	./setup/hare-compile.sh ;\
 
-	$(MAKE) -C maestro-utils/ssm clean
-	$(MAKE) -C maestro-utils/ssm
-
-	$(MAKE) -C maestro-manager/ssm clean
-	$(MAKE) -C maestro-manager/ssm
-
-	$(MAKE) -C maestro-tcl/ssm clean
-	$(MAKE) -C maestro-tcl/ssm
-
-	$(MAKE) -C maestro-core clean
-	$(MAKE) -C maestro-core
-
-	./setup/hare-compile.sh || exit 1
-	./setup/soft-link-ssm.sh || exit 1
-
+clean:
+	rm -rf build ssm
