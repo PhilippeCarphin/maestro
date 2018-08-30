@@ -1,6 +1,18 @@
 /bin
 /ssm
 
+# IBM network file system files
+.nfs*
+
+# Temp files
+*~
+
+# Vim swap files
+*.swp
+*.swo
+*.swn
+*.swm
+
 # Prerequisites
 *.d
 
