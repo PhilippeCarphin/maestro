@@ -11,7 +11,6 @@ all: clean
 	mkdir -p ${SWDEST}
 	cp config.mk ${SWDEST}/
 	cp -r src ${SWDEST}/
-	make -C ${SWDEST}/core
-	make -C ${SWDEST}/tcl
+	make -C ${SWDEST}/src/core
 clean:
 	rm -rf ${SWDEST}

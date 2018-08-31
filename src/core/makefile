@@ -1,5 +1,5 @@
 
-include ../config.mk
+include ../../config.mk
 
 MAKEFLAGS += --warn-undefined-variables
 SHELL := bash
@@ -23,27 +23,23 @@ runcontrollib.o nodelogger.o maestro.o nodeinfo.o tictac.o expcatchup.o XmlUtils
 QueryServer.o SeqUtilServer.o l2d2_socket.o l2d2_commun.o ocmjinfo.o logreader.o $(ROXML_OBJECTS)
 EXECUTABLES=nodelogger maestro nodeinfo tictac expcatchup getdef logreader mserver madmin tsvinfo mtest
 
-#
+BINDIR=bin
+INCDIR=include
+LIBDIR=lib
+WRAPDIR=bin/wrappers
 
 all: prep 
 	$(MAKE) prep $(EXECUTABLES) wrapper
 
 wrapper: 
-	rm -rf $(BINDIR)/wrappers
-	mkdir -p $(BINDIR)/wrappers
-	cd wrappers; for file in *; do \
-	    cp $${file} $(BINDIR)/wrappers/maestro_${VERSION}.$${file}; \
-	done; \
-	cd ..
-
+	rm -rf $(WRAPDIR)
+	mkdir -p $(WRAPDIR)
+	cp wrappers/* $(WRAPDIR)
 clean:
 	rm -f *.o; rm -f $(EXECUTABLES); rm -rf $(SWDEST) .fo
 
 prep:
-	if [ ! -d $(SWDEST) ] ; then \
-	   echo "Creating $(SWDEST)" ; \
-	   mkdir -p $(SWDEST); mkdir $(SWDEST)/include; mkdir $(SWDEST)/bin; \
-	fi; \
+	mkdir -p $(LIBDIR) $(INCDIR) $(BINDIR)
 
 #objects
 
