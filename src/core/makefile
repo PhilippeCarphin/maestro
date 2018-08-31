@@ -29,12 +29,8 @@ LIBDIR=lib
 WRAPDIR=bin/wrappers
 
 all: prep 
-	$(MAKE) prep $(EXECUTABLES) wrapper
-
-wrapper: 
-	rm -rf $(WRAPDIR)
-	mkdir -p $(WRAPDIR)
-	cp wrappers/* $(WRAPDIR)
+	$(MAKE) prep $(EXECUTABLES)
+	
 clean:
 	rm -f *.o; rm -f $(EXECUTABLES); rm -rf $(SWDEST) .fo
 
