@@ -9,7 +9,6 @@ SHELL := bash
 .SUFFIXES:
 .SUFFIXES: .c .o
 
-MAKEFILE:=$(lastword $(MAKEFILE_LIST))
 WERROR_FLAGS= -Wall -Werror=implicit-function-declaration -Werror=return-type -Werror=unused-but-set-variable -Werror=unused-variable -Werror=strict-aliasing=3
 CFLAGS = -Wall -Wimplicit-function-declaration -Wl,--allow-multiple-definition 
 LIB=-lc -lcrypto -lz -ldl
@@ -27,7 +26,7 @@ EXECUTABLES=nodelogger maestro nodeinfo tictac expcatchup getdef logreader mserv
 #
 
 all: prep 
-	$(MAKE) -f $(MAKEFILE) prep $(EXECUTABLES) wrapper
+	$(MAKE) prep $(EXECUTABLES) wrapper
 
 wrapper: 
 	rm -rf $(BINDIR)/wrappers
