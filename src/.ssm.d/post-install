@@ -22,3 +22,5 @@ echo 'export TMPDIR=${TMPDIR:-/tmp/$USER/$$} && mkdir -p ${TMPDIR}' >> ${profile
 echo 'export TRUE_HOST=${TRUE_HOST:-$(hostname)}' >> ${profilePath}
 chmod 644 ${profilePath}
 
+$(MAKE) -C src/core
+$(MAKE) -C src/tcl
