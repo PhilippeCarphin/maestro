@@ -4,25 +4,24 @@ TCL_ROOT=`pwd -P`
 set -e
 
 cd $TCL_ROOT
+echo "TCL_ROOT = ${TCL_ROOT}"
 
-export PATH=${TCL_ROOT}/bin:$PATH
-
-
+mkdir -p ${TCL_ROOT}/bin
 cd ${TCL_ROOT}/bin
 rm -f wish tclsh 
 ln -sf wish8.5 wish
 ln -sf tclsh8.5 tclsh
 ln -sf wish8.5 maestro_wish8.5
 ln -sf tclsh8.5 maestro_tclsh8.5
-
+export PATH=${TCL_ROOT}/bin:$PATH
 
 
 function configure_and_make() {
-    cd $1
+    cd ${TCL_ROOT}/$1
     ./configure --enable-threads --enable-shared --prefix=${TCL_ROOT} $2
     make 
     make install
-    cd ..
+    cd ${TCL_ROOT}
 }
 
 MAKE_ARGS1="-with-tcl=${TCL_ROOT}/lib --with-tclinclude=${TCL_ROOT}/include"
