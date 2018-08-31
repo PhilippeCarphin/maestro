@@ -13,12 +13,15 @@ all: clean
 			exit 1 ;\
 	fi;
 	
-	mkdir -p build
+	$(MAKE) -C src/core
+	$(MAKE) -C src/tcl
 	
 	echo "Creating ssm package: ${SSMPACKAGE}"
-	cp -r src/* build/
+	mkdir -p ssm
+	cp -r src/* ssm/
+	tar cvf - $(SSMPACKAGE) | gzip -> $(SSMPACKAGE).ssm
 	
 	./hare-compile.sh ;\
 
 clean:
-	rm -rf build
+	rm -rf ssm
