@@ -20,7 +20,7 @@ ssm created -d $ssm_domain_path || exit 1
 
 #ppp/gpsc
 
-for platform in ubuntu-14.04-amd64-64 sles-11-amd64-64
+for platform in ubuntu-14.04-amd64-64 sles-11-amd64-64 ; do
     ssm install -f ssm/maestro_${version}_all.ssm -d $ssm_domain_path
     ssm publish -p maestro_${version}_all -d $ssm_domain_path -pp $platform 
     

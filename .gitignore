@@ -1,4 +1,5 @@
 /bin
+/build
 /ssm
 
 # IBM network file system files
