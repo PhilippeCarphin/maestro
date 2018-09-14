@@ -21,6 +21,3 @@ echo "export SEQ_MAESTRO_SHORTCUT=\". ssmuse-sh -d ${domainHome}\"" >> ${profile
 echo 'export TMPDIR=${TMPDIR:-/tmp/$USER/$$} && mkdir -p ${TMPDIR}' >> ${profilePath}
 echo 'export TRUE_HOST=${TRUE_HOST:-$(hostname)}' >> ${profilePath}
 chmod 644 ${profilePath}
-
-$(MAKE) -C src/core
-$(MAKE) -C src/tcl
