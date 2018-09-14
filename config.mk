@@ -5,6 +5,7 @@ SEQ_WRAPPER=maestro_$(VERSION)
 MACHINE=$(shell uname -s)
 HARDWARE=$(shell uname -m | tr '_' '-')
 SWDEST=$(shell pwd)/build/$(ORDENV_PLAT)
+BIN_FOLDER=$(SWDEST)/bin
 XML_INCLUDE_DIR=/usr/include/libxml2
 XML_LIB_DIR=/usr/lib
 CC = cc
