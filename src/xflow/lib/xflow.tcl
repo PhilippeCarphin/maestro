@@ -4884,7 +4884,7 @@ proc xflow_init { {exp_path ""} } {
       SharedData_setMiscData XFLOW_THREAD_ID [thread::id]
 
       set SHADOW_STATUS 
-      SharedData_setMiscData IMAGE_DIR $env(SEQ_XFLOW_BIN)/../etc/images
+      SharedData_setMiscData IMAGE_DIR $env(SEQ_PACKAGE_HOME)/src/xflow/etc/images
       if { ! [info exists AUTO_MSG_DISPLAY] } {
          set AUTO_MSG_DISPLAY [SharedData_getMiscData AUTO_MSG_DISPLAY]
       } else {
