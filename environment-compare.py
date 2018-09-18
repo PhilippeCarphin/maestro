@@ -42,9 +42,9 @@ def compare_lines_from_commands(cmd1,cmd2):
 
     if ba:
         print("%s lines present in:"%len(ba))
-        print_green("    "+cmd1)
-        print("but not:")
         print_green("    "+cmd2)
+        print("but not:")
+        print_green("    "+cmd1)
 
     for line in ba:
         print(line)
