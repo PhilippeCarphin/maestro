@@ -631,7 +631,7 @@ namespace eval ::dkfFontSel {
     # based on the current filename.
     proc 'load_resources {filebase} {
         global env
-        set dirbase $env(SEQ_MANAGER_BIN)/../etc/config/
+        set dirbase $env(SEQ_PACKAGE_HOME)/src/xflow/etc/config/
 	set filebase [file rootname $filebase]
         set filebase [file tail $filebase]
 	option readfile ${dirbase}${filebase}.ad widgetDefault
