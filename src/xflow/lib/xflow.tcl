@@ -4974,7 +4974,7 @@ if { ! [info exists XFLOW_STANDALONE] || ${XFLOW_STANDALONE} == "1" } {
       puts "SEQ_XFLOW_BIN must be defined!"
       exit
    }
-   set lib_dir $env(SEQ_XFLOW_BIN)/../lib
+   set lib_dir $env(SEQ_PACKAGE_HOME)/src/xflow/lib
    puts "lib_dir=$lib_dir"
    set auto_path [linsert $auto_path 0 $lib_dir ]
    package require Tk

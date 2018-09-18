@@ -14,7 +14,7 @@ if { ! [info exists env(SEQ_XFLOW_BIN) ] } {
    exit
 }
 
-set lib_dir $env(SEQ_XFLOW_BIN)/../lib
+set lib_dir $env(SEQ_PACKAGE_HOME)/src/xflow/lib
 set auto_path [linsert $auto_path 0 $lib_dir ]
 
 proc Overview_setTkOptions {} {
@@ -2817,7 +2817,7 @@ proc Overview_init {} {
    set NODE_DISPLAY_PREF [SharedData_getMiscData NODE_DISPLAY_PREF]
    set FLOW_SCALE [SharedData_getMiscData FLOW_SCALE]
    set COLLAPSE_DISABLED_NODES [SharedData_getMiscData COLLAPSE_DISABLED_NODES]
-   SharedData_setMiscData IMAGE_DIR $env(SEQ_XFLOW_BIN)/../etc/images
+   SharedData_setMiscData IMAGE_DIR $env(SEQ_PACKAGE_HOME)/src/xflow/etc/images
 
    set SHOW_MSGBAR false
    set LIST_TAG    ""
@@ -4075,7 +4075,7 @@ proc out {} {
 # intercep clock commands to allow
 # testing with different time values
 global env
-source $env(SEQ_XFLOW_BIN)/../lib/ClockWrapper.tcl
+source $env(SEQ_PACKAGE_HOME)/src/xflow/lib/ClockWrapper.tcl
 package require ClockWrapper
 interp alias {} ::clock {} ::ClockWrapper
 ::ClockWrapper::setDelta "4 hour"
