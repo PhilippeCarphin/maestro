@@ -16,4 +16,4 @@ ssm publish -p maestro_${version}_${platform} -d $ssm_domain_path -pp $platform
 set +x
 
 echo ". ssmuse-sh -d ~/ssm/maestro/1.5.1/"
-. ssmuse-sh -d ~/ssm/maestro/1.5.1/
+. ssmuse-sh -d $HOME/ssm/maestro/1.5.1/
