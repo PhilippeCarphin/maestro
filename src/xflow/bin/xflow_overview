@@ -108,5 +108,5 @@ if [[ "${exp}" != "" ]] ; then
 fi
 
 export NO_STOP_MESSAGE=on
-print "\n$TCLSH ${SEQ_PACKAGE_HOME}/src/tcl/lib/Overview.tcl ${automsg_opt} ${suites_opt}"
-$TCLSH ${SEQ_PACKAGE_HOME}/src/tcl/lib/Overview.tcl -main ${automsg_opt} ${suites_opt} ${logfile_opt} ${debug_opt} ${rc_opt} ${user_opt} ${logspan_opt} ${exp_opt}
+print "\n$TCLSH ${SEQ_PACKAGE_HOME}/src/xflow/lib/Overview.tcl ${automsg_opt} ${suites_opt}"
+$TCLSH ${SEQ_PACKAGE_HOME}/src/tcl/xflow/Overview.tcl -main ${automsg_opt} ${suites_opt} ${logfile_opt} ${debug_opt} ${rc_opt} ${user_opt} ${logspan_opt} ${exp_opt}
