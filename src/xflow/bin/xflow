@@ -10,6 +10,11 @@ export TK_LIBRARY=${TK_LIBRARY}:${SEQ_PACKAGE_HOME}/src/tcl/lib/tk8.5
 
 TCLSH=$(which maestro_wish8.5)
 
+if [[ "${TCLSH}" == "" ]] ; then
+   echo "Aborted. Could not find maestro_wish8.5." >&2
+   exit 
+fi
+
 if [[ "${SEQ_XFLOW_BIN}" == "" ]] ; then
    echo "SEQ_XFLOW_BIN environment variable not defined! Exiting..." >&2
    exit 
