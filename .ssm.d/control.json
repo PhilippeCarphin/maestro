@@ -1,0 +1,7 @@
+{
+    "description": "Maestro is a suite of tools which organize, visualize, schedule, validate, and submit tasks to computer systems.",
+    "name": "maestro",
+    "platform": "all",
+    "summary": "Maestro Suite",
+    "version": "1.6"
+}
