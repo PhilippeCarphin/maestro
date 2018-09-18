@@ -17,6 +17,7 @@ ln -s ${packageHome}/src/utilities/bin/* ${BIN_FOLDER}/
 ln -s ${packageHome}/src/xflow/bin/* ${BIN_FOLDER}/
 ln -s ${packageHome}/src/xm/bin/* ${BIN_FOLDER}/
 
+echo "export SEQ_PACKAGE_HOME=${packageHome}" >> ${profilePath}
 echo "export SEQ_BIN=${BIN_FOLDER}" >> ${profilePath}
 echo "export SEQ_MANAGER_BIN=${BIN_FOLDER}" >> ${profilePath}
 echo "export SEQ_MANAGER_DOMAIN=${domainHome}" >> ${profilePath}
