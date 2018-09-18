@@ -17,6 +17,8 @@ tcl: clean src-copy
 
 src-copy:
 	mkdir -p ${SWDEST}
+	mkdir -p ${BIN_FOLDER}
+
 	cp config.mk ${SWDEST}/
 	cp -r src ${SWDEST}/
 	cp -r .ssm.d ${SWDEST}/
@@ -25,4 +27,5 @@ clean:
 	rm -rf ${SWDEST} ${BIN_FOLDER}
 
 skip-tcl: core
-	cp -r ../tcl-maestro-backup-compiled/ ${SWDEST}/src/tcl/
+	rm -rf ${SWDEST}/src/tcl
+	cp -r ../tcl-maestro-backup-compiled/ ${SWDEST}/src/tcl
