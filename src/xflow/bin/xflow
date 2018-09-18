@@ -67,6 +67,6 @@ if [[ "${debug}" = "1" ]] ; then
    debug_opt="-debug"
 fi
 
-echo $TCLSH ${SEQ_XFLOW_BIN}/../lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt}
+echo $TCLSH ${SEQ_PACKAGE_HOME}/src/tcl/lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt}
 export NO_STOP_MESSAGE=on
-$TCLSH ${SEQ_XFLOW_BIN}/../lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt} ${exp_opt}
+$TCLSH ${SEQ_PACKAGE_HOME}/src/tcl/lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt} ${exp_opt}
