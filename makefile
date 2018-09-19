@@ -5,7 +5,7 @@ SHELL := bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
-VERSION=$(shell get_repo_version.sh)
+VERSION=$(shell ./get_repo_version.py)
 SSMPACKAGE=maestro_${VERSION}_${ORDENV_PLAT}
 BUILD_PLATFORM_FOLDER=${PWD}/build/${SSMPACKAGE}
 BIN_FOLDER=${BUILD_PLATFORM_FOLDER}/bin
@@ -16,7 +16,7 @@ all: core tcl
 core: clean src-copy
 	make -C ${BUILD_PLATFORM_FOLDER}/src/core
 
-tcl: clean src-copy verify
+tcl: clean src-copy
 	make -C ${BUILD_PLATFORM_FOLDER}/src/tcl
 
 src-copy:
