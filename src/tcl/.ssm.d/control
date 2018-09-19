@@ -1,7 +1,0 @@
-{
-    "description": "This is version 8.5.11 of tcl tk adapted for the Maestro suite.",
-    "name": "tcl-tk",
-    "platform": "all",
-    "summary": "tcl tk adapted for the Maestro suite.",
-    "version": "8.5.11"
-}
