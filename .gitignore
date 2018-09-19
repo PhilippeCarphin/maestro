@@ -1,6 +1,7 @@
 /bin
 /build
 /ssm
+build.cfg
 
 # IBM network file system files
 .nfs*
