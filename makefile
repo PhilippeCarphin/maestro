@@ -1,5 +1,3 @@
-include config.mk        
-
 MAKEFLAGS += --warn-undefined-variables
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
@@ -7,25 +5,33 @@ SHELL := bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
+VERSION=$(shell get_repo_version.sh)
+SSMPACKAGE=maestro_${VERSION}_${ORDENV_PLAT}
+BUILD_PLATFORM_FOLDER=${PWD}/build/${SSMPACKAGE}
+BIN_FOLDER=${BUILD_PLATFORM_FOLDER}/bin
+CC=cc
+
 all: core tcl
 
 core: clean src-copy
-	make -C ${SWDEST}/src/core
+	make -C ${BUILD_PLATFORM_FOLDER}/src/core
 
-tcl: clean src-copy
-	make -C ${SWDEST}/src/tcl
+tcl: clean src-copy verify
+	make -C ${BUILD_PLATFORM_FOLDER}/src/tcl
 
 src-copy:
-	mkdir -p ${SWDEST}
+	mkdir -p ${BUILD_PLATFORM_FOLDER}
 	mkdir -p ${BIN_FOLDER}
 
-	cp config.mk ${SWDEST}/
-	cp -r src ${SWDEST}/
-	cp -r .ssm.d ${SWDEST}/
+	cp -r src ${BUILD_PLATFORM_FOLDER}/
+	cp -r .ssm.d ${BUILD_PLATFORM_FOLDER}/
 
 clean:
-	rm -rf ${SWDEST} ${BIN_FOLDER}
+	echo "version = ${VERSION}"
+	rm -rf ${BUILD_PLATFORM_FOLDER} ${BIN_FOLDER}
 
 skip-tcl: core
-	rm -rf ${SWDEST}/src/tcl
-	cp -r ../tcl-maestro-backup-compiled/ ${SWDEST}/src/tcl
+	# tcl rarely needs to be recompiled from source. This option speeds up development for clean builds.
+	# Just copy the contents of build/.../src/tcl to the folder here.
+	rm -rf ${BUILD_PLATFORM_FOLDER}/src/tcl
+	cp -r ../tcl-maestro-backup-compiled/ ${BUILD_PLATFORM_FOLDER}/src/tcl

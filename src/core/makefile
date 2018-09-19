@@ -1,6 +1,4 @@
 
-include ../../config.mk
-
 MAKEFLAGS += --warn-undefined-variables
 SHELL := bash
 .SHELLFLAGS := -eu -o pipefail -c
@@ -27,12 +25,14 @@ BINDIR=bin
 INCDIR=include
 LIBDIR=lib
 WRAPDIR=bin/wrappers
+XML_INCLUDE_DIR=/usr/include/libxml2
+XML_LIB_DIR=/usr/lib
 
 all: prep 
 	$(MAKE) prep $(EXECUTABLES)
 	
 clean:
-	rm -f *.o; rm -f $(EXECUTABLES); rm -rf $(SWDEST) .fo
+	rm -f *.o; rm -f $(EXECUTABLES); rm -rf $(BUILD_PLATFORM_FOLDER) .fo
 
 prep:
 	mkdir -p $(LIBDIR) $(INCDIR) $(BINDIR)
