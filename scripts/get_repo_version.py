@@ -14,9 +14,20 @@ output1=safe_check_output(cmd1)
 cmd2="git rev-parse HEAD"
 output2=safe_check_output(cmd2)
 
+commit_hash_length=8
+unknown="unknown_version"
+
 if "fatal:" not in output1:
-    print(output1.strip())
+    version=output1.strip()[:commit_hash_length]
+    if version:
+        print(version)
+    else:
+        print(unknown)
 elif "fatal: " not in output2:
-    print(output2.strip())
+    version=output2.strip()[:commit_hash_length]
+    if version:
+        print(version)
+    else:
+        print(unknown)
 else:
-    print("unknown-version")
+    print(unknown)
