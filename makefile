@@ -19,7 +19,8 @@ all: clean
 	cp -r .ssm.d ${BUILD_PLATFORM_FOLDER}/
 
 	if [[ `lsb_release -a` = *"SUSE LINUX"* ]] ; then \
-			echo "Compiling on SLES architecture requires that we specify a module and more generic ORDENV_PLAT" ;\
+			echo "If release is SUSE, assume we are on IBM cray architecture." ;\
+			echo "Compiling on Cray architecture requires that we specify a module and more generic ORDENV_PLAT" ;\
 			module switch PrgEnv-intel/5.2.82 PrgEnv-gnu ;\
 			export ORDENV_PLAT=sles-11-amd64-64 ;\
 	fi
