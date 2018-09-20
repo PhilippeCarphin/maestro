@@ -33,11 +33,15 @@ all: clean
 			cp -r _tcl/ ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
 	else \
 			echo "Could not find _tcl folder, building tcl from source." ;\
+			sleep 4 ;\
 			make -C ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
 	fi
+
+	cd .ssm.d ; ../scripts/create_ssm_control_files_here.sh
 	
 	./scripts/package-ssm.sh
 
 clean:
 	echo "version = ${VERSION}"
-	rm -rf ${BUILD_PLATFORM_FOLDER} ${BIN_FOLDER}
+	rm -rf build ${BIN_FOLDER}
+	mkdir -p build

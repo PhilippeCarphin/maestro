@@ -1,6 +1,0 @@
-Package: maestro
-Version: 1.5.1
-Platform: ubuntu-14.04-amd64-64
-Maintainer: sts271
-BuildInfo:
-Description: Unified Task Sequencer

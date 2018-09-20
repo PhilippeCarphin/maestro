@@ -5,6 +5,9 @@ build.cfg
 _*
 !__init__.py
 
+# ssm control files change automatically with every new build
+.ssm.d/control*
+
 # IBM network file system files
 .nfs*
 
