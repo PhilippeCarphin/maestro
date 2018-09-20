@@ -2,9 +2,7 @@
 /build
 /ssm
 build.cfg
-
-# Ignore folders which start with underscore
-_*/
+_*
 
 # IBM network file system files
 .nfs*
