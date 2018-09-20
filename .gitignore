@@ -3,6 +3,7 @@
 /ssm
 build.cfg
 _*
+!__init__.py
 
 # IBM network file system files
 .nfs*

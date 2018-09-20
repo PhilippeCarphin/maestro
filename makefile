@@ -5,7 +5,7 @@ SHELL := bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
-VERSION=$(shell ./scripts/get_repo_version.py)
+VERSION=$(shell ${PWD}/scripts/get_repo_version.py)
 SSMPACKAGE=maestro_${VERSION}_${ORDENV_PLAT}
 BUILD_PLATFORM_FOLDER=${PWD}/build/${SSMPACKAGE}
 BIN_FOLDER=${BUILD_PLATFORM_FOLDER}/bin
