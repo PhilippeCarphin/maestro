@@ -19,7 +19,7 @@ all: clean
 	cp -r .ssm.d ${BUILD_PLATFORM_FOLDER}/
 
 	if [[ `lsb_release -a` = *"SUSE LINUX"* ]] ; then \
-			# Compiling on SLES architecture requires that we specify a module and more generic ORDENV_PLAT
+			echo "Compiling on SLES architecture requires that we specify a module and more generic ORDENV_PLAT" ;\
 			module switch PrgEnv-intel/5.2.82 PrgEnv-gnu ;\
 			export ORDENV_PLAT=sles-11-amd64-64 ;\
 	fi
@@ -27,12 +27,12 @@ all: clean
 	make -C ${BUILD_PLATFORM_FOLDER}/src/core
 
 	if [ -d "_tcl" ]; then \
-			# Using _tcl folder instead of building tcl from source.
+			echo "Using _tcl folder instead of building tcl from source." ;\
 			rm -rf ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
 			cp -r _tcl/ ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
-	else ;\
-	        # Could not find _tcl folder, building tcl from source.
-        	make -C ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
+	else \
+			echo "Could not find _tcl folder, building tcl from source." ;\
+			make -C ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
 	fi
 	
 	./scripts/package-ssm.sh
