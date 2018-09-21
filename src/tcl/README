@@ -1,0 +1,9 @@
+tcl is part of the Maestro sequencer software package.
+This is simply a packaging of tcl-tk 8.5.11 and required extensions for use within the maestro GUIs.
+The tcl core source material was not modified in any significant way.
+
+Before 2018, the tcl packages used by Maestro were stored as tars and extracted for the compile.
+The folders here are simply the contents of those tars. This allowed for some cleanup of the build process.
+
+The tcl package is not meant to be published through ssm, only installed.
+Some of the tcl executables may clash with system executables.
