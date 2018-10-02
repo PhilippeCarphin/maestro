@@ -1,0 +1,219 @@
+#!/bin/ksh
+
+#/* Part of the Maestro sequencer software package.
+# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
+# *                          Environment Canada
+# *
+# * Maestro is free software; you can redistribute it and/or
+# * modify it under the terms of the GNU Lesser General Public
+# * License as published by the Free Software Foundation,
+# * version 2.1 of the License.
+# *
+# * Maestro is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# * Lesser General Public License for more details.
+# *
+# * You should have received a copy of the GNU Lesser General Public
+# * License along with this library; if not, write to the
+# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# * Boston, MA 02111-1307, USA.
+# */
+
+
+#
+# Name: nodelister
+#
+# Author: CMOIS
+#
+# description: shows the latest listing of the node 
+#
+# usage: nodelister -n node [-l loopargs] -type [success,abort,submission] -list  - shows all the possible listings (successful, aborted, submitted)
+#        nodelister -h                                         - shows help
+#        nodelister -n node -type [success,abort,submission] [-d datestamp] - shows the latest available listing (successful, aborted, submitted)
+#        nodelister -n node -type [success,abort,submission] [-d datestamp] -o outfile   - outputs the latest available listing (successful, aborted, submitted) to file outfile
+#        nodelister -n node [-l loopargs] -type [success,abort,submission] [-d datestamp] -list - shows all the possible listings (successful, aborted, submitted) for the specified datestamp
+#        nodelister -n node [-l loopargs] -type [success,abort,submission] [-d datestamp] - shows one specific listing file
+
+function viewfile
+{
+   source_file=$1
+   dest_file=$2
+   tmp_file=/tmp/listing_$$
+   found=0
+   isCompressed=0
+
+   [[ $v == 1 ]] && set -x 
+
+   if [[ ${source_file} != "" ]]; then
+     if [[ -e ${source_file} ]] ; then
+	 ln -s ${source_file} ${tmp_file}
+         [[ -n `file $(true_path ${source_file}) | grep 'gzip'` ]] && isCompressed=1
+     else
+	 host=${source_file##*@}
+	 scp -q $host:$source_file ${tmp_file} 2>/dev/null || scp -q $host:${source_file%%@*} ${tmp_file}
+         [[ -n `file ${tmp_file} | grep 'gzip'` ]] && isCompressed=1
+     fi
+     if [[ -e ${tmp_file} ]]; then
+	 found=1
+         if [[ $dest_file == "" ]]; then
+            [[ $isCompressed == 1 ]] && gunzip -c ${tmp_file} || cat ${tmp_file}
+         else
+            echo "Writing listing to ${dest_file}"
+            [[ $isCompressed == 1 ]] && gunzip -c ${tmp_file} > ${dest_file} || cat ${tmp_file} > ${dest_file}
+         fi 
+         rm -f ${tmp_file}
+     fi
+  fi
+  if [[ ${found} == 0 ]] ; then
+      echo $fullnode $type 'listing not available'
+  fi
+}
+
+Usage="
+Nodelister  \n 
+\n
+\t     Shows the latest listing of the node \n
+\n
+\t     Usage: nodelister -n node [-l loopargs] [-type [success,abort,submission]] [-d datestamp] [-list -o outfile] [-f listfile]\n
+\n
+\t\t        Where: \n
+\t\t\t          node is the full node name. ex: /regional/assimilation/00/gen_cutoff \n
+\t\t\t          loopargs is the comma-separated list of loop arguments. ex. outer_loop=1,inner_loop=2\n
+\t\t\t          type defines whether to get the latest succesfull, aborted or submitted listing. Default is success.\n
+\t\t\t          datestamp is the experiment datestamp (YYYYMMDDhhmmss). Default is the latest.\n
+\t\t\t          list shows all possible listings of the node.\n
+\t\t\t          outfile is the output file where the output can be redirected.\n
+\t\t\t\t        listfile is used for viewing specific listing instead of latest (requires full path to listing file)
+\t\t\t          node and listfile arguments are mutually exclusive but at least one must be provided
+\n
+\t     Ex: \n
+\t\t       nodelister -n node [-l loopargs] -type [success,abort,submission] -d datestamp -list        - shows all the possible listings (successful, aborted)\n
+\t\t       nodelister -h                                                       - shows help\n
+\t\t       nodelister -n node -type [success,abort,submission]                 - shows the latest available listing (successful, aborted, submitted)\n
+\t\t       nodelister -n node -type [success,abort,submission] -o outfile      - outputs the latest available listing (successful, aborted, submitted) to file outfile\n
+\t\t       nodelister -f listfile -o outfile                                   - outputs the specified listing file to file outfile\n
+\n
+\t     SEQ_EXP_HOME=$SEQ_EXP_HOME\n"
+
+arguments=$*
+eval `cclargs_lite -D "" $0 \
+  -h        ""                    "1"                          "[Display help       ]" \
+  -n        ""                    ""                           "[Node         ]" \
+  -list     "0"                   "1"                          "[Show available listings            ]" \
+  -type     ""                    ""                           "[Show latest successful, aborted or submitted listing?  ]" \
+  -l        ""                    ""                           "[Loop argument list ]" \
+  -o        ""                    "/tmp/nodelister_$$"         "[Output listing to file    ]" \
+  -d        ""                    ""                           "[datestamp value]" \
+  -v        "0"                   "1"                          "[Verbose]" \
+  -f        ""                    ""                           "[Listing file full path]" \
+  ++ $arguments 2>/dev/null`
+
+if [ ! -d "${SEQ_EXP_HOME}" ]; then
+   echo "nodelister error: Invalid path SEQ_EXP_HOME=$SEQ_EXP_HOME"
+   exit 1
+fi
+if [[ -n "${SEQ_BIN}" ]] ; then
+   nodeinfo=${SEQ_BIN}/nodeinfo
+else
+   nodeinfo=$(which nodeinfo)
+fi
+
+[[ $v == 1 ]] && set -x 
+
+if [[ $n == "" && $f == "" ]]; then
+    echo "Node or listing file must be defined \n"
+    echo $Usage
+    exit 1
+fi
+
+if [[ $n != "" && $f != "" ]]; then
+    echo "Node or listing file are mutually exclusive\n"
+    echo $Usage
+    exit 1
+fi
+
+if [[ ${type} == "" ]]; then
+   if [[ ${list} == "0" ]]; then
+      truetype="success"
+   else
+      truetype="all"
+   fi
+else
+   truetype=${type}
+fi
+
+if [[ "$f" != "" ]]; then
+   viewfile $f $o
+   exit 0
+fi
+
+#if [[ $n != "" ]]; then
+#   if [[ $d == "" && ${list} == "0" ]]; then
+#    echo "Datestamp must be defined \n"
+#    echo $Usage
+#    exit 1
+#   fi
+#fi
+
+# defaults to latest
+datestamp=`tictac -f %Y%M%D%H%Min%S`
+
+# in any case if the datestamp is provided by the user
+# we'll use it
+if [[ ${d} != "" ]] ; then
+   datestamp=$d
+fi
+
+# if "list" is used and datestamp not provided
+# we get everything and not only the latest
+if [[ ${list} == "1" && ${d} == "" ]]; then
+   datestamp=""
+fi
+
+if [[ $h != "" ]]; then
+   echo $Usage
+fi 
+
+if [[ $l != "" ]]; then
+   fullnode=`$nodeinfo -n $n -l $l -f node`
+   fullnode=`echo $fullnode | cut -d "=" -f2`
+   if [[ $fullnode = "" ]]; then
+       echo "nodeinfo reported a problem - exitting.\n"
+       exit 1
+   fi
+else
+   fullnode=$n
+fi
+
+latest_dir=${SEQ_EXP_HOME}/listings/latest/
+
+if [[ $truetype != "abort" && $truetype != "success" && $truetype != "submission" && $truetype != "all" ]]; then
+   echo "type must be success, abort or submission"
+   exit 1
+fi
+
+if [[ $list -eq 1 ]]; then
+   hostlist=$(ls -L ${SEQ_EXP_HOME}/listings | grep -wv latest | sed "s/\//\ /")
+   for host in $hostlist ; do
+      echo On $host
+      ls -d ${SEQ_EXP_HOME}/listings/$host/ 1>/dev/null 2>&1
+      if [[ $? == "0" ]]; then
+         if [[ ${truetype} != "all" ]]; then
+            ls -alrt ${SEQ_EXP_HOME}/listings/$host/${fullnode}*.${truetype}.${datestamp}* 2>/dev/null || true
+         else
+            ls -alrt ${SEQ_EXP_HOME}/listings/$host/${fullnode}*.*.${datestamp}* 2>/dev/null || true
+         fi
+      else
+         if [[ ${truetype} != "all" ]]; then
+            ping -q -c 1 $host >> /dev/null && ssh $host ls -alrt ${SEQ_EXP_HOME}/listings/$host/${fullnode}*.${truetype}.${datestamp}* 2>/dev/null || true
+         else
+            ping -q -c 1 $host >> /dev/null && ssh $host ls -alrt ${SEQ_EXP_HOME}/listings/$host/${fullnode}*.*.${datestamp}* 2>/dev/null || true
+         fi
+      fi
+   done
+else 
+       latestlink=$(ls -rt1 $latest_dir/$fullnode.${datestamp}.$truetype@* 2> /dev/null | tail -1)
+       [[ -z $latestlink ]] && latestlink=$(ls -rt1 $latest_dir/$fullnode.*.$truetype@* 2> /dev/null | tail -1)
+       viewfile ${latestlink} $o
+fi

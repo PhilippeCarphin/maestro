@@ -1,0 +1,93 @@
+#!/bin/ksh93
+
+#/* Part of the Maestro sequencer software package.
+# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
+# *                          Environment Canada
+# *
+# * Maestro is free software; you can redistribute it and/or
+# * modify it under the terms of the GNU Lesser General Public
+# * License as published by the Free Software Foundation,
+# * version 2.1 of the License.
+# *
+# * Maestro is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# * Lesser General Public License for more details.
+# *
+# * You should have received a copy of the GNU Lesser General Public
+# * License along with this library; if not, write to the
+# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# * Boston, MA 02111-1307, USA.
+# */
+
+
+arguments=$*
+eval `cclargs $0 \
+  -h        ""                    ""                   "[Display help       ]" \
+  -v        ""                    "1"                  "[Verbose            ]" \
+  -d        ""                    ""                   "[datestamp value YYYYMMDDhhmmss ]" \
+  -e        ""                    ""                   "[Target experiment  ]" \
+  -debug    "0"                   "1"                  "[debug mode]" \
+  ++ $arguments`
+
+test "${debug}" = "1" && echo "Deprecated option -debug, use -v" && set -x
+
+if [[ $v != "" ]] ; then  
+  set -x
+fi
+
+if [[ -z $e ]]; then 
+   if [[ -z $SEQ_EXP_HOME ]]; then 
+      echo Error: -e argument or SEQ_EXP_HOME must be defined.
+      exit 1
+   else  
+      e=$SEQ_EXP_HOME
+   fi
+fi
+
+if [[ -n "${SEQ_BIN}" ]] ; then
+   nodeinfo=${SEQ_BIN}/nodeinfo
+   tictac=${SEQ_BIN}/tictac
+   maestro=${SEQ_BIN}/maestro
+else
+   nodeinfo=$(which nodeinfo)
+   tictac=$(which tictac)
+   maestro=$(which maestro)
+fi
+
+logfile=${e}/logs/log_expbegin
+printf "\ndate:$(date)" >> ${logfile}
+printf "\nnodeinfo:${nodeinfo}" >> ${logfile}
+printf "\ntictac:${tictac}" >> ${logfile}
+printf "\nmaestro:${maestro}" >> ${logfile}
+
+if [[ -n "${SEQ_DATE}" ]] ; then
+    printf "\nSEQ_DATE=${SEQ_DATE}" >> ${logfile}
+fi
+if [[ "${d}" = "" ]]; then
+   currentDate=$(${tictac} -f %Y%M%D%H%Min%S -e $e)
+   #  get new date: +24 Hours
+   formatted_date="${currentDate:0:4}-${currentDate:4:2}-${currentDate:6:2} ${currentDate:8:2}:${currentDate:10:2}:${currentDate:12:2}"
+   newDate=$(date -d @$(( $(date -d  "$formatted_date" +%s)  + 24 * 60 * 60)) +%Y%m%d%H%M%S) 
+else
+   ### pad dates to 14 date characters by multiplying by base 10.
+   if [[  ${#d} -gt 14 || ${#d} -lt 8 ]]  ; then
+     printf "Input date format error. Format: YYYYMMDD[HHMMSS]. Ex: 19700101000000 or 19700101.\n" 
+     exit 1
+   fi 
+   newDate=$(($d*10**(14-${#d})))
+fi
+
+# set new date
+printf "\nset new date:${tictac} -s ${newDate}" >> ${logfile}
+
+# create log file
+explogfile=${e}/logs/${newDate}_nodelog
+test ! -f ${explogfile} && touch ${explogfile}
+
+# determine node to submit
+rootNode=$( ${nodeinfo} -f root -e $e -d $newDate )
+rootNode=${rootNode#*=}
+
+# start new run
+${maestro} -s submit -n ${rootNode} -d ${newDate} -e $e >> ${logfile} 2>&1

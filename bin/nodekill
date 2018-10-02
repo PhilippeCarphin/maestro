@@ -1,0 +1,104 @@
+#!/bin/ksh
+
+#/* Part of the Maestro sequencer software package.
+# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
+# *                          Environment Canada
+# *
+# * Maestro is free software; you can redistribute it and/or
+# * modify it under the terms of the GNU Lesser General Public
+# * License as published by the Free Software Foundation,
+# * version 2.1 of the License.
+# *
+# * Maestro is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# * Lesser General Public License for more details.
+# *
+# * You should have received a copy of the GNU Lesser General Public
+# * License along with this library; if not, write to the
+# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# * Boston, MA 02111-1307, USA.
+# */
+
+arguments=$*
+eval `cclargs $0 \
+  -n        ""                    ""                           "[Node         ]" \
+  -d        ""                    ""                           "[Datestamp (Default \$SEQ_DATE)     ]" \
+  -h        ""                    ""                           "[Display help       ]" \
+  -v        "0"                   "1"                           "[Verbose mode        ]" \
+  -list     "0"                   "1"                          "[Show available jobs of the node to kill         ]" \
+  -listall  "0"                   "1"                          "[Show all available jobs of every node to kill         ]" \
+  -l        ""                    ""                           "[Loop argument list ]" \
+  -job_id   ""                    ""                           "[Which job_id to kill ]" \
+  ++ $arguments`
+
+test "${v}" = "1" && set -x
+
+if [ ! -d "${SEQ_EXP_HOME}" ]; then
+   echo "nodekill error: Invalid path SEQ_EXP_HOME=$SEQ_EXP_HOME"
+   exit 1
+fi
+
+if [ ! -d "${SEQ_EXP_HOME}/sequencing/jobinfo" ]; then
+   echo "nodekill error: No Such File or Directory $SEQ_EXP_HOME/sequencing/jobinfo"
+   exit 1
+fi
+
+if [[ "${d}" = "" ]]; then
+   d=$(${SEQ_BIN}/tictac -f %Y%M%D%H%Min%S)
+fi
+
+if [[ -n "${SEQ_BIN}" ]] ; then
+   nodeinfo=${SEQ_BIN}/nodeinfo
+else
+   nodeinfo=$(which nodeinfo)
+fi
+
+if [[ $n == "" && $listall == "0" ]]; then
+    echo "Node must be defined"
+    exit 1
+fi
+
+if [[ $l != "" ]]; then
+   fullnode=`$nodeinfo -n $n -l $l -f node`
+   fullnode=`echo $fullnode | cut -d "=" -f2`
+else
+   fullnode=$n
+fi
+
+if [[ $listall -eq 1 ]]; then 
+   # find ${SEQ_EXP_HOME}/sequencing/jobinfo -type l -exec ls -lrt1 {} \;
+   cd  ${SEQ_EXP_HOME}/sequencing/jobinfo && find . -type l -name "$d@*" -exec ls -gort1 {} \; 
+elif [[ $list -eq 1 ]]; then
+   dir=${SEQ_EXP_HOME}/sequencing/jobinfo$(dirname ${fullnode})
+   # ls -lrt1 $dir/* | grep -w $(basename $fullnode)
+
+   # cd to the directory and do the ls from there
+   cd ${dir} && \ls -gort1 | grep -w $(basename $fullnode)
+else
+   dir=${SEQ_EXP_HOME}/sequencing/jobinfo$(dirname ${fullnode})
+   if [[ -L  $dir/$d@$job_id ]] ; then
+      # look for the "->" separator
+      set -A lsResult $(\ls -lrt1 $dir/$d@$job_id)
+      foundArrow=0
+      cell=""
+      for var in ${lsResult[@]}; do
+         [[ "${foundArrow}" == "1" ]] && cell=${var} && break
+         [[ "${var}" == "->" ]] && foundArrow=1
+      done
+      echo cell=$cell job_id=$job_id
+      rm -f $dir/$d@$job_id
+      if [[ $(command -v jobdel) != "" ]] ; then 
+		 jobdel -c $cell $job_id
+	  elif [[ $(command -v gmjob) != "" ]] ; then  
+         gmjob $cell delete $job_id
+	  else 
+	     echo "Unable to kill job because used to delete jobs (jobdel & gmjob currently supported)."
+	     exit 1
+      fi
+   else 
+      echo "Record of job_id $dir/$d@$job_id no longer available. \n"
+      exit 1
+   fi
+fi
+

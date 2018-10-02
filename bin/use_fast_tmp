@@ -1,0 +1,47 @@
+#/bin/ksh
+#/* Part of the Maestro sequencer software package.
+# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
+# *                          Environment Canada
+# *
+# * Maestro is free software; you can redistribute it and/or
+# * modify it under the terms of the GNU Lesser General Public
+# * License as published by the Free Software Foundation,
+# * version 2.1 of the License.
+# *
+# * Maestro is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# * Lesser General Public License for more details.
+# *
+# * You should have received a copy of the GNU Lesser General Public
+# * License along with this library; if not, write to the
+# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# * Boston, MA 02111-1307, USA.
+# */
+
+#CMOI_LEVEL op
+#CMOI_PLATFORM op_f
+
+# use /fasttmp if available
+if [ -n "${TMPFSDIR}" ]; then
+
+   if [[ ! -d "${TMPFSDIR}" ]] ; then
+      echo "\nFast tmp dir: ${TMPFSDIR} should exist and does not!\n"
+      exit 1
+   fi
+
+   # fast tmp already allocated
+   echo "\nUsing fast tmp dir: ${TMPFSDIR}"
+   mkdir -p ${TMPFSDIR}/$SEQ_NAME/work
+   cd ${TMPFSDIR}/$SEQ_NAME/work
+   if [[ -d $TASK_BIN ]]; then 
+      ln -s $TASK_BIN ../bin 
+   fi
+   if [[ -d $TASK_OUTPUT ]]; then 
+      ln -s $TASK_OUTPUT ../output
+   fi
+   if [[ -d $TASK_INPUT ]]; then 
+      ln -s $TASK_INPUT ../input
+   fi
+   export TASK_WORK=$(pwd)
+fi

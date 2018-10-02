@@ -1,0 +1,97 @@
+#!/bin/ksh
+
+#/* Part of the Maestro sequencer software package.
+# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
+# *                          Environment Canada
+# *
+# * Maestro is free software; you can redistribute it and/or
+# * modify it under the terms of the GNU Lesser General Public
+# * License as published by the Free Software Foundation,
+# * version 2.1 of the License.
+# *
+# * Maestro is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# * Lesser General Public License for more details.
+# *
+# * You should have received a copy of the GNU Lesser General Public
+# * License along with this library; if not, write to the
+# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# * Boston, MA 02111-1307, USA.
+# */
+
+arguments=$*
+eval `cclargs $0 \
+  -e        ""                    ""                           "[Target experiment or suites.xml file]" \
+  -h        ""                    ""                           "[Display help]" \
+  -s        ""                    ""                           "[Which string to look for]" \
+  -i        "0"                   "1"                          "[Ignore case?]" \
+  -v        "0"                   "1"                          "[Verbose]" \
+  -l        "0"                   "1"                          "[Search listings too (much longer)]" \
+  -f        ""                    ""                           "[Item scan filters. Ex: cfg (*.cfg in /config,/module and experiment.cfg), res (/resources), module (/module), bin (/bin), log (/logs), task (*.tsk in /modules)]" \
+  ++ $arguments`
+
+[[ $v == 1 ]] && set -x 
+
+if [[ -z $s ]]; then 
+   echo "Error: -s (string to look for) argument must be defined."
+   exit 1
+fi
+
+e=${e:-$SEQ_EXP_HOME}
+
+if [[ -z $e ]]; then 
+   echo Error: -e argument or SEQ_EXP_HOME must be defined.
+   exit 1
+elif [[ -d $e  ]] ; then 
+    exps=${e:-$SEQ_EXP_HOME}
+else 
+    exps=$(grep "<Exp>" $e | cut -d ">" -f 2 | cut -d "<" -f 1) 
+fi
+
+[[ "$i" == "1" ]] && ignore=i 
+
+for exp in $exps ; do
+
+    ! [[ -d  $exp ]] && continue    
+    echo "\n --> Scanning under $exp ..."
+    if [[ -z $f || $f == *cfg* ]] ; then  
+        [[ -f  $exp/experiment.cfg ]] && grep -${ignore}H $s $exp/experiment.cfg
+    fi
+    if [[ -z $f || $f == *module* || $f == *task* || $f == *cfg* ]] ; then  
+        if [[ $f == *task* ]] ; then 
+            [[ -d  $exp/modules/ ]] && find $exp/modules/ -name "*.tsk" -follow -type f -exec grep -${ignore}H $s {} \;  
+        fi 
+        if [[ $f == *cfg* ]] ; then
+            if [[ -d $exp/config/ ]] ; then 
+                [[ -d  $exp/config/ ]] && find $exp/config/ -follow -type f -exec grep -${ignore}H $s {} \;
+            fi  
+            [[ -d  $exp/modules/ ]] && find $exp/modules/ -name "*.cfg" -follow -type f -exec grep -${ignore}H $s {} \;  
+        fi
+        if [[ $f != *cfg* && $f != *task* ]] ; then
+            [[ -d  $exp/modules/ ]] && find $exp/modules/ -follow -type f -exec grep -${ignore}H $s {} \;  
+        fi
+    fi
+    if [[ $f == *log* ]] ; then   
+        [[ -d  $exp/logs/ ]] && find $exp/logs/ -follow -type f -exec grep -${ignore}H $s {} \;  
+    fi
+    if [[ -z $f || $f == *res* ]] ; then
+        [[ -d  $exp/resources/ ]] && find $exp/resources/ -follow -type f -exec grep -${ignore}H $s {} \;  
+    fi
+    if [[ -z $f || $f == *bin* ]] ; then
+        [[ -d  $exp/bin/ ]] && find $exp/bin/ -follow -type f -exec grep -${ignore}H $s {} \;  
+    fi
+    if [[ "$l" == "1" || $f == *listing* ]]; then
+        for machine in `ls $exp/listings`; do 
+            [[ "$machine" == "latest" ]] && continue
+            if  [[ -d $exp/listings/$machine/ ]] ; then 
+                #visible local
+                find $exp/listings/$machine/ -type f -exec zgrep -${ignore}H $s {} \;
+            else 
+                echo "\n==Logging on $machine to scan listings=="
+                ping -q -c 1 $machine >> /dev/null && ssh $machine find $exp/listings/$machine/ -type f -exec zgrep -${ignore}H $s {} \;
+            fi
+        done 
+    fi 
+   
+done

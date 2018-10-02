@@ -1,0 +1,165 @@
+#!/usr/bin/python
+
+#/* Part of the Maestro sequencer software package.
+# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
+# *                          Environment Canada
+# *
+# * Maestro is free software; you can redistribute it and/or
+# * modify it under the terms of the GNU Lesser General Public
+# * License as published by the Free Software Foundation,
+# * version 2.1 of the License.
+# *
+# * Maestro is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# * Lesser General Public License for more details.
+# *
+# * You should have received a copy of the GNU Lesser General Public
+# * License along with this library; if not, write to the
+# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# * Boston, MA 02111-1307, USA.
+# */
+
+import os,sys,re,shutil
+
+class Hub(dict):
+    """Local distribution hub"""
+
+    def __init__(self,base,name,subs,append=False):
+        """Class constructor"""
+        self.name=name
+        self.path=os.path.join(base,name)
+        self.subs=subs
+        self.append=append
+
+# Set default list of subdirectories for the experiment hub/ here
+try:
+    seqExpHome=os.path.normpath(os.environ['SEQ_EXP_HOME'])
+except KeyError:
+    seqExpHome=''
+hub=os.path.join(seqExpHome,'hub')
+try:
+    fd=open(os.path.join(hub,".subdirs"),"r")
+except IOError:
+    subdirs=[]
+else:
+    subdirs=re.split("\n|\s",fd.read().rstrip())
+    fd.close()
+
+# Parse command line arguments
+import optparse
+parser=optparse.OptionParser()
+parser.add_option('-c','--clean',dest='clean',action='store_true',default=False,
+                  help='Hub link cleanup before construction')
+parser.add_option('-d','--defaults',dest='linkdir',metavar='PATH',
+                  default=os.path.join(os.environ['HOME'],'.suites','.default_links'),
+                  help='Path to directory of default links [default: %default]')
+parser.add_option('-e','--experiment',dest='exp',metavar='NAME',
+                  default=os.path.basename(seqExpHome),
+                  help='Experiment name [default: %default]')
+parser.add_option('-f','--force',dest='force',action='store_true',default=False,
+                  help='Remove and replace existing links if they exist')
+parser.add_option('-s','--sub',dest='subs',metavar='DIR',default=subdirs,action="append",
+                  help='Subdirectories to create in remote hubs [default: %default]')
+parser.add_option('-v','--verbose',dest='verbose',action='store_true',default=False,
+                  help='Verbose output')
+parser.add_option('--dry-run',dest='dryrun',action='store_true',default=False,
+                  help='Do not create links or targets')
+parser.add_option('--no-create',dest='create',action='store_false',default=True,
+                  help='Do not create target directories on remote hosts')
+parser.add_option('--no-listings',dest='listings',action='store_false',default=True,
+                  help='Do not create listing links')
+(options, args)=parser.parse_args()
+
+# Check for incompatible arguments
+create=options.create
+if options.dryrun:
+    create=False
+    if options.force:
+        sys.stderr.write('Conflicting options specified:  --dry-run and --force.\n')
+        sys.exit(1)
+
+# Check for required environment
+if not seqExpHome:
+    sys.stderr.write('SEQ_EXP_HOME must be set to create links.\n')
+    sys.exit(1)
+if os.path.realpath(os.getcwd()) != os.path.realpath(seqExpHome):
+    sys.stderr.write('Must be in SEQ_EXP_HOME ('+seqExpHome+') to create links.\n')
+    sys.exit(1)
+    
+# Set up hub list
+hubs = [Hub(seqExpHome,'hub',subdirs)]
+if options.listings:
+    hubs.append(Hub(seqExpHome,'listings',['listings'],append=True))
+
+# Check for default links
+try:
+    machs=[mach for mach in os.listdir(options.linkdir) if os.path.islink(os.path.join(options.linkdir,mach))]    
+except OSError:
+    sys.stderr.write(options.linkdir+' is not a valid default link directory.\n')
+    sys.exit(1)
+
+# Subdirectory cleanup
+if options.clean:
+    for hub in hubs:
+        for sub in os.listdir(hub.path):
+            if not sub.startswith('.'):
+                local=os.path.join(hub.path,sub)
+                try:
+                    shutil.rmtree(local)
+                except OSError:
+                    try:
+                        os.remove(local)
+                    except OSError:
+                        sys.stderr.write('Unable to remove '+local+'.\n')
+                        sys.exit(1)
+  
+# Create subdirectories and links
+if create: import subprocess
+for mach in machs:
+    subs = []
+    for hub in hubs:
+        link=os.path.join(hub.path,mach)
+        target=os.path.join(os.readlink(os.path.join(options.linkdir,mach)),options.exp)
+        target_append = hub.append and os.path.join(target,hub.name) or target
+        if options.force:
+            if os.path.islink(link):
+                try:
+                    os.remove(link)
+                except OSError:
+                    sys.stderr.write('Warning: unable to remove '+link+' despite force.\n')
+            if os.path.lexists(link):
+                sys.stderr.write('Cannot clean up non-link '+link+'.\n')
+                sys.exit(1)
+        if os.path.lexists(link):
+            sys.stderr.write('Link '+link+' exists: clean up or use --force to remove existing links.\n')
+            if not options.dryrun: sys.exit(1)
+        try:
+            if not options.dryrun: os.symlink(target_append,link)
+        except OSError:
+            sys.stderr.write('Unable to link '+link+'.\n')
+            sys.exit(1)
+        if options.verbose: sys.stdout.write('Linked '+link+' => '+target_append+'\n')            
+        if create:
+            subs = subs + [os.path.join(target,sub) for sub in hub.subs]            
+    if subs:
+        cmd="ssh -o 'ConnectTimeout 5' "+mach+" 'mkdir -p "+" ".join(subs)+"; if [[ ! -d "+" && -d ".join(subs)+" ]] ; then echo 1 ; else echo 0 ; fi'"
+        p=subprocess.Popen(cmd,stdout=subprocess.PIPE,stderr=subprocess.PIPE,shell=True)
+        stderr=p.stderr.read()
+        if len(stderr) > 0:
+            sys.stderr.write('Warning: STDERR returned from '+mach+' is '+stderr)
+        creation_error = False
+        try:
+            if int(p.stdout.read()) == 0:
+                if options.verbose:
+                    for sub in subs:
+                        sys.stdout.write('Created '+mach+':'+sub+'\n')
+            else:
+                creation_error = True
+        except:
+            creation_error = True
+        if creation_error:
+            sys.stderr.write('Warning: Unable to create local hub on '+mach+'\n')
+                        
+
+                                 
