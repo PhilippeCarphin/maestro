@@ -218,7 +218,7 @@ proc SharedFlowNode_searchSubmitNode { exp_path node datestamp submitted_node } 
 proc SharedFlowNode_searchForTask { exp_path flow_node datestamp } {
    set value ""
    if { $flow_node != "" } {
-      if { [string match *task [SharedFlowNode_getGenericAttribute ${exp_path} ${flow_node} ${datestamp} type] ] } {
+      if { [SharedFlowNode_getGenericAttribute ${exp_path} ${flow_node} ${datestamp} type] == "task" } {
          set value $flow_node
       } else {
          set value [SharedFlowNode_searchForTask ${exp_path} [SharedFlowNode_getGenericAttribute ${exp_path} ${flow_node} ${datestamp} submitter] ${datestamp}]
