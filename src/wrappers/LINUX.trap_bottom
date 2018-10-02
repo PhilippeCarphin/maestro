@@ -1,0 +1,8 @@
+
+} 
+echo ${SelfJobRemove} 
+echo "nodetracer -n ${SEQ_NODE} ${SEQ_LOOP_ARGS} -d ${SEQ_DATE} -i ${jobout} -c" 
+${SEQ_UTILS_BIN}/nodetracer -n ${SEQ_NODE} ${SEQ_LOOP_ARGS} -d ${SEQ_DATE} -i ${jobout} -c 
+eval ${SelfJobRemove}
+rm -f ${SEQ_TMP_CFG}.complete ${SEQ_TMP_CFG} 
+trap "" ERR EXIT 12
