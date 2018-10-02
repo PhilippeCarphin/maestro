@@ -1,0 +1,77 @@
+#!/bin/ksh
+
+[[ "$1" = --help || "$1" = -h ]] && set -h
+# check tcl/tk installation: 
+[[ -z ${SEQ_MAESTRO_DOMAIN} ]] && echo "SEQ_MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 
+
+if ! [[ -f ${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_${ORDENV_PLAT}/bin/maestro_wish8.5 ]] ; then 
+    echo "Installation incomplete. tcl/tk package must be installed within $SEQ_MAESTRO_DOMAIN." 
+    exit 1 
+fi 
+
+export PATH=${PATH}:${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_${ORDENV_PLAT}/bin
+export TCL_LIBRARY=${TCL_LIBRARY}:${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_${ORDENV_PLAT}/lib/tcl8.5
+export TK_LIBRARY=${TK_LIBRARY}:${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_${ORDENV_PLAT}/lib/tk8.5
+
+TCLSH=$(which maestro_wish8.5)
+
+if [[ "${SEQ_XFLOW_BIN}" == "" ]] ; then
+   echo "SEQ_XFLOW_BIN environment variable not defined! Exiting..." >&2
+   exit 
+fi
+
+[[ -f "${SEQ_XFLOW_BIN}/../etc/check_deprecation" ]] && . "${SEQ_XFLOW_BIN}/../etc/check_deprecation"
+
+arguments=$*
+eval `cclargs $0 "[maestro gui]" \
+  -d            ""      ""      "[sequencer date]" \
+  -exp          ""      ""      "[experiment path]" \
+  -noautomsg "0"        "1"   "[value 1 means no auto message display]" \
+  -nosubmitpopup "0"        "1"   "[value 1 means no submit popup]" \
+  -rc ""        ""      "[maestrorc preferrence file]" \
+  -n ""      ""      "[focus on this node at startup]" \
+  -l ""      ""      "[loop arguments to node argument]" \
+  -debug        "0"     "1"     "[debug message]" \
+  ++ $arguments`
+
+test "${noautomsg}" != "" && automsg_opt="-noautomsg ${noautomsg}" || automsg_opt=""
+test "${nosubmitpopup}" != "" && nosubmitpopup_opt="-nosubmitpopup ${nosubmitpopup}" || nosubmitpopup=""
+
+date_opt=""
+if [[ "${d}" != "" ]] ; then
+   print "\n starting $(basename $0) with date ${d}"
+   date_opt="-date ${d}"
+fi
+exp_opt=""
+if [[ "${exp}" != "" ]] ; then
+   print "\n starting $(basename $0) with exp ${exp}"
+   exp_opt="-exp ${exp}"
+fi
+rc_opt=""
+if [[ "${rc}" != "" ]] ; then
+   print "\n maestrorc preferrence file ${rc}"
+   [[ ! -f ${rc} ]] && print "\nxflow ERROR: file not found ${rc}" && exit 1
+   rc_opt="-rc ${rc}"
+fi
+node_opt=""
+if [[ "${n}" != "" ]] ; then
+   print "\n $(basename $0) will attempt to focus on node ${n}"
+   node_opt="-node ${n}"
+fi
+loop_opt=""
+if [[ "${l}" != "" ]] ; then
+   if [[ "${node_opt}" == "" ]] ; then
+      print "\nxflow ERROR: -l argument requires -n argument!"
+      exit 1
+   fi
+   print "\n $(basename $0) got loop argument ${l}"
+   loop_opt="-loop ${l}"
+fi
+debug_opt=""
+if [[ "${debug}" = "1" ]] ; then
+   debug_opt="-debug"
+fi
+
+echo $TCLSH ${SEQ_XFLOW_BIN}/../lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt}
+export NO_STOP_MESSAGE=on
+$TCLSH ${SEQ_XFLOW_BIN}/../lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt} ${exp_opt}

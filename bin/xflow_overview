@@ -1,0 +1,117 @@
+#!/bin/ksh
+[[ "$1" = --help || "$1" = -h ]] && set -h
+
+# check tcl/tk installation: 
+[[ -z ${SEQ_MAESTRO_DOMAIN} ]] && echo "SEQ_MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 
+
+if ! [[ -f ${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_$ORDENV_PLAT/bin/maestro_wish8.5 ]] ; then 
+    echo "Installation incomplete. tcl/tk package must be installed within $SEQ_MAESTRO_DOMAIN." 
+    exit 1 
+fi 
+
+export PATH=${PATH}:${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_$ORDENV_PLAT/bin
+export TCL_LIBRARY=${TCL_LIBRARY}:${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_$ORDENV_PLAT/lib/tcl8.5
+export TK_LIBRARY=${TK_LIBRARY}:${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_$ORDENV_PLAT/lib/tk8.5
+
+TCLSH=$(which maestro_wish8.5)
+
+if [[ "${SEQ_XFLOW_BIN}" == "" ]] ; then
+   echo "SEQ_XFLOW_BIN environment variable not defined! Exiting..." >&2
+   exit 
+fi
+
+arguments=$*
+eval `cclargs -D "" $0 "[starts the overview gui]" \
+  -as 		"" 	"" 	"[start application as another user]" \
+  -display 	"" 	"$DISPLAY" 	"[X windows display]" \
+  -debug 	"0" 	"1"	"[debug message]" \
+  -exp          ""      ""      "[experiment path]" \
+  -noautomsg 	"0"     "1"	"[value 1 means no auto message display]" \
+  -suites 	""	""	"[suites list file]" \
+  -logfile ""  ""  "[application log file]" \
+  -rc ""	""	"[maestrorc preferrence file]" \
+  -user ""	""	"[real user]" \
+  -logspan ""	""	"[log reading span in hours]" \
+  ++ $arguments`
+
+# setting the display properly
+if [[ "${display}" = "" ]] ; then 
+   # use the ssh -Y, allow trusted hosts
+   sshX="-Y"
+else
+   sshX=""
+   export DISPLAY=${display:-${DISPLAY}}
+fi
+
+[[ -f "${SEQ_XFLOW_BIN}/../etc/check_deprecation" ]] && . "${SEQ_XFLOW_BIN}/../etc/check_deprecation"
+
+print "\ndisplay=${display}"
+print "\nusing DISPLAY=$DISPLAY"
+
+# switch to another user?
+if [[ "${as}" != "" ]] ; then
+   userOverviewFlag="-user ${USER}"
+   if [ "${USER}" = "afsfops" -a '("${as}" = "afsipar" || "${as}" = "afsiops")' ] ; then
+      print "\nxflow_overview switching ${USER} user to ${as}"
+      # for a&p, we need special ssh key setup
+      sshCommandKey=${HOME}/.ssh/command_keys/maestro_${as}_key
+      if [[ ! -f ${sshCommandKey} ]] ; then
+         echo "xflow_overview Fatal Error: cannot find ssh command key ${sshCommandKey}" 
+	 exit 1
+      fi
+      print "\nxflow_overview command\n--- echo ${0} ${arguments} ${userOverviewFlag} | ssh ${sshX} -T -i ${sshCommandKey} ${as}@${TRUE_HOST} ---"
+      echo "xflow_overview ${arguments} ${userOverviewFlag}" | ssh ${sshX} -T -i ${sshCommandKey} ${as}@${TRUE_HOST}
+      exit 0
+   else
+      if [[ "${USER}" != "${as}" ]] ; then
+         print "\nxflow_overview switching ${USER} user to ${as} dollar_0=${0}"
+         print "\nxflow_overview command\n--- echo ${0} ${arguments} ${userOverviewFlag} | ssh ${sshX} -T ${as}@${TRUE_HOST} ---"
+	 echo "xflow_overview ${arguments} ${userOverviewFlag}" | ssh ${sshX} -T ${as}@${TRUE_HOST}
+	 exit 0
+      fi
+   fi
+fi
+
+logfile_opt=""
+[[ ${logfile} != "" ]] && logfile_opt="-logfile ${logfile}"
+
+test "${noautomsg}" != "" && automsg_opt="-noautomsg ${noautomsg}" || automsg_opt=""
+
+suites_opt=""
+if [[ "${suites}" != "" ]] ; then
+   print "\n suites file ${suites}"
+   [[ ! -f ${suites} ]] && print "\nxflow_overview ERROR: file not found ${suites}" && exit 1
+   suites_opt="-suites ${suites}"
+fi
+
+rc_opt=""
+if [[ "${rc}" != "" ]] ; then
+   print "\n maestrorc preferrence file ${rc}"
+   [[ ! -f ${rc} ]] && print "\nxflow_overview ERROR: file not found ${rc}" && exit 1
+   rc_opt="-rc ${rc}"
+fi
+
+debug_opt=""
+if [[ "${debug}" = "1" ]] ; then
+   debug_opt="-debug"
+fi
+
+user_opt=""
+if [[ "${user}" != "" ]] ; then
+   user_opt="-user ${user}"
+fi
+
+logspan_opt=""
+if [[ "${logspan}" != "" ]] ; then
+   logspan_opt="-logspan ${logspan}"
+fi
+
+exp_opt=""
+if [[ "${exp}" != "" ]] ; then
+   print "\n starting $(basename $0) with exp ${exp}"
+   exp_opt="-exp ${exp}"
+fi
+
+export NO_STOP_MESSAGE=on
+print "\n$TCLSH ${SEQ_XFLOW_BIN}/../lib/Overview.tcl ${automsg_opt} ${suites_opt}"
+$TCLSH ${SEQ_XFLOW_BIN}/../lib/Overview.tcl -main ${automsg_opt} ${suites_opt} ${logfile_opt} ${debug_opt} ${rc_opt} ${user_opt} ${logspan_opt} ${exp_opt}
