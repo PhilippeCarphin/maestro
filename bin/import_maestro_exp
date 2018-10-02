@@ -1,0 +1,195 @@
+#!/bin/ksh
+#/* Part of the Maestro sequencer software package.
+# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
+# *                          Environment Canada
+# *
+# * Maestro is free software; you can redistribute it and/or
+# * modify it under the terms of the GNU Lesser General Public
+# * License as published by the Free Software Foundation,
+# * version 2.1 of the License.
+# *
+# * Maestro is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# * Lesser General Public License for more details.
+# *
+# * You should have received a copy of the GNU Lesser General Public
+# * License along with this library; if not, write to the
+# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# * Boston, MA 02111-1307, USA.
+# */
+
+
+USAGE="\nUSAGE: import_maestro_exp [-h] [-cgnm] -s source -d destination\n
+ where:\n
+  -h: display help\n
+  -s: path to the source suite/experiment\n
+  -d: destination path with the same suite/experiment name (w/o -n) OR with different name (with -n)\n
+  -n: enable new suite/experiment tag\n
+  -g: enable git depot creation tag\n 
+  -c: disable copying of constants directory\n
+  -y: force yes to overwrite experiment question\n
+  -m: call makelinks after importation\n
+  -r: enable reference implementation tag\n
+ Description: retrieve a source maestro suite/experiment and set up its new git repository (if specified)\n
+ Example: import_maestro_exp -s ~afsiops/maestro_suites/ensemble/forecast/e100 -d /tmp -g\n"
+
+if [ "$(uname -s)" != "Linux" ]; then
+  echo "ERROR: import_maestro_exp only runs on Linux" 1>&2 && exit 1
+fi
+
+ntag=0
+gtag=0
+ctag=0
+rtag=0
+mtag=0
+src=""
+dest=""
+
+while getopts hcgnrmvs:d:y options 2> /dev/null; do
+  case $options in
+    h)
+      echo $USAGE 1>&2 && exit 0;;
+    c)
+      ctag=1;;
+    g)
+      gtag=1;;
+    n)
+      ntag=1;;
+    r)
+      rtag=1;;
+    m)
+      mtag=1;;
+    v)
+      set -x;;
+    s)
+      src=$(true_path $OPTARG) || exit 1;;
+    d)
+      dest=$OPTARG;;
+    y)
+      answer=y;;
+    *)
+      echo $USAGE 1>&2 && exit 1;;
+  esac
+done
+#move to the next argument
+shift `expr $OPTIND - 1`
+if [ "$*" != "" ]; then
+  echo $USAGE 1>&2 && exit 1
+fi
+
+if [ "$src" = "" ]; then
+  echo "ERROR: -s option required!" 1>&2 && exit 1
+fi
+if [ "$dest" = "" ]; then
+  echo "ERROR: -d option required!" 1>&2 && exit 1
+fi    
+
+if (touch $dest/.import_maestro_exp 2>&1 | grep -q "Permission denied"); then
+    echo "ERROR: No permission under destination=$dest!" 1>&2 && exit 1
+  else
+    rm -f $dest/.import_maestro_exp
+fi
+
+if [ $ntag -eq 1 ]; then
+  # with -n option: renaming the suite/experiment
+  final_exp=$(basename $dest)
+  destdir=${dest%/*}
+else
+  # w/o -n option
+  final_exp=$(basename $src)
+  destdir=$dest
+fi
+
+if [[ -d $destdir/${final_exp} || -f $destdir/${final_exp} || -L $destdir/${final_exp} ]]; then
+  echo "$destdir/${final_exp} exists. Overwrite? (y/n) " 1>&2
+  if [[ -z $answer ]]; then
+    read answer
+  fi
+  if [[ "$answer" = "Y" || "$answer" = "y" ]]; then
+    echo "Removing $destdir/${final_exp}..." 1>&2
+    rm -rf $destdir/${final_exp}
+  else
+    echo "Skip importing!" 1>&2
+    exit 0
+  fi
+fi
+
+mkdir -p $destdir 
+destdir=$(true_path $destdir)
+
+echo "Retrieving $exp...\n
+SOURCE=$src\n
+DESTINATION=$destdir\n" 1>&2
+
+# deal with suites with sub-modules
+cd $src && has_submodule=$(git config --list | grep \^submodule)
+if [[ -n ${has_submodule} ]]; then
+ git clone --no-hardlinks $src $destdir/${final_exp}
+ cd $destdir/${final_exp} && git submodule update --init && git submodule foreach 'set -e; branch=$(git config -f ${toplevel}/.gitmodules submodule.${name}.branch); git checkout ${branch}'
+else
+ rsync -rlpv --exclude ".git" --exclude "hub" --exclude "logs" --exclude "sequencing" --exclude "listings" $src/ $destdir/${final_exp}/
+ # copy directories/links under hub
+ if [[ $ctag -eq 1 ]]; then
+   find . -name hub  \( -type d -o -type l \) -exec rsync -rlpRv --exclude "constants/" --exclude "*/work/"  {} $destdir/${final_exp}/ \;
+ else
+   find . -name hub  \( -type d -o -type l \) -exec rsync -rlpRv --exclude "*/work/" {} $destdir/${final_exp}/ \;
+ fi
+ if [ $gtag -eq 1 ]; then
+  echo "\nEnabling git tag..." 1>&2
+  # tell git to ignore its operations under logs/listings/sequencing
+  echo "*" > $TMPDIR/.gitignore
+  find $destdir/${final_exp} \( -name logs -o -name listings -o -name sequencing \) -type d -exec cp $TMPDIR/.gitignore  {}/ \;
+  # setup a local git repository
+  cd $destdir/${final_exp} && setup_git_repository
+ fi
+fi
+
+# copy only the first level of logs, listings and sequencing
+cd $src && find . \( -name logs -o -name listings -o -name sequencing -o -name stats \) \( -type d \) -exec rsync -dlpRv {} $destdir/${final_exp}/   \;
+cd $src && find . \( -name logs -o -name listings -o -name sequencing -o -name stats \) \( -type l \) -exec mkdir -p $destdir/$final_exp/{} \; 
+# recreate sequencing / logs if they do not exist / haven't been linked 
+cd $src && for dir in `find . -name modules` ; do 
+   [[ -e ${dir%*/modules}/logs ]]  || rm -f $destdir/$final_exp/${dir%*/modules}/logs && mkdir -p $destdir/$final_exp/${dir%*/modules}/logs
+   [[ -e ${dir%*/modules}/sequencing ]] || rm -f  $destdir/$final_exp/${dir%*/modules}/sequencing &&  mkdir -p $destdir/$final_exp/${dir%*/modules}/sequencing
+   [[ -e ${dir%*/modules}/stats ]] ||  rm -f $destdir/$final_exp/${dir%*/modules}/stats &&  mkdir -p $destdir/$final_exp/${dir%*/modules}/stats
+done 
+
+
+if [ $rtag -eq 1 ]; then
+  echo "\nEnabling reference implementation tag..." 1>&2
+  if [[ -z "${MAESTRO_CURRENT_REF}" ]] ; then
+    echo "ERROR: MAESTRO_CURRENT_REF undefined!" 1>&2
+    echo "Load a Maestro module before continuing. Skip loading reference
+    implementation..." 1>&2
+  else
+    # Inject experiment documentation
+    docfile=$destdir/${final_exp}/.ref_info
+    echo MAESTRO_CURRENT_REF=${MAESTRO_CURRENT_REF} >${docfile}
+    echo MAESTRO_MODULE_NAME=${MAESTRO_MODULE_NAME} >>${docfile}
+    echo MAESTRO_MODULE_PATH=${MAESTRO_MODULE_PATH} >>${docfile}
+
+    # Inject s.ssmuse.dot command required to acquire reference
+    ssmfile=$destdir/${final_exp}/.ref_load
+    echo ". s.ssmuse.dot $(dirname ${MAESTRO_CURRENT_REF})" >${ssmfile}
+  fi
+fi
+
+# Run makelinks on each experiment
+if [ $mtag -eq 1 ]; then 
+
+  cd $src 
+  for hubdirs in `find . -name hub  \( -type d -o -type l \) ` ;  do 
+      exp=${hubdirs%*/hub}
+      cd $destdir/$final_exp/$exp
+      if [[ "$answer" = "Y" || "$answer" = "y" ]]; then
+         export SEQ_EXP_HOME=$destdir/$final_exp/${exp#.*}
+         makelinks  -f -c -e $final_exp/${exp#.*}  
+      else
+         export SEQ_EXP_HOME=$destdir/$final_exp/${exp#.*}
+         makelinks  -e $final_exp/${exp#.*} 
+      fi  
+  done 
+fi
+
+echo "\nDone importing ${final_exp}\n" 1>&2

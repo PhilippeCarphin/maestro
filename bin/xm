@@ -1,0 +1,69 @@
+#!/bin/ksh
+#/* Part of the Maestro sequencer software package.
+# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
+# *                          Environment Canada
+# *
+# * Maestro is free software; you can redistribute it and/or
+# * modify it under the terms of the GNU Lesser General Public
+# * License as published by the Free Software Foundation,
+# * version 2.1 of the License.
+# *
+# * Maestro is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# * Lesser General Public License for more details.
+# *
+# * You should have received a copy of the GNU Lesser General Public
+# * License along with this library; if not, write to the
+# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# * Boston, MA 02111-1307, USA.
+# */
+
+[[ "$1" = --help || "$1" = -h ]] && set -h
+
+[[ -z ${SEQ_MAESTRO_DOMAIN} ]] && echo "SEQ_MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 
+
+if ! [[ -f ${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_${ORDENV_PLAT}/bin/maestro_wish8.5 ]] ; then 
+    echo "Installation incomplete. tcl/tk package must be installed within $SEQ_MAESTRO_DOMAIN." 
+    exit 1 
+fi 
+
+export PATH=${PATH}:${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_${ORDENV_PLAT}/bin
+export TCL_LIBRARY=${TCL_LIBRARY}:${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_${ORDENV_PLAT}/lib/tcl8.5
+export TK_LIBRARY=${TK_LIBRARY}:${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_${ORDENV_PLAT}/lib/tk8.5
+
+TCLSH=$(which maestro_wish8.5)
+
+# -- issues with $TMPDIR
+if [ ${#TMPDIR} -eq 0 ];then
+        echo "The env. variable is not defined ... using /tmp/$(id -nu)/$$ "
+	export TMPDIR=/tmp/$(id -nu)/$$
+fi
+
+# -- Language
+#if [ ${#CMCLNG} -eq 0 ];then
+       export CMCLNG=english
+#fi
+
+# -- export SEQ_MANAGER_BIN
+test "${SEQ_MANAGER_BIN}" == "" && print "\nSEQ_MANAGER_BIN not defined! Exiting...\n" && exit 1
+
+# create default depot if not exist
+[ -d $HOME/.suites ] || mkdir $HOME/.suites
+
+# -- VERY first time user --> dont have .maestro.rc file and no Exp's.
+#    >>Convention : .maestro.rc file should alwys reside in user HOME<<
+#    Note : it could be possible that this user has used the interface
+#           before but his .maestro.rc file has been erased for X reason !!
+
+if [ ! -s $HOME/.maestrorc ];then
+   # -- have to create one and Populate it with minimum data
+   cp ${SEQ_MANAGER_BIN}/../etc/config/maestrorc $HOME/.maestrorc
+fi
+
+arguments=$*
+eval `cclargs $0 "[xm]" \
+  -exp          ""      ""      "[experiment path]" \
+  ++ $arguments`
+
+$TCLSH ${SEQ_MANAGER_BIN}/../lib/x_manager/XPManager.tcl $arguments &
