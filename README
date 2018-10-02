@@ -1,0 +1,71 @@
+
+#/* Part of the Maestro sequencer software package. This is simply a packaging of tcl-tk 8.5.11 
+# * and required extensions for use within the maestro GUIs. The tcl core source 
+# * material was not modified in any way.  
+# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
+# *                          Environment Canada
+# *
+# * Maestro is free software; you can redistribute it and/or
+# * modify it under the terms of the GNU Lesser General Public
+# * License as published by the Free Software Foundation,
+# * version 2.1 of the License.
+# *
+# * Maestro is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# * Lesser General Public License for more details.
+# *
+# * You should have received a copy of the GNU Lesser General Public
+# * License along with this library; if not, write to the
+# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# * Boston, MA 02111-1307, USA.
+# */
+
+
+
+tcl-tk_8.5.11_multi :
+
+   contains the source code and libraries to generate the tcl-tk_8.5.11_multi ssm package.
+   This package is to be installed on the target ssm domain. It is used as a place holder
+   for the target specifi ssm packages below.
+
+   To generate the ssm package, cd to the ssm directory and run "make ssm"
+
+1) make the ssm package for your platform:
+
+cd $PATH_TO_PACKAGE/ssm 
+make
+
+2) install package in domain
+
+ ssm install -d $TARGET_DOMAIN -f $PATH_TO_PACKAGE/ssm/$your_ssm_package 
+
+3) compile platform packages
+cd $TARGET_DOMAIN/tcl-tk_$version_$platform/src
+./INSTALL.sh
+
+4) use the domain (other maestro packages are installed / published in there) 
+
+OR 
+
+1) unpack ssm package
+
+tar -zxf $PATH_TO_PACKAGE/ssm/$your_ssm_package
+
+2) compile package: 
+
+cd $PATH_TO_PACKAGE/src
+./INSTALL.sh
+
+3) make the ssm package
+
+cd $PATH_TO_PACKAGE/ssm
+make 
+
+4) install package in domain
+
+ssm install -d $TARGET_DOMAIN -f $PATH_TO_PACKAGE/ssm/$your_ssm_package 
+
+
+
+N.B. package should NOT be published as it contains a tcl installation that could not mix well with the system's installation. 
