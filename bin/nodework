@@ -1,0 +1,71 @@
+#!/bin/ksh
+
+#/* Part of the Maestro sequencer software package.
+# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
+# *                          Environment Canada
+# *
+# * Maestro is free software; you can redistribute it and/or
+# * modify it under the terms of the GNU Lesser General Public
+# * License as published by the Free Software Foundation,
+# * version 2.1 of the License.
+# *
+# * Maestro is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# * Lesser General Public License for more details.
+# *
+# * You should have received a copy of the GNU Lesser General Public
+# * License along with this library; if not, write to the
+# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# * Boston, MA 02111-1307, USA.
+# */
+
+
+arguments=$*
+
+eval `cclargs $0 \
+  -n        ""                    ""                           "[Node               ]" \
+  -base     "0"                   "1"                          "[Return base only   ]" \
+  -ext      ""                    ""                           "[Extension          ]" \
+  -h        ""                    ""                           "[Display help       ]" \
+  ++ $arguments`
+
+if [[ -n "${SEQ_BIN}" ]] ; then
+    nodeinfo=${SEQ_BIN}/nodeinfo
+    tictac=${SEQ_BIN}/tictac
+else
+    nodeinfo=$(which nodeinfo)
+    tictac=$(which tictac)
+fi
+
+if [[ $l != "" ]]; then largs="-l $l" ; fi
+mach=$(nodeinfo -n $n $largs | grep node.machine | cut -d "=" -f 2)
+
+# Construct path from base
+workpath=
+if [[ ${base} == 0 ]] ; then workpath=/${n}${ext} ; fi
+
+# Return defined workbase if found - otherwise construct it
+if [[ -n "${SEQ_WORKBASE}" ]] ; then
+    echo ${mach}:${SEQ_WORKBASE}${workpath}
+else
+    if [ ! -d "${SEQ_EXP_HOME}" ]; then
+	echo "nodeout error: Invalid path SEQ_EXP_HOME=$SEQ_EXP_HOME"
+	exit 1
+    fi
+
+    if [[ $n == "" ]]; then
+	echo "Node must be defined"
+	exit 1
+    fi
+    
+    if [[ $l != "" ]]; then
+	fullnode=`$nodeinfo -n $n -l $l -f node`
+	fullnode=`echo $fullnode | cut -d "=" -f2`
+	mach=$(nodeinfo -n $n -l $l | grep node.machine | cut -d "=" -f 2)
+    else
+	fullnode=$n
+	mach=$(nodeinfo -n $n | grep node.machine | cut -d "=" -f 2)
+    fi
+    echo ${mach}:${SEQ_EXP_HOME}/hub/${mach}/work/$(tictac -f %Y%M%D%H%Min%S)${workpath}
+fi

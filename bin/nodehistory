@@ -1,0 +1,132 @@
+#!/bin/ksh93
+
+#/* Part of the Maestro sequencer software package.
+# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
+# *                          Environment Canada
+# *
+# * Maestro is free software; you can redistribute it and/or
+# * modify it under the terms of the GNU Lesser General Public
+# * License as published by the Free Software Foundation,
+# * version 2.1 of the License.
+# *
+# * Maestro is distributed in the hope that it will be useful,
+# * but WITHOUT ANY WARRANTY; without even the implied warranty of
+# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
+# * Lesser General Public License for more details.
+# *
+# * You should have received a copy of the GNU Lesser General Public
+# * License along with this library; if not, write to the
+# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
+# * Boston, MA 02111-1307, USA.
+# */
+
+#
+usage='usage: nodehistory -n node [-h,-sdate startdate, -edate enddate, -step hours]'
+
+msgjob=' node config not available: '
+
+arguments=$*
+
+eval `cclargs $0 \
+  -n        ""                      ""         "[Node         ]" \
+  -v        ""                      "1"        "[Verbose            ]" \
+  -h        ""                      ""         "[Display help       ]" \
+  -l        ""                      ""         "[Loop argument list ]" \
+  -sdate    "0"                     ""         "[Start date             ]" \
+  -edate    "99991231235959"        ""         "[End date  ]" \
+  -history  ""                      ""         "[Number of hours backwards from edate]" \
+  -filter   ""                      ""         "[Only read logs matching filter (ex: ??????06 -> day=6, ?????????12 ->hour=12]" \
+  ++ $arguments`
+
+if [[ $v != "" ]] ; then  
+  set -x
+fi 
+
+if [ "${SEQ_EXP_HOME}" == "" ]; then
+   echo "ERROR: SEQ_EXP_HOME not defined!\n"
+   exit 1
+fi
+
+if [ ! -d "${SEQ_EXP_HOME}" ]; then
+   echo "nodehistory error: Invalid path SEQ_EXP_HOME=$SEQ_EXP_HOME"
+   exit 1
+fi
+
+if [[ -n "${SEQ_BIN}" ]] ; then
+   nodeinfo=${SEQ_BIN}/nodeinfo
+else
+   nodeinfo=$(which nodeinfo)
+fi
+
+if [[ $n == "" ]]; then
+    echo "Node must be defined \n"
+    echo $Usage
+    exit 1
+fi
+
+if [[ $h != "" ]]; then
+   echo $Usage
+fi 
+
+if [[ $l != "" ]]; then
+   fullnode=`$nodeinfo -n $n -l $l -f node`
+   fullnode=${fullnode#*=} 
+   if [[ $fullnode = "" ]]; then
+       echo nodeinfo reported a problem - exitting.
+       exit 1
+   fi
+else
+   fullnode=$n
+fi
+
+# Parse $fullnode into nodeContainer, nodeLeaf, and nodeExt
+# fullnode has the form /path/to/node/nodeLeaf.ext where ext is defined by ext_re :
+subext_re='\(+[0-9A-Za-z^_]\+\)'                                # plus sign followed a string of [alphanumerics or '^' or '_']
+ext_re='\.'$subext_re'\+$'                                      # a dot followed by one or more subextensions at end of string
+nodeContainer=${fullnode%/*}                                    # Everything until the last slash
+nodeLeafWithExt=${fullnode##*/}                                 # Everything after the last slash
+nodeExt=$(echo $nodeLeafWithExt | grep --only-matching $ext_re) # Part of nodeLeaf matching ext_re
+nodeExt=${nodeExt#.}                                            # Remove the dot
+nodeLeaf=$(echo $nodeLeafWithExt | sed s/$ext_re//)             # nodeLeaf with extension removed.
+
+### pad dates to 14 date characters by multiplying by base 10.
+sdate=$(($sdate*10**(14-${#sdate})))
+edate=$(($edate*10**(14-${#edate})))
+
+if [[ $history != "" ]]; then
+    formatted_date="${edate:0:4}-${edate:4:2}-${edate:6:2} ${edate:8:2}:${edate:10:2}:${edate:12:2}"
+    sdate=$(date -d @$(( $(date -d  "$formatted_date" +%s)  - $history * 60 * 60)) +%Y%m%d%H%M%S) 
+fi
+
+if [[ (${#sdate} > 14) || (${#edate} > 14) ]] ; then
+   echo "sdate=$sdate edate=$edate"
+   echo "Arguments too long. Exiting."
+   exit 1
+fi
+    
+#echo "nodeContainer : $nodeContainer"
+#echo "nodeLeaf : $nodeLeaf"
+#echo "nodeExt : $nodeExt"
+
+for logFile in ${SEQ_EXP_HOME}/logs/${filter}*_nodelog
+do
+   filename=${logFile##*/}
+   dateLog=${filename%_nodelog} 
+   if [[ ( -r $logFile ) ]] ; then
+      if [[ ( ("$dateLog" > "$sdate" ) || ( "$dateLog" == "$sdate" ) ) && ( ("$dateLog" < "$edate" ) || ( "$dateLog" == "$edate"  )) ]]; then
+          echo "*** Datestamp=$dateLog ***"
+          grep "SEQNODE=${nodeContainer}/${nodeLeaf}:" $logFile | grep ":SEQLOOP=${nodeExt}:" |
+          # the sed part does the following
+          # 1) remove the node part from the output
+          # 2) remove the node loop part from the output
+          # 3) combines msgtype&seqmsg content into message
+          sed -e "s,:SEQNODE=${nodeContainer}/${nodeLeaf}:, ," \
+          -e "s,:SEQLOOP=${nodeExt}:,," \
+          -e "s,MSGTYPE=,MESSAGE=," \
+          -e "s,SEQMSG=, ," 
+          echo ""
+      fi
+   else
+      echo "log file $logFile not found!"
+   fi
+done
