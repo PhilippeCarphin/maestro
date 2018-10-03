@@ -5,10 +5,10 @@ SHELL := bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
-VERSION=$(shell ${PWD}/scripts/get_repo_version.py)
-SSMPACKAGE=maestro_${VERSION}_${ORDENV_PLAT}
-BUILD_PLATFORM_FOLDER=${PWD}/build/${SSMPACKAGE}
-BIN_FOLDER=${BUILD_PLATFORM_FOLDER}/bin
+export VERSION=$(shell ${PWD}/scripts/get_repo_version.py)
+export SSMPACKAGE=maestro_${VERSION}_${ORDENV_PLAT}
+export BUILD_PLATFORM_FOLDER=${PWD}/build/${SSMPACKAGE}
+export BIN_FOLDER=${BUILD_PLATFORM_FOLDER}/bin
 CC=cc
 
 all: clean
@@ -37,7 +37,7 @@ all: clean
 			make -C ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
 	fi
 
-	cd .ssm.d ; ../scripts/create_ssm_control_files_here.sh
+	cd ${BUILD_PLATFORM_FOLDER}/.ssm.d ; . ../../../scripts/create_ssm_control_files_here.sh
 	
 	./scripts/package-ssm.sh
 
