@@ -11,7 +11,7 @@ TITLE="maestro"
 
 echo "Package: ${TITLE}
 Version: ${VERSION}
-Platform: ${ORDENV_PLATFORM}
+Platform: ${ORDENV_PLAT}
 Maintainer: ${USER}
 BuildInfo:
 Description: ${DESCRIPTION}" > control
@@ -19,7 +19,9 @@ Description: ${DESCRIPTION}" > control
 echo "{
 		\"description\": \"Maestro is a suite of tools which organize, visualize, schedule, validate, and submit tasks to computer systems.\",
 		\"name\": \"${TITLE}\",
-		\"platform\": \"${PLATFORM}\",
+		\"platform\": \"${ORDENV_PLAT}\",
 		\"summary\": \"Maestro Suite\",
 		\"version\": \"${VERSION}\"
 }" > control.json
+
+echo "export SEQ_MAESTRO_VERSION=${VERSION}" > profile.sh
