@@ -23,14 +23,14 @@
 
 [[ -z ${SEQ_MAESTRO_DOMAIN} ]] && echo "SEQ_MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 
 
-if ! [[ -f ${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_${ORDENV_PLAT}/bin/maestro_wish8.5 ]] ; then 
-    echo "Installation incomplete. tcl/tk package must be installed within $SEQ_MAESTRO_DOMAIN." 
+if ! [[ -f ${SEQ_TCL_BIN}/bin/maestro_wish8.5 ]] ; then 
+    echo "Installation incomplete. tcl/tk bin not found." 
     exit 1 
 fi 
 
-export PATH=${PATH}:${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_${ORDENV_PLAT}/bin
-export TCL_LIBRARY=${TCL_LIBRARY}:${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_${ORDENV_PLAT}/lib/tcl8.5
-export TK_LIBRARY=${TK_LIBRARY}:${SEQ_MAESTRO_DOMAIN}/tcl-tk_8.5.11_${ORDENV_PLAT}/lib/tk8.5
+export PATH=${PATH}:${SEQ_TCL_BIN}
+export TCL_LIBRARY=${TCL_LIBRARY}:${SEQ_TCL_SRC}/lib/tcl8.5
+export TK_LIBRARY=${TK_LIBRARY}:${SEQ_TCL_SRC}/lib/tk8.5
 
 TCLSH=$(which maestro_wish8.5)
 
@@ -58,7 +58,7 @@ test "${SEQ_MANAGER_BIN}" == "" && print "\nSEQ_MANAGER_BIN not defined! Exiting
 
 if [ ! -s $HOME/.maestrorc ];then
    # -- have to create one and Populate it with minimum data
-   cp ${SEQ_MANAGER_BIN}/../etc/config/maestrorc $HOME/.maestrorc
+   cp ${SEQ_MANAGER_SRC}/etc/config/maestrorc $HOME/.maestrorc
 fi
 
 arguments=$*
@@ -66,4 +66,4 @@ eval `cclargs $0 "[xm]" \
   -exp          ""      ""      "[experiment path]" \
   ++ $arguments`
 
-$TCLSH ${SEQ_MANAGER_BIN}/../lib/x_manager/XPManager.tcl $arguments &
+$TCLSH ${SEQ_MANAGER_SRC}/lib/x_manager/XPManager.tcl $arguments &
