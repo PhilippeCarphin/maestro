@@ -9,17 +9,25 @@ Platform=`uname -s` ; [[ $Platform = Linux ]] && Platform=${Platform}-`uname -m`
 cp ${packageHome}/.ssm.d/profile.sh ${profilePath}
 
 BIN_FOLDER=${packageHome}/bin
-
+TCL_SRC=${packageHome}/src/tcl
+TCL_BIN_FOLDER=${TCL_SRC}/tcl_bin
+XM_SRC=${packageHome}/src/xm
+ 
 # Soft link all bins to the root bin folder.
-# Do not copy tcl bins however, because it may clash with system tcl.
 ln -s ${packageHome}/src/core/bin/* ${BIN_FOLDER}/
 ln -s ${packageHome}/src/utilities/bin/* ${BIN_FOLDER}/
 ln -s ${packageHome}/src/xflow/bin/* ${BIN_FOLDER}/
 ln -s ${packageHome}/src/xm/bin/* ${BIN_FOLDER}/
 
+# tcl bins go in a special bins folder, so that they do not clash with a possible system installable of tcl
+ln -s ${packageHome}/src/tcl/bin ${TCL_BIN_FOLDER}
+
 echo "export SEQ_PACKAGE_HOME=${packageHome}" >> ${profilePath}
 echo "export SEQ_BIN=${BIN_FOLDER}" >> ${profilePath}
+echo "export SEQ_TCL_BIN=${TCL_BIN_FOLDER}" >> ${profilePath}
+echo "export SEQ_TCL_SRC=${TCL_SRC}" >> ${profilePath}
 echo "export SEQ_MANAGER_BIN=${BIN_FOLDER}" >> ${profilePath}
+echo "export SEQ_MANAGER_SRC=${XM_SRC}" >> ${profilePath}
 echo "export SEQ_MANAGER_DOMAIN=${domainHome}" >> ${profilePath}
 echo "export SEQ_UTILS_BIN=${BIN_FOLDER}" >> ${profilePath}
 echo "export SEQ_UTILS_DOMAIN=${domainHome}" >> ${profilePath}

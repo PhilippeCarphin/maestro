@@ -83,34 +83,34 @@ namespace eval XPManager {
 
     # -- buttons icones
     foreach img {bug XpSel FoldXp Tool Refresh Ok Cancel Close Add Stop Remove Save Next Previous Apply Help Quit Notify Up font} {
-               eval variable img_$img [image create photo -file ${SEQ_MANAGER_BIN}/../etc/images/$img.gif]
+               eval variable img_$img [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/$img.gif]
     }
 
     # -- Audit
-    variable img_clsdFolderImg     [image create photo -file ${SEQ_MANAGER_BIN}/../etc/images/clsdFolder.gif]
-    variable img_openFolderImg     [image create photo -file ${SEQ_MANAGER_BIN}/../etc/images/openFolder.gif]
-    variable img_fileImg           [image create photo -file ${SEQ_MANAGER_BIN}/../etc/images/file.gif]
+    variable img_clsdFolderImg     [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/clsdFolder.gif]
+    variable img_openFolderImg     [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/openFolder.gif]
+    variable img_fileImg           [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/file.gif]
 
     # -- Palacard
-    variable img_placard [image create photo -file ${SEQ_MANAGER_BIN}/../etc/images/placard.gif]
+    variable img_placard [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/placard.gif]
     
     # -- Exp Icons
-    variable img_ExpIcon           [image create photo -file ${SEQ_MANAGER_BIN}/../etc/images/xp.gif]
-    variable img_ExpNoteIcon       [image create photo -file ${SEQ_MANAGER_BIN}/../etc/images/xp.note.gif]
-    variable img_ExpSunny          [image create photo -file ${SEQ_MANAGER_BIN}/../etc/images/Sunny.gif]
-    variable img_ExpThunder        [image create photo -file ${SEQ_MANAGER_BIN}/../etc/images/Thunder.gif]
-    variable img_ExpThunderstorms  [image create photo -file ${SEQ_MANAGER_BIN}/../etc/images/Thunderstorms.gif]
+    variable img_ExpIcon           [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/xp.gif]
+    variable img_ExpNoteIcon       [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/xp.note.gif]
+    variable img_ExpSunny          [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/Sunny.gif]
+    variable img_ExpThunder        [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/Thunder.gif]
+    variable img_ExpThunderstorms  [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/Thunderstorms.gif]
 
     foreach script {Dialogs.tcl XTree.tcl TreeUtil.tcl NewExp.tcl Audit.tcl Import.tcl XpBrowser.tcl SubmitBug.tcl About.tcl} {
-	namespace inscope :: source ${SEQ_MANAGER_BIN}/../lib/x_manager/$script
+	namespace inscope :: source ${SEQ_MANAGER_SRC}/lib/x_manager/$script
     }
 
     foreach script { Preferences.tcl XpOptions.tcl dkffont.tcl } {
-	namespace inscope :: source ${SEQ_MANAGER_BIN}/../lib/common/$script
+	namespace inscope :: source ${SEQ_MANAGER_SRC}/lib/common/$script
     }
    
     # this is for the exp's configs *.cfg files
-     namespace inscope :: source ${SEQ_MANAGER_BIN}/../lib/f_manager/ExpModTreeView.tcl
+     namespace inscope :: source ${SEQ_MANAGER_SRC}/lib/f_manager/ExpModTreeView.tcl
 }
 
 proc XPManager::create { {startup_exp ""} } {
@@ -139,9 +139,9 @@ proc XPManager::create { {startup_exp ""} } {
    
 
    if { [info exists ::env(CMCLNG)] == 0 || [string compare "$::env(CMCLNG)" "english"] == 0 } {
-              source ${SEQ_MANAGER_BIN}/../lib/x_manager/menu_english.tcl
+              source ${SEQ_MANAGER_SRC}/lib/x_manager/menu_english.tcl
    } else {
-              source ${SEQ_MANAGER_BIN}/../lib/x_manager/menu_francais.tcl
+              source ${SEQ_MANAGER_SRC}/lib/x_manager/menu_francais.tcl
    }
 
    set prgtext   "Creating MainFrame..."
@@ -233,7 +233,7 @@ proc XPManager::_create_intro { } {
 
 
     set ximg  [label $top.x -image $XPManager::img_placard -background white]
-    set bwimg [label $ximg.bw -bitmap @${SEQ_MANAGER_BIN}/../etc/images/xm.xbm -foreground grey90 -background white]
+    set bwimg [label $ximg.bw -bitmap @${SEQ_MANAGER_SRC}/etc/images/xm.xbm -foreground grey90 -background white]
     
     
     set frame [frame $ximg.f -background white]
@@ -423,7 +423,7 @@ proc XPManager::ParseOpParExpDepot {} {
            $prefDparser alias DefaultModDepot XPManager::set_prefs_cmd_DefaultModDepot
 
            set cmd {
-                   set fid [open [file join ${SEQ_MANAGER_BIN}/../etc/config/ xm.cfg ] r]
+                   set fid [open [file join ${SEQ_MANAGER_SRC}/etc/config/ xm.cfg ] r]
                    set script [read $fid]
                    close $fid
                    $prefDparser eval $script
