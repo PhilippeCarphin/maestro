@@ -21,6 +21,7 @@
 
 
 global SEQ_MANAGER_BIN
+global SEQ_MANAGER_SRC
 global env
 global MUSER 
 global array ExperimentInode
@@ -30,9 +31,8 @@ global List_Exps
 set List_Exps {}
 set ListAllExperiments {}
 
-# -- read args --> Crap this should not be here
-#set SEQ_MANAGER_BIN [lindex $argv 0] 
 set SEQ_MANAGER_BIN $env(SEQ_MANAGER_BIN)
+set SEQ_MANAGER_SRC $env(SEQ_MANAGER_SRC)
 
 # -- get user
 set MUSER [exec id -nu]
@@ -57,7 +57,7 @@ proc bug_Report {error} {
 
 namespace eval XPManager {
 
-    global SEQ_MANAGER_BIN 
+    global SEQ_MANAGER_BIN SEQ_MANAGER_SRC
 
     variable _wfont
 
@@ -114,7 +114,7 @@ namespace eval XPManager {
 }
 
 proc XPManager::create { {startup_exp ""} } {
-    global SEQ_MANAGER_BIN MUSER startupExp
+    global SEQ_MANAGER_BIN SEQ_MANAGER_SRC MUSER startupExp
     
     variable _wfont
     variable notebook
@@ -224,7 +224,7 @@ proc XPManager::update_font { newfont } {
 
 proc XPManager::_create_intro { } {
     
-    global SEQ_MANAGER_BIN
+    global SEQ_MANAGER_BIN SEQ_MANAGER_SRC
 
     set top [toplevel .intro -relief raised -borderwidth 2]
 
@@ -294,11 +294,11 @@ proc XPManager::parseCmdOptions {} {
 
 proc XPManager::main {} {
    
-    global SEQ_MANAGER_BIN
+    global SEQ_MANAGER_BIN SEQ_MANAGER_SRC
 
-    lappend ::auto_path [file dirname ${SEQ_MANAGER_BIN}]
-    lappend ::auto_path [file dirname ${SEQ_MANAGER_BIN}]/lib/common
-    lappend ::auto_path [file dirname ${SEQ_MANAGER_BIN}]/lib/f_manager
+    lappend ::auto_path ${SEQ_MANAGER_SRC}
+    lappend ::auto_path ${SEQ_MANAGER_SRC}/lib/common
+    lappend ::auto_path ${SEQ_MANAGER_SRC}/lib/f_manager
 
     namespace inscope :: package require BWidget 1.9
 
@@ -388,32 +388,11 @@ proc XPManager::ListExperiments {} {
   
     set buf1 {}
     set buf2 {}
-    # set buf1 [XTree::FindExps $XPManager::ExpOpsRepository]
-    # set buf2 [XTree::FindExps $XPManager::ExpParRepository]
-
-    # -- Add user stuf now all
-    # set buf3 {}
-    # set user_list [Preferences::GetTabListDepots "none" "r"]
-    # foreach lusrd $user_list {
-    #    lappend buf3 {*}[XTree::FindExps $lusrd]
-    # }
-
-    # set ListAllExperiments [concat $buf1 $buf2 $buf3]
-
-    # -- Now find Experiment Inode
-    # set ExperimentInode [TreeUtil::FindExpInode $ListAllExperiments]
-
-    # DEBUG
-    #dict for {id info} $ExperimentInode {
-    #	    dict with info {
-    #              puts "ExpId=$id inode=$inode Exp_path=$experiment"
-    #	    }
-    #}
 }
 
 proc XPManager::ParseOpParExpDepot {} {
            
-           global SEQ_MANAGER_BIN
+           global SEQ_MANAGER_BIN SEQ_MANAGER_SRC
 
            set prefDparser [interp create -safe]
            $prefDparser alias ExpOpsRepository    XPManager::set_prefs_cmd_ExpOpsRepository

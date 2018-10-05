@@ -10,7 +10,7 @@ cp ${packageHome}/.ssm.d/profile.sh ${profilePath}
 
 BIN_FOLDER=${packageHome}/bin
 TCL_SRC=${packageHome}/src/tcl
-TCL_BIN_FOLDER=${TCL_SRC}/tcl_bin
+TCL_BIN_FOLDER=${packageHome}/tcl_bin
 XM_SRC=${packageHome}/src/xm
  
 # Soft link all bins to the root bin folder.
