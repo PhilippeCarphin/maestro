@@ -1112,7 +1112,7 @@ proc Preferences::MaestroEventsCreateWidget { frm } {
 
 proc Preferences::WallPaperIconsCreateWidget { frm } {
 
-      global SEQ_MANAGER_BIN
+      global SEQ_MANAGER_BIN SEQ_MANAGER_SRC
       variable  _WallPaper
       variable  SaveBI
       variable  CancelBI
@@ -1624,7 +1624,7 @@ proc Preferences::ParseUserMaestrorc { } {
 
 proc Preferences::setPrefValues { PName name args } {
           
-          global SEQ_MANAGER_BIN
+          global SEQ_MANAGER_BIN SEQ_MANAGER_SRC
 	
           set word [join $args " "]
 	  switch $PName {
@@ -1749,7 +1749,7 @@ proc Preferences::GetTabListDepots { nbk type} {
 
 
 proc Preferences::set_liste_Wall_Papers {} {
-     global SEQ_MANAGER_BIN
+          global SEQ_MANAGER_BIN SEQ_MANAGER_SRC
 
      # does user have access to images ?
      if {[catch {file stat ${SEQ_MANAGER_SRC}/etc/bg_templates entry} err]} {
@@ -1763,7 +1763,7 @@ proc Preferences::set_liste_Wall_Papers {} {
 
 proc Preferences::set_prefs_default {} {
 
-              global SEQ_MANAGER_BIN
+     global SEQ_MANAGER_BIN
 
               set listPref {}
 
