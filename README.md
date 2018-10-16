@@ -19,11 +19,11 @@ To compile Maestro and create an SSM package simply use the makefile by typing:
 
 ```bash
  make
+```
 
-# The first compile may take awhile because of compiling Tcl and its libraries.
-# However, if you create a shortcut called "_tcl" in the maestro folder 
-# (which points to a previous tcl compilation) you can speed up compilation a lot:
+The first compile may take awhile because of compiling Tcl and its libraries. However, if you create a shortcut called "_tcl" in the maestro folder (which points to a previous tcl compilation) you can speed up compilation a lot:
 
+```bash
  cd maestro
  
  # This make will be slow
