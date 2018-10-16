@@ -1,41 +1,39 @@
 #!/bin/ksh
-domainHome=$1
-packageHome=$2
-profileDirPath=${packageHome}/etc/profile.d
-packageName=${packageHome##*/}
-profilePath=${profileDirPath}/${packageName}.sh
-mkdir -p ${profileDirPath}
-Platform=`uname -s` ; [[ $Platform = Linux ]] && Platform=${Platform}-`uname -m`
-cp ${packageHome}/.ssm.d/profile.sh ${profilePath}
+DOMAIN_HOME=$1
+PACKAGE_HOME=$2
+PROFILE_D=${PACKAGE_HOME}/etc/profile.d
+PACKAGE_NAME=${PACKAGE_HOME##*/}
+PROFILE_SCRIPT=${PROFILE_D}/${PACKAGE_NAME}.sh
+mkdir -p ${PROFILE_D}
+cp ${PACKAGE_HOME}/.ssm.d/profile.sh ${PROFILE_SCRIPT}
 
-BIN_FOLDER=${packageHome}/bin
-TCL_SRC=${packageHome}/src/tcl
-TCL_BIN_FOLDER=${packageHome}/tcl_bin
-XM_SRC=${packageHome}/src/xm
+BIN_FOLDER=${PACKAGE_HOME}/bin
+TCL_BIN_FOLDER=${PACKAGE_HOME}/tcl_bin
  
 # Soft link all bins to the root bin folder.
-ln -s ${packageHome}/src/core/bin/* ${BIN_FOLDER}/
-ln -s ${packageHome}/src/utilities/bin/* ${BIN_FOLDER}/
-ln -s ${packageHome}/src/xflow/bin/* ${BIN_FOLDER}/
-ln -s ${packageHome}/src/xm/bin/* ${BIN_FOLDER}/
+ln -s ${PACKAGE_HOME}/src/core/bin/* ${BIN_FOLDER}/
+ln -s ${PACKAGE_HOME}/src/utilities/bin/* ${BIN_FOLDER}/
+ln -s ${PACKAGE_HOME}/src/xflow/bin/* ${BIN_FOLDER}/
+ln -s ${PACKAGE_HOME}/src/xm/bin/* ${BIN_FOLDER}/
 
-# tcl bins go in a special bins folder, so that they do not clash with a possible system installable of tcl
-ln -s ${packageHome}/src/tcl/bin ${TCL_BIN_FOLDER}
+# tcl bins go in a special bins folder, so that they do not clash with a possible system installation of tcl
+rm -f ${TCL_BIN_FOLDER}
+ln -s ${PACKAGE_HOME}/src/tcl/bin ${TCL_BIN_FOLDER}
 
-echo "export SEQ_PACKAGE_HOME=${packageHome}" >> ${profilePath}
-echo "export SEQ_BIN=${BIN_FOLDER}" >> ${profilePath}
-echo "export SEQ_TCL_BIN=${TCL_BIN_FOLDER}" >> ${profilePath}
-echo "export SEQ_TCL_SRC=${TCL_SRC}" >> ${profilePath}
-echo "export SEQ_MANAGER_BIN=${BIN_FOLDER}" >> ${profilePath}
-echo "export SEQ_MANAGER_SRC=${XM_SRC}" >> ${profilePath}
-echo "export SEQ_MANAGER_DOMAIN=${domainHome}" >> ${profilePath}
-echo "export SEQ_UTILS_BIN=${BIN_FOLDER}" >> ${profilePath}
-echo "export SEQ_UTILS_DOMAIN=${domainHome}" >> ${profilePath}
-echo "export SEQ_XFLOW_BIN=${BIN_FOLDER}" >> ${profilePath}
-echo "export SEQ_XFLOW_DOMAIN=${domainHome}" >> ${profilePath}
+echo "
+export SEQ_PACKAGE_HOME=${PACKAGE_HOME}
+export SEQ_BIN=${BIN_FOLDER}
+export SEQ_SRC=${PACKAGE_HOME}/src
+export SEQ_TCL_BIN=${TCL_BIN_FOLDER}
+export SEQ_TCL_SRC=${PACKAGE_HOME}/src/tcl
+export SEQ_MANAGER_SRC=${PACKAGE_HOME}/src/xm
 
-echo "export SEQ_MAESTRO_DOMAIN=${domainHome}" >> ${profilePath}
-echo "export SEQ_MAESTRO_SHORTCUT=\". ssmuse-sh -d ${domainHome}\"" >> ${profilePath}
-echo 'export TMPDIR=${TMPDIR:-/tmp/$USER/$$} && mkdir -p ${TMPDIR}' >> ${profilePath}
-echo 'export TRUE_HOST=${TRUE_HOST:-$(hostname)}' >> ${profilePath}
-chmod 644 ${profilePath}
+export SEQ_MAESTRO_DOMAIN=${DOMAIN_HOME}
+export SEQ_MAESTRO_SHORTCUT=\". ssmuse-sh -d ${DOMAIN_HOME}\"
+export TMPDIR=${TMPDIR:-/tmp/$USER/$$} && mkdir -p ${TMPDIR}
+export TRUE_HOST=${TRUE_HOST:-$(hostname)}
+
+" >> ${PROFILE_SCRIPT}
+
+chmod 644 ${PROFILE_SCRIPT}
+

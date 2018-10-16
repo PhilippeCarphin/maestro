@@ -2,7 +2,7 @@
 
 # Description: this script displays a dialog to the maestro user
 # that the package he is using is deprecated; the message
-# is only displayed if the ${SEQ_XFLOW_BIN}/../etc/.deprecated
+# is only displayed if the ${SEQ_SRC}/etc/.deprecated
 # is available.
 # The content of the .deprecated file will be used as is as part of the
 # message sent to the user.
@@ -10,7 +10,7 @@
 # are removed and the names of the packages.
 
 #set -x
-deprecateFile=${SEQ_XFLOW_BIN}/../etc/.deprecated
+deprecateFile=${SEQ_SRC}/etc/.deprecated
 if [[ -f ${deprecateFile} ]] ; then
    #echo "deprecated file found"
    beginMsg="The current maestro package is deprecated and will be removed shortly.\n\n"
