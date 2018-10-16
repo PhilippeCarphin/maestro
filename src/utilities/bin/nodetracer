@@ -165,6 +165,6 @@ fi
 [[ $c == 1 ]] && rm -f $i
 
 if [[ "$type" != "success" && "$type" != "submission" && "$SEQ_ABORT_EMAILS" != "" ]]; then
-  echo "To get the abort listing: \n1) Load maestro's ssm package\n2) Run commands:\n\texport SEQ_EXP_HOME=$e \n\t$SEQ_UTILS_BIN/nodelister -f $time_dest"  |Mail -s "ABORT: nodename=$fullnode exp=$e date=$SEQ_DATE" $SEQ_ABORT_EMAILS
+  echo "To get the abort listing: \n1) Load maestro's ssm package\n2) Run commands:\n\texport SEQ_EXP_HOME=$e \n\t$SEQ_BIN/nodelister -f $time_dest"  |Mail -s "ABORT: nodename=$fullnode exp=$e date=$SEQ_DATE" $SEQ_ABORT_EMAILS
 fi
 

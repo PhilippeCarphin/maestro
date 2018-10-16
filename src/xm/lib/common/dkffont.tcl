@@ -4,7 +4,7 @@ package require autoscroll
 package require tooltip
 package require log
 
-global env SEQ_MANAGER_BIN
+global env SEQ_BIN
 
 lappend ::auto_path [file dirname ${SEQ_MANAGER_SRC}]
 lappend ::auto_path [file dirname ${SEQ_MANAGER_SRC}]/lib/common

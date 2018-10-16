@@ -87,7 +87,7 @@ EOF
 
 if [[ ! -f $HOME/.maestrorc ]] ; then 
    printf "\nPreferences file not found. Copying default maestrorc preferences. ($HOME/.maestrorc)\n"
-   cp $SEQ_UTILS_BIN/../data/.maestrorc $HOME/ 
+   cp $SEQ_BIN/../data/.maestrorc $HOME/ 
 fi 
 
 if [[ ! -f $HOME/.suites/default_resources.def ]] ; then

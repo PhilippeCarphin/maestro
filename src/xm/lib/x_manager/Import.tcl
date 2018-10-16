@@ -492,7 +492,7 @@ proc Import::CheckName { widgt } {
 
 proc Import::ExecImport {win newname srcexp dest git cte mklinks} {
       
-      global SEQ_MANAGER_BIN
+      global SEQ_BIN
 
       variable ExeImport
       variable ERROR  0
@@ -533,7 +533,7 @@ proc Import::ExecImport {win newname srcexp dest git cte mklinks} {
       $WinInfoWidget insert end "Source=$srcexp \n"
       $WinInfoWidget insert end "Destination=$dest \n"
 
-      set ImportScript "${SEQ_MANAGER_BIN}/import_maestro_exp"
+      set ImportScript "${SEQ_BIN}/import_maestro_exp"
 
       if { $git == 1 } {
               set arg_git "-g"

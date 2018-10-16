@@ -221,7 +221,7 @@ proc XpBrowser::create { frm } {
       $Bmflow configure -command [list XpBrowser::ExpSelected $Bmflow]
 
       set Bxflow     [button $subfcb.xflow  -text $Dialogs::XpB_xflow     -command {\
-                      catch {[exec ${SEQ_MANAGER_BIN}/Exec_MaestroXFlow.ksh $::_XpBrSelected &]}}]
+                      catch {[exec ${SEQ_BIN}/Exec_MaestroXFlow.ksh $::_XpBrSelected &]}}]
 
       set Bimport    [button $subfcb.import -text $Dialogs::XpB_import    -command {\
                       Import::ImportExp $::_XpBrSelected}]

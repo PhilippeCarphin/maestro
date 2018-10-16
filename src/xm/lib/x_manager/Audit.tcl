@@ -510,7 +510,7 @@ proc Audit::CreateTabliste {dir TabFrame Frame kaka} {
 
 proc Audit::ViewDiff {tbl} {
 
-        global SEQ_MANAGER_BIN
+        global SEQ_BIN
         
 	set tclsh [ exec which maestro_wish8.5]
 
@@ -549,7 +549,7 @@ proc Audit::ViewDiff {tbl} {
                       set fpath2 ${dir2}/$opt
 
 		      # -- We should check existence of file 1 & 2 before calling tkdiff
-                      exec  ${tclsh} ${SEQ_MANAGER_BIN}/tkdiff $fpath1 $fpath2 &
+                      exec  ${tclsh} ${SEQ_BIN}/tkdiff $fpath1 $fpath2 &
                 } else {
 		        Dialogs::show_msgdlg $Dialogs::Dlg_NoAsciiFile ok warning "" .audit
                 }

@@ -1869,9 +1869,9 @@ static int go_submit(const char *_signal, char *_flow , const SeqNodeDataPtr _no
          SeqUtil_TRACE(TL_FULL_TRACE,"maestro.go_submit() ord return status: %d \n",error_status);
       }
       if ( strlen( loopArgs ) > 0 ) {
-         sprintf(nodetracercmd, "%s/nodetracer -n %s -l %s -d %s -e %s -type submission -i %s -c", getenv("SEQ_UTILS_BIN"), _nodeDataPtr->name, loopArgs, _nodeDataPtr->datestamp, _nodeDataPtr->expHome, submissionDir);
+         sprintf(nodetracercmd, "%s/nodetracer -n %s -l %s -d %s -e %s -type submission -i %s -c", getenv("SEQ_BIN"), _nodeDataPtr->name, loopArgs, _nodeDataPtr->datestamp, _nodeDataPtr->expHome, submissionDir);
       } else {
-         sprintf(nodetracercmd, "%s/nodetracer -n %s -d %s -e %s -type submission -i %s -c", getenv("SEQ_UTILS_BIN"), _nodeDataPtr->name, _nodeDataPtr->datestamp, _nodeDataPtr->expHome, submissionDir);
+         sprintf(nodetracercmd, "%s/nodetracer -n %s -d %s -e %s -type submission -i %s -c", getenv("SEQ_BIN"), _nodeDataPtr->name, _nodeDataPtr->datestamp, _nodeDataPtr->expHome, submissionDir);
       }
       nodetracer_status = system(nodetracercmd);
       if ( nodetracer_status ) {
