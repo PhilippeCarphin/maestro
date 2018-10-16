@@ -132,8 +132,6 @@ proc xflow_showSupportCallback { exp_path datestamp } {
    ExpOptions_showSupport ${exp_path} ${hour} [xflow_getWidgetName ${exp_path} ${datestamp} top_frame]
 }
 
-# no fancy format here, it's a simple dump of the content
-# of $SEQ_BIN/../etc/commands_summary.txt into a text widget
 proc xflow_maestroCmds { parent } {
    global env
    set topW .maestro_cmds_top
