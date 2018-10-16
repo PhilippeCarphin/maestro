@@ -20,9 +20,9 @@
 # */
 
 export SEQ_EXP_HOME=$1
-if [[ "${SEQ_XFLOW_BIN}" == "" ]]; then 
-   echo "SEQ_XFLOW_BIN not defined..."
-   errMsg="SEQ_XFLOW_BIN not defined, cannot start xflow!"
+if [[ "${SEQ_BIN}" == "" ]]; then 
+   echo "SEQ_BIN not defined..."
+   errMsg="SEQ_BIN not defined, cannot start xflow!"
    kdialogFound=0
    test $(which kdialog) && kdialogFound=1
    if [[ ${kdialogFound} == "1"  ]] ; then

@@ -9,8 +9,8 @@ package require img::png
 package require autoscroll
 
 global env
-if { ! [info exists env(SEQ_XFLOW_BIN) ] } {
-   puts "Environment variable SEQ_XFLOW_BIN must be defined!"
+if { ! [info exists env(SEQ_BIN) ] } {
+   puts "Environment variable SEQ_BIN must be defined!"
    exit
 }
 

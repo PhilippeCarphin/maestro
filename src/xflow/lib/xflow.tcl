@@ -133,7 +133,7 @@ proc xflow_showSupportCallback { exp_path datestamp } {
 }
 
 # no fancy format here, it's a simple dump of the content
-# of $SEQ_XFLOW_BIN/../etc/commands_summary.txt into a text widget
+# of $SEQ_BIN/../etc/commands_summary.txt into a text widget
 proc xflow_maestroCmds { parent } {
    global env
    set topW .maestro_cmds_top
@@ -4667,7 +4667,7 @@ proc xflow_parseCmdOptions {} {
    }
    # this section is only executed when xflow is run as a standalone application
    if { ${XFLOW_STANDALONE} == 1 } {
-      puts "SEQ_XFLOW_BIN=$env(SEQ_XFLOW_BIN)"
+      puts "SEQ_BIN=$env(SEQ_BIN)"
       SharedData_init
 
       if { ! ($params(rc) == "") } {
@@ -4970,8 +4970,8 @@ proc xflow_checkExpPermission { {exp_path ""} } {
 }
 
 if { ! [info exists XFLOW_STANDALONE] || ${XFLOW_STANDALONE} == "1" } {
-   if { ! [info exists env(SEQ_XFLOW_BIN) ] } {
-      puts "SEQ_XFLOW_BIN must be defined!"
+   if { ! [info exists env(SEQ_BIN) ] } {
+      puts "SEQ_BIN must be defined!"
       exit
    }
    set lib_dir $env(SEQ_SRC)/xflow/lib

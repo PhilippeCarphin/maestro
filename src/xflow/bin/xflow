@@ -15,8 +15,8 @@ if [[ "${TCLSH}" == "" ]] ; then
    exit 
 fi
 
-if [[ "${SEQ_XFLOW_BIN}" == "" ]] ; then
-   echo "SEQ_XFLOW_BIN environment variable not defined! Exiting..." >&2
+if [[ "${SEQ_BIN}" == "" ]] ; then
+   echo "SEQ_BIN environment variable not defined! Exiting..." >&2
    exit 
 fi
 

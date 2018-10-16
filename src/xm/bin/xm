@@ -45,8 +45,8 @@ fi
        export CMCLNG=english
 #fi
 
-# -- export SEQ_MANAGER_BIN
-test "${SEQ_MANAGER_BIN}" == "" && print "\nSEQ_MANAGER_BIN not defined! Exiting...\n" && exit 1
+# -- export SEQ_BIN
+test "${SEQ_BIN}" == "" && print "\nSEQ_BIN not defined! Exiting...\n" && exit 1
 
 # create default depot if not exist
 [ -d $HOME/.suites ] || mkdir $HOME/.suites
