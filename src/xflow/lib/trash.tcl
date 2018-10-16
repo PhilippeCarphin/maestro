@@ -5,7 +5,7 @@ package require tooltip
 package require log
 
 global env
-set lib_dir $env(SEQ_XFLOW_BIN)/../lib
+set lib_dir $env(SEQ_SRC)/lib
 # puts "lib_dir=$lib_dir"
 set auto_path [linsert $auto_path 0 $lib_dir ]
 
@@ -520,7 +520,7 @@ namespace eval ::trashSel {
     # based on the current filename.
     proc 'load_resources {filebase} {
         global env
-        set dirbase $env(SEQ_XFLOW_BIN)/../etc/constants/
+        set dirbase $env(SEQ_SRC)/etc/constants/
 	set filebase [file rootname $filebase]
         set filebase [file tail $filebase]
 	option readfile ${dirbase}${filebase}.ad widgetDefault

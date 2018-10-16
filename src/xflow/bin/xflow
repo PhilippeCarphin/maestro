@@ -4,9 +4,9 @@
 # check tcl/tk installation: 
 [[ -z ${SEQ_MAESTRO_DOMAIN} ]] && echo "SEQ_MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 
 
-export PATH=${PATH}:${SEQ_PACKAGE_HOME}/src/tcl/bin
-export TCL_LIBRARY=${TCL_LIBRARY}:${SEQ_PACKAGE_HOME}/src/tcl/lib/tcl8.5
-export TK_LIBRARY=${TK_LIBRARY}:${SEQ_PACKAGE_HOME}/src/tcl/lib/tk8.5
+export PATH=${PATH}:${SEQ_SRC}/tcl/bin
+export TCL_LIBRARY=${TCL_LIBRARY}:${SEQ_SRC}/tcl/lib/tcl8.5
+export TK_LIBRARY=${TK_LIBRARY}:${SEQ_SRC}/tcl/lib/tk8.5
 
 TCLSH=$(which maestro_wish8.5)
 
@@ -20,7 +20,7 @@ if [[ "${SEQ_XFLOW_BIN}" == "" ]] ; then
    exit 
 fi
 
-[[ -f "${SEQ_XFLOW_BIN}/../etc/check_deprecation" ]] && . "${SEQ_XFLOW_BIN}/../etc/check_deprecation"
+[[ -f "${SEQ_SRC}/etc/check_deprecation" ]] && . "${SEQ_SRC}/etc/check_deprecation"
 
 arguments=$*
 eval `cclargs $0 "[maestro gui]" \
@@ -72,6 +72,6 @@ if [[ "${debug}" = "1" ]] ; then
    debug_opt="-debug"
 fi
 
-echo $TCLSH ${SEQ_PACKAGE_HOME}/src/xflow/lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt}
+echo $TCLSH ${SEQ_SRC}/xflow/lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt}
 export NO_STOP_MESSAGE=on
-$TCLSH ${SEQ_PACKAGE_HOME}/src/xflow/lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt} ${exp_opt}
+$TCLSH ${SEQ_SRC}/xflow/lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt} ${exp_opt}

@@ -24,8 +24,8 @@ package require tooltip
 package require log
 
 SharedData_init
-SharedData_setMiscData IMAGE_DIR $env(SEQ_PACKAGE_HOME)/src/xm/etc/images
-SharedData_setMiscData BG_TEMPLATES_DIR $env(SEQ_PACKAGE_HOME)/src/xm/etc/bg_templates
+SharedData_setMiscData IMAGE_DIR $env(SEQ_SRC)/xm/etc/images
+SharedData_setMiscData BG_TEMPLATES_DIR $env(SEQ_SRC)/xm/etc/bg_templates
 
 #option add *activeBackground [SharedData_getColor ACTIVE_BG]
 #option add *selectBackground [SharedData_getColor SELECT_BG]
@@ -35,7 +35,7 @@ MaestroConsole_init
 # reads application config file only once
 proc ExpModTreeControl_readAppConfig {} {
    global env DefaultModDepotVar
-   set configFile  $env(SEQ_PACKAGE_HOME)/src/xm/etc/config/xm.cfg
+   set configFile  $env(SEQ_SRC)/xm/etc/config/xm.cfg
    if { ! [info exists DefaultModDepotVar] } {
       if { [file readable ${configFile}] } {
          puts "Reading application config file: ${configFile}"

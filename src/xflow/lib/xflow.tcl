@@ -149,7 +149,7 @@ proc xflow_maestroCmds { parent } {
       text ${txtW} -width 30 -wrap word -yscrollcommand [list ${topW}.yscroll set]
       
       # get the info 
-      set infoFile $env(SEQ_XFLOW_BIN)/../etc/command_summary.txt
+      set infoFile $env(SEQ_SRC)/etc/command_summary.txt
       if { [file readable ${infoFile}] } {
          set infoTxt [exec -ignorestderr  cat ${infoFile}]
          ${txtW} insert end ${infoTxt}
@@ -2341,7 +2341,7 @@ proc xflow_evalConfigCreateWidgets { exp_path datestamp node extension caller_w 
    global xflow_EvalConfigFullConfigVar xflow_SubmitHostsVar
    if { ! [info exists xflow_SubmitHostsVar] } {
       set xflow_SubmitHostsVar ""
-      set hostsFile $env(SEQ_XFLOW_BIN)/../etc/submit_hosts
+      set hostsFile $env(SEQ_SRC)/etc/submit_hosts
       if { [file readable ${hostsFile}] } {
          set xflow_SubmitHostsVar [exec -ignorestderr cat ${hostsFile}]
       }
@@ -4884,7 +4884,7 @@ proc xflow_init { {exp_path ""} } {
       SharedData_setMiscData XFLOW_THREAD_ID [thread::id]
 
       set SHADOW_STATUS 
-      SharedData_setMiscData IMAGE_DIR $env(SEQ_PACKAGE_HOME)/src/xflow/etc/images
+      SharedData_setMiscData IMAGE_DIR $env(SEQ_SRC)/xflow/etc/images
       if { ! [info exists AUTO_MSG_DISPLAY] } {
          set AUTO_MSG_DISPLAY [SharedData_getMiscData AUTO_MSG_DISPLAY]
       } else {
@@ -4974,7 +4974,7 @@ if { ! [info exists XFLOW_STANDALONE] || ${XFLOW_STANDALONE} == "1" } {
       puts "SEQ_XFLOW_BIN must be defined!"
       exit
    }
-   set lib_dir $env(SEQ_PACKAGE_HOME)/src/xflow/lib
+   set lib_dir $env(SEQ_SRC)/xflow/lib
    puts "lib_dir=$lib_dir"
    set auto_path [linsert $auto_path 0 $lib_dir ]
    package require Tk

@@ -4,9 +4,9 @@
 # check tcl/tk installation: 
 [[ -z ${SEQ_MAESTRO_DOMAIN} ]] && echo "SEQ_MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 
 
-export PATH=${PATH}:${SEQ_PACKAGE_HOME}/src/tcl/bin
-export TCL_LIBRARY=${TCL_LIBRARY}:${SEQ_PACKAGE_HOME}/src/tcl/lib/tcl8.5
-export TK_LIBRARY=${TK_LIBRARY}:${SEQ_PACKAGE_HOME}/src/tcl/lib/tk8.5
+export PATH=${PATH}:${SEQ_SRC}/tcl/bin
+export TCL_LIBRARY=${TCL_LIBRARY}:${SEQ_SRC}/tcl/lib/tcl8.5
+export TK_LIBRARY=${TK_LIBRARY}:${SEQ_SRC}/tcl/lib/tk8.5
 
 TCLSH=$(which maestro_wish8.5)
 
@@ -38,7 +38,7 @@ else
    export DISPLAY=${display:-${DISPLAY}}
 fi
 
-[[ -f "${SEQ_XFLOW_BIN}/../etc/check_deprecation" ]] && . "${SEQ_XFLOW_BIN}/../etc/check_deprecation"
+[[ -f "${SEQ_SRC}/etc/check_deprecation" ]] && . "${SEQ_SRC}/etc/check_deprecation"
 
 print "\ndisplay=${display}"
 print "\nusing DISPLAY=$DISPLAY"
@@ -108,5 +108,5 @@ if [[ "${exp}" != "" ]] ; then
 fi
 
 export NO_STOP_MESSAGE=on
-print "\n$TCLSH ${SEQ_PACKAGE_HOME}/src/xflow/lib/Overview.tcl ${automsg_opt} ${suites_opt}"
-$TCLSH ${SEQ_PACKAGE_HOME}/src/tcl/xflow/Overview.tcl -main ${automsg_opt} ${suites_opt} ${logfile_opt} ${debug_opt} ${rc_opt} ${user_opt} ${logspan_opt} ${exp_opt}
+print "\n$TCLSH ${SEQ_SRC}/xflow/lib/Overview.tcl ${automsg_opt} ${suites_opt}"
+$TCLSH ${SEQ_SRC}/tcl/xflow/Overview.tcl -main ${automsg_opt} ${suites_opt} ${logfile_opt} ${debug_opt} ${rc_opt} ${user_opt} ${logspan_opt} ${exp_opt}

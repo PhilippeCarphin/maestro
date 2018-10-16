@@ -147,8 +147,8 @@ proc ModuleFlowView_addHelpMenu { _expPath _moduleNode _parentWidget } {
       -relief [SharedData_getMiscData MENU_RELIEF]
    menu ${menuW} -tearoff 0
 
-   set sampleTaskFile $env(SEQ_PACKAGE_HOME)/src/xflow/etc/samples/task_resources.xml
-   set sampleContainerFile $env(SEQ_PACKAGE_HOME)/src/xflow/etc/samples/container_resources.xml
+   set sampleTaskFile $env(SEQ_SRC)/xflow/etc/samples/task_resources.xml
+   set sampleContainerFile $env(SEQ_SRC)/xflow/etc/samples/container_resources.xml
 
    ${menuW} add command -label "Sample Task Resource" -underline 7 \
       -command [list ModuleFlowView_goEditor ${sampleTaskFile}]
