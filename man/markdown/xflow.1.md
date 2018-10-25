@@ -3,7 +3,7 @@ xflow(1) -- visually monitor a Maestro experiment
 
 ## SYNOPSIS
 
-`xflow` [-d <YYYYMMDDHH>] [-exp <exp-path>] [-noautomsg <0|1>] [-nosubmitpopup <0|1>] [-rc <maestro-rc-path>] [-n <node-path>] [-l <loop-arguments>] [-debug <0|1>]
+`xflow [-d <YYYYMMDDHH>] [-exp <exp-path>] [-noautomsg <0|1>] [-nosubmitpopup <0|1>] [-rc <maestro-rc-path>] [-n <node-path>] [-l <loop-arguments>] [-debug <0|1>]`
 
 ## DESCRIPTION
 
