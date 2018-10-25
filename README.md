@@ -21,6 +21,18 @@ To compile Maestro and create an SSM package simply use the makefile by typing:
  make
 ```
 
+The build process uses the version or tags of your git repo to version the Maestro SSM package. If no tags (like 0.1.6) are present, it will use the first portion of the latest commit hash. This makes it difficult to release different Maestro SSM packages with the same version name. To see your current version:
+
+```bash
+git describe
+```
+
+If there are not tags, you'll need to either create one, or pull tags from the repo you originally cloned from:
+
+```bash
+git fetch --tags
+```
+
 The first compile may take awhile because of compiling Tcl and its libraries. However, if you create a shortcut called "_tcl" in the maestro folder (which points to a previous tcl compilation) you can speed up compilation a lot:
 
 ```bash
