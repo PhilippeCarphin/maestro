@@ -62,14 +62,13 @@ cd maestro
 VERSION=`./scripts/get_repo_version.py`
 SSM_DOMAIN_PATH=$HOME/ssm/maestro/$VERSION
 
-set -ex 
 rm -rf /home/sts271/ssm/maestro/$VERSION
 ssm created -d $SSM_DOMAIN_PATH
 
-platform=ubuntu-14.04-amd64-64
-SSM_PACKAGE=ssm/maestro_${VERSION}_${platform}.ssm
+PLATFORM=ubuntu-14.04-amd64-64
+SSM_PACKAGE=ssm/maestro_${VERSION}_${PLATFORM}.ssm
 ssm install -f $SSM_PACKAGE -d $SSM_DOMAIN_PATH
-ssm publish -p maestro_${VERSION}_${platform} -d $SSM_DOMAIN_PATH -pp $platform 
+ssm publish -p maestro_${VERSION}_${PLATFORM} -d $SSM_DOMAIN_PATH -pp $PLATFORM 
 
 . ssmuse-sh -d $SSM_DOMAIN_PATH
 ```
