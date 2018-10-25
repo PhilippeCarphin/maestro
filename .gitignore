@@ -1,6 +1,8 @@
 /bin
 /build
 /ssm
+/venv
+/man/roff
 build.cfg
 _*
 !__init__.py
