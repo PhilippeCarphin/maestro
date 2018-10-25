@@ -3,7 +3,7 @@ xflow_overview(1) -- visually monitor multiple Maestro experiments
 
 ## SYNOPSIS
 
-`xflow_overview` [-d <YYYYMMDDHH>] [-exp <exp-path>] [-noautomsg <0|1>] [-nosubmitpopup <0|1>] [-rc <maestro-rc-path>] [-n <node-path>] [-l <loop-arguments>] [-debug <0|1>]
+`xflow_overview [-exp <path-to-experiment-folder>] [-rc <maestro-rc-path>] [-logspan <integer-hours>] [-display <x-windows-display>] [-as <username>] [-debug <0|1>] [-noautomsg <0|1>] [-logfile <path-to-logfile>]`
 
 ## DESCRIPTION
 
