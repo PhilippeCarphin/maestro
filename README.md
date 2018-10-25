@@ -27,7 +27,7 @@ The build process uses the version or tags of your git repo to version the Maest
 git describe
 ```
 
-If there are not tags, you'll need to either create one, or pull tags from the repo you originally cloned from:
+If there are no tags, you'll need to either create one, or pull tags from the repo you originally cloned from:
 
 ```bash
 git fetch --tags
@@ -52,3 +52,24 @@ The first compile may take awhile because of compiling Tcl and its libraries. Ho
 You have to move **tcl-maestro-backup-compiled** to somewhere outside the root Maestro folder, as the make process may delete build files for a clean make.
 
 This system, and the Tcl dependencies, are being reconsidered.
+
+## Install
+
+After the build process, you can install and publish the SSM package in the usual way. Here's a script you can copy paste:
+
+```bash
+cd maestro
+VERSION=`./scripts/get_repo_version.py`
+SSM_DOMAIN_PATH=$HOME/ssm/maestro/$VERSION
+
+set -ex 
+rm -rf /home/sts271/ssm/maestro/$VERSION
+ssm created -d $SSM_DOMAIN_PATH
+
+platform=ubuntu-14.04-amd64-64
+SSM_PACKAGE=ssm/maestro_${VERSION}_${platform}.ssm
+ssm install -f $SSM_PACKAGE -d $SSM_DOMAIN_PATH
+ssm publish -p maestro_${VERSION}_${platform} -d $SSM_DOMAIN_PATH -pp $platform 
+
+. ssmuse-sh -d $SSM_DOMAIN_PATH
+```
