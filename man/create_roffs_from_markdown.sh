@@ -1,0 +1,39 @@
+#~/bin/bash
+
+# Creates roff/manpage files using a folder of markdown files.
+# Run this script from the "maestro/man" folder.
+# Requires markdown files in the "markdown" folder and puts output in folder "roff"
+
+SOURCE_FOLDER=markdown
+TARGET_FOLDER=roff
+
+# Verify script was run correctly
+if [ `basename $PWD` != "man" ] ; then
+    echo "This script must be run from the 'man' folder."
+    exit 1
+fi
+if [ ! -d $SOURCE_FOLDER ] ; then
+    echo "Not a folder: '$SOURCE_FOLDER'"
+    exit 1
+fi
+rm -rf $TARGET_FOLDER
+mkdir -p $TARGET_FOLDER
+
+# Setup Python virtual environment if necessary
+VENV=../venv
+if [ ! -d $VENV ] ; then
+    virtualenv -p python3 $VENV
+fi
+$VENV/bin/pip3 install -r requirements.txt
+
+# Convert all markdowns to roff
+for markdown in `find $SOURCE_FOLDER -name "*.md"` ; do    
+    name=`basename $markdown`
+    name=$(echo "$name" | cut -f 1 -d '.')
+    echo "Converting '$name'"
+    $VENV/bin/python3 mrkd.py $markdown $TARGET_FOLDER/$name.1
+done
+
+echo
+echo "Contents of '$TARGET_FOLDER':"
+ls $TARGET_FOLDER
