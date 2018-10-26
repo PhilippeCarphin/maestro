@@ -1,4 +1,4 @@
-xflow_overview(1) -- visually monitor multiple Maestro experiments
+xflow_overview -- visually monitor multiple Maestro experiments
 =============================================
 
 ## SYNOPSIS
