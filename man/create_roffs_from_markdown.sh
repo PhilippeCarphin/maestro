@@ -4,6 +4,8 @@
 # Run this script from the "maestro/man" folder.
 # Requires markdown files in the "markdown" folder and puts output in folder "roff"
 
+set -e
+
 SOURCE_FOLDER=markdown
 TARGET_FOLDER=roff
 
@@ -31,7 +33,14 @@ for markdown in `find $SOURCE_FOLDER -name "*.md"` ; do
     name=`basename $markdown`
     name=$(echo "$name" | cut -f 1 -d '.')
     echo "Converting '$name'"
-    $VENV/bin/python3 mrkd.py $markdown $TARGET_FOLDER/$name.1
+    
+    # Copy markdown to a temp file and append the footer.md to it.
+    temp_markdown=$TARGET_FOLDER/$(basename $markdown)
+    cp $markdown $temp_markdown
+    cat footer.md >> $temp_markdown
+    
+    $VENV/bin/python3 mrkd.py $temp_markdown $TARGET_FOLDER/$name.1
+    rm $temp_markdown
 done
 
 SCRIPT_NAME=`basename "$0"`
