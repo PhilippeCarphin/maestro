@@ -19,7 +19,7 @@ Starting with the most commonly used:
 
 * `-n, --node <node-path>:` Required argument. Specify the full path of task or family node. This is mandatory unless `-f root` is used, which specifies the first node at the root of the experiment.
 * `-e <path-to-exp-folder>`: By default nodeinfo will search the experiment found in `SEQ_EXP_HOME`. Use this option to specify the experiment path instead. For example: `/home/smco500/.suites/rdps/r1`
-* `-f, --filters <filter-whitelist>`: Use search filters, for example `-f cfg,res`. If this option is used, only search those file types. Available filters are: `all` (default, but does not include var), `task`, `cfg`, `res`, `res_path`, `type`, `node`, `root`, `var`.
+* `-f, --filters <filter-whitelist>`: Use search filters, for example `-f cfg,res`. If this option is used, only search those file types. Available filters are: `all` by default, but does not include var, `task` for node task path, `cfg` for node config path, `res` for resource definitions, `res_path` for node resource path, `type` to show node type like "Task", `node` for node name and loop extension if applicable, `root` for the path of the root node, `var` for all environment variable exports, and finally `dep` to see node dependencies.
 * `-l, --loop-args <loop-arguments>:` Specify the loop arguments as a comma seperated value loop index. Example: `-l run=18`.
 * `-v:` Verbose tracing output.
 
@@ -37,4 +37,10 @@ Get nodeinfo for configuration and resources from an experiment in the present w
 
 ```
 nodeinfo -e `pwd` -n /main/post_proc/loop_b -f cfg,res
+```
+
+Get node dependencies for the run_orji task in the GDWPS forecast run:
+
+```
+nodeinfo -e /home/smco500/.suites/gdwps/forecast -n gdwps/run_orji -f dep
 ```
