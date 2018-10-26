@@ -17,7 +17,7 @@ For more information on Maestro experiments, see https://wiki.cmc.ec.gc.ca/wiki/
 
 Some of these options can also be changed within the xflow graphical application, but are provided as command line options for convenience. Starting with the most commonly used:
 
-* `-d <YYYYMMDDHH>:` These ten digits for year, month, day, and hour specify the times used when reading the logs and listings. If you provide a date from the past, then xflow will pretend it is that date and the progress, listings, and errors you see will be for that date. By default this will be the earliest date possible - often the date the suite was created.
+* `-d <YYYYMMDDHH>`: These ten digits for year, month, day, and hour specify the times used when reading the logs and listings. If you provide a date from the past, then xflow will pretend it is that date and the progress, listings, and errors you see will be for that date. By default this will be the earliest date possible - often the date the suite was created.
 * `-exp <path-to-exp-folder>`: By default xflow will assume the path it was launched from contains an experiment. USe this option to specify the experiment path instead. For example: `/home/smco500/.suites/rdps/r1`
 * `-rc <maestro-rc-path>`: By default, Maestro is configured with the file found in your home: `~/.maestrorc`. You can ignore that file if you provide one here instead.
 * `-noautomsg <0|1>`: By default, there will be automatic popups when the message center detects a message (for example, an error in a run). If this is set to 1, there will be no automatic popups.
