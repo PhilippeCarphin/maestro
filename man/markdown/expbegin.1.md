@@ -28,21 +28,3 @@ Begin the RDPS, r1 experiment on the date 2020/01/01.
 ```
 expbegin -e /home/smco500/.suites/rdps/r1 -d 20200101000000
 ```
-
-## AUTHOR
-
-Maestro and its tools were written by the Canadian Meteorological Centre.
-
-## REPORTING BUGS
-
-Report maestro bugs to https://gitlab.science.gc.ca/maestro/maestro/issues
-
-## COPYRIGHT
-
-Maestro and its tools are licensed under GPL 2.1. This is free software: you are free to change and redistribute it.
-
-## SEE ALSO
-
-https://wiki.cmc.ec.gc.ca/wiki/Maestro
-
-https://gitlab.science.gc.ca/maestro/maestro

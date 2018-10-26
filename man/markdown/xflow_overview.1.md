@@ -41,23 +41,3 @@ Launch xflow_overview for all operational suites with debugging console output e
 ```
 xflow_overview -suites ~smco500/xflow.suites.xml -debug 1 -rc ~/.maestrorc2
 ```
-
-## AUTHOR
-
-Maestro and its tools were written by the Canadian Meteorological Centre.
-
-## REPORTING BUGS
-
-Report xflow_overview bugs to https://gitlab.science.gc.ca/maestro/maestro/issues
-
-## COPYRIGHT
-
-Maestro and its tools are licensed under GPL 2.1. This is free software: you are free to change and redistribute it.
-
-## SEE ALSO
-
-https://wiki.cmc.ec.gc.ca/wiki/Maestro
-
-https://wiki.cmc.ec.gc.ca/wiki/Maestro/xflow_overview
-
-https://gitlab.science.gc.ca/maestro/maestro

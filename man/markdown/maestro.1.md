@@ -11,7 +11,7 @@ maestro -- API for the main engine in the Maestro sequencer package
 
 When signals are sent to tasks several things happen. `maestro` verifies dependencies, it may trigger other tasks, it creates processes, it may call itself recursively, and it writes several types of logs. This utility manages that complexity.
 
-For more information on Maestro, see https://wiki.cmc.ec.gc.ca/wiki/Maestro
+For more information on Maestro, see: https://wiki.cmc.ec.gc.ca/wiki/Maestro
 
 ## OPTIONS
 
@@ -57,23 +57,3 @@ Submit run_mod using extra arguments to allow a cpu waste of 10%:
 ```
 maestro -s submit -n /enkf_mod/Forecasts/gem_loop/gem_mod/Runmod -l gem_loop=18 -o "-waste 10"
 ```
-
-## AUTHOR
-
-Maestro and its tools were written by the Canadian Meteorological Centre.
-
-## REPORTING BUGS
-
-Report maestro bugs to https://gitlab.science.gc.ca/maestro/maestro/issues
-
-## COPYRIGHT
-
-Maestro and its tools are licensed under GPL 2.1. This is free software: you are free to change and redistribute it.
-
-## SEE ALSO
-
-https://wiki.cmc.ec.gc.ca/wiki/Maestro
-
-https://wiki.cmc.ec.gc.ca/wiki/Maestro/maestro_(command)
-
-https://gitlab.science.gc.ca/maestro/maestro
