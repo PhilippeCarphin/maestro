@@ -1,9 +1,9 @@
-maestro(1) -- API for the main engine in the Maestro sequencer package
+maestro -- API for the main engine in the Maestro sequencer package
 =============================================
 
 ## SYNOPSIS
 
-`maestro -n node -s signal -e exp [-iv] [-d <YYYYMMDDHHMMSS>] [-l <loopargs>] [-f <flow-value>] [-o <extra_soumet_args>]`
+`maestro -n node -s signal -e exp [-iv] [-d <YYYYMMDDhhmmss>] [-l <loopargs>] [-f <flow-value>] [-o <extra_soumet_args>]`
 
 ## DESCRIPTION
 
@@ -19,7 +19,7 @@ Starting with the most commonly used:
 
 * `-s, --signal <signal>:` Required argument. The `-s submit` signal submits a node execution request. You can `-s begin`, `-s end`, or `-s abort` node execution. `-s initbranch` sends a branch initialization, which is only effective for container nodes. This will clear the status for the current container node and any children nodes. `-s initnode` initializes a node, but it's only effective on leaf nodes.
 * `-n, --node <node-path>:` Required argument. Specify the full path of task or family node. This is mandatory unless `-f root` is used, which specifies the first node at the root of the experiment.
-* `-d <YYYYMMDDHHMMSS>:` Specify the 14 character date of the experiment. Example: `20080530000000`. Anything shorter will be padded with zeroes. The default value is the date of the experiment. The order of precedence for dates are the `-d` argument, followed by the `SEQ_DATE` environment variable, and finally the latest modified log file under the directory `$SEQ_EXP_HOME/logs`. If none of those exist, the command will assume the epoch date, that is `197001010000`. 
+* `-d <YYYYMMDDhhmmss>:` Launch a cron to submit on this 14 character date. Example: `20080530000000`. Anything shorter will be padded with zeroes. The default value is the date of the experiment. A date earlier than now will submit immediately. The order of precedence for dates are the `-d` argument, followed by the `SEQ_DATE` environment variable, and finally the latest modified log file under the directory `$SEQ_EXP_HOME/logs`. If none of those exist, the command will assume the epoch date, that is `197001010000`. 
 * `-f, --flow <flow-value>:` Supported values are `continue` or `stop`. Default value is continue. For a task node, this option tells the sequencer whether to continue or stop flow execution after the current node has completed. For a container node, this option specifies whether or not its children will be submitted for execution when the container is in its begin state.
 * `-i:` Ignore dependencies and catchup values. Submit the current node for execution despite any unsatified dependencies or catchup values.
 * `-o, --extra-soumet-args:` Additional arguments being given to ord_soumet by the job besides the usual ones used by the sequencer. This argument has precedence over any argument defined in the job's resources file in case of multiple definitions. Example: `-o -waste=50`.
