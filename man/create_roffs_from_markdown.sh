@@ -31,7 +31,7 @@ $VENV/bin/pip3 install -r requirements.txt
 # Convert all markdowns to roff
 for markdown in `find $SOURCE_FOLDER -name "*.md"` ; do    
     name=`basename $markdown`
-    name=$(echo "$name" | cut -f 1 -d '.')
+    name=${name::-5}
     echo "Converting '$name'"
     
     # Copy markdown to a temp file and append the footer.md to it.
