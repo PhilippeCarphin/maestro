@@ -1,4 +1,4 @@
-nodeinfo -- print 
+nodeinfo -- send signals to Maestro nodes
 =============================================
 
 ## SYNOPSIS
