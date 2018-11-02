@@ -10,6 +10,7 @@ export SSMPACKAGE=maestro_${VERSION}_${ORDENV_PLAT}
 export BUILD_PLATFORM_FOLDER=${PWD}/build/${SSMPACKAGE}
 export BIN_FOLDER=${BUILD_PLATFORM_FOLDER}/bin
 export SCRIPTS_FOLDER=${PWD}/scripts
+export MAN_FOLDER=${BUILD_PLATFORM_FOLDER}/man/man1
 CC=cc
 
 all: clean
@@ -40,10 +41,9 @@ all: clean
 
 	cd ${BUILD_PLATFORM_FOLDER}/.ssm.d ; . ${SCRIPTS_FOLDER}/create_ssm_control_files_here.sh
 	
-	cd ${BUILD_PLATFORM_FOLDER}/man ; ./create_roffs_from_markdown.sh
-	MAN_FOLDER=${BUILD_PLATFORM_FOLDER}/man/man1
+	cd man ; ./create_roffs_from_markdown.sh
 	mkdir -p ${MAN_FOLDER}
-	cp -r roff/ ${MAN_FOLDER}
+	cp -r man/roff/* ${MAN_FOLDER}
 	
 	./scripts/package-ssm.sh
 	

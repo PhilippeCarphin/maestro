@@ -33,7 +33,7 @@ export SEQ_MAESTRO_SHORTCUT=\". ssmuse-sh -d ${DOMAIN_HOME}\"
 export TMPDIR=${TMPDIR:-/tmp/$USER/$$} && mkdir -p ${TMPDIR}
 export TRUE_HOST=${TRUE_HOST:-$(hostname)}
 
-export MANPATH=$MANPATH:${PACKAGE_HOME}/man
+export MANPATH=$MANPATH:${PACKAGE_HOME}/man:
 
 " >> ${PROFILE_SCRIPT}
 
