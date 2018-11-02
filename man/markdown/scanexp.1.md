@@ -13,6 +13,8 @@ scanexp requires either the `-e` option or the `SEQ_EXP_HOME` environment variab
 
 For more information on Maestro experiments, see https://wiki.cmc.ec.gc.ca/wiki/Maestro/experiment
 
+For more information on Maestro, see https://wiki.cmc.ec.gc.ca/wiki/Maestro
+
 ## OPTIONS
 
 Starting with the most commonly used:

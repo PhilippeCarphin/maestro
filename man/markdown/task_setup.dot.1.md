@@ -9,6 +9,8 @@ task_setup.dot -- run the task setup utility with your environment variables
 
 `task_setup.dot` runs the `task_setup.py` utility with your environment variables. You can also supply extra arguments to `task_setup.dot` which will be passed to `task_setup.py`.
 
+For more information on Maestro, see https://wiki.cmc.ec.gc.ca/wiki/Maestro
+
 ## EXAMPLES
 
 This example will send the current environment variables, and the `-v` option to the `task_setup.py` utility:
