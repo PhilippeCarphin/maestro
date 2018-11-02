@@ -40,8 +40,13 @@ all: clean
 
 	cd ${BUILD_PLATFORM_FOLDER}/.ssm.d ; . ${SCRIPTS_FOLDER}/create_ssm_control_files_here.sh
 	
+	cd ${BUILD_PLATFORM_FOLDER}/man ; ./create_roffs_from_markdown.sh
+	MAN_FOLDER=${BUILD_PLATFORM_FOLDER}/man/man1
+	mkdir -p ${MAN_FOLDER}
+	cp -r roff/ ${MAN_FOLDER}
+	
 	./scripts/package-ssm.sh
-
+	
 clean:
 	echo "version = ${VERSION}"
 	rm -rf build ${BIN_FOLDER}
