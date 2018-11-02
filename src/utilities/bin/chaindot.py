@@ -31,66 +31,13 @@ INPUT:
        which would be the experiment name
      - chain of experiment nodes, beginning with the experiment name and
        terminating with the node whose context is being constructed
-
-The content of the experiment directory defines the experiment in question.  It
-is assumed that the directory has this form (This is a minimum; other elements
-may also be present):
-    MyExpt
-        experiment.cfg
-        flow.xml
-        resources
-            resources.cfg
-        modules
-            module_1
-                module_1.cfg
-                family_1
-                    family_1.cfg
-                    task_1
-                        task_1.cfg
-            module_n
-                module_n*.cfg
-
-A *.cfg may or may not exist for each node in the supplied path.
-
-Each line of the *.cfg files is of the form,
-    type MyVarName=MyVarValue
-where type must be one of:
-    interface
-    private
-    public
-
-Private variables are effective from the point where they are declared and
-downwards along the branch up to the next module-node.
-
-The scope of interface variables is identical to that of private variables,
-except that their value is taken from those that were available one node upward.
-This is important where the current node is a module-node; a private variable
-from the previous node would be already out of scope, but an interface variable
-of the same name has the power to access that out-of-scope value.  Thus,
-interface variables are useful for receiving information in one module from the
-previous module.
-    
-Public variables are effective from the point where they are declared and
-downwards all the way along the branch.  It should be noted that a public
-variable may be hidden by a private or interface variable, but will be visible
-again beyond the scope of the hiding private or interface variable.
-
-This is a prototype of a utility that will ultimately be used with the
-unified sequencer."""
+"""
 
 #
-# AUTHOR
-#     J.W. Blezius
-
-#REVISION
-# v1_00   Blezius J.W.    May 20 2009 first release
-# v1_01   Racette D.      July 14 2010 Modified argument passing
-# v1_02   Racette D.      July 21 2010 Modified experiment structure
-# v1_03   Racette D.      Aug. 24 2010 Removing Scoping
-# v1_04   Racette D.      Nov. 20 2010 Changed loop behaviour
-# v1_10   McTaggart-Cowan R. July 2012 Add resource file sourcing
-#         Racette D.      Oct 2012     Clarified output, added MODULE_ARGUMENTS files 
-
+# AUTHORS
+# J.W. Blezius
+# Racette D.
+# McTaggart-Cowan R.
 
 from xml.dom              import expatbuilder
 from xml.dom              import Node

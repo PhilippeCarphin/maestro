@@ -13,6 +13,8 @@ The xflow command expects to be launched from within the path of an experiment. 
 
 For more information on Maestro experiments, see https://wiki.cmc.ec.gc.ca/wiki/Maestro/experiment
 
+For more information on Maestro, see https://wiki.cmc.ec.gc.ca/wiki/Maestro
+
 ## OPTIONS
 
 Some of these options can also be changed within the xflow graphical application, but are provided as command line options for convenience. Starting with the most commonly used:

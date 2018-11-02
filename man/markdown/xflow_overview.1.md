@@ -13,6 +13,8 @@ xflow_overview requires a suites XML file to launch. By default, it reads the fi
 
 For more information on Maestro experiments, see https://wiki.cmc.ec.gc.ca/wiki/Maestro/experiment
 
+For more information on Maestro, see https://wiki.cmc.ec.gc.ca/wiki/Maestro
+
 ## OPTIONS
 
 Starting with the most commonly used:

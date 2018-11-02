@@ -7,7 +7,7 @@ logreader -- analyse Maestro logs and output tsv elements for tcl
 
 ## DESCRIPTION
 
-`logreader` reads the files in `$SEQ_EXP_HOME/logs`, computes statistics on them, prints the results as `tsv` elements (thread shared variables) for tcl, and writes to `$SEQ_EXP_HOME/stats`. The tsv output is not human readable - instead it is an intermediate step used internally in Maestro's visualisation tools like `xflow`. The output includes averages for the end, beginning, submission delay, and progress for all the nodes of an experiment.
+`logreader` reads and writes files. It reads the files in `$SEQ_EXP_HOME/logs`, computes statistics on them, prints the results as `tsv` elements (thread shared variables) for tcl, and writes to `$SEQ_EXP_HOME/stats`. The tsv output is not human readable - instead it is an intermediate step used internally in Maestro's visualisation tools like `xflow`. The output includes averages for the end, beginning, submission delay, and progress for all the nodes of an experiment.
 
 This tool outputs tsv elements because often multiple threads will need access to this data at the same time. tsv elements allow this. The output is separated by newlines. The first line shows statuses: 
 
@@ -31,13 +31,13 @@ For more information on Maestro, see: https://wiki.cmc.ec.gc.ca/wiki/Maestro
 
 Starting with the most commonly used:
 
+* `-d <YYYYMMDDhhmmss>:` The 14 character date you want to examine. Example: `20080530000000`. Anything shorter will be padded with zeroes. The default value is the date of the experiment.
+* `-e <experiment-path>:` By default the logreader uses `$SEQ_EXP_HOME`. For example: `-e /home/smco500/.suites/rdps/r1`
 * `-i <input-file>:` Specify a logfile to read. If no `-i` is provided, logreader will use `${SEQ_EXP_HOME}/logs/${datestamp}_nodelog`.
-* `-o <output-file>:` Specify an output file for the computed statistics in a more human readable form. For example:
+* `-o <output-file>:` Specify an output file for the computed statistics in a more human readable form.
 * `-t <filter-type>:` Filter results by type. Available filters are: `log` which shows statuses and stats used by xflow. `statuses`, `stats`, `avg`, and `compute_avg`. Default is `log`.
 * `-n <days-for-average>:` Specify a number of days since `<datestamp>` for averaging. Used with `-t avg`. Default value is 7 days. This is a 10% truncated average to account for extremes.
 * `-c:` If the output file already exists, write nothing to that file.    
-* `-d <YYYYMMDDhhmmss>:` The 14 character date you want to examine. Example: `20080530000000`. Anything shorter will be padded with zeroes. The default value is the date of the experiment.
-* `-e <experiment-path>:` By default the logreader uses `$SEQ_EXP_HOME`. For example: `-e /home/smco500/.suites/rdps/r1`
 * `-v:` Set verbose code tracing.
 
 ## EXAMPLES

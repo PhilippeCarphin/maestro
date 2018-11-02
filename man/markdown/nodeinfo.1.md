@@ -3,7 +3,7 @@ nodeinfo -- send signals to Maestro nodes
 
 ## SYNOPSIS
 
-`nodeinfo -n node [-e exp] [-l <loopargs>] [-f <filter-whitelist>]`
+`nodeinfo -n <node> [-e <path-to-experiment-folder>] [-l <loopargs>] [-f <filter-whitelist>]`
 
 ## DESCRIPTION
 
