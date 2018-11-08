@@ -13,7 +13,17 @@ Maestro has a long development history. Let the maintainers know if you have any
 
 Tcl and Tk are used for the user interfaces of Maestro tools. Tcl is a general purpose programming language, and Tk is a GUI toolkit.
 
-## Build
+## Build, Install, Use
+
+There are three steps to share a new Maestro version.
+
+* Build: developers use the source code to create an installer file - an SSM package.
+* Install: system administrators use an SSM package to unpack the files to any location, and make it available for use.
+* Use: users run `ssmuse-sh` to use an installed SSM package to their environment so that they can use it.
+
+### Build
+
+This first step will create an install file - an SSM package - for Maestro. To install and use the package, See the Install section.
 
 To compile Maestro and create an SSM package simply use the makefile by typing:
 
@@ -54,7 +64,7 @@ You have to move **tcl-maestro-backup-compiled** to somewhere outside the root M
 
 This system, and the Tcl dependencies, are being reconsidered.
 
-## Install
+### Install
 
 After the build process, you can install and publish the SSM package in the usual way. Here's a script you can copy paste:
 
@@ -70,5 +80,25 @@ rm -rf $HOME/ssm/maestro/$VERSION
 ssm created -d $SSM_DOMAIN_PATH
 ssm install -f $SSM_PACKAGE -d $SSM_DOMAIN_PATH
 ssm publish -p maestro_${VERSION}_${PLATFORM} -d $SSM_DOMAIN_PATH -pp $PLATFORM 
-. ssmuse-sh -d $SSM_DOMAIN_PATH
+echo ". ssmuse-sh -d $SSM_DOMAIN_PATH"
 ```
+
+### Use
+
+After you or a system administrator has installed and published an SSM package, anyone on the network can use it. Some examples:
+
+```
+. ssmuse-sh -d ~/ssm/maestro/ad02f5g2/
+
+. ssmuse-sh -d ~/ssm/maestro/1.5.1/
+
+. ssmuse-sh -d eccc/cmo/isst/maestro/1.5.1-rc22
+```
+
+Note that the last line in the previous `Install` section will echo (output) the appropriate `ssmuse-sh` line to use your package:
+
+```
+echo ". ssmuse-sh -d $SSM_DOMAIN_PATH"
+```
+
+For more information on your environment setup see: https://wiki.cmc.ec.gc.ca/wiki/HPCS/ordenv
