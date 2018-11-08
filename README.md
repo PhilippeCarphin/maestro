@@ -42,7 +42,8 @@ The first compile may take awhile because of compiling Tcl and its libraries. Ho
  make
  
  # Copy the results of the build process
- cp -r src/tcl ../tcl-maestro-backup-compiled
+ # Replace ${SSM_PACKAGE} with the folder created by "make". Example: maestro_a0c8517c_ubuntu-14.04-amd64-64
+ cp -r build/${SSM_PACKAGE}/src/tcl ../tcl-maestro-backup-compiled
  ln -s ../tcl-maestro-backup-compiled _tcl
  
  # This make will be faster
