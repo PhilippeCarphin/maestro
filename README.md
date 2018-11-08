@@ -23,7 +23,7 @@ There are three steps to share a new Maestro version.
 
 ### Build
 
-This first step will create an install file - an SSM package - for Maestro. To install and use the package, See the Install section.
+This first step will create an install file - an SSM package - for Maestro. To install and use the package, See the `Install` section.
 
 To compile Maestro and create an SSM package simply use the makefile by typing:
 
