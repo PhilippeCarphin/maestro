@@ -65,7 +65,7 @@ SSM_DOMAIN_PATH=$HOME/ssm/maestro/$VERSION
 PLATFORM=ubuntu-14.04-amd64-64
 SSM_PACKAGE=ssm/maestro_${VERSION}_${PLATFORM}.ssm
 
-rm -rf /home/sts271/ssm/maestro/$VERSION
+rm -rf ~/ssm/maestro/$VERSION
 ssm created -d $SSM_DOMAIN_PATH
 ssm install -f $SSM_PACKAGE -d $SSM_DOMAIN_PATH
 ssm publish -p maestro_${VERSION}_${PLATFORM} -d $SSM_DOMAIN_PATH -pp $PLATFORM 
