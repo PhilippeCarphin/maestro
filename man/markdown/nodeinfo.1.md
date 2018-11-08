@@ -7,9 +7,7 @@ nodeinfo -- send signals to Maestro nodes
 
 ## DESCRIPTION
 
-`maestro` is a core utility in the Maestro project. It sends `submit`, `begin`, `end`, `abort`, `initbranch`, or `initnode` signals to a Maestro experiment and its tasks. This utility is most often used by `xflow` invisibly in its backend. However you can also send these signals using this commandline utility.
-
-When signals are sent to tasks several things happen. `maestro` verifies dependencies, it may trigger other tasks, it creates processes, it may call itself recursively, and it writes several types of logs. This utility manages that complexity.
+`nodeinfo` prints human readable information about a Maestro node. This information includes its name, type (example: Loop), catchup value, machine (example: eccc-ppp1), configuration path, resources path, and many other values. This is the output produced in `xflow` with the `node info` menu option.
 
 For more information on Maestro, see: https://wiki.cmc.ec.gc.ca/wiki/Maestro
 
