@@ -53,11 +53,11 @@ def main(args):
     domain1=args["<ssm-domain1>"]
     domain2=args["<ssm-domain2>"]
 
-    cmd1=". ssmuse-sh -d %s ; compgen -c"%domain1
-    cmd2=". ssmuse-sh -d %s ; compgen -c"%domain2
+    cmd1=". ssmuse-sh -d %s ; env ; compgen -c"%domain1
+    cmd2=". ssmuse-sh -d %s ; env ; compgen -c"%domain2
 
     print_yellow("\nComparing fresh environment to '%s'"%domain1)
-    compare_lines_from_commands("compgen -c",cmd1)
+    compare_lines_from_commands("env ; compgen -c",cmd1)
     
     if domain2:
         print_yellow("\nComparing domains '%s' and '%s'"%(domain1,domain2))
