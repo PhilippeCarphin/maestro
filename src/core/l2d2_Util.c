@@ -340,7 +340,7 @@ int  writeNodeWaitedFile ( const char * string , FILE *mlog )
     memset(this_datestamp,'\0',sizeof(this_datestamp));
     memset(this_loopArgs,'\0',sizeof(this_loopArgs));
    
-    n=sscanf(string,"sfile=%s wfile=%s exp=%s node=%s datestamp=%s args=%s",statusFile,waitfile,this_exp,this_node,this_datestamp,this_loopArgs);
+    n=sscanf(string,"sfile=%1023s wfile=%1023s exp=%255s node=%255s datestamp=%24s args=%127s",statusFile,waitfile,this_exp,this_node,this_datestamp,this_loopArgs);
 
     /* check if we have the right number of tokens */
     if ( (n <= 4 ) || ( n == 5 && strlen(this_loopArgs) != 0) ) {
@@ -366,7 +366,7 @@ int  writeNodeWaitedFile ( const char * string , FILE *mlog )
     }
   
     while( fgets(line, 1024, waitingFile) != NULL ) {
-           n=sscanf(line,"exp=%s node=%s datestamp=%s args=%s",exp,node,datestamp,loopArgs);
+           n=sscanf(line,"exp=%255s node=%255s datestamp=%24s args=%127s",exp,node,datestamp,loopArgs);
 	   if (  (inode=get_Inode(exp) ) < 0 ) {
                     fprintf(mlog,"writeNodeWaitFile: Cannot get inode of registred xp=%s\n",exp);
 		    continue;

@@ -308,7 +308,7 @@ int main (int argc, char* argv[])
             fprintf(stderr, "Found No maestro_server_%s parameters file\n",mversion);
             exit(1);
   } else {
-            int nscan = sscanf(Auth_token, "seqpid=%u seqhost=%s seqip=%s seqport=%u", &pid, htserver, ipserver, &port);
+            int nscan = sscanf(Auth_token, "seqpid=%u seqhost=%31s seqip=%31s seqport=%u", &pid, htserver, ipserver, &port);
   }
   
   if ( (sock=connect_to_host_port_by_ip (ipserver,port))  < 1 ) {

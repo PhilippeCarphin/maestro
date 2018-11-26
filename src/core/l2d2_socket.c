@@ -173,7 +173,7 @@ int bind_sock_to_port (int s, int min_port, int max_port)
       socklen_t sizeserver_eff = sizeof(server_eff) ;
       int current_port=min_port, success=0;
 
-      if ((min_port < 0) || ( min_port < 0)) {
+      if ((min_port < 0) || ( max_port < 0)) {
          fprintf(stderr, "Invalid port range. Min port %d. Max port %d. Must be >= 0 \n",min_port, max_port);
          return (-1); 
       }

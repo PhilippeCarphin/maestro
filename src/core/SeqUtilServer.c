@@ -227,7 +227,7 @@ FILE * fopen_svr ( const char * filename , int sock )
   if ( getenv("TMPDIR") != NULL ) {
           snprintf(wfilename,sizeof(wfilename),"%s/waitfile",getenv("TMPDIR"));
   } else { 
-          snprintf(wfilename,sizeof(wfilename),"/tmp/waitfile.%d",pid);
+          snprintf(wfilename,sizeof(wfilename),"/tmp/waitfile.%u",pid);
   } 
 
   SeqUtil_TRACE(TL_FULL_TRACE,"fopen_svr(): wait file:%s===== \n",filename);

@@ -193,7 +193,7 @@ int revert_nfs (  const char * buf , ServerActions action , const char *buf2 , c
 		                memset(nname,'\0',sizeof(nname));
 		                memset(datestamp,'\0',sizeof(datestamp));
 		                memset(loopArgs,'\0',sizeof(loopArgs));
-		                ret = sscanf(buf,"sfile=%s wfile=%s exp=%s node=%s datestamp=%s args=%s",sfile,filename,seq_xp_home,nname,datestamp,loopArgs);
+		                ret = sscanf(buf,"sfile=%1023s wfile=%1023s exp=%1023s node=%1023s datestamp=%1023s args=%1023s",sfile,filename,seq_xp_home,nname,datestamp,loopArgs);
 				          ret = WriteNodeWaitedFile_nfs ( seq_xp_home, nname, datestamp, loopArgs, filename, sfile);
 	                        break;
                       case SVR_WRITE_USERDFILE: /* have to be reviewed , if server shutdon we may only have the first chunk of transmission 
@@ -205,7 +205,7 @@ int revert_nfs (  const char * buf , ServerActions action , const char *buf2 , c
 		                memset(mversion,'\0',sizeof(mversion));
 		                memset(md5sum,'\0',sizeof(md5sum));
 		                memset(datestamp,'\0',sizeof(datestamp));
-                      ret = sscanf(buf,"K file=%s Dbf=%s pwd=%s mv=%s m5s=%s dstmp=%s",filename,sfile,pwname,mversion,md5sum,datestamp);
+                      ret = sscanf(buf,"K file=%1023s Dbf=%1023s pwd=%1023s mv=%127s m5s=%127s dstmp=%1023s",filename,sfile,pwname,mversion,md5sum,datestamp);
 				          ret = WriteInterUserDepFile_nfs( filename, sfile, pwname, mversion, datestamp, md5sum);
 	                        break;
                       default  :
@@ -256,7 +256,7 @@ int OpenConnectionToMLLServer (const char * node ,const char *signal , const cha
 	    fprintf(stderr, "Found No Maestro Server Parameteres File\n");
             return(-1);
     } else {
-	    int nscan = sscanf(Auth_token, "seqpid=%u seqhost=%s seqip=%s seqport=%d", &pid, htserver, ipserver, &port);
+	    int nscan = sscanf(Auth_token, "seqpid=%u seqhost=%19s seqip=%19s seqport=%d", &pid, htserver, ipserver, &port);
 	    fprintf(stderr, "maestro L2D2 server parameters are: <pid=%u  host=%s ip=%s port=%d>\n",pid,htserver,ipserver,port);
 	    free(Auth_token);
     }
