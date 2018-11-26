@@ -1,0 +1,22 @@
+<MODULE name="entry_mod">
+    <SUBMITS sub_name="task"/>
+    <SUBMITS sub_name="loop"/>
+    <TASK name="task">
+        <SUBMITS sub_name="npasstask" type="user"/>
+    </TASK>
+    <NPASS_TASK name="npasstask"/>
+    <LOOP name="loop">
+        <SUBMITS sub_name="switch"/>
+        <SWITCH name="switch" type="datestamp_hour">
+            <SWITCH_ITEM name="00">
+                <SUBMITS sub_name="task_00"/>
+                <TASK name="task_00"/>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="default">
+                <SUBMITS sub_name="task_default"/>
+                <TASK name="task_default"/>
+            </SWITCH_ITEM>
+        </SWITCH>
+    </LOOP>
+</MODULE>
+

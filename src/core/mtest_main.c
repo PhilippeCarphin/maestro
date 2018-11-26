@@ -26,6 +26,7 @@
 #include <libxml/tree.h>
 #include <libxml/xpathInternals.h>
 #include "ResourceVisitor.h"
+#include "FlowVisitor.h"
 #include "SeqDatesUtil.h"
 #include "SeqLoopsUtil.h"
 #include "SeqUtil.h"
@@ -33,6 +34,7 @@
 #include "getopt.h"
 #include "SeqNode.h"
 #include "XmlUtils.h"
+#include "l2d2_commun.h"
 
 static char * testDir = NULL;
 int MLLServerConnectionFid=0;
@@ -136,8 +138,6 @@ int test_getIncrementedDatestamp()
    return 0;
 }
 
-
-
 int test_checkValidityData()
 {
    header("checkValidityData()");
@@ -148,6 +148,8 @@ int test_checkValidityData()
    ValidityDataPtr val = &validityData1;
 
    SeqNodeDataPtr ndp = SeqNode_createNode("Phil");
+   SeqNameValuesPtr loopsArgs = NULL;
+   
    free(ndp->extension);
    free(ndp->datestamp);
    ndp->extension = "";
@@ -172,7 +174,7 @@ int test_checkValidityData()
    val->valid_dow = "6"; /* Since 2016-01-02 is a saturday */
    if( checkValidity(ndp, val) != 1 ) raiseError("TEST FAILED\n");
 
-   /* TEST 4 : With 2016-01-02 being a Saturday, teh valid_dow of "1" should not
+   /* TEST 4 : With 2016-01-02 being a Saturday, the valid_dow of "1" should not
     * match the node's datestamp dow. */
    val->valid_dow = "1"; /* Since 2016-01-02 is not a monday */
    if( checkValidity(ndp, val) != 0 ) raiseError("TEST FAILED\n");
@@ -183,19 +185,24 @@ int test_checkValidityData()
     * extension "+1+2" which should match the nodeDataPtr's extension */
    validityData1.local_index = "loop1=1,loop2=2";
    ndp->extension = "+1+2";
-   if( checkValidity(ndp, val) != 1 ) raiseError("TEST FAILED\n");
+   SeqLoops_parseArgs( &loopsArgs, "loop1=1,loop2=2");
+   SeqNode_setLoopArgs(ndp, loopsArgs);
+   if( checkValidity(ndp, val) != 1 ) raiseError("TEST MATCH FAILED\n");
 
    /* TEST 6 : We should have a mismatch of the node's extension with the
     * local_index */
    validityData1.local_index = "loop1=1,loop2=2";
    ndp->extension = "+1+3";
-   if( checkValidity(ndp, val) != 0 ) raiseError("TEST FAILED\n");
+   SeqLoops_parseArgs( &loopsArgs, "loop1=1,loop2=3");
+   SeqNode_setLoopArgs(ndp, loopsArgs);
+   if( checkValidity(ndp, val) != 0 ) raiseError("TEST MISMATCH FAILED\n");
 
 out_free:
    ndp->extension = NULL;
    SeqNode_freeNode(ndp);
    return 0;
 }
+
 int test_Resource_createContext()
 {
    header("Resource_createContext");
@@ -233,7 +240,6 @@ int test_Resource_createContext()
 
 out_free:
    SeqNode_freeNode(ndp);
-   SeqUtil_TRACE(TL_FULL_TRACE,"HERE");
    free((char*) xmlFile);
    free((char*) defFile);
    return 0;
@@ -263,6 +269,7 @@ ResourceVisitorPtr createTestResourceVisitor(SeqNodeDataPtr ndp, const char * no
    SeqUtil_TRACE(TL_FULL_TRACE, "createTestResourceVisitor() end\n");
    return rv;
 }
+
 #define NODE_RES_XML_ROOT "NODE_RESOURCES"
 int test_nodeStackFunctions()
 {
@@ -344,6 +351,7 @@ int test_isValid()
 {
 
    SeqNodeDataPtr ndp = SeqNode_createNode("Phil");
+   SeqNameValuesPtr loopsArgs = NULL;
    const char * xmlFile = absolutePath("validityXml.xml");
    xmlDocPtr doc = XmlUtils_getdoc(xmlFile);
    xmlXPathContextPtr rc = xmlXPathNewContext(doc);
@@ -358,13 +366,14 @@ int test_isValid()
    ndp->datestamp = strdup("20160102030405");
    free(ndp->extension);
    ndp->extension = strdup("+0");
+   SeqLoops_parseArgs( &loopsArgs, "loop=0");
+   SeqNode_setLoopArgs(ndp, loopsArgs);
    printValidityData(valDat);
    if ( !isValid(ndp,valNode) ) raiseError("TEST_FAILED");
    deleteValidityData(valDat);
 
 out_free:
    SeqNode_freeNode(ndp);
-   SeqUtil_TRACE(TL_FULL_TRACE, "HERE NOW");
    xmlXPathFreeObject(result);
    xmlXPathFreeContext(rc);
    xmlFreeDoc(doc);
@@ -428,6 +437,7 @@ int test_parseNodeDFS()
    /* SETUP : Artificially create a resourceVisitor with the xml file, and a
     * nodeDataPtr with a datestamp and an extension for validity checking */
    SeqNodeDataPtr ndp = SeqNode_createNode("phil");
+   SeqNameValuesPtr loopsArgs = NULL;
    free(ndp->datestamp);
    ndp->datestamp = strdup("20160102030405");
    const char * xmlFile = absolutePath("loop_container.xml");
@@ -453,6 +463,8 @@ int test_parseNodeDFS()
    rv->loopResourcesFound = 0;
    free(ndp->extension);
    ndp->extension = strdup("+1");
+   SeqLoops_parseArgs( &loopsArgs, "loop1=1");
+   SeqNode_setLoopArgs(ndp, loopsArgs);
    Resource_parseNodeDFS(rv, ndp, Resource_getLoopAttributes);
    expression = SeqNameValues_getValue( ndp->data, "EXPRESSION" );
    if( expression == NULL || strcmp(expression, "13:14:15:16") != 0) raiseError("TEST_FAILED"); 
@@ -469,10 +481,13 @@ int test_Resource_parseWorkerPath()
 {
    header("parseWorkerPath");
    SeqNodeDataPtr ndp = SeqNode_createNode("phil");
+   SeqNameValuesPtr loopsArgs = NULL;
    free(ndp->datestamp);
    ndp->datestamp = strdup("20160102120000");
    free(ndp->extension);
    ndp->extension = strdup("+1");
+   SeqLoops_parseArgs( &loopsArgs, "loop1=1");
+   SeqNode_setLoopArgs(ndp, loopsArgs);
 
    const char * xmlFile = absolutePath("loop_container.xml");
    ResourceVisitorPtr rv = createTestResourceVisitor(ndp,NULL,xmlFile,NULL);
@@ -535,6 +550,121 @@ int test_getVarName()
    return 0;
 }
 
+FlowVisitorPtr createTestFlowVisitor()
+{
+   SeqUtil_TRACE(TL_FULL_TRACE, "createTestFlowVisitor() begin\n");
+   FlowVisitorPtr new_flow_visitor = (FlowVisitorPtr) malloc(sizeof(FlowVisitor));
+   if( new_flow_visitor == NULL )
+      raiseError("createTestFlowVisitor(): out of memory\n");
+
+   char postfix[] = "/flow.xml";
+   char * xmlFilename = (char *) malloc ( strlen(testDir) + strlen(postfix) + 1 );
+   if (xmlFilename == NULL) {
+        raiseError("createTestFlowVisitor(): out of memory\n");
+   }
+
+   sprintf(xmlFilename, "%s%s", testDir,postfix);
+   xmlDocPtr doc = XmlUtils_getdoc(xmlFilename);
+   if (doc == NULL) {
+        raiseError("createTestFlowVisitor(): file %s not found or unreadable\n", xmlFilename);
+   }
+
+   new_flow_visitor->context = xmlXPathNewContext(doc);
+   free(xmlFilename);
+
+   new_flow_visitor->nodePath = strdup("/entry_mod/task");
+   new_flow_visitor->expHome = NULL;
+   new_flow_visitor->datestamp = NULL;
+   new_flow_visitor->switch_args = NULL;
+   new_flow_visitor->context->node = new_flow_visitor->context->doc->children;
+   new_flow_visitor->currentFlowNode = NULL;
+   new_flow_visitor->suiteName = NULL;
+   new_flow_visitor->taskPath = NULL;
+   new_flow_visitor->module = NULL;
+   new_flow_visitor->intramodulePath = NULL;
+   new_flow_visitor->currentNodeType = Task;
+
+   new_flow_visitor->_stackSize = 0;
+
+   SeqUtil_TRACE(TL_FULL_TRACE, "createTestFlowVisitor() end\n");
+   return new_flow_visitor;
+}
+
+int test_Flow_setPathToModule()
+{
+   header("setPathToModule");
+   
+   SeqNodeDataPtr ndp = SeqNode_createNode("nice_node");
+   FlowVisitorPtr fv =  createTestFlowVisitor();
+   free(fv->intramodulePath);
+   free(ndp->container);
+   free(fv->module);
+   fv->intramodulePath = strdup("/mod/family");
+   ndp->container = strdup("/entry_mod/mod/family");
+   fv->module = strdup("mod");
+   fv->_stackSize = 1;
+   
+   Flow_setPathToModule(fv, ndp);
+
+   if (strcmp(ndp->pathToModule,"/entry_mod/mod") != 0)
+      raiseError("TEST_FAILED"); 
+   return 0;
+}
+
+int test_WriteNodeWaitedFile_nfs()
+{
+   header("WriteNodeWaitedFile_nfs");
+   
+   FILE *waitingFile = NULL;
+   char filename[SEQ_MAXFIELD];
+   char line[SEQ_MAXFIELD];
+   char Lexp[256],Lnode[256],Ldatestamp[25],LloopArgs[128];
+   const char * TMPDIR = getenv("TMPDIR");
+   int line_n = 0;
+   snprintf(filename,sizeof(filename),"%s/mtest_waited_file",TMPDIR);
+   
+   WriteNodeWaitedFile_nfs("/seq/exp/home","/mtest/node","20180101010000","two_times_two=4,loop=arg",filename,"");
+   WriteNodeWaitedFile_nfs("/seq/exp/home","/mtest/another_node","20180101010000","two_times_two=4,loop=arg",filename,"");
+   
+   if ((waitingFile = fopen(filename,"a+")) == NULL)
+      raiseError("TEST_FAILED");
+      
+   while( fgets(line, SEQ_MAXFIELD, waitingFile) != NULL ) {
+      memset(LloopArgs,'\0',sizeof(LloopArgs));
+      sscanf(line,"exp=%255s node=%255s datestamp=%24s args=%127s",Lexp,Lnode,Ldatestamp,LloopArgs);
+      if (strcmp(Lexp,"/seq/exp/home") != 0 || strcmp(Ldatestamp,"20180101010000") != 0 || strcmp(LloopArgs,"two_times_two=4,loop=arg") != 0)
+         raiseError("TEST_FAILED");
+      if (line_n == 0) {
+         if (strcmp(Lnode, "/mtest/node") != 0)
+            raiseError("TEST_FAILED");
+         line_n++;
+      } else {
+         if (strcmp(Lnode, "/mtest/another_node") != 0)
+            raiseError("TEST_FAILED");
+      }
+   }
+   
+   if (line_n != 1)
+      raiseError("TEST_FAILED");
+   
+   fclose( waitingFile );
+   remove(filename);
+   return 0;
+}
+
+int test_str2md5()
+{
+   header("str2md5");
+   char *md5sum = NULL;
+   
+   md5sum = (char *) str2md5("Encode moi ca",strlen("Encode moi ca"));
+   if (strncmp(md5sum,"13325029457f870681ed978b9d132fc7",32) != 0){
+      raiseError("TEST_FAILED");
+   }
+   
+   return 0;
+}
+
 int runTests(const char * seq_exp_home, const char * node, const char * datestamp)
 {
    test_xml_fallback();
@@ -547,10 +677,12 @@ int runTests(const char * seq_exp_home, const char * node, const char * datestam
    test_Resource_getLoopAttributes();
    test_parseNodeDFS();
    test_Resource_parseWorkerPath();
-   test_SeqLoops_getNodeLoopContainersExtensionsInReverse();
-
-
+   /* test_SeqLoops_getNodeLoopContainersExtensionsInReverse(); */
    test_getVarName();
+   
+   test_Flow_setPathToModule();
+   test_WriteNodeWaitedFile_nfs();
+   test_str2md5();
 
    SeqUtil_TRACE(TL_CRITICAL, "============== ALL TESTS HAVE PASSED =====================\n");
    return 0;
@@ -614,7 +746,7 @@ from the maestro directory.\n");
       exit(1);
    }
 
-   char * suffix = "/src/testDir";
+   char * suffix = "/src/core/testDir";
    testDir = (char *) malloc( sizeof(char) * (strlen(PWD) + strlen(suffix) + 1));
    sprintf( testDir, "%s%s" , PWD, suffix);
 
