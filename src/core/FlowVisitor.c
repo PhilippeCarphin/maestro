@@ -745,14 +745,15 @@ int Flow_setPathToModule(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataP
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_setPathToModule() begin\n");
    int entryModule = (_flow_visitor->_stackSize == 0);
    char pathToModule[SEQ_MAXFIELD] = {'\0'};
+   char pathToContainer[SEQ_MAXFIELD] = {'\0'};
 
    if( _flow_visitor->intramodulePath != NULL && ! entryModule ){
       int lengthDiff = strlen(_nodeDataPtr->container) - strlen( _flow_visitor->intramodulePath);
-      strncpy(pathToModule, _nodeDataPtr->container, lengthDiff);
+      strncpy(pathToContainer, _nodeDataPtr->container, lengthDiff);
    } else {
-      strcpy(pathToModule, _nodeDataPtr->container );
+      strcpy(pathToContainer, _nodeDataPtr->container );
    }
-   sprintf(pathToModule,"%s/%s",pathToModule,_flow_visitor->module);
+   sprintf(pathToModule,"%s/%s",pathToContainer,_flow_visitor->module);
 
    SeqNode_setPathToModule(_nodeDataPtr,pathToModule);
 

@@ -776,7 +776,7 @@ static void l2d2SelectServlet( int listen_sd , TypeOfWorker tworker)
 	                                         /* close(i);same comment as for the S case below */
 			                         ret=shutdown(i,SHUT_WR);
 						 ceiling--;
-                                                 snprintf(l2d2client[i].Open_str,sizeof(l2d2client[i].Open_str),"Session Refused with Host:%s AT:%s Exp=%s Node=%s Signal=%s pid_svr=%d pid_sent=%d m5_client=%s ",hostname , Stime, expName, node, signal, pidTken, pidSent, m5);
+                                                 snprintf(l2d2client[i].Open_str,sizeof(l2d2client[i].Open_str),"Session Refused with Host:%s AT:%s Exp=%s Node=%s Signal=%s pid_svr=%u pid_sent=%u m5_client=%s ",hostname , Stime, expName, node, signal, pidTken, pidSent, m5);
                                          }
                                          /* gather info for this client */
 					 l2d2client[i].trans=0;
@@ -1418,7 +1418,7 @@ int main ( int argc , char * argv[] )
   /* bind to a free port, get port number */
   server_port = bind_sock_to_port (fserver, L2D2.port_min, L2D2.port_max);
   if (server_port < 0) {
-     fprintf(stderr,"Cannot create server. Port blocked or bad range. \n",buf);
+     fprintf(stderr,"Cannot create server. Port blocked or bad range. \n");
 	  exit(1);
   } 
   

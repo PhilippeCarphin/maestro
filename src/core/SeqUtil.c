@@ -1112,7 +1112,7 @@ int WriteNodeWaitedFile_nfs ( const char* seq_xp_home, const char* nname, const 
     while( fgets(line, SEQ_MAXFIELD, waitingFile) != NULL ) {
            /* clear LloopArgs since args might be empty, meaning it would not match in the sscanf which would leave LloopArgs unchanged */
            memset(LloopArgs,'\0',sizeof(LloopArgs));
-           n=sscanf(line,"exp=%s node=%s datestamp=%s args=%s",Lexp,Lnode,Ldatestamp,LloopArgs);
+           n=sscanf(line,"exp=%255s node=%255s datestamp=%24s args=%127s",Lexp,Lnode,Ldatestamp,LloopArgs);
            if ( (Linode=get_Inode(Lexp)) < 0 ) {
                    fprintf(stderr,"writeNodeWaitedFile_nfs: Cannot get Inode of registred xp=%s\n",Lexp);
                    continue;
@@ -1227,7 +1227,7 @@ int WriteForEachFile_nfs ( const char* _exp, const char* _node, const char* _dat
     /* sua   : need to add more logic for duplication and handle more than one entry in the waited file 
        Rochdi: we added comparaison of xp inode:  /.suites vs /maestro_suites (ie real case) */
     while( fgets(line, SEQ_MAXFIELD, waitingFile) != NULL ) {
-           n=sscanf(line,"exp=%s node=%s datestamp=%s index_to_add=%s args=%s",Lexp,Lnode,Ldatestamp,Lindex, LloopArgs);
+           n=sscanf(line,"exp=%255s node=%255s datestamp=%24s index_to_add=%127s args=%127s",Lexp,Lnode,Ldatestamp,Lindex, LloopArgs);
            if ( (Linode=get_Inode(Lexp)) < 0 ) {
                    fprintf(stderr,"writeNodeWaitedFile_nfs: Cannot get Inode of registred xp=%s\n",Lexp);
                    continue;
@@ -1279,6 +1279,9 @@ int lock_nfs ( const char * filename , const char * datestamp, const char * _seq
      time_t now;
      double diff_t;
 
+     if ( filename == NULL ) {
+        fprintf(stderr,"lock_nfs: null filename received as argument ...\n");
+     }
 
      if ( _seq_exp_home == NULL ) {
 	            fprintf(stderr,"lock_nfs: Cannot bad SEQ_EXP_HOME received as argument ...\n");
