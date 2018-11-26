@@ -2064,11 +2064,11 @@ static void setWaitingState(const SeqNodeDataPtr _nodeDataPtr, const char* waite
  ********************************************************************************/
 #define SEQ_USE_SYSTEM_CALLS_FOR_DEPS
 static void submitDependencies ( const SeqNodeDataPtr _nodeDataPtr, const char* _signal, const char* _flow ) {
-   char line[512];
+   char line[SEQ_MAXFIELD];
    char nodelogger_msg[SEQ_MAXFIELD];
    FILE* waitedFilePtr = NULL;
    SeqNameValuesPtr loopArgsPtr = NULL, depNVArgs = NULL;
-   char depExp[256] = {'\0'}, depNode[256] = {'\0'}, depArgs[SEQ_MAXFIELD] = {'\0'}, depDatestamp[20] = {'\0'};
+   char depExp[256] = {'\0'}, depNode[256] = {'\0'}, depArgs[256] = {'\0'}, depDatestamp[20] = {'\0'};
    char waited_filename[SEQ_MAXFIELD] = {'\0'}, submitCmd[SEQ_MAXFIELD] = {'\0'}, statusFile[SEQ_MAXFIELD] = {'\0'};
    char *extName = NULL, * depExtension = NULL, *tmpValue=NULL, *tmpExt=NULL;
    int submitCode = 0, count = 0, line_count=0;
@@ -2127,7 +2127,7 @@ static void submitDependencies ( const SeqNodeDataPtr _nodeDataPtr, const char* 
 
                   /* Extract dependant node information from line */
                   SeqUtil_TRACE(TL_FULL_TRACE, "maestro.submitDependencies() from waited file line: %s\n", current_dep_line->data );
-                  sscanf( current_dep_line->data, "exp=%s node=%s datestamp=%s args=%s", 
+                  sscanf( current_dep_line->data, "exp=%255s node=%255s datestamp=%19s args=%255s", 
                      depExp, depNode, depDatestamp, depArgs );
                   SeqUtil_TRACE(TL_FULL_TRACE, "maestro.submitDependencies() waited file data depExp:%s depNode:%s depDatestamp:%s depArgs:%s\n", 
                      depExp, depNode, depDatestamp, depArgs );
@@ -2184,7 +2184,7 @@ static void submitDependencies ( const SeqNodeDataPtr _nodeDataPtr, const char* 
             } else {
                /* Flow is not "continue" : Simply emit a nodelogger messge for every line in the file */
                while ( fgets( line, sizeof(line), waitedFilePtr ) != NULL ) {
-                  sscanf( line, "exp=%s node=%s datestamp=%s args=%s",
+                  sscanf( line, "exp=%255s node=%255s datestamp=%19s args=%255s",
                      depExp, depNode, depDatestamp, depArgs );
                   SeqUtil_TRACE(TL_FULL_TRACE, "maestro.submitDependencies() read in line exp=%s node=%s datestamp=%s args=%s \n", depExp, depNode, depDatestamp,depArgs);
                   if ((depArgs != NULL) && (strlen(depArgs) > 0) && ( SeqLoops_parseArgs( &depNVArgs, depArgs) != -1))  {
@@ -2224,10 +2224,10 @@ Inputs:
 
 */
 static void submitForEach ( const SeqNodeDataPtr _nodeDataPtr, const char* _signal ) {
-   char line[512];
+   char line[SEQ_MAXFIELD];
    FILE* FEFile = NULL;
    SeqNameValuesPtr loopArgsPtr = NULL, newArgs=NULL, poppedArgs=NULL;
-   char depExp[256], depNode[256],depIndex[128], depArgs[SEQ_MAXFIELD], depDatestamp[15], poppedValue[128];
+   char depExp[256], depNode[256],depIndex[128], depArgs[256], depDatestamp[20], poppedValue[128];
    char filename[SEQ_MAXFIELD], submitCmd[SEQ_MAXFIELD], extendedArgs[256];
    char *extName = NULL, *submitDepArgs = NULL, *tmpValue=NULL, *tmpExt=NULL;
    int submitCode = 0, line_count=0, ret, isLastIter=0;
@@ -2276,9 +2276,9 @@ static void submitForEach ( const SeqNodeDataPtr _nodeDataPtr, const char* _sign
                memset(extendedArgs,'\0',sizeof extendedArgs);
                line_count++;
                SeqUtil_TRACE(TL_FULL_TRACE, "maestro.submitForEach() from waited file line: %s\n", line );
-               ret=sscanf( line, "exp=%s node=%s datestamp=%s index_to_add=%s args=%s", depExp, depNode, depDatestamp, depIndex, depArgs );
+               ret=sscanf( line, "exp=%255s node=%255s datestamp=%19s index_to_add=%127s args=%255s", depExp, depNode, depDatestamp, depIndex, depArgs );
                if (ret != 5) {
-                  ret=sscanf( line, "exp=%s node=%s datestamp=%s index_to_add=%s args=", depExp, depNode, depDatestamp, depIndex );
+                  ret=sscanf( line, "exp=%255s node=%255s datestamp=%19s index_to_add=%127s args=", depExp, depNode, depDatestamp, depIndex );
                   if (ret != 4) {
                      fprintf(stderr,"Format error in scanning current line: %s . Skipping. \n", line); 
                      continue;
