@@ -1,4 +1,4 @@
-#~/bin/bash
+#!/bin/bash
 
 # Creates roff/manpage files using a folder of markdown files.
 # Run this script from the "maestro/man" folder.
