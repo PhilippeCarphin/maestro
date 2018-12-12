@@ -24,6 +24,7 @@ echo "
 export SEQ_PACKAGE_HOME=${PACKAGE_HOME}
 export SEQ_BIN=${BIN_FOLDER}
 export SEQ_SRC=${PACKAGE_HOME}/src
+export SEQ_WRAPPERS=${PACKAGE_HOME}/bin/wrappers
 export SEQ_TCL_BIN=${TCL_BIN_FOLDER}
 export SEQ_TCL_SRC=${PACKAGE_HOME}/src/tcl
 export SEQ_MANAGER_SRC=${PACKAGE_HOME}/src/xm
