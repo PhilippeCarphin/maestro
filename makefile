@@ -9,14 +9,16 @@ export VERSION=$(shell ${PWD}/scripts/get_repo_version.py)
 export SSMPACKAGE=maestro_${VERSION}_${ORDENV_PLAT}
 export BUILD_PLATFORM_FOLDER=${PWD}/build/${SSMPACKAGE}
 export BIN_FOLDER=${BUILD_PLATFORM_FOLDER}/bin
+export WRAPPER_PREFIX=maestro_${VERSION}.
+export WRAPPERS_BUILD_FOLDER=${BUILD_PLATFORM_FOLDER}/bin/wrappers
 export SCRIPTS_FOLDER=${PWD}/scripts
 export MAN_FOLDER=${BUILD_PLATFORM_FOLDER}/man/man1
 CC=cc
 
 all: clean
-	mkdir -p ${BUILD_PLATFORM_FOLDER}
-	mkdir -p ${BIN_FOLDER}
-
+	mkdir -p ${BUILD_PLATFORM_FOLDER} ${BIN_FOLDER} ${WRAPPERS_BUILD_FOLDER}
+	
+	${SCRIPTS_FOLDER}/copy_wrappers.sh ${WRAPPER_PREFIX} ${WRAPPERS_BUILD_FOLDER}
 	cp -r src ${BUILD_PLATFORM_FOLDER}/
 	cp -r .ssm.d ${BUILD_PLATFORM_FOLDER}/
 
