@@ -31,8 +31,9 @@ export SEQ_MANAGER_SRC=${PACKAGE_HOME}/src/xm
 
 export SEQ_MAESTRO_DOMAIN=${DOMAIN_HOME}
 export SEQ_MAESTRO_SHORTCUT=\". ssmuse-sh -d ${DOMAIN_HOME}\"
-export TMPDIR=${TMPDIR:-/tmp/$USER/$$} && mkdir -p ${TMPDIR}
-export TRUE_HOST=${TRUE_HOST:-$(hostname)}
+export TMPDIR=\${TMPDIR:-/tmp/\$USER/\$\$}
+mkdir -p \${TMPDIR}
+export TRUE_HOST=${TRUE_HOST:-\$(hostname)}
 
 export MANPATH=$MANPATH:${PACKAGE_HOME}/man:
 
