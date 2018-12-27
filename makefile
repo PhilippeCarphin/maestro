@@ -16,6 +16,9 @@ export MAN_FOLDER=${BUILD_PLATFORM_FOLDER}/man/man1
 CC=cc
 
 all: clean
+	# Abort if VERSION was not set.
+	@[ "${VERSION}" ] || ( echo "Failed to set VERSION."; exit 1 )
+
 	mkdir -p ${BUILD_PLATFORM_FOLDER} ${BIN_FOLDER} ${WRAPPERS_BUILD_FOLDER}
 	
 	${SCRIPTS_FOLDER}/copy_wrappers.sh ${WRAPPER_PREFIX} ${WRAPPERS_BUILD_FOLDER}
