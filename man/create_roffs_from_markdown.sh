@@ -27,11 +27,8 @@ ln -s $TARGET_FOLDER man1
 # Abort if we cannot generate the man pages.
 # This is done after we have safely created the directory structure.
 if [[ -z $(command -v python3) ]] ; then
-		echo "
-		
-		WARNING: not creating man pages. Python 3 is required, but was not found.
-		
-		"
+		echo "		
+WARNING: not creating man pages. Python 3 is required, but was not found."
 		sleep 5
 		exit 0
 fi
