@@ -5,7 +5,8 @@ SHELL := bash
 .DELETE_ON_ERROR:
 .SUFFIXES:
 
-export VERSION=$(shell ${PWD}/scripts/get_repo_version.py)
+export VERSION=$(shell ${PWD}/scripts/get_repo_version.sh )
+export ORDENV_PLAT=$(shell ${PWD}/scripts/adjust_ordenv_plat.sh )
 export SSMPACKAGE=maestro_${VERSION}_${ORDENV_PLAT}
 export BUILD_PLATFORM_FOLDER=${PWD}/build/${SSMPACKAGE}
 export BIN_FOLDER=${BUILD_PLATFORM_FOLDER}/bin
@@ -16,8 +17,21 @@ export MAN_FOLDER=${BUILD_PLATFORM_FOLDER}/man/man1
 CC=cc
 
 all: clean
+	echo "VERSION = '${VERSION}'"
 	# Abort if VERSION was not set.
-	@[ "${VERSION}" ] || ( echo "Failed to set VERSION."; exit 1 )
+	if [[ -z "${VERSION}" ]] ; then \
+		echo "Aborted. Failed to find VERSION." ;\
+		exit 1 ;\
+	fi
+
+	cd man ; ./create_roffs_from_markdown.sh
+	mkdir -p ${MAN_FOLDER}
+	cp -r man/roff/* ${MAN_FOLDER}
+
+	if [[ "$(shell ${PWD}/scripts/is_platform_xc40.sh )" = "true" ]] ; then \
+			echo "Compiling on Cray architecture requires that we specify a module." ;\
+			module switch PrgEnv-intel/5.2.82 PrgEnv-gnu ;\
+	fi
 
 	mkdir -p ${BUILD_PLATFORM_FOLDER} ${BIN_FOLDER} ${WRAPPERS_BUILD_FOLDER}
 	
@@ -25,14 +39,7 @@ all: clean
 	cp -r src ${BUILD_PLATFORM_FOLDER}/
 	cp -r .ssm.d ${BUILD_PLATFORM_FOLDER}/
 
-	if [[ `lsb_release -a` = *"SUSE LINUX"* ]] ; then \
-			echo "If release is SUSE, assume we are on IBM cray architecture." ;\
-			echo "Compiling on Cray architecture requires that we specify a module and more generic ORDENV_PLAT" ;\
-			module switch PrgEnv-intel/5.2.82 PrgEnv-gnu ;\
-			export ORDENV_PLAT=sles-11-amd64-64 ;\
-	fi
-
-	make -C ${BUILD_PLATFORM_FOLDER}/src/core
+	module switch PrgEnv-intel/5.2.82 PrgEnv-gnu ; make -C ${BUILD_PLATFORM_FOLDER}/src/core
 
 	if [ -d "_tcl" ]; then \
 			echo "Using _tcl folder instead of building tcl from source." ;\
@@ -41,14 +48,10 @@ all: clean
 	else \
 			echo "Could not find _tcl folder, building tcl from source." ;\
 			sleep 4 ;\
-			make -C ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
+			module switch PrgEnv-intel/5.2.82 PrgEnv-gnu ; make -C ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
 	fi
 
 	cd ${BUILD_PLATFORM_FOLDER}/.ssm.d ; . ${SCRIPTS_FOLDER}/create_ssm_control_files_here.sh
-	
-	cd man ; ./create_roffs_from_markdown.sh
-	mkdir -p ${MAN_FOLDER}
-	cp -r man/roff/* ${MAN_FOLDER}
 	
 	./scripts/package-ssm.sh
 	

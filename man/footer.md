@@ -18,7 +18,7 @@ If in the future we decide man pages are not the best way to centralise our info
 
 If something appears out of date or wrong, please help the team by notifying us, or correcting this man page!
 
-Report Maestro bugs to https://gitlab.science.gc.ca/maestro/maestro/issues
+Report Maestro bugs to https://gitlab.science.gc.ca/cmoi/maestro/issues
 
 Contact stuart.spence@canada.ca for questions about the Maestro man pages.
 
@@ -30,4 +30,4 @@ Maestro and its tools are licensed under GPL 2.1. This is free software: you are
 
 https://wiki.cmc.ec.gc.ca/wiki/Maestro
 
-https://gitlab.science.gc.ca/maestro/maestro
+https://gitlab.science.gc.ca/cmoi/maestro

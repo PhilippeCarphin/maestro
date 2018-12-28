@@ -4,7 +4,7 @@
 # Run this script from the "maestro/man" folder.
 # Requires markdown files in the "markdown" folder and puts output in folder "roff"
 
-set -e
+set -eu
 
 SOURCE_FOLDER=markdown
 TARGET_FOLDER=roff
@@ -20,6 +20,21 @@ if [ ! -d $SOURCE_FOLDER ] ; then
 fi
 rm -rf $TARGET_FOLDER
 mkdir -p $TARGET_FOLDER
+
+# Create soft link for MANPATH
+ln -s $TARGET_FOLDER man1
+
+# Abort if we cannot generate the man pages.
+# This is done after we have safely created the directory structure.
+if [[ -z $(command -v python3) ]] ; then
+		echo "
+		
+		WARNING: not creating man pages. Python 3 is required, but was not found.
+		
+		"
+		sleep 5
+		exit 0
+fi
 
 # Setup Python virtual environment if necessary
 VENV=../venv
@@ -42,9 +57,6 @@ for markdown in `find $SOURCE_FOLDER -name "*.md"` ; do
     $VENV/bin/python3 mrkd.py $temp_markdown $TARGET_FOLDER/$name.1
     rm $temp_markdown
 done
-
-# Create soft link for MANPATH
-ln -s $TARGET_FOLDER man1
 
 # Create README
 SCRIPT_NAME=`basename "$0"`
