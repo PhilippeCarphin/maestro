@@ -1,3 +1,5 @@
+#!/bin/bash
+
 # This script uses variables in the environment to create the control and control.json files for SSM packages.
 # It creates "control" and "control.json" in the current folder.
 # If given, the first argument of the script is used as the 'git fetch url' to describe where to get the repo.

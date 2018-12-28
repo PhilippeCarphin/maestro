@@ -3,6 +3,7 @@
 # On some platforms, a module switch is required for compilation.
 # If that is necessary, this script prints it. Otherwise prints nothing.
 
+# find the full path which contains this script file, no matter where it is called from.
 SCRIPT_DIR="$( cd "$( dirname "${BASH_SOURCE[0]}" )" >/dev/null 2>&1 && pwd )"
 
 if [[ "$(bash ${SCRIPT_DIR}/is_platform_xc40.sh )" = "true" ]] ; then

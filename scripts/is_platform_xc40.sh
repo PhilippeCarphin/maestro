@@ -2,7 +2,7 @@
 
 # Prints 'true' if we are likely on IBM cray architecture.
 # Prints 'false' otherwise.
-# This script exists as an easy way to perform an identical check many times in the convoluted build process.
+# This script is essentially a re-usable function for the makefile, so that this check is easily changed or removed in the future.
 
 if [[ "$(lsb_release -a)" = *"SUSE LINUX"* ]] ; then 
 		echo "true"
