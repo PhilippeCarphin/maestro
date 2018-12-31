@@ -22,6 +22,9 @@ fi
 
 [[ -f "${SEQ_SRC}/etc/check_deprecation" ]] && . "${SEQ_SRC}/etc/check_deprecation"
 
+# Note: because of 'man_if_help', cclargs is used here only to parse. 
+# Users will never see these brief cclargs messages, instead they will see the Linux man page.
+man_if_help $* && exit 0
 arguments=$*
 eval `cclargs $0 "[maestro gui]" \
   -d            ""      ""      "[sequencer date]" \
