@@ -71,7 +71,7 @@ After the build process, you can install and publish the SSM package in the usua
 ```bash
 cd maestro
 
-VERSION=`./scripts/get_repo_version.py`
+VERSION=`./scripts/get_repo_version.sh`
 SSM_DOMAIN_PATH=$HOME/ssm/maestro/$VERSION
 PLATFORM=ubuntu-14.04-amd64-64
 SSM_PACKAGE=ssm/maestro_${VERSION}_${PLATFORM}.ssm
