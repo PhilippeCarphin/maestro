@@ -1,0 +1,38 @@
+#!/bin/bash
+
+# This script helps other scripts show their man page if '-h' or similar options are given.
+# This can be used to remove documentation responsibilities from tools like cclargs so that cclargs is used just for parsing.
+
+# For example, you might have a bash script called 'abc_format.sh' which uses cclargs.
+# You can add this line to 'abc_format.sh' just before cclargs:
+#
+#    ./man_if_help $* && exit 0
+#
+# or if this script is in your bin:
+#
+#    man_if_help $* && exit 0
+#
+# Now if '-h' '--help' or '--h' are found in any commandline arguments in abc_format.sh, the command
+# 'man abc_format.sh' will be run and 'abc_format.sh' will exit without proceeding to cclargs.
+
+
+
+# Use the parent process ID to get the command which called this script.
+parent_command=$(ps -o comm= $PPID)
+
+# If this script is not called by a script, but called interactively, then simply print itself.
+# This script does not have its own man page because it will likely be dropped into many different projects and only used internally.
+if [[ $parent_command == "bash" ]] ; then
+		cat $0
+		exit 0
+fi
+
+for arg in "$@"
+do
+		if [[ $arg == "-h" || $arg == "--help" || $arg == "--h" ]] ; then
+				# This script sends the 'exit 0' signal only if it successfully ran the man page.
+				man $parent_command && exit 0
+		fi
+done
+
+exit 1

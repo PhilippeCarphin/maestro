@@ -15,6 +15,9 @@ if [[ "${SEQ_BIN}" == "" ]] ; then
    exit 
 fi
 
+# Note: because of 'man_if_help', cclargs is used here only to parse.
+# Users will never see these brief cclargs messages, instead they will see the Linux man page.
+man_if_help $* && exit 0
 arguments=$*
 eval `cclargs -D "" $0 "[starts the overview gui]" \
   -as 		"" 	"" 	"[start application as another user]" \
