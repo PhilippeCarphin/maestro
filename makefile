@@ -8,7 +8,8 @@ SHELL := bash
 export VERSION=$(shell ${PWD}/scripts/get_repo_version.sh )
 export ORDENV_PLAT=$(shell ${PWD}/scripts/adjust_ordenv_plat.sh )
 export SSMPACKAGE=maestro_${VERSION}_${ORDENV_PLAT}
-export BUILD_PLATFORM_FOLDER=${PWD}/build/${SSMPACKAGE}
+export BUILD_FOLDER=${PWD}/build
+export BUILD_PLATFORM_FOLDER=${BUILD_FOLDER}/${SSMPACKAGE}
 export BIN_FOLDER=${BUILD_PLATFORM_FOLDER}/bin
 export WRAPPER_PREFIX=maestro_${VERSION}.
 export WRAPPERS_BUILD_FOLDER=${BUILD_PLATFORM_FOLDER}/bin/wrappers
@@ -59,5 +60,10 @@ all: clean
 	
 clean:
 	echo "version = ${VERSION}"
-	rm -rf build ${BIN_FOLDER}
+
+	rm -rf ${BIN_FOLDER}
+
+	# Delete all builds for this ord environment platform
+	rm -rf ${BUILD_FOLDER}/*${ORDENV_PLAT}*
+
 	mkdir -p build
