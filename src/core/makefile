@@ -174,7 +174,7 @@ MAESTRO_OBJECTS = maestro.o logreader.o nodelogger.o tictac.o nodeinfo.o \
 	FlowVisitor.o SeqDepends.o
 
 maestro: maestro_main.c $(MAESTRO_OBJECTS)
-	$(CC) $^ -I $(INCDIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o maestro; \
+	$(CC) $^ -I $(INCDIR) $(XC40_DYNAMIC_FLAG) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o maestro; \
 	mv maestro $(BINDIR);
 
 EXPCATCHUP_OBJECTS = expcatchup.o getopt_long.o SeqUtil.o XmlUtils.o           \

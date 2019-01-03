@@ -1,0 +1,9 @@
+# This file exists so that git stores the bin directory in the repo.
+# This is necessary because many makes in the makefile assume the bin directory exists.
+# If you run for example:
+#    make maestro
+# it would also run:
+#    mv maestro bin
+# which renames maestro to bin, since bin does not exist.
+
+# If you can think of a cleaner, simpler way, go ahead!
