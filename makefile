@@ -20,6 +20,7 @@ export SSMPACKAGE=maestro_${VERSION}_${ORDENV_PLAT}
 export BUILD_FOLDER=${PWD}/build
 export BUILD_PLATFORM_FOLDER=${BUILD_FOLDER}/${SSMPACKAGE}
 export BIN_FOLDER=${BUILD_PLATFORM_FOLDER}/bin
+export TCL_BIN_FOLDER=${BUILD_PLATFORM_FOLDER}/tcl_bin
 export WRAPPER_PREFIX=maestro_${VERSION}.
 export WRAPPERS_BUILD_FOLDER=${BUILD_PLATFORM_FOLDER}/bin/wrappers
 export SCRIPTS_FOLDER=${PWD}/scripts
@@ -53,15 +54,19 @@ all: clean
 
 	${XC40_MODULE_SWITCH} make -C ${BUILD_PLATFORM_FOLDER}/src/core
 
-	if [ -d "_tcl" ]; then \
-			echo "Using _tcl folder instead of building tcl from source." ;\
-			rm -rf ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
-			cp -r _tcl/ ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
-	else \
-			echo "Could not find _tcl folder, building tcl from source." ;\
-			sleep 4 ;\
-			${XC40_MODULE_SWITCH} make -C ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
-	fi
+	# Use != instead of == so that IS_XC40==true is explicitly the only way we skip this important step.
+	if [ -d "_tcl" ] && [ ${IS_XC40} != "true" ] ; then \
+		echo "Using _tcl folder instead of building tcl from source." ;\
+		rm -rf ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
+		cp -r _tcl/ ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
+	elif [ ${IS_XC40} != "true" ] ; then \
+		echo "Could not find _tcl folder, building tcl from source." ;\
+		sleep 4 ;\
+		${XC40_MODULE_SWITCH} make -C ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
+	fi \
+	
+	# Move all bins to the root bin folder
+	
 
 	cd ${BUILD_PLATFORM_FOLDER}/.ssm.d ; . ${SCRIPTS_FOLDER}/create_ssm_control_files_here.sh
 	

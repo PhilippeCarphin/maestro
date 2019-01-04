@@ -22,7 +22,7 @@
 
 
 arguments=$*
-eval `cclargs $0 \
+eval `cclargs $0 "[For complete and up to date information on this command, see the man page by typing 'man expbegin']" \
   -h        ""                    ""                   "[Display help       ]" \
   -v        ""                    "1"                  "[Verbose            ]" \
   -d        ""                    ""                   "[datestamp value YYYYMMDDhhmmss ]" \

@@ -16,7 +16,7 @@ if [[ "${SEQ_BIN}" == "" ]] ; then
 fi
 
 arguments=$*
-eval `cclargs -D "" $0 "[For more information on this command, see the man page by typing 'man xflow_overview']" \
+eval `cclargs -D "" $0 "[For complete and up to date information on this command, see the man page by typing 'man xflow_overview']" \
   -as 		"" 	"" 	"[start application as another user]" \
   -display 	"" 	"$DISPLAY" 	"[X windows display]" \
   -debug 	"0" 	"1"	"[debug message]" \

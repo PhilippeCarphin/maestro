@@ -83,7 +83,8 @@ static void alarm_handler() { /* nothing */ }
 
 void print_usage (FILE* stream , int exit_code)
 {
-  fprintf (stream, "Usage:  %s options [ args ... ]\n", program_name);
+  fprintf (stream, "For complete and up to date information on this command, see the man page by typing 'man madmin'. Old:\n\n\
+				  Usage:  %s options [ args ... ]\n", program_name);
   fprintf (stream,
            "  -h                      Display usage information.\n"
            "  -c   config.xml         re-load maestro server configuration file.\n"

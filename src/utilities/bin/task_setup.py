@@ -1031,7 +1031,7 @@ class Config(dict):
 if __name__ == "__main__":
 
     # Command line argument parsing
-    usage = "%prog [options] CONFIG_FILE"
+    usage = "For complete and up to date information on this command, see the man page by typing 'man task_setup.py'."
     parser = optparse.OptionParser(usage=usage)
     parser.add_option("-b","--base",dest="basedir",default='.',
                       help="task base DIRECTORY",metavar="DIRECTORY")

@@ -26,7 +26,8 @@ import optparse
 def main(): 
 
     # Command line argument parsing
-    parser = optparse.OptionParser()
+    usage="For complete and up to date information on this command, see the man page by typing 'man varsed.py'. Old:"
+    parser = optparse.OptionParser(usage=usage)
     parser.add_option("-i","--input_file",dest="inputFile",default=None,
                       help="Input FILE to replace non-quoted semi-colons for newlines)",metavar="FILE")
     (options,args) = parser.parse_args()

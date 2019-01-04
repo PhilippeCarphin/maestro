@@ -26,7 +26,9 @@
 #include "getopt.h"
 static void printUsage()
 {
-   char * usage = "DESCRIPTION: getdef: Searches in _file_ for the value of _key_ where file contains\n\
+   char * usage = "For complete and up to date information on this command, see the man page by typing 'man getdef'. Old:\n\
+\n\
+		   DESCRIPTION: getdef: Searches in _file_ for the value of _key_ where file contains\n\
     lines of the form \"key=value\".\n\
 \n\
 USAGE:\n\

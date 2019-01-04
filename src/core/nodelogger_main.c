@@ -32,28 +32,14 @@
 #include "SeqUtil.h"
 #include "getopt.h"
 
-/***************************************************************
-   Name: nodelogger
-   description: write a formatted message to the oprun log
-   usage: nodelogger job signal message
-   Douglas Bender
-
-Revision:
-
-   April 2013:  R. Lahlou
-     - add signal to abort loop in nodeinfo.c
-   September 1999 Ping-An Tan
-             - Using nodelogger the procedure from runcontrollib.a library.
-*****************************************************************/
-
-
 int MLLServerConnectionFid=0;
 
 static void alarm_handler() { fprintf(stderr,"@@@@@@ EXCEEDED TIME IN LOOP ITERATIONS @@@@@@\n"); };
 
 static void printUsage()
 {
-char * usage = "DESCRIPTION: Nodelogger\n\
+char * usage = "For complete and up to date information on this command, see the man page by typing 'man nodelogger'. Old:\n\n\
+		DESCRIPTION: Nodelogger\n\
 \n\
 USAGE:\n\
 \n\

@@ -40,7 +40,8 @@
 *************************************************************************************/
 static void printSeqUsage()
 {
-   char * usage = "DESCRIPTION: Maestro\n\
+   char * usage = "For complete and up to date information on this command, see the man page by typing 'man maestro'. Old:\n\n\
+		   DESCRIPTION: Maestro\n\
 \n\
 USAGE\n\
 \n\

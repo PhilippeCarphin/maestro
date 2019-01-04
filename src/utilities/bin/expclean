@@ -22,7 +22,7 @@
 
 arguments=$*
 
-eval `cclargs $0 "[For more information on this command, see the man page by typing 'man expclean']" \
+eval `cclargs $0 "[For complete and up to date information on this command, see the man page by typing 'man expclean']" \
   -e        ""                    ""                           "[Target experiment  ]" \
   -t        ""                    ""                           "[Real-Time deletion value   ]" \
   -d        ""                    ""                           "[Datestamp deletion value   ]" \

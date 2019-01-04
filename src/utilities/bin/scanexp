@@ -21,7 +21,7 @@
 # */
 
 arguments=$*
-eval `cclargs $0 "[For more information on this command, see the man page by typing 'man scanexp']" \
+eval `cclargs $0 "[For complete and up to date information on this command, see the man page by typing 'man scanexp']" \
   -e        ""                    ""                           "[Target experiment or suites.xml file]" \
   -h        ""                    ""                           "[Display help]" \
   -s        ""                    ""                           "[Which string to look for]" \

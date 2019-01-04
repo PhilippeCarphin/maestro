@@ -32,7 +32,9 @@
 
 static void printUsage()
 {
-   char * usage = "DESCRIPTION: Logreader\n\
+   char * usage = "For complete and up to date information on this command, see the man page by typing 'man logreader'. Old:\n\
+\n\
+		   DESCRIPTION: Logreader\n\
 \n\
 USAGE:\n\
     \n\
