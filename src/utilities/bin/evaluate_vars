@@ -22,7 +22,7 @@
 
 arguments=$*
 
-eval `cclargs_lite $0 \
+eval `cclargs_lite $0 "[For complete and up to date information on this command, see the man page by typing 'man evaluate_vars']" \
   -n        ""                    ""                           "[Node               ]" \
   -l        ""                    ""                           "[Loop arguments     ]" \
   -d        ""                    ""                           "[Datestamp          ]" \

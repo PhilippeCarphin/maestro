@@ -85,6 +85,12 @@ volatile sig_atomic_t sig_child = 0;
 /* signal handler for sesion control not used for the moment  */
 static void recv_handler ( int notused ) { sig_recv = 1; }
 
+static void show_usage()
+{
+		char * usage = "For complete and up to date information on this command, see the man page by typing 'man mserver'.";
+		puts(usage);
+}
+
 static void child_handler(int signo, siginfo_t *siginfo, void *context)
 {
      wait(0);
@@ -1321,9 +1327,7 @@ void maestro_l2d2_main_process_server (int fserver)
 }
 
 int main ( int argc , char * argv[] ) 
-{
-
-  
+{  
   struct stat st;
   char *Auth_token=NULL, *m5sum=NULL;
   struct passwd *passwdEnt = getpwuid(getuid());
@@ -1339,6 +1343,12 @@ int main ( int argc , char * argv[] )
 
   char *home = NULL;
   char *ip=NULL;
+
+  // mserver has no arguments, so if some are given, assume it is -h or --help or the user needs a usage page.
+  if(argc>0){
+		show_usage();
+		exit(1);
+  }
 
   /* default values for L2D2.clean_times */
   L2D2.clean_times=L2D2_cleantimes;

@@ -21,7 +21,7 @@ runcontrollib.o nodelogger.o maestro.o nodeinfo.o tictac.o expcatchup.o XmlUtils
 QueryServer.o SeqUtilServer.o l2d2_socket.o l2d2_commun.o ocmjinfo.o logreader.o $(ROXML_OBJECTS)
 EXECUTABLES=nodelogger maestro nodeinfo tictac expcatchup getdef logreader mserver madmin tsvinfo mtest
 
-BINDIR=${BIN_FOLDER:-bin}
+BINDIR?=bin
 INCDIR=include
 LIBDIR=lib
 WRAPDIR=$(BINDIR)/wrappers

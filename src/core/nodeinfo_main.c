@@ -35,7 +35,7 @@ int MLLServerConnectionFid=0;
 static void printUsage()
 {
    char *seq_exp_home = NULL;
-   char * usage = "\
+   char * usage = "For complete and up to date information on this command, see the man page by typing 'man nodeinfo'. Old:\n\n\
 DESCRIPTION: Nodeinfo\n\
 \n\
 USAGE\n\

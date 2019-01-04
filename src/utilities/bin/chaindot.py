@@ -305,7 +305,8 @@ class T_Chain:
 def main():    
 
     # Command line argument parsing
-    parser = optparse.OptionParser()
+    usage="For complete and up to date information on this command, see the man page by typing 'man chaindot.py'"
+    parser = optparse.OptionParser(usage=usage)
     parser.add_option("-e","--exp_path",dest="expPath",default=os.getenv('SEQ_EXP_HOME'),
                       help="Full experiment PATH (default SEQ_EXP_HOME)",metavar="PATH")
     parser.add_option("-n","--node_path",dest="nodeName",default=None,

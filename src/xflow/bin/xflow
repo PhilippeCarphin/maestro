@@ -23,7 +23,7 @@ fi
 [[ -f "${SEQ_SRC}/etc/check_deprecation" ]] && . "${SEQ_SRC}/etc/check_deprecation"
 
 arguments=$*
-eval `cclargs $0 "[For more information on this command, see the man page by typing 'man xflow']" \
+eval `cclargs $0 "[For complete and up to date information on this command, see the man page by typing 'man xflow']" \
   -d            ""      ""      "[sequencer date]" \
   -exp          ""      ""      "[experiment path]" \
   -noautomsg "0"        "1"   "[value 1 means no auto message display]" \

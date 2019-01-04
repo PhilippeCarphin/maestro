@@ -24,7 +24,7 @@
 #simple script to check the status of the mserver on a given machine, then launch an mserver on a target machine if it is not currently online. 
 arguments=$*
 
-eval `cclargs $0 "[For more information on this command, see the man page by typing 'man mserver_check']" \
+eval `cclargs $0 "[For complete and up to date information on this command, see the man page by typing 'man mserver_check']" \
   -m        ""                    "$TRUE_HOST"                 "[Machine on which to launch server ]" \
   -v        ""                    "1"                          "[Verbose            ]" \
   -h        ""                    ""                           "[Display help       ]" \
