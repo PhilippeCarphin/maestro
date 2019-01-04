@@ -9,7 +9,7 @@ scanexp -- a simple way to search experiments for strings
 
 `scanexp` is essentially an enhanced grep, with defaults and options convenient for searching Maestro experiments.
 
-scanexp requires either the `-e` option or the `SEQ_EXP_HOME` environment variable set to the experiment you want to scan. It also requires the `-s` option which is the string to search for.
+scanexp requires either the `-e` option or the `SEQ_EXP_HOME` environment variable set to the experiment you want to scan (or a suites xml file). It also requires the `-s` option which is the string to search for.
 
 For more information on Maestro experiments, see https://wiki.cmc.ec.gc.ca/wiki/Maestro/experiment
 
@@ -19,7 +19,7 @@ For more information on Maestro, see https://wiki.cmc.ec.gc.ca/wiki/Maestro
 
 Starting with the most commonly used:
 
-* `-e <path-to-exp-folder>`: By default scanexp will search the experiment found in `SEQ_EXP_HOME`. Use this option to specify the experiment path instead. For example: `/home/smco500/.suites/rdps/r1`
+* `-e <path-to-exp-folder>`: Target experiment or suites xml file. By default scanexp will search the experiment found in `SEQ_EXP_HOME`. Use this option to specify the experiment path instead. For example: `/home/smco500/.suites/rdps/r1`
 * `-s <string-to-search-for>`: Simply, the string to search for in all experiment files.
 * `-f <filter-whitelist>`: Use search filters, for example `-f cfg,res`. If this option is used, only search those file types. Available filters are: `cfg`, `module`, `task`, `log`, `res`, `bin`, `listing`. If no filter is provided, all files are searched except `log` and `listing`. There are some exceptions to how the search is performed. For a more detailed understanding of this logic, unfortunately you'll have to examine the script.
 * `-i`: Use a case insensitive search.
