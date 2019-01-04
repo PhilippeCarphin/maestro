@@ -24,10 +24,7 @@
 #simple script to check the status of the mserver on a given machine, then launch an mserver on a target machine if it is not currently online. 
 arguments=$*
 
-# Note: because of 'man_if_help', cclargs is used here only to parse.
-# Users will never see these brief cclargs messages, instead they will see the Linux man page.
-man_if_help $* && exit 0
-eval `cclargs $0 "[Simple script to check the status of the mserver on a given machine, then launch an mserver on a target machine if it is not currently online.]" \
+eval `cclargs $0 "[For more information on this command, see the man page by typing 'man mserver_check']" \
   -m        ""                    "$TRUE_HOST"                 "[Machine on which to launch server ]" \
   -v        ""                    "1"                          "[Verbose            ]" \
   -h        ""                    ""                           "[Display help       ]" \
