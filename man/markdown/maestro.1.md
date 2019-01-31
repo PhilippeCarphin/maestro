@@ -3,7 +3,7 @@ maestro -- API for the main engine in the Maestro sequencer package
 
 ## SYNOPSIS
 
-`maestro -n node -s signal -e exp [-iv] [-d <YYYYMMDDhhmmss>] [-l <loopargs>] [-f <flow-value>] [-o <extra_soumet_args>]`
+`maestro -n node -s signal -e exp [-i] [-v] [-d <YYYYMMDDhhmmss>] [-l <loopargs>] [-f <flow-value>] [-o <extra_soumet_args>]`
 
 ## DESCRIPTION
 
