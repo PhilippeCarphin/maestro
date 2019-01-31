@@ -3,7 +3,7 @@ scanexp -- a simple way to search experiments for strings
 
 ## SYNOPSIS
 
-`scanexp -e <path-to-experiment> -s <string-to-search-for> [-ivl] [-f <filter-whitelist>]`
+`scanexp -e <path-to-experiment> -s <string-to-search-for> [-i] [-v] [-l] [-f <filter-whitelist>]`
 
 ## DESCRIPTION
 

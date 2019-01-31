@@ -3,7 +3,7 @@ evaluate_vars -- examine the environment variables set in Maestro tasks
 
 ## SYNOPSIS
 
-`evaluate_vars -n <node> [-fv] [-l <loop-args>] [-m <machine>] [-o <output-path>]`
+`evaluate_vars -n <node> [-f] [-v] [-l <loop-args>] [-m <machine>] [-o <output-path>]`
 
 ## DESCRIPTION
 
