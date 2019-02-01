@@ -3,7 +3,7 @@ xflow_overview -- visually monitor multiple Maestro experiments
 
 ## SYNOPSIS
 
-`xflow_overview [-exp <path-to-experiment-folder>] [-rc <maestro-rc-path>] [-logspan <integer-hours>] [-display <x-windows-display>] [-as <username>] [-debug <0|1>] [-noautomsg <0|1>] [-logfile <path-to-logfile>]`
+`xflow_overview [-suites <path-to-suites-xml>] [-exp <path-to-experiment-folder>] [-rc <maestro-rc-path>] [-logspan <integer-hours>] [-display <x-windows-display>] [-as <username>] [-debug <0|1>] [-noautomsg <0|1>] [-logfile <path-to-logfile>]`
 
 ## DESCRIPTION
 
@@ -19,6 +19,7 @@ For more information on Maestro, see https://wiki.cmc.ec.gc.ca/wiki/Maestro
 
 Starting with the most commonly used:
 
+* `-suites <path-to-suites-xml>`: Specify the full path to a `xflow.suites.xml` file. The `xflow.suites.xml` file lists all the suites you want to see in the `xflow_overview` window. By default this value will be `$HOME/xflow.suites.xml`.
 * `-exp <path-to-experiment-folder>`: Launching xflow_overview for all experiments can be slow. Use this option instead to view a single experiment.
 * `-rc <maestro-rc-path>`: By default, Maestro is configured with the file found in your home: `~/.maestrorc`. You can ignore that file if you provide one here instead.
 * `-logspan <integer-hours>`: There is a limit to how far back in history xflow_overview searches in logs. This changes that limit. You could for example use `-logspan 72` to see logs and aborts reaching back three days.
@@ -35,7 +36,13 @@ If you used SSH to connect to the computer launching xflow_overview, make sure y
 Launch xflow_overview for the RDPS, r1 experiment:
 
 ```
-xflow -exp ~smco500/.suites/rdps/r1
+xflow_overview -exp ~smco500/.suites/rdps/r1
+```
+
+Launch xflow_overview for all operational suites:
+
+```
+xflow_overview -suites ~smco500/xflow.suites.xml
 ```
 
 Launch xflow_overview for all operational suites with debugging console output enabled and a different maestrorc file:
