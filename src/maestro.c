@@ -1798,7 +1798,8 @@ static int go_submit(const char *_signal, char *_flow , const SeqNodeDataPtr _no
          SeqUtil_TRACE(TL_FULL_TRACE,"Temporarily sending submission output to %s\n", submissionDir );
          strcat(cmd, " > \""); strcat (cmd, submissionDir); strcat (cmd, "\" 2>&1");
          SeqUtil_TRACE(TL_FULL_TRACE,"Task type node submit command: %s\n", cmd );
-         error_status = WEXITSTATUS(system(cmd));
+         int full_status = system(cmd);
+         error_status = WEXITSTATUS(full_status);
 
          SeqUtil_TRACE(TL_FULL_TRACE,"maestro.go_submit() ord return status: %d \n",error_status);
          if (strcmp(_nodeDataPtr->workerPath, "") != 0) {
@@ -2144,7 +2145,8 @@ static void submitDependencies ( const SeqNodeDataPtr _nodeDataPtr, const char* 
                      sprintf( submitCmd, "maestro -e %s -d %s -s submit -f continue -n %s %s",
                            depExp, depDatestamp, depNode, submitDepArgs );
                      SeqUtil_TRACE(TL_FULL_TRACE, "submitDependencies(): Running system command: %s\n", submitCmd);
-                     submitCode = WEXITSTATUS(system ( submitCmd ));
+                     int full_status = system(submitCmd);
+                     submitCode = WEXITSTATUS(full_status);
                      free(submitDepArgs);
                      submitDepArgs = NULL;
 #else
