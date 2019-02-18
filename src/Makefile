@@ -24,8 +24,8 @@ MAKEFILE:=$(lastword $(MAKEFILE_LIST))
 include ../config/config.mk
 
 WERROR_FLAGS= -Wall -Werror=implicit-function-declaration -Werror=return-type -Werror=unused-but-set-variable -Werror=unused-variable -Werror=strict-aliasing=3
-CFLAGS = -g -Wall
-LIB=-lc -lcrypto 
+CFLAGS = -g -Wall -I /usr/local/Cellar/include -I/usr/local/Cellar/openssl//1.0.2q/include/ 
+LIB=-L  /usr/local/Cellar/openssl//1.0.2q/lib/ -lc -lcrypto 
 LIBTH=-lpthread
 CFLAGS1 = -g
 CFLAGS2 = -lefence -g -I../inc -DREENTRANT -Wall -Wextra -Wno-unused -D__DEBUG -DIGNORE_EMPTY_TEXT_NODES
@@ -103,7 +103,7 @@ FlowVisitor.o:  FlowVisitor.c FlowVisitor.h nodeinfo.c nodeinfo.h ResourceVisito
 	$(CC) -c $< $(CFLAGS) $(WERROR_FLAGS) -I $(INCDIR) -I $(XML_INCLUDE_DIR)
 
 SeqDepends.o: SeqDepends.c SeqDepends.h
-	$(CC) -g $(WERROR_FLAGS) -I $(INCDIR) -I $(XML_INCLUDE_DIR) -c $<
+	$(CC) -g $(WERROR_FLAGS) -I $(INCDIR) $(CFLAGS) -I $(XML_INCLUDE_DIR) -c $<
 
 ResourceVisitor.o: ResourceVisitor.c ResourceVisitor.h nodeinfo.c nodeinfo.h
 	$(CC) -c $< $(CFLAGS) $(WERROR_FLAGS) -I $(INCDIR) -I $(XML_INCLUDE_DIR)
@@ -133,7 +133,7 @@ l2d2_Util.o: l2d2_Util.c l2d2_Util.h
 	$(CC) -c l2d2_Util.c
  
 l2d2_commun.o: l2d2_commun.c l2d2_commun.h
-	$(CC) -c l2d2_commun.c
+	$(CC) $(CFLAGS) -c l2d2_commun.c
  
 l2d2_admin.o: l2d2_admin.c
 	$(CC) -c l2d2_admin.c
@@ -179,7 +179,7 @@ NODELOGGER_OBJECTS = nodelogger.o SeqUtil.o l2d2_commun.o SeqUtilServer.o \
 	FlowVisitor.o ResourceVisitor.o SeqDepends.o
 
 nodelogger: nodelogger_main.c $(NODELOGGER_OBJECTS)
-	$(CC) -g $^ -I $(XML_INCLUDE_DIR) -L$(XML_LIB_DIR) -lxml2 $(LIB) -I$(INCDIR) -o nodelogger
+	$(CC) -g $^ -I $(CFLAGS) -I $(XML_INCLUDE_DIR) -L$(XML_LIB_DIR) -lxml2 $(LIB) -I$(INCDIR) -o nodelogger
 	cp nodelogger $(BINDIR)
 
 LOGREADER_OBJECTS = logreader.o SeqUtil.o SeqDatesUtil.o l2d2_commun.o         \
@@ -212,7 +212,7 @@ NODEINFO_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o \
 	ResourceVisitor.o SeqDepends.o
 
 nodeinfo: nodeinfo_main.c $(NODEINFO_OBJECTS)
-	$(CC) -g $^ -I $(XML_INCLUDE_DIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@;\
+	$(CC) -g $^ $(CFLAGS) -I $(XML_INCLUDE_DIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@;\
 	cp nodeinfo $(BINDIR)
 
 getdef:	getdef_main.o SeqUtil.o SeqListNode.o l2d2_commun.o getopt_long.o
@@ -234,7 +234,7 @@ TSVINFO_OBJECTS = tsvinfo.o SeqNodeCensus.o nodeinfo.o SeqUtil.o \
 	QueryServer.o l2d2_socket.o SeqUtilServer.o getopt_long.o SeqDepends.o
 
 tsvinfo: tsvinfo_main.c $(TSVINFO_OBJECTS)
-	$(CC) $^ -g $(WERROR_FLAGS) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@
+	$(CC) $^ -g $(CFLAGS) $(WERROR_FLAGS) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@
 	cp $@ $(BINDIR);
 
 TEST_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o \

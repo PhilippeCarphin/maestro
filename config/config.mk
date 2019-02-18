@@ -8,8 +8,8 @@ SWDEST=$(shell pwd)/../bin/$(ORDENV_PLAT)
 LIBDIR=$(SWDEST)/lib
 INCDIR=$(SWDEST)/include
 BINDIR=$(SWDEST)/bin
-XML_INCLUDE_DIR=/usr/include/libxml2
-XML_LIB_DIR=/usr/lib
+XML_INCLUDE_DIR=/usr/local/Cellar/libxml2/2.9.9_2/include/libxml2
+XML_LIB_DIR=/usr/local/Cellar/libxml2/2.9.9_2/lib
 
 # platform specific definition
 ifeq ($(MACHINE),Linux)
