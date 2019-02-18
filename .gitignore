@@ -30,3 +30,4 @@ submitTests.sh
 .nfs*
 mtest
 tsvinfo
+*.dSYM
