@@ -90,3 +90,11 @@ dkms.conf
 
 # Do not ignore the ssm metadata folder
 !.ssm.d
+# Test suite submission script
+samenameTest.sh
+submitTests.sh
+# NFS files
+.nfs*
+mtest
+tsvinfo
+*.dSYM

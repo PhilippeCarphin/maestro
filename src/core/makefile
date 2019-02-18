@@ -1,8 +1,10 @@
 include shared-make-configuration.cfg
 
 WERROR_FLAGS= -Wall -Werror=implicit-function-declaration -Werror=return-type -Werror=unused-but-set-variable -Werror=unused-variable -Werror=strict-aliasing=3
-CFLAGS = -Wall -Wimplicit-function-declaration -Wl,--allow-multiple-definition 
+
+CFLAGS = -g -Wall -Wimplicit-function-declaration
 LIB=-lc -lcrypto -lz -ldl ${XC40_DYNAMIC_FLAG}
+
 LIBTH=-lpthread
 CFLAGS1 = 
 CFLAGS2 = -lefence -I../inc -DREENTRANT -Wall -Wextra -Wno-unused -D__DEBUG -DIGNORE_EMPTY_TEXT_NODES
@@ -14,16 +16,19 @@ runcontrollib.o nodelogger.o maestro.o nodeinfo.o tictac.o expcatchup.o XmlUtils
 QueryServer.o SeqUtilServer.o l2d2_socket.o l2d2_commun.o ocmjinfo.o logreader.o $(ROXML_OBJECTS)
 EXECUTABLES=nodelogger maestro nodeinfo tictac expcatchup getdef logreader mserver madmin tsvinfo mtest
 
-BINDIR?=bin
+BINDIR=bin
 INCDIR=include
 LIBDIR=lib
 WRAPDIR=src/core/wrappers
 XML_INCLUDE_DIR=/usr/include/libxml2
 XML_LIB_DIR=/usr/lib
+CFLAGS += -I /usr/local/Cellar/include -I/usr/local/Cellar/openssl/1.0.2q/include/
+LIB += -L /usr/local/Cellar/openssl/1.0.2q/lib/
+#
 
 all: prep 
 	$(MAKE) prep $(EXECUTABLES)
-	
+
 clean:
 	find . -name "*\.o" -exec rm {} \;
 	rm -f $(EXECUTABLES)
@@ -76,7 +81,7 @@ FlowVisitor.o:  FlowVisitor.c FlowVisitor.h nodeinfo.c nodeinfo.h ResourceVisito
 	$(CC) -c $< $(CFLAGS) -I $(INCDIR) -I $(XML_INCLUDE_DIR)
 
 SeqDepends.o: SeqDepends.c SeqDepends.h
-	$(CC) -I $(INCDIR) -I $(XML_INCLUDE_DIR) -c $<
+	$(CC) -g $(WERROR_FLAGS) -I $(INCDIR) $(CFLAGS) -I $(XML_INCLUDE_DIR) -c $<
 
 ResourceVisitor.o: ResourceVisitor.c ResourceVisitor.h nodeinfo.c nodeinfo.h
 	$(CC) -c $< $(CFLAGS) -I $(INCDIR) -I $(XML_INCLUDE_DIR)
@@ -106,7 +111,7 @@ l2d2_Util.o: l2d2_Util.c l2d2_Util.h
 	$(CC) -c l2d2_Util.c
  
 l2d2_commun.o: l2d2_commun.c l2d2_commun.h
-	$(CC) -c l2d2_commun.c
+	$(CC) $(CFLAGS) -c l2d2_commun.c
  
 l2d2_admin.o: l2d2_admin.c
 	$(CC) -c l2d2_admin.c
@@ -143,8 +148,8 @@ TICTAC_OBJECTS = tictac.o SeqUtil.o QueryServer.o l2d2_socket.o SeqUtilServer.o 
 	l2d2_commun.o SeqListNode.o getopt_long.o
 
 tictac:	tictac_main.c $(TICTAC_OBJECTS)
-	$(CC) $^ -L$(XML_LIB_DIR) -lxml2 $(LIB) -o tictac
-	mv tictac $(BINDIR)
+	$(CC) -g $(CFLAGS) $^ -L$(XML_LIB_DIR) -lxml2 $(LIB) -o tictac
+	cp tictac $(BINDIR)
 
 NODELOGGER_OBJECTS = nodelogger.o SeqUtil.o l2d2_commun.o SeqUtilServer.o \
 	l2d2_socket.o QueryServer.o tictac.o nodeinfo.o SeqNode.o SeqLoopsUtil.o \
@@ -152,15 +157,15 @@ NODELOGGER_OBJECTS = nodelogger.o SeqUtil.o l2d2_commun.o SeqUtilServer.o \
 	FlowVisitor.o ResourceVisitor.o SeqDepends.o
 
 nodelogger: nodelogger_main.c $(NODELOGGER_OBJECTS)
-	$(CC) $^ -I $(XML_INCLUDE_DIR) -L$(XML_LIB_DIR) -lxml2 $(LIB) -I$(INCDIR) -o nodelogger
-	mv nodelogger $(BINDIR)
+	$(CC) -g $^ -I $(CFLAGS) -I $(XML_INCLUDE_DIR) -L$(XML_LIB_DIR) -lxml2 $(LIB) -I$(INCDIR) -o nodelogger
+	cp nodelogger $(BINDIR)
 
 LOGREADER_OBJECTS = logreader.o SeqUtil.o SeqDatesUtil.o l2d2_commun.o         \
 	SeqListNode.o getopt_long.o
 
 logreader: logreader_main.c $(LOGREADER_OBJECTS)
-	$(CC) $^ $(LIB) -o $@
-	mv logreader $(BINDIR)
+	$(CC) -g $(CFLAGS) $^ $(LIB) -o $@
+	cp logreader $(BINDIR)
 
 MAESTRO_OBJECTS = maestro.o logreader.o nodelogger.o tictac.o nodeinfo.o \
 	SeqNode.o SeqLoopsUtil.o XmlUtils.o SeqNameValues.o SeqListNode.o SeqDatesUtil.o \
@@ -169,15 +174,15 @@ MAESTRO_OBJECTS = maestro.o logreader.o nodelogger.o tictac.o nodeinfo.o \
 	FlowVisitor.o SeqDepends.o
 
 maestro: maestro_main.c $(MAESTRO_OBJECTS)
-	$(CC) $^ -I $(INCDIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o maestro; \
-	mv maestro $(BINDIR);
+	$(CC) -g $^ $(CFLAGS) -I $(INCDIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o maestro; \
+	cp maestro $(BINDIR);
 
 EXPCATCHUP_OBJECTS = expcatchup.o getopt_long.o SeqUtil.o XmlUtils.o           \
 	SeqListNode.o l2d2_commun.o
 
 expcatchup:expcatchup_main.c $(EXPCATCHUP_OBJECTS)
-	$(CC) $^ -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@; \
-	mv expcatchup $(BINDIR);
+	$(CC) -g $^ -L $(XML_LIB_DIR) $(CFLAGS) -lxml2 $(LIB) -o $@; \
+	cp expcatchup $(BINDIR);
 
 NODEINFO_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o \
 	QueryServer.o l2d2_socket.o SeqListNode.o SeqDatesUtil.o SeqUtilServer.o \
@@ -185,21 +190,21 @@ NODEINFO_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o \
 	ResourceVisitor.o SeqDepends.o
 
 nodeinfo: nodeinfo_main.c $(NODEINFO_OBJECTS)
-	$(CC) $^ -I $(XML_INCLUDE_DIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@;\
-	mv nodeinfo $(BINDIR)
+	$(CC) -g $^ $(CFLAGS) -I $(XML_INCLUDE_DIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@;\
+	cp nodeinfo $(BINDIR)
 
 getdef:	getdef_main.o SeqUtil.o SeqListNode.o l2d2_commun.o getopt_long.o
-	$(CC) -c getdef_main.c 
-	$(CC) getdef_main.o SeqUtil.o SeqListNode.o l2d2_commun.o getopt_long.o $(LIB) -o getdef
-	mv getdef $(BINDIR)
+	$(CC) -g -c getdef_main.c $(CFLAGS)
+	$(CC) -g getdef_main.o SeqUtil.o SeqListNode.o l2d2_commun.o getopt_long.o $(LIB) -o getdef
+	cp getdef $(BINDIR)
 
 mserver: $(L2D2SOBJECTS)
-	$(CC) $(CFLAGS) $(L2D2SOBJECTS) $(LIB) $(LIBTH) -o mserver; \
-	mv mserver $(BINDIR);
+	$(CC) $(L2D2SOBJECTS) $(LIB) $(LIBTH) $(CFLAGS) -o mserver; \
+	cp mserver $(BINDIR);
 
 madmin: $(L2D2AOBJECTS)
-	$(CC) $(CFLAGS) $(L2D2AOBJECTS) $(LIB) $(LIBTH) -o madmin; \
-	mv madmin $(BINDIR);
+	$(CC) $(L2D2AOBJECTS) $(LIB) $(LIBTH) $(CFLAGS) -o madmin; \
+	cp madmin $(BINDIR);
 
 TSVINFO_OBJECTS = tsvinfo.o SeqNodeCensus.o nodeinfo.o SeqUtil.o \
 	SeqNode.o SeqNameValues.o SeqLoopsUtil.o SeqListNode.o FlowVisitor.o   \
@@ -207,8 +212,8 @@ TSVINFO_OBJECTS = tsvinfo.o SeqNodeCensus.o nodeinfo.o SeqUtil.o \
 	QueryServer.o l2d2_socket.o SeqUtilServer.o getopt_long.o SeqDepends.o
 
 tsvinfo: tsvinfo_main.c $(TSVINFO_OBJECTS)
-	$(CC) $^ -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@
-	mv $@ $(BINDIR);
+	$(CC) $^ -g $(CFLAGS) $(WERROR_FLAGS) $(CFLAGS) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@
+	cp $@ $(BINDIR);
 
 TEST_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o \
 	QueryServer.o l2d2_socket.o SeqListNode.o SeqDatesUtil.o SeqUtilServer.o \
@@ -216,6 +221,7 @@ TEST_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o \
 	ResourceVisitor.o SeqDepends.o tsvinfo.o SeqNodeCensus.o
 
 mtest:	mtest_main.c $(TEST_OBJECTS)
-	$(CC) $^ -I $(XML_INCLUDE_DIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@
-	mv $@ $(BINDIR)
+	$(CC) $^ -g $(WERROR_FLAGS) -I $(XML_INCLUDE_DIR) $(CFLAGS) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@
+	cp $@ $(BINDIR)
+
 
