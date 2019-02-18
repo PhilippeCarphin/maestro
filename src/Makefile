@@ -133,7 +133,7 @@ l2d2_lists.o: l2d2_lists.h l2d2_lists.c
 	$(CC) -c l2d2_lists.c
 
 l2d2_Util.o: l2d2_Util.c l2d2_Util.h
-	$(CC) -c l2d2_Util.c
+	$(CC) $(CFLAGS) -c l2d2_Util.c
  
 l2d2_commun.o: l2d2_commun.c l2d2_commun.h
 	$(CC) $(CFLAGS) -c l2d2_commun.c
@@ -189,7 +189,7 @@ LOGREADER_OBJECTS = logreader.o SeqUtil.o SeqDatesUtil.o l2d2_commun.o         \
 	SeqListNode.o getopt_long.o
 
 logreader: logreader_main.c $(LOGREADER_OBJECTS)
-	$(CC) -g $(CFLAGS) $^ $(LIB) -o $@
+	$(CC) -g $^ $(CFLAGS) $(LIB) -o $@
 	cp logreader $(BINDIR)
 
 MAESTRO_OBJECTS = maestro.o logreader.o nodelogger.o tictac.o nodeinfo.o \
@@ -206,7 +206,7 @@ EXPCATCHUP_OBJECTS = expcatchup.o getopt_long.o SeqUtil.o XmlUtils.o           \
 	SeqListNode.o l2d2_commun.o
 
 expcatchup:expcatchup_main.c $(EXPCATCHUP_OBJECTS)
-	$(CC) -g $^ -L $(XML_LIB_DIR) $(CFLAGS) -lxml2 $(LIB) -o $@; \
+	$(CC) -g $^ $(CFLAGS) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@; \
 	cp expcatchup $(BINDIR);
 
 NODEINFO_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o \
@@ -246,7 +246,7 @@ TEST_OBJECTS = SeqUtil.o SeqNode.o XmlUtils.o SeqLoopsUtil.o l2d2_commun.o \
 	ResourceVisitor.o SeqDepends.o tsvinfo.o SeqNodeCensus.o
 
 mtest:	mtest_main.c $(TEST_OBJECTS)
-	$(CC) $^ -g $(WERROR_FLAGS) -I $(XML_INCLUDE_DIR) $(CFLAGS) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@
+	$(CC) $^ -g $(CFLAGS) $(WERROR_FLAGS) -I $(XML_INCLUDE_DIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o $@
 	cp $@ $(BINDIR)
 
 
