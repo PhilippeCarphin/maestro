@@ -4,12 +4,13 @@ VERSION=1.5.2
 SEQ_WRAPPER=maestro_$(VERSION)
 MACHINE=$(shell uname -s)
 HARDWARE=$(shell uname -m | tr '_' '-')
-SWDEST=$(shell pwd)/../bin/$(ORDENV_PLAT)
+SWDEST=dist/$(ORDENV_PLAT)
 LIBDIR=$(SWDEST)/lib
+OPTDIR=$(SWDEST)/opt
 INCDIR=$(SWDEST)/include
 BINDIR=$(SWDEST)/bin
-XML_INCLUDE_DIR=/usr/include/libxml2
-XML_LIB_DIR=/usr/lib
+XML_INCLUDE_DIR=/usr/local/Cellar/libxml2/2.9.9_2/include/libxml2
+XML_LIB_DIR=/usr/local/Cellar/libxml2/2.9.9_2/lib
 
 # platform specific definition
 ifeq ($(MACHINE),Linux)

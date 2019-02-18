@@ -578,27 +578,27 @@ void print_LListe ( struct _ListListNodes MyListListNodes, FILE *outputFile)
                */
                sprintf(output_buffer, "%s {",ptr_LXHtrotte->Lext);  
                tmp_statstring=strdup(output_buffer); 
-               if (  ptr_LXHtrotte->exectime && strlen( ptr_LXHtrotte->exectime ) > 0 ) { 
+               if (  strlen( ptr_LXHtrotte->exectime ) > 0 ) {
                   tmp_statstring = sconcat (tmp_statstring," exectime ");  
                   tmp_statstring = sconcat (tmp_statstring,ptr_LXHtrotte->exectime);  
                } 
-               if (  ptr_LXHtrotte->submitdelay && strlen( ptr_LXHtrotte->submitdelay ) > 0 ) { 
+               if (  strlen( ptr_LXHtrotte->submitdelay ) > 0 ) {
                   tmp_statstring = sconcat (tmp_statstring," submitdelay ");  
                   tmp_statstring = sconcat (tmp_statstring,ptr_LXHtrotte->submitdelay);  
                } 
-               if (  ptr_LXHtrotte->lstime && strlen( ptr_LXHtrotte->lstime ) > 0 ) { 
+               if (  strlen( ptr_LXHtrotte->lstime ) > 0 ) {
                   tmp_statstring = sconcat (tmp_statstring," submit ");  
                   tmp_statstring = sconcat (tmp_statstring,ptr_LXHtrotte->lstime);  
                } 
-               if (  ptr_LXHtrotte->lbtime && strlen( ptr_LXHtrotte->lbtime ) > 0 ) { 
+               if (  strlen( ptr_LXHtrotte->lbtime ) > 0 ) {
                   tmp_statstring = sconcat (tmp_statstring," begin ");  
                   tmp_statstring = sconcat (tmp_statstring,ptr_LXHtrotte->lbtime);  
                } 
-               if (  ptr_LXHtrotte->letime && strlen( ptr_LXHtrotte->letime ) > 0 ) { 
+               if (  strlen( ptr_LXHtrotte->letime ) > 0 ) {
                   tmp_statstring = sconcat (tmp_statstring," end ");  
                   tmp_statstring = sconcat (tmp_statstring,ptr_LXHtrotte->letime);  
                } 
-               if (  ptr_LXHtrotte->deltafromstart && strlen( ptr_LXHtrotte->deltafromstart ) > 0 ) { 
+               if (  strlen( ptr_LXHtrotte->deltafromstart ) > 0 ) {
                   tmp_statstring = sconcat (tmp_statstring," deltafromstart ");  
                   tmp_statstring = sconcat (tmp_statstring,ptr_LXHtrotte->deltafromstart);  
                } 
@@ -662,7 +662,7 @@ void print_LListe ( struct _ListListNodes MyListListNodes, FILE *outputFile)
 }
 
 /*used to parse averages from avg file*/
-void getAverage(char *exp, char *datestamp){
+void getAverage(const char *exp, const char *datestamp){
    char *avg_file_path=NULL, *tmp_file_path=NULL;
    char *full_path=NULL;
    char char_datestamp[15];
@@ -708,7 +708,7 @@ int printAverage() {
 
    while ( node_tmpptr != NULL ) { 
       if ((prev_node == NULL) || (strcmp (node_tmpptr->node, prev_node) != 0)){
-         fprintf(stdout,"%s\\avg {",node_tmpptr->node, node_tmpptr->member);
+         fprintf(stdout,"%s\\avg {",node_tmpptr->node);
       }
     
       if (node_tmpptr->member != NULL)  { 
@@ -810,7 +810,7 @@ char *getNodeAverageLine(char *node, char *member){
 }
 
 /*used to generate averages from stats*/
-void computeAverage(char *exp, char *datestamp, int stats_days, FILE * output_file){
+void computeAverage(const char *exp, const char *datestamp, int stats_days, FILE * output_file){
    char *stats_file_path = NULL;
    char *full_path = NULL;
    char char_datestamp[15];
@@ -868,7 +868,7 @@ int getStats(FILE *_stats){
 
 /*parse stats line and add stats node*/
 int parseStatsLine(char line[1024]){
-   char *node, *member, *stime, *btime, *etime, *exectime, *submitdelay, *deltafromstart;
+   char *node, *member, *stime, *btime, *etime, *exectime, *submitdelay = NULL, *deltafromstart;
    int ret=0;
    
    char tmp_node[]="SEQNODE=", tmp_member[]="MEMBER=", tmp_stime[]="SUBMIT=", 
@@ -1008,7 +1008,7 @@ int addStatsNode(char *node, char *member, char* stime, char *btime, char *etime
 }
 
 /*final step to the computation of averages; it calculates from the linked list and outputs results to avg file*/
-int processStats(char *exp, char *datestamp, FILE * output_file){
+int processStats(const char *exp, const char *datestamp, FILE * output_file){
    StatsNode *node_tmpptr;
    PastTimes *time_tmpptr;
    char *begin=NULL, *end=NULL, *submitdelay=NULL, *exectime=NULL, *deltafromstart=NULL, *submit=NULL;
@@ -1054,12 +1054,12 @@ int processStats(char *exp, char *datestamp, FILE * output_file){
       } else {
           truncate_amount=(avg_counter + 9) / 10;
       }
-      submit=secondsToChar(SeqUtil_basicTruncatedMean(&int_submit, avg_counter, truncate_amount));
-      begin=secondsToChar(SeqUtil_basicTruncatedMean(&int_begin, avg_counter, truncate_amount));
-      end=secondsToChar(SeqUtil_basicTruncatedMean(&int_end, avg_counter, truncate_amount));
-      submitdelay=secondsToChar(SeqUtil_basicTruncatedMean(&int_submitdelay, avg_counter,truncate_amount));
-      exectime=secondsToChar(SeqUtil_basicTruncatedMean(&int_exectime, avg_counter,truncate_amount));
-      deltafromstart=secondsToChar(SeqUtil_basicTruncatedMean(&int_deltafromstart, avg_counter,truncate_amount));
+      submit=secondsToChar(SeqUtil_basicTruncatedMean(int_submit, avg_counter, truncate_amount));
+      begin=secondsToChar(SeqUtil_basicTruncatedMean(int_begin, avg_counter, truncate_amount));
+      end=secondsToChar(SeqUtil_basicTruncatedMean(int_end, avg_counter, truncate_amount));
+      submitdelay=secondsToChar(SeqUtil_basicTruncatedMean(int_submitdelay, avg_counter,truncate_amount));
+      exectime=secondsToChar(SeqUtil_basicTruncatedMean(int_exectime, avg_counter,truncate_amount));
+      deltafromstart=secondsToChar(SeqUtil_basicTruncatedMean(int_deltafromstart, avg_counter,truncate_amount));
  
       SeqUtil_printOrWrite(output_file, "SEQNODE=%s:MEMBER=%s:SUBMIT=%s:BEGIN=%s:END=%s:EXECTIME=%s:SUBMITDELAY=%s:DELTAFROMSTART=%s\n",
              node_tmpptr->node, node_tmpptr->member,submit, begin, end, exectime, submitdelay, deltafromstart);
@@ -1109,7 +1109,7 @@ int charToSeconds (char *_timestamp) {
 }
 
 /*edited from http://www.c4learn.com/c-programming/c-concating-strings-dynamic-allocation */
-char *sconcat(char *ptr1,char *ptr2){
+char *sconcat(const char *ptr1,const char *ptr2){
    int len1,len2;
    int i,j;
    char *ptr3;
@@ -1192,7 +1192,7 @@ void delete_node(struct _ListNodes *node, struct _ListListNodes *list) {
 *  clobberFile -- is there a filecheck before writing to the output. 0 = don't clobber 
 *
 */ 
-void logreader(char * inputFilePath, char * outputFilePath, char * exp, char * datestamp, int type, int statWindow, int clobberFile ) {
+void logreader(const char * inputFilePath, const char * outputFilePath, const char * exp, const char * datestamp, int type, int statWindow, int clobberFile ) {
 
    FILE *output_file = NULL;
    char * base; 

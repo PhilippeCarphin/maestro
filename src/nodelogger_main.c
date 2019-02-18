@@ -47,8 +47,6 @@ Revision:
 *****************************************************************/
 
 
-int MLLServerConnectionFid=0;
-
 static void alarm_handler() { fprintf(stderr,"@@@@@@ EXCEEDED TIME IN LOOP ITERATIONS @@@@@@\n"); };
 
 static void printUsage()
@@ -115,7 +113,7 @@ int main (int argc, char * argv[])
 
 
    char *node = NULL, *signal = NULL , *message = NULL, *loops = NULL, *datestamp = NULL, *seq_exp_home = NULL, *tmpDate=NULL;
-   int errflg = 0, hasSignal = 0, hasNode = 0, hasDate = 0, hasLoops=0, dateSize=14; 
+   int errflg = 0, hasSignal = 0, hasNode = 0, hasDate = 0, hasLoops=0; 
    int r,i;
  
    struct sigaction act;

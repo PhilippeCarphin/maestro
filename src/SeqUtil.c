@@ -108,7 +108,7 @@ out:
  * executable.  Other information may be added to the message depending on flags
  * also set by the environment variable SEQ_TRACE_LEVEL
  *******************************************************************************/
-void SeqUtil_TRACE(int messageImportance ,const char * fmt, ... ){
+void _SeqUtil_TRACE(int messageImportance ,const char * fmt, ... ){
 
     int maxOutputLength=50000;
 	char message[maxOutputLength],prefix[maxOutputLength];
@@ -270,7 +270,7 @@ void raiseError(const char* fmt, ... ) {
    exit(1);
 }
 
-void SeqUtil_checkExpHome (char * _expHome) {
+void SeqUtil_checkExpHome (const char * _expHome) {
 
    DIR *dirp = NULL;
 

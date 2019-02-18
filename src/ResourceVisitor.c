@@ -442,8 +442,9 @@ int Resource_parseNodeDFS_internal(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDa
 
    Resource_unsetNode(rv);
 
-out:
+out_free:
    xmlXPathFreeObject(validityResults);
+out:
    SeqUtil_TRACE(TL_FULL_TRACE, "Resource_parseNodeDFS_internal() end\n");
    return retval;
 }

@@ -253,7 +253,7 @@ int Flow_doNodeQuery(FlowVisitorPtr _flow_visitor, const char * nodeName,
 
    /* run the normal query */
    SeqUtil_TRACE(TL_FULL_TRACE,"Flow_doNodeQuery(): run the normal query:%s\n",query);
-   if( (result = XmlUtils_getnodeset (query, _flow_visitor->context)) == NULL ) {
+   if( (result = XmlUtils_getnodeset ((const xmlChar *)query, _flow_visitor->context)) == NULL ) {
       retval = FLOW_FAILURE;
       goto out;
    }
@@ -298,7 +298,7 @@ int Flow_changeModule(FlowVisitorPtr _flow_visitor, const char * module)
       goto out;
    }
 
-   if( (result = XmlUtils_getnodeset( "(/MODULE)", _flow_visitor->context )) == NULL ){
+   if( (result = XmlUtils_getnodeset( (const xmlChar *)"(/MODULE)", _flow_visitor->context )) == NULL ){
       retval = FLOW_FAILURE;
       goto out;
    } else {

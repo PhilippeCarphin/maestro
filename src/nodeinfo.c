@@ -138,7 +138,7 @@ const char* getVarName(const char *src, const char *startDelim,
    size_t len = 0;
    SeqUtil_TRACE(TL_FULL_TRACE,"getVarName() inputs: src=%s startDelim=%s endDelim=%s\n", src, startDelim, endDelim);
 
-   if(start = strstr(src,startDelim))
+   if((start = strstr(src,startDelim)))
       start += strlen(startDelim);
    else
       return NULL;
@@ -781,7 +781,7 @@ int doesNodeExist (const char *_nodePath, const char *_seq_exp_home , const char
 
    Flow_deleteVisitor(flow_visitor);
    free(newNode);
-   free(newDatestamp); 
+   free((char *)newDatestamp);
    SeqNode_freeNode(tempNode);
    SeqUtil_TRACE(TL_FULL_TRACE, "doesNodeExist() end\n");
    return nodeExists;
@@ -789,17 +789,18 @@ int doesNodeExist (const char *_nodePath, const char *_seq_exp_home , const char
 
 SeqNodeDataPtr nodeinfo ( const char* node, unsigned int filters,
                               SeqNameValuesPtr _loops, const char* _exp_home,
-                              char *extraArgs, char* datestamp, const char * switch_args )
+                              char *extraArgs, const char* datestamp, const char * switch_args )
 {
-   char *newNode = NULL,  *tmpfilters = NULL;
-   char workdir[SEQ_MAXFIELD];
-   SeqNodeDataPtr  nodeDataPtr = NULL;
 
    if( _exp_home == NULL ) {
       raiseError("SEQ_EXP_HOME not set! (nodeinfo) \n");
    }
 
-   newNode = (const char*) SeqUtil_fixPath( node );
+   const char *newNode =  SeqUtil_fixPath( node );
+   char *tmpfilters = NULL;
+   char workdir[SEQ_MAXFIELD];
+   SeqNodeDataPtr  nodeDataPtr = NULL;
+
    SeqUtil_TRACE(TL_FULL_TRACE, "nodeinfo.nodeinfo() trying to create node %s, exp %s\n", newNode, _exp_home );
    nodeDataPtr = (SeqNodeDataPtr) SeqNode_createNode ( newNode );
    SeqNode_setSeqExpHome(nodeDataPtr,_exp_home); 

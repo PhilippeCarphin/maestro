@@ -472,7 +472,7 @@ int send_socket (int sock , char *buf , int size , unsigned int timeout)
 /** 
  * Initiate a connection with maestro_server 
  */
-int do_Login( int sock , unsigned int pid , char *node, char *xpname , char *signl , char *username ,char **m5) {
+int do_Login( int sock , unsigned int pid , const char *node, const char *xpname , const char *signl , const char *username , char **m5) {
 
     char host[25];
     char bLogin[1024];
@@ -492,10 +492,10 @@ int do_Login( int sock , unsigned int pid , char *node, char *xpname , char *sig
     if ( (path_status=realpath(xpname,resolved)) == NULL ) {
                fprintf(stderr,"do_Login: Probleme avec le path=%s\n",xpname);
                return (1);
-    } 
+    }
 
     /* get inode */
-    if (stat(resolved,&fileStat) < 0) {    
+    if (stat(resolved,&fileStat) < 0) {
                fprintf(stderr,"do_Login: Cannot stat on path=%s\n",resolved);
                return (1);
     }
@@ -507,22 +507,22 @@ int do_Login( int sock , unsigned int pid , char *node, char *xpname , char *sig
     }
 
     snprintf(bLogin,sizeof(bLogin),"I %u %ld %s %s %s %s %s %s", pid, (long) fileStat.st_ino, xpname, node , signl , host, username, *m5);
-    if ( (bytes_sent=send_socket (sock , bLogin , sizeof(bLogin) , SOCK_TIMEOUT_CLIENT)) <= 0 ) { 
+    if ( (bytes_sent=send_socket (sock , bLogin , sizeof(bLogin) , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
                 fprintf(stderr,"LOGIN FAILED (Timeout sending) with %s Maestro server from host=%s node=%s signal=%s\n",username, host, node, signl );
     	        return(1);
-    } 
-   
-    
-	    
+    }
+
+
+
     if ( (bytes_read=recv_socket (sock , buffer , sizeof(buffer) , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
                 fprintf(stderr,"LOGIN FAILED (Timeout receiving) with %s Maestro server from host=%s node=%s signal=%s\n",username, host, node, signl );
                 return(1);
     }
 
     buffer[bytes_read > 0 ? bytes_read :0] = '\0';
-		
-    if ( buffer[0] != '0'  ) fprintf(stderr,"LOGIN FAILED with %s Maestro server from host=%s node=%s signal=%s\n",username, host, node, signl ); 
-					  
+
+    if ( buffer[0] != '0'  ) fprintf(stderr,"LOGIN FAILED with %s Maestro server from host=%s node=%s signal=%s\n",username, host, node, signl );
+
     return (buffer[0] == '0' ? 0 : 1);
 
 }

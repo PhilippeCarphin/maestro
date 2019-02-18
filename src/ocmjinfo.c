@@ -1016,7 +1016,8 @@ char result[JINFO_MAX_FIELD];
  char tempo[JINFO_MAX_TMP];
  char *tmpstrtok = NULL;
 
- memset(result,'\0', sizeof result);
+ // sizeof result will always be the size of char* because it is a parameter
+ memset(result,'\0', JINFO_MAX_FIELD);
  memset(tmp_result, '\0', sizeof tmp_result);
  memset(tmp, '\0', sizeof tmp);
  memset(fmt_term,'\0', sizeof fmt_term);

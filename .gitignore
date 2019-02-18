@@ -30,3 +30,9 @@ submitTests.sh
 .nfs*
 mtest
 tsvinfo
+*.dSYM
+*.d
+cmake-build*
+build
+exp/*
+dist

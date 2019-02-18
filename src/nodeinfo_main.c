@@ -30,11 +30,9 @@
 #include "getopt.h"
 #include "SeqDatesUtil.h"
 
-int MLLServerConnectionFid=0;
 
 static void printUsage()
 {
-   char *seq_exp_home = NULL;
    char * usage = "\
 DESCRIPTION: Nodeinfo\n\
 \n\
@@ -109,8 +107,8 @@ int main ( int argc, char * argv[] )
    SeqNameValuesPtr loopsArgs = NULL;
    char *node = NULL, *seq_exp_home = NULL, *outputFile=NULL, *datestamp=NULL, *tmpDate=NULL, 
         *filters_str = strdup("all");
-   int errflg = 0, nodeFound = 0, i;
-   int gotLoops=0, showRootOnly = 0;
+   int nodeFound = 0, i;
+   int gotLoops=0;
    if ( argc == 1 || argc == 2) {
       printUsage();
       exit(1);

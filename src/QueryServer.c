@@ -256,7 +256,7 @@ int OpenConnectionToMLLServer (const char * node ,const char *signal , const cha
 	    fprintf(stderr, "Found No Maestro Server Parameteres File\n");
             return(-1);
     } else {
-	    int nscan = sscanf(Auth_token, "seqpid=%u seqhost=%s seqip=%s seqport=%d", &pid, htserver, ipserver, &port);
+	    sscanf(Auth_token, "seqpid=%u seqhost=%s seqip=%s seqport=%d", &pid, htserver, ipserver, &port);
 	    fprintf(stderr, "maestro L2D2 server parameters are: <pid=%u  host=%s ip=%s port=%d>\n",pid,htserver,ipserver,port);
 	    free(Auth_token);
     }
@@ -269,7 +269,7 @@ int OpenConnectionToMLLServer (const char * node ,const char *signal , const cha
     
     gethostname(thisHost, sizeof(thisHost));
 
-    ret=do_Login(sock,pid,node,_seq_exp_home,signal,passwdEnt->pw_name,&m5sum); 
+    ret=do_Login(sock,pid, node,_seq_exp_home,signal,passwdEnt->pw_name,&m5sum);
     free(m5sum);
 
     if ( ret != 0 ) close(sock);

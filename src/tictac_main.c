@@ -38,15 +38,13 @@
 ******************************************************************************/
 
 
-int MLLServerConnectionFid;
 static void alarm_handler() { /* nothing */ };
 
 static void printUsage()
 {
-char *seq_exp_home = NULL;
 char * usage = "DESCRIPTION: Date accessor/modifier interface for experiments\n\
 \n\
-USAGE:\N\
+USAGE:\n\
     \n\
     tictac [-s date,-f format] [-e exp] [-d datestamp] [-v]\n\
 \n\
@@ -89,7 +87,7 @@ EXAMPLES:\n\
 printf("%s",usage);
 }
 
-main (int argc, char * argv [])
+int main (int argc, char * argv [])
 {
    char * short_opts = "s:f:e:d:hv";
    extern char *optarg;
@@ -108,7 +106,7 @@ main (int argc, char * argv [])
    int i = 0;
 
    char *datestamp = NULL, *expHome = NULL, *format=NULL, *tmpDate = NULL;
-   int setDate=0, r, padding;
+   int setDate=0, r;
    struct sigaction act;
 
    memset (&act, '\0', sizeof(act));

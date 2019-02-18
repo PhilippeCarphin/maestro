@@ -63,13 +63,14 @@
 
 void SeqUtil_addPadding( char *dst, const char *datestamp, char c, int length);
 void  raiseError(const char* fmt, ... );
-void  SeqUtil_TRACE( int level,const char * fmt, ...);
+void  _SeqUtil_TRACE( int level,const char * fmt, ...);
+#define SeqUtil_TRACE(...) _SeqUtil_TRACE(__VA_ARGS__)
 void  SeqUtil_setTraceLevel (int _trace) ;
 int   SeqUtil_getTraceLevel () ;
 void SeqUtil_setTraceFlag(int flag, int value);
 void SeqUtil_setTraceEnv();
 void SeqUtil_showTraceInfo();
-void  SeqUtil_checkExpHome (char * _expHome) ;
+void  SeqUtil_checkExpHome (const char * _expHome) ;
 void  actions(char *signal, char* flow, char *node) ;
 void  actionsEnd(char *signal, char* flow, char* node) ;
 int   genFileList(LISTNODEPTR *fileList,const char *directory,LISTNODEPTR *filterList) ;

@@ -41,7 +41,9 @@
 #include <sys/param.h>
 #include "l2d2_roxml.h"
 #include "l2d2_server.h"
+#include "l2d2_socket.h"
 #include "l2d2_lists.h"
+#include "l2d2_commun.h"
 
 extern char *get_Authorization(char *, char * ,char **);
 extern dpnode *getDependencyFiles(char *ddep , char *xp, FILE *fp , const char *deptype);
@@ -116,16 +118,13 @@ char filename[256];
 int main (int argc, char* argv[])
 {
   int i,next_option,answer,ret,status=0;
-  int sock,bytes_read, bytes_sent, port, datestamp ;
+  int sock,bytes_read, bytes_sent, port;
   
   ServerActions whatAction;
   DepOption     Doption;
 
   unsigned int pid;
 
-  struct sockaddr_in server;
-  struct hostent *hostentry = NULL;
-  struct in_addr ip;
   struct passwd *passwdEnt = getpwuid(getuid());
 
   static char buffer[1024];
@@ -138,16 +137,10 @@ int main (int argc, char* argv[])
   static char depdir[1024];
   static char *SeqExpHome=NULL;
   static char signal[16]="madmin";
-  static DIR *dp = NULL;
-  struct dirent *d;
-  struct stat st;
   struct sigaction act;
 
   char dpkey[128];
   char cmdBuf[1024];
-  char extension[256];
-  char underline[2];
-  char ffilename[512];
   char Time[40];
   char lpargs[512];
   char *mversion = NULL;
@@ -308,7 +301,7 @@ int main (int argc, char* argv[])
             fprintf(stderr, "Found No maestro_server_%s parameters file\n",mversion);
             exit(1);
   } else {
-            int nscan = sscanf(Auth_token, "seqpid=%u seqhost=%s seqip=%s seqport=%u", &pid, htserver, ipserver, &port);
+            sscanf(Auth_token, "seqpid=%u seqhost=%s seqip=%s seqport=%u", &pid, htserver, ipserver, &port);
   }
   
   if ( (sock=connect_to_host_port_by_ip (ipserver,port))  < 1 ) {
@@ -350,6 +343,8 @@ int main (int argc, char* argv[])
   memset(buffer,'\0',sizeof(buffer));
   switch ( whatAction ) 
   {
+      case NONE:
+          break;
       case SHUT_DOWN_SERVER:
            alarm(5);
            bytes_sent=write(sock, "X ", 2);

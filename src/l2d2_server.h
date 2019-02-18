@@ -21,7 +21,9 @@
 
 #ifndef L2D2SERVER_H
 #define L2D2SERVER_H
-
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
 
 /* structure that holds l2d2server 'global' data */
 typedef struct {
@@ -65,7 +67,7 @@ typedef struct {
    _clean_times clean_times;
 } _l2d2server;
 
-struct _depParameters {
+typedef struct _depParameters {
    char xpd_name[256];
    char xpd_node[256];
    char xpd_indx[15];

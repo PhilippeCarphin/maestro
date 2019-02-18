@@ -1,6 +1,7 @@
 #ifndef _SEQ_NODE_CENSUS_H_
 #define _SEQ_NODE_CENSUS_H_
 
+#include "SeqNode.h"
 /********************************************************************************
  * DOCUMENTATION: Interface.
  * These are functions used to get a list of the nodes of an experiment.

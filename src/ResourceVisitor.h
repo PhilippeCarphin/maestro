@@ -45,12 +45,12 @@
 
 typedef struct _ValidityData {
 
-   char * dow;
-   char * hour;
-   char * time_delta;
-   char * valid_hour;
-   char * valid_dow;
-   char * local_index;
+   const char * dow;
+   const char * hour;
+   const char * time_delta;
+   const char * valid_hour;
+   const char * valid_dow;
+   const char * local_index;
 }ValidityData;
 typedef ValidityData * ValidityDataPtr;
 
