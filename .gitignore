@@ -31,3 +31,4 @@ submitTests.sh
 mtest
 tsvinfo
 *.dSYM
+*.d
