@@ -36,6 +36,17 @@
 
 extern int MLLServerConnectionFid;
 
+int  (*_removeFile)(const char *filename, const char * _seq_exp_home ) ;
+int  (*_access)(const char *filename, int mode, const char * _seq_exp_home ) ;
+int  (*_touch)(const char *filename, const char * _seq_exp_home );
+FILE * (*_fopen) ( const char *filename , int  sock );
+int (*_SeqUtil_mkdir) ( const char* dirname, int notUsed, const char * _seq_exp_home );
+int  (*_isFileExists) ( const char* lockfile, const char *caller, const char * _seq_exp_home ) ;
+int (*_globPath) (const char *pattern, int flags, int (*errfunc) (const char *epath, int eerrno), const char * _seq_exp_home );
+LISTNODEPTR (*_globExtList) (const char *pattern, int flags, int (*errfunc) (const char *epath, int eerrno) );
+int (*_lock)  ( const char *filename , const char * datestamp, const char * _seq_exp_home );
+int (*_unlock)  ( const char *filename , const char * datestamp, const char * _seq_exp_home );
+
 /**
  * removeFile_svr: Removes the named file 'filename' through mserver it returns 
  * zero if succeeds  and a nonzero value if it does not
