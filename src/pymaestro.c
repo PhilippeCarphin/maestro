@@ -1,7 +1,7 @@
 
 #include <Python.h>
 #include "SeqNodeCensus.h"
-int MLLServerConnectionFid=0;
+#include "SeqUtil.h"
 
 #if PY_MAJOR_VERSION >= 3
 
@@ -20,6 +20,7 @@ static PyObject *pymaestro_exported_func(PyObject* self, PyObject* args)
         printf("argv[%d] = : %s\n", i, argv[i]);
 	}
 
+
 	// struct MyOpts *opts;
 	// if(parse_args(argc, argv, &opts)){
 	// 	return self;
@@ -29,8 +30,8 @@ static PyObject *pymaestro_exported_func(PyObject* self, PyObject* args)
 	// 	return self;
 	// }
   printf(" * Some call to a C function *\n");
-  // nodeinfo("cock", "piss", "shit", "boner", NULL, "today", NULL);
-  PathArgNodePtr pan = getNodeList("boner", "schlong");
+  // nodeinfo("this", "that", "the", "other", NULL, "today", NULL);
+  PathArgNodePtr pan = getNodeList("foo", "bar");
 
 	return self;
 }
@@ -85,6 +86,7 @@ PyMODINIT_FUNC
 PyInit_pymaestro(void)
 {
     PyObject *module = PyModule_Create(&moduledef);
+    SeqUtil_setTraceFlag( TRACE_LEVEL , TL_FULL_TRACE );
 
     if (module == NULL)
         INITERROR;
