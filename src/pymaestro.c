@@ -1,5 +1,7 @@
 
 #include <Python.h>
+#include "SeqNodeCensus.h"
+int MLLServerConnectionFid=0;
 
 #if PY_MAJOR_VERSION >= 3
 
@@ -27,6 +29,8 @@ static PyObject *pymaestro_exported_func(PyObject* self, PyObject* args)
 	// 	return self;
 	// }
   printf(" * Some call to a C function *\n");
+  // nodeinfo("cock", "piss", "shit", "boner", NULL, "today", NULL);
+  PathArgNodePtr pan = getNodeList("boner", "schlong");
 
 	return self;
 }
