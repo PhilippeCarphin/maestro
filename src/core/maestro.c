@@ -119,7 +119,6 @@ int processDepStatus( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep, cons
 /* see SeqUtil.h for other definitions */
 static int ServerConnectionStatus = 1;
 static int QueDeqConnection = 0 ;
-int MLLServerConnectionFid=0; /* connection for the maestro Lock|Log  server */
 extern int OpenConnectionToMLLServer (const char *,const char *,const char*);
 extern void CloseConnectionWithMLLServer ( int con  );
 static void CreateLockFile_svr (int sock , char *filename, char *caller, const char* _seq_exp_home );

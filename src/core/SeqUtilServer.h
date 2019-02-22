@@ -25,6 +25,8 @@
 #include "SeqListNode.h"
 #include "l2d2_socket.h"
 
+extern int MLLServerConnectionFid;
+
 int  removeFile_svr(const char *filename, const char * _seq_exp_home ) ;
 
 extern int  (*_removeFile)(const char *filename, const char * _seq_exp_home ) ;
