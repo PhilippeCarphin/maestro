@@ -109,4 +109,4 @@ fi
 
 export NO_STOP_MESSAGE=on
 print "\n$TCLSH ${SEQ_SRC}/xflow/lib/Overview.tcl ${automsg_opt} ${suites_opt}"
-$TCLSH ${SEQ_SRC}/tcl/xflow/Overview.tcl -main ${automsg_opt} ${suites_opt} ${logfile_opt} ${debug_opt} ${rc_opt} ${user_opt} ${logspan_opt} ${exp_opt}
+$TCLSH ${SEQ_SRC}/xflow/lib/Overview.tcl -main ${automsg_opt} ${suites_opt} ${logfile_opt} ${debug_opt} ${rc_opt} ${user_opt} ${logspan_opt} ${exp_opt}
