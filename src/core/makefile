@@ -17,8 +17,8 @@ LIBS = -l xml2 -l crypto -l dl -l pthread -l c
 
 SRC = $(wildcard *.c)
 
-MAINS=$(filter %_main.c,$(SRC))
-NON_MAINS = $(filter-out $(MAINS),$(wildcard *.c))
+MAINS=$(filter %_main.c,$(SRC)) l2d2_admin.c l2d2_server.c
+NON_MAINS = $(filter-out $(MAINS) pymaestro.c,$(wildcard *.c))
 OBJ = $(NON_MAINS:.c=.o)
 EXECUTABLES=$(MAINS:_main.c=.out)
 

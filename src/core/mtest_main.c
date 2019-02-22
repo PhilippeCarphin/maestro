@@ -37,7 +37,6 @@
 #include "l2d2_commun.h"
 
 static char * testDir = NULL;
-int MLLServerConnectionFid=0;
 
 /********************************************************************************
  * MAESTRO TEST FILE
