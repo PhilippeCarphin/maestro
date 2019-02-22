@@ -34,7 +34,7 @@
 #include "l2d2_commun.h"
 
 
-extern int MLLServerConnectionFid;
+int MLLServerConnectionFid = 0;
 
 int  (*_removeFile)(const char *filename, const char * _seq_exp_home ) ;
 int  (*_access)(const char *filename, int mode, const char * _seq_exp_home ) ;
