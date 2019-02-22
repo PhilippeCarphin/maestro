@@ -56,7 +56,7 @@ vars:
 	$(CC) $< $(CFLAGS) -c -o $@
 
 %.out:%_main.o $(OBJ)
-	$(CC) $(LDFLAGS) $< $(OBJ) $(LIBS) -o $@
+	$(CC) $< $(LDFLAGS) $(OBJ) $(LIBS) -o $@
 
 clean:
 	rm -f *.o; rm -f $(EXECUTABLES); rm -rf $(SWDEST) .fo ; rm -rf *.d
