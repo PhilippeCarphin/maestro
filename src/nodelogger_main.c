@@ -47,8 +47,6 @@ Revision:
 *****************************************************************/
 
 
-int MLLServerConnectionFid=0;
-
 static void alarm_handler() { fprintf(stderr,"@@@@@@ EXCEEDED TIME IN LOOP ITERATIONS @@@@@@\n"); };
 
 static void printUsage()

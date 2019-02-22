@@ -38,7 +38,6 @@
 ******************************************************************************/
 
 
-int MLLServerConnectionFid;
 static void alarm_handler() { /* nothing */ };
 
 static void printUsage()
