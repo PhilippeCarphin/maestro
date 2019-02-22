@@ -6,7 +6,7 @@ package require tooltip
 package require log
 
 global env
-set lib_dir $env(SEQ_SRC)/lib
+set lib_dir $env(SEQ_SRC)/xflow/lib
 # puts "lib_dir=$lib_dir"
 set auto_path [linsert $auto_path 0 $lib_dir ]
 
