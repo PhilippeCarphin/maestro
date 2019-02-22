@@ -27,8 +27,10 @@ WERROR_FLAGS= -Wall -Werror=implicit-function-declaration -Werror=return-type -W
 
 XML_INCLUDE_DIR=/usr/local/Cellar/libxml2/2.9.9_2/include/libxml2
 XML_LIB_DIR=/usr/local/Cellar/libxml2/2.9.9_2/lib
-OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2q/include/ 
+XML_INCLUDE_DIR=/usr/local/Cellar/libxml2/2.9.7/include/libxml2
+OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2q/include/
 OPENSSL_LIB_DIR=/usr/local/Cellar/openssl/1.0.2q/lib/
+
 
 CFLAGS = -g -Wall -Wimplicit-function-declaration -MMD
 CFLAGS += -I $(XML_INCLUDE_DIR) -I $(OPENSSL_INCLUDE_DIR)
