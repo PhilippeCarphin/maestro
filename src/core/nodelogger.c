@@ -37,6 +37,7 @@
 #include "nodelogger.h"
 #include "l2d2_socket.h"
 #include "SeqUtil.h"
+#include "SeqUtilServer.h"
 #include <libgen.h>
 #include <strings.h>
 
@@ -51,7 +52,6 @@ static char nodelogger_buf_top[NODELOG_BUFSIZE];
 static char nodelogger_buf_short[NODELOG_BUFSIZE];
 static char nodelogger_buf_notify[NODELOG_BUFSIZE];
 static char nodelogger_buf_notify_short[NODELOG_BUFSIZE];
-extern int MLLServerConnectionFid;
 extern int OpenConnectionToMLLServer (const char *, const char *, const char *);
 
 static char NODELOG_JOB[NODELOG_BUFSIZE];

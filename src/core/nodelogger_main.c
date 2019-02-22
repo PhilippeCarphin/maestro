@@ -32,7 +32,6 @@
 #include "SeqUtil.h"
 #include "getopt.h"
 
-int MLLServerConnectionFid=0;
 
 static void alarm_handler() { fprintf(stderr,"@@@@@@ EXCEEDED TIME IN LOOP ITERATIONS @@@@@@\n"); };
 
