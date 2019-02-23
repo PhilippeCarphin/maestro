@@ -277,7 +277,7 @@ int NodeLogr (char *nodeLogerBuffer , int pid, FILE *mlog)
      int NodeLogfile;
      int bwrite, num=0,ret;
      char user[10];
-     char firsin[512],Stime[40],Etime[40];
+     char firsin[512];
      char logBuffer[1024];
 
      if ( nodeLogerBuffer == NULL ) {
@@ -405,14 +405,8 @@ int writeInterUserDepFile (const char * tbuffer, FILE *mlog)
      char *tmpString;
      const char delimiter[] = "#";
      struct stat st;
-     char mode[] = "0444";
-     char wbuffer[2048];
-     char junk[2048];
-     char csize[5];
-     int n,to_read=0, total=0,received=0;
 
-     int r,i;
-     int size;
+     int r;
 
      tmpString=strdup(tbuffer); 
 
@@ -626,7 +620,7 @@ int ParseXmlConfigFile(char *filename ,  _l2d2server *pl2d2 )
 
       node_t *root = roxml_load_buf(buffer);
       node_t *item = roxml_get_chld(root,NULL,0);
-      char *r_txt  = roxml_get_name(item,bf,sizeof(bf));
+      // char *r_txt  = roxml_get_name(item,bf,sizeof(bf));
 
       if ( strcmp(bf,"mserver") == 0 ) {
              node_t *log_n = roxml_get_chld(item,"log",0);
@@ -878,14 +872,12 @@ struct _depParameters * ParseXmlDepFile(char *filename , FILE * dmlog )
 {
 
       FILE *doc=NULL;
-      node_t *dep, *name, *inode, *lock , *sub;
       struct _depParameters *listParam=NULL;
       char bf[256];
-      char bfl[1024];
       char buffer[2048];
       char tmpbf[2048];
       char *c;
-      int size,i;
+      int size;
 
       memset(bf, '\0' , sizeof(bf));
       memset(buffer, '\0' , sizeof(buffer));
@@ -904,7 +896,7 @@ struct _depParameters * ParseXmlDepFile(char *filename , FILE * dmlog )
 
       node_t *root = roxml_load_buf(buffer);
       node_t *item = roxml_get_chld(root,NULL,0);
-      char *r_txt  = roxml_get_name(item,bf,sizeof(bf));
+      // char *r_txt  = roxml_get_name(item,bf,sizeof(bf));
 
       node_t *type = roxml_get_attr(item, "type",0);
       c=roxml_get_content(type,bf,sizeof(bf),&size);
@@ -1146,7 +1138,7 @@ int SendFile (const char * filename , int sock, FILE *mlog )
     char   fsize[11]; /* size of the file encoded in 10 char, max : 9999999999 wow! */
     FILE * waitf;
     
-    int bytes_written=0, bytes_read=0, bytes_left=0, total=0;
+    int bytes_written=0, bytes_left=0, total=0;
     struct stat st;
 
     /* get & format size of file in bytes */ 
@@ -1203,8 +1195,7 @@ int SendFile (const char * filename , int sock, FILE *mlog )
 int lock ( char *md5Token , _l2d2server L2D2 , char *xpn , char *node , FILE *mlog ) 
 {
    int ret;
-   char *base,*leaf;
-   char src[1024],dest[1024],Ltime[25];
+   char src[1024],dest[1024];
    struct stat st;
    time_t now;
    double diff_t=0.0;

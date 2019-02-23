@@ -142,7 +142,7 @@ int roxml_is_number(char *input)
 {
 	char *end;
 	int is_number = 0;
-	double r = strtod(input, &end);
+	strtod(input, &end);
 	
 	if((end == NULL) || 
 		(roxml_is_separator(end[0])) || 
@@ -865,7 +865,6 @@ int ROXML_INT roxml_validate_axes(node_t *root, node_t *candidat, node_t ***ans,
 	int path_end = 0;
 	char * axes = NULL;
 	char intern_buff[INTERNAL_BUF_SIZE];
-	char intern_buff2[INTERNAL_BUF_SIZE];
 
 	if(xn == NULL) {
 		valid = 1;

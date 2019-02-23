@@ -44,7 +44,7 @@ static void printUsage()
 {
 char * usage = "DESCRIPTION: Date accessor/modifier interface for experiments\n\
 \n\
-USAGE:\N\
+USAGE:\n\
     \n\
     tictac [-s date,-f format] [-e exp] [-d datestamp] [-v]\n\
 \n\
@@ -87,7 +87,7 @@ EXAMPLES:\n\
 printf("%s",usage);
 }
 
-main (int argc, char * argv [])
+int main (int argc, char * argv [])
 {
    char * short_opts = "s:f:e:d:hv";
    extern char *optarg;
