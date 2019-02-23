@@ -768,8 +768,6 @@ node_t * roxml_add_node(node_t * parent, int position, int type, char *name, cha
 	char * buffer = NULL;
 	node_t * new_node;
 
-	int allow_attrib_child;
-	
 	if(parent) {
 		if(parent->type & ROXML_ATTR_NODE) {
 			if(((type & ROXML_TXT_NODE) == 0)||(parent->chld)) {

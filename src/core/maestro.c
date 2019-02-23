@@ -1389,7 +1389,7 @@ int prepInterUserFEFile( const SeqNodeDataPtr _nodeDataPtr, char * _target_state
 
    struct passwd *current_passwd = NULL;
    char registration_time[40];
-   char depParam[2048],depFile[1024],depBuf[2048];
+   char depFile[1024],depBuf[2048];
    char *loopArgs = NULL, *depBase = NULL,  *md5sum = NULL;
    char *maestro_version=NULL , *maestro_shortcut=NULL;
    struct timeval tv;
@@ -2225,11 +2225,11 @@ Inputs:
 static void submitForEach ( const SeqNodeDataPtr _nodeDataPtr, const char* _signal ) {
    char line[SEQ_MAXFIELD];
    FILE* FEFile = NULL;
-   SeqNameValuesPtr loopArgsPtr = NULL, newArgs=NULL, poppedArgs=NULL;
+   SeqNameValuesPtr newArgs=NULL, poppedArgs=NULL;
    char depExp[256], depNode[256],depIndex[128], depArgs[256], depDatestamp[20], poppedValue[128];
    char filename[SEQ_MAXFIELD], submitCmd[SEQ_MAXFIELD], extendedArgs[256];
-   char *extName = NULL, *submitDepArgs = NULL, *tmpValue=NULL, *tmpExt=NULL;
-   int submitCode = 0, line_count=0, ret, isLastIter=0;
+   char *extName = NULL, *tmpValue=NULL, *tmpExt=NULL;
+   int submitCode = 0, line_count=0, ret;
 
    SeqUtil_TRACE(TL_FULL_TRACE, "maestro.submitForEach() executing for %s\n", _nodeDataPtr->nodeName );
 

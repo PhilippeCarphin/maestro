@@ -124,14 +124,13 @@ void DependencyManager (_l2d2server l2d2 ) {
      static DIR *dp=NULL;
      struct dirent *pd;
      struct stat st;
-     sigset_t  newmask, oldmask,zeromask;
      struct sigaction sa;
      struct _depParameters *depXp=NULL;
      time_t current_epoch, start_epoch, start_epoch_cln;
      glob_t g_LogFiles;
      size_t cnt;
      int  g_lres;
-     int datestamp,nb,LoopNumber;
+     int datestamp,nb;
      char underline[2];
      char buf[1024];
      char cmd[2048];
@@ -146,11 +145,11 @@ void DependencyManager (_l2d2server l2d2 ) {
      char Time[40],tlog[16];
      char *pleaf=NULL;
      char **p;
-     int r, ret, running=0, _ZONE_ = 2, KILL_SERVER = FALSE;
-     int fd,epid; 
-         
+     int r, ret, running=0, KILL_SERVER = FALSE;
+     int fd,epid;
+
      l2d2.depProcPid=getpid();
-  
+
      /* redirect  streams 
         Note : dup2 should handle close and open , but it does not !!*/
      close(STDIN_FILENO);
@@ -996,7 +995,7 @@ void maestro_l2d2_main_process_server (int fserver)
 {
   FILE *smlog, *fp;
   pid_t pid_eworker, kpid;  /* pid_eworker : pid of eternal worker */
-  int ret,status,j,ew_regenerated=1,dm_regenerated=1;
+  int ret,j,ew_regenerated=1,dm_regenerated=1;
   char *m5sum=NULL, *Auth_token=NULL;
   char authorization_file[1024], filename[1024], isAliveFile[128];
   const char message[256];
