@@ -1202,7 +1202,7 @@ int SendFile (const char * filename , int sock, FILE *mlog )
  */
 int lock ( char *md5Token , _l2d2server L2D2 , char *xpn , char *node , FILE *mlog ) 
 {
-   int i, ret;
+   int ret;
    char *base,*leaf;
    char src[1024],dest[1024],Ltime[25];
    struct stat st;
