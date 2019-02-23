@@ -21,7 +21,9 @@
 
 #ifndef L2D2SERVER_H
 #define L2D2SERVER_H
-
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <stdio.h>
 
 /* structure that holds l2d2server 'global' data */
 typedef struct {

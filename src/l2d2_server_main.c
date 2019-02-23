@@ -26,7 +26,8 @@
 #include <signal.h>
 #include <pwd.h>
 #include <errno.h>
-#include <time.h>
+#include <sys/time.h>
+#include <utime.h>
 #include <glob.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -45,6 +46,7 @@
 #include "l2d2_Util.h"
 #include "l2d2_server.h"
 #include "l2d2_socket.h"
+#include "l2d2_commun.h"
 
 #define MAX_PROCESS 8                     /* max number of Transient workers */
 #define ETERNAL_WORKER_STIMEOUT   1*60    /* 1 minute */

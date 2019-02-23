@@ -25,9 +25,8 @@ include ../config/config.mk
 
 WERROR_FLAGS= -Wall -Werror=implicit-function-declaration -Werror=return-type -Werror=unused-but-set-variable -Werror=unused-variable -Werror=strict-aliasing=3
 
-XML_INCLUDE_DIR=/usr/local/Cellar/libxml2/2.9.9_2/include/libxml2
 XML_LIB_DIR=/usr/local/Cellar/libxml2/2.9.9_2/lib
-XML_INCLUDE_DIR=/usr/local/Cellar/libxml2/2.9.7/include/libxml2
+XML_INCLUDE= -I/usr/local/Cellar/libxml2/2.9.7/include/libxml2 -I /usr/local/Cellar/libxml2/2.9.9_2/include/libxml2
 OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2q/include/
 OPENSSL_LIB_DIR=/usr/local/Cellar/openssl/1.0.2q/lib/
 
@@ -38,12 +37,14 @@ CFLAGS += -I $(XML_INCLUDE_DIR) -I $(OPENSSL_INCLUDE_DIR)
 LDFLAGS = -L $(XML_LIB_DIR) -L $(OPENSSL_LIB_DIR)
 LIBS = -l xml2 -l crypto -l dl -l pthread -l c
 
-SRC = $(wildcard *.c)
+SRC = $(filter-out pymaestro.c,$(wildcard *.c))
+OBJ = $(ALL_SRC:.c=.o)
 
-MAINS=$(filter %_main.c,$(SRC)) l2d2_admin.c l2d2_server.c
-NON_MAINS = $(filter-out $(MAINS) pymaestro.c,$(wildcard *.c))
-OBJ = $(NON_MAINS:.c=.o)
+MAINS=$(filter %_main.c,$(SRC))
 EXECUTABLES=$(MAINS:_main.c=.out)
+
+NON_MAINS = $(filter-out $(MAINS) pymaestro.c,$(SRC))
+OBJ = $(NON_MAINS:.c=.o)
 
 
 
