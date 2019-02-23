@@ -41,6 +41,7 @@
 #define DEFAULT_LOOP_SET_STR   strdup("1")
 
 
+int SeqLoops_parseArgs( SeqNameValuesPtr* nameValuesPtr, const char* cmd_args );
 void SeqLoops_setLoopAttribute( SeqNameValuesPtr* loop_attr_ptr, char* attr_name, char* attr_value );
 int SeqLoops_parseArgs( SeqNameValuesPtr* nameValuesPtr, const char* cmd_args );
 char* SeqLoops_getLoopAttribute( SeqNameValuesPtr loop_attr_ptr, char* attr_name );

@@ -22,11 +22,13 @@
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h> 
+#include <libxml/parser.h>
 #include "maestro.h"
 #include "SeqListNode.h"
 #include "SeqUtil.h"
 #include "SeqNameValues.h"
 #include "SeqDatesUtil.h"
+#include "SeqLoopsUtil.h"
 #include "getopt.h"
 /***********************************************************************************
 * name: maestro

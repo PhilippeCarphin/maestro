@@ -9,7 +9,7 @@ OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2q/include/
 OPENSSL_LIB_DIR=/usr/local/Cellar/openssl/1.0.2q/lib/
 
 
-CFLAGS = -g -Wall -Wimplicit-function-declaration -MMD
+CFLAGS = -g -Wall -Wimplicit-function-declaration -MMD -Werror=implicit-function-declaration
 CFLAGS += -I $(XML_INCLUDE_DIR) -I $(OPENSSL_INCLUDE_DIR)
 
 LDFLAGS = -L $(XML_LIB_DIR) -L $(OPENSSL_LIB_DIR)
