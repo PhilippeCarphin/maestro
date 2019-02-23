@@ -29,7 +29,6 @@
 
 static void printUsage()
 {
-   char *seq_exp_home = NULL;
    char * usage = "DESCRIPTION: Accessor/modifier interface for experiment catchup value.\n\
 \n\
 USAGE:\n\
