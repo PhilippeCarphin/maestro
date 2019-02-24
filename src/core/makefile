@@ -34,7 +34,6 @@ OPENSSL_LIB_DIR=/usr/local/Cellar/openssl/1.0.2q/lib/
 MAESTRO_LIB_DIR = .
 MAESTRO_LIBS = -l maestro
 
-
 CFLAGS = -g -Wall -Wimplicit-function-declaration -MMD -Werror=implicit-function-declaration
 CFLAGS += $(XML_INCLUDE) -I $(OPENSSL_INCLUDE_DIR)
 CFLAGS += -Wno-unused-label -Wno-pointer-sign -Wno-unused-function

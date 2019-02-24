@@ -47,8 +47,11 @@ def verify_tsvinfo_available():
 
 def get_node_paths(exp_home, datestamp):
     tsvfile = '.tsvtmp'
-    this_dir = os.path.dirname(__file__)
-    cmd = '{}/tsvinfo.out -e {} -d {} --readable-output {}'.format(this_dir, exp_home, datestamp, tsvfile)
+    maestro_dir = os.path.join(os.path.dirname(__file__), '..')
+    src_dir = os.path.join(maestro_dir, 'src')
+    tsvinfo = os.path.join(src_dir, 'tsvinfo.out')
+    subprocess.call(['make', '-C', src_dir])
+    cmd = '{} -e {} -d {} --readable-output {}'.format(tsvinfo, exp_home, datestamp, tsvfile)
     print(cmd)
     retval = subprocess.call(cmd.split())
 

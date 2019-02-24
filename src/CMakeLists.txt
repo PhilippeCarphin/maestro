@@ -8,6 +8,7 @@ include_directories( /usr/local/opt/openssl/include ${LIBXML2_INCLUDE_DIRS})
 link_directories(/usr/local/opt/openssl/lib ${LIBXML2_LIBRARY_DIRS})
 link_libraries(${LIBXML2_LIBRARIES} crypto)
 
+# There is a good reason for not using file globs
 set(lib_sources
         FlowVisitor.c
         QueryServer.c
