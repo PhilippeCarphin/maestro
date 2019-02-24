@@ -102,3 +102,4 @@ tsvinfo
 cmake-build*
 build
 exp/*
+dist
