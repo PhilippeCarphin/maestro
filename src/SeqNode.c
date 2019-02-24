@@ -198,7 +198,8 @@ void SeqNode_setCpu_new ( SeqNodeDataPtr node_ptr, const char* cpu ) {
       }  
 
       /*find count of "x" separator*/
-      for (x_count=0; strPtr[x_count]; strPtr[x_count]=='x' ? x_count++ : *(strPtr++));
+      for (x_count=0; strPtr[x_count]; strPtr[x_count]=='x' ? x_count++ : *(strPtr++))
+         ;
 
       SeqUtil_TRACE(TL_FULL_TRACE, "SeqNode_setCpu() cpu=%s, x-separator count=%d\n",cpu,x_count);
 

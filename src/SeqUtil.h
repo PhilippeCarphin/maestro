@@ -63,7 +63,8 @@
 
 void SeqUtil_addPadding( char *dst, const char *datestamp, char c, int length);
 void  raiseError(const char* fmt, ... );
-void  SeqUtil_TRACE( int level,const char * fmt, ...);
+void  _SeqUtil_TRACE( int level,const char * fmt, ...);
+#define SeqUtil_TRACE(...) _SeqUtil_TRACE(__VA_ARGS__)
 void  SeqUtil_setTraceLevel (int _trace) ;
 int   SeqUtil_getTraceLevel () ;
 void SeqUtil_setTraceFlag(int flag, int value);

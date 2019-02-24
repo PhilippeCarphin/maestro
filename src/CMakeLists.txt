@@ -60,3 +60,8 @@ add_executable(getdef getdef_main.c)
 add_executable(expcatchup expcatchup_main.c)
 add_executable(nodeinfo maestro_main.c)
 add_executable(nodelogger nodelogger_main.c)
+
+add_custom_target(post_build
+        COMMAND echo "Placeholder for custom Post build command or script")
+
+add_dependencies(post_build maestro tsvinfo tictac l2d2_server mtest getdef expcatchup nodeinfo nodelogger)
