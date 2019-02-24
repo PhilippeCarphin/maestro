@@ -36,7 +36,7 @@ MAESTRO_LIBS = -l maestro
 
 CFLAGS = -g -Wall -Wimplicit-function-declaration -MMD -Werror=implicit-function-declaration
 CFLAGS += -I $(XML_INCLUDE_DIR) -I $(OPENSSL_INCLUDE_DIR)
-CFLAGS += -Wno-unused-label -Wno-pointer-sign
+CFLAGS += -Wno-unused-label -Wno-pointer-sign -Wno-unused-function
 
 LDFLAGS = -L $(XML_LIB_DIR) -L $(OPENSSL_LIB_DIR) -L $(MAESTRO_LIB_DIR)
 LIBS = -l xml2 -l crypto -l dl -l pthread -l c $(MAESTRO_LIBS)

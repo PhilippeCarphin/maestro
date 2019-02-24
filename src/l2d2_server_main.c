@@ -43,6 +43,7 @@
 #include <sys/select.h>
 #include <fcntl.h>
 #include <dirent.h>
+#include <math.h>
 #include "l2d2_Util.h"
 #include "l2d2_server.h"
 #include "l2d2_socket.h"
@@ -998,7 +999,7 @@ void maestro_l2d2_main_process_server (int fserver)
   int ret,j,ew_regenerated=1,dm_regenerated=1;
   char *m5sum=NULL, *Auth_token=NULL;
   char authorization_file[1024], filename[1024], isAliveFile[128];
-  const char message[256];
+  char message[256];
   time_t current_epoch, epoch_cln ;
   struct sigaction adm;
   struct stat st;
@@ -1036,7 +1037,7 @@ void maestro_l2d2_main_process_server (int fserver)
   }
   close(STDOUT_FILENO);
   close(STDERR_FILENO);
-  if (fd = open("/dev/null", O_RDWR, 0) != -1) {
+  if ((fd = open("/dev/null", O_RDWR, 0)) != -1) {
         if(dup2(fd, STDOUT_FILENO) < 0) {
              perror("dup2 stdout");
              exit (1);
@@ -1124,7 +1125,9 @@ void maestro_l2d2_main_process_server (int fserver)
 	                 fprintf(smlog,"Eternal Worker has been Re-generated 2 times already .. exiting at :%s\n",Time);
 	                 close(fserver);
                          for ( j=0; j < MAX_PROCESS ; j++ ) {
-	                       ChildPids[j] == 0 ? : kill (ChildPids[j],9);
+	                       if(ChildPids[j] != 0) {
+							   kill(ChildPids[j], 9);
+						   }
                          }
                          kill(L2D2.depProcPid,9);
 			 /* send email notice */
@@ -1158,7 +1161,9 @@ void maestro_l2d2_main_process_server (int fserver)
 		        fprintf(smlog,"Dependency manager has been Re-generated once already .. exiting at:%s\n",Time);
 	                kill(pid_eworker,9);
                         for ( j=0; j < MAX_PROCESS ; j++ ) {
-	                       ChildPids[j] == 0 ? : kill (ChildPids[j],9);
+							if(ChildPids[j] != 0) {
+								kill(ChildPids[j], 9);
+							}
                         }
                         snprintf(message,sizeof(message),"Dependency manager (pid=%u) died (at:%s) after being re-started, mserver exiting, Please check",L2D2.depProcPid,Time);
 			ret=sendmail(L2D2.emailTO,L2D2.emailTO,L2D2.emailCC,"maestro server (mserver) failure",&message[0],smlog);
@@ -1205,7 +1210,7 @@ void maestro_l2d2_main_process_server (int fserver)
 	/* Eternal worker       */
 	snprintf(filename,sizeof(filename),"%s/EW_%d",L2D2.tmpdir,pid_eworker);
 	if ( stat(filename,&st) == 0 ) {
-	        if ( (diff_t=abs(difftime(current_epoch,st.st_mtime))) > NOTIF_TIME_INTVAL_EW ) {
+	        if ( (diff_t=fabs(difftime(current_epoch,st.st_mtime))) > NOTIF_TIME_INTVAL_EW ) {
 	              if ( (ret=kill(pid_eworker,0)) != 0 ) {
 		                   sig_child=1;
 				   ret=unlink(filename);
@@ -1221,7 +1226,7 @@ void maestro_l2d2_main_process_server (int fserver)
 	/* Dependency Manager  */
 	 snprintf(filename,sizeof(filename),"%s/DM_%d",L2D2.tmpdir,L2D2.depProcPid);
 	 if ( stat(filename,&st) == 0 ) {
-	            if ( (diff_t=abs(difftime(current_epoch,st.st_mtime))) > NOTIF_TIME_INTVAL_DM ) {
+	            if ( (diff_t=fabs(difftime(current_epoch,st.st_mtime))) > NOTIF_TIME_INTVAL_DM ) {
 	                if ( (ret=kill(L2D2.depProcPid,0)) != 0 ) {
 		                   sig_child=1;
 				   ret=unlink(filename);
@@ -1239,7 +1244,9 @@ void maestro_l2d2_main_process_server (int fserver)
 	     close(fserver);
              sleep (2);
              for ( j=0; j < MAX_PROCESS; j++ ) {
-	           ChildPids[j] == 0 ? : kill (ChildPids[j],9);
+				 if(ChildPids[j] != 0){
+					 kill(ChildPids[j], 9);
+				 }
              }
 	     kill(pid_eworker,9);
              kill(L2D2.depProcPid,9);
@@ -1254,7 +1261,9 @@ void maestro_l2d2_main_process_server (int fserver)
 	       get_time(Time,1);
 	       fprintf(smlog,"mserver::Error md5sum has changed File=%s new=%s old=%s ... at:%s killing server\n",L2D2.auth,m5sum,L2D2.m5sum,Time);
                for ( j=0; j < MAX_PROCESS; j++ ) {
-	           ChildPids[j] == 0 ? : kill (ChildPids[j],9);
+                    if(ChildPids[j] != 0){
+                        kill(ChildPids[j], 9);
+                    }
                }
 	       kill(pid_eworker,9);
 	       l2d2server_remove(smlog);
@@ -1411,7 +1420,7 @@ int main ( int argc , char * argv[] )
   /* bind to a free port, get port number */
   server_port = bind_sock_to_port (fserver, L2D2.port_min, L2D2.port_max);
   if (server_port < 0) {
-     fprintf(stderr,"Cannot create server. Port blocked or bad range. \n",buf);
+     fprintf(stderr,"Cannot create server. Port blocked or bad range. \n");
 	  exit(1);
   } 
   
