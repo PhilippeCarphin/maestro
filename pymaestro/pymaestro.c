@@ -1,5 +1,6 @@
 
 #include <Python.h>
+#include "nodeinfo.h"
 #include "SeqNodeCensus.h"
 #include "SeqUtil.h"
 
@@ -12,8 +13,8 @@ static PyObject *pymaestro_exported_func(PyObject* self, PyObject* args)
   // Arguments of the python function call arrive as a tuple of
   // PyObjects args.
   printf("I am a C function %s(), I received arguments : \n", __FUNCTION__);
-	char *argv[argc];
-   argv[0] = __func__;
+	const char *argv[argc];
+  argv[0] = __func__;
 	for(int i = 1; i < argc; ++i){
       PyObject *bytes = PyUnicode_AsEncodedString(PyTuple_GetItem(args, i-1), "UTF-8", "strict");
         argv[i] = PyBytes_AS_STRING(bytes);
@@ -31,7 +32,16 @@ static PyObject *pymaestro_exported_func(PyObject* self, PyObject* args)
 	// }
   printf(" * Some call to a C function *\n");
   // nodeinfo("this", "that", "the", "other", NULL, "today", NULL);
-  PathArgNodePtr pan = getNodeList("foo", "bar");
+  PathArgNodePtr pan = nodeinfo(
+          argv[1], // const char *node
+          atoi(argv[2]), // unsigned int filters
+          NULL,// SeqNameValuesPtr _loops
+          argv[4], // const char * _exp_home
+          NULL, // char * extraArgs
+          argv[6], //const char *datestamp
+          NULL // const char *switch_args
+          );
+  (void) pan;
 
 	return self;
 }
@@ -52,7 +62,7 @@ error_out(PyObject *m) {
 
 static PyMethodDef myextension_methods[] = {
     {"error_out", (PyCFunction)error_out, METH_NOARGS, NULL},
-    {"func_name", (PyCFunction)pymaestro_exported_func, METH_VARARGS, NULL},
+    {"nodeinfo", (PyCFunction)pymaestro_exported_func, METH_VARARGS, NULL},
     {NULL, NULL}
 };
 

@@ -1,0 +1,4 @@
+* Maestro Shell Demo
+
+Using =maestro= with =python-prompt-toolkit= to make a sweet interactive shell
+demo.
