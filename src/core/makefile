@@ -7,12 +7,16 @@ XML_INCLUDE= -I/usr/local/Cellar/libxml2/2.9.7/include/libxml2 -I /usr/local/Cel
 OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2q/include/
 OPENSSL_LIB_DIR=/usr/local/Cellar/openssl/1.0.2q/lib/
 
+MAESTRO_LIB_DIR = .
+MAESTRO_LIBS = -l maestro
+
 
 CFLAGS = -g -Wall -Wimplicit-function-declaration -MMD -Werror=implicit-function-declaration
 CFLAGS += -I $(XML_INCLUDE_DIR) -I $(OPENSSL_INCLUDE_DIR)
+CFLAGS += -Wno-unused-label -Wno-pointer-sign
 
-LDFLAGS = -L $(XML_LIB_DIR) -L $(OPENSSL_LIB_DIR)
-LIBS = -l xml2 -l crypto -l dl -l pthread -l c
+LDFLAGS = -L $(XML_LIB_DIR) -L $(OPENSSL_LIB_DIR) -L $(MAESTRO_LIB_DIR)
+LIBS = -l xml2 -l crypto -l dl -l pthread -l c $(MAESTRO_LIBS)
 
 SRC = $(filter-out pymaestro.c,$(wildcard *.c))
 OBJ = $(ALL_SRC:.c=.o)
@@ -20,23 +24,27 @@ OBJ = $(ALL_SRC:.c=.o)
 MAINS=$(filter %_main.c,$(SRC))
 EXECUTABLES=$(MAINS:_main.c=.out)
 
-NON_MAINS = $(filter-out $(MAINS) pymaestro.c,$(SRC))
-OBJ = $(NON_MAINS:.c=.o)
-
-
+LIB_SRC = $(filter-out $(MAINS) pymaestro.c,$(SRC))
+LIB_OBJ = $(LIB_SRC:.c=.o)
+lib = libmaestro.a
 
 execs:$(EXECUTABLES)
+
+$(lib):$(LIB_OBJ)
+	ar -crs $@ $^
 
 vars:
 	@echo "NON_MAINS = $(NON_MAINS)"
 	@echo "MAINS = $(MAINS)"
-	@echo "OBJ = $(OBJ)"
+	@echo "LIB_OBJ = $(LIB_OBJ)"
 
 %.o:$.c
 	$(CC) $< $(CFLAGS) -c -o $@
 
-%.out:%_main.o $(OBJ)
-	$(CC) $< $(LDFLAGS) $(OBJ) $(LIBS) -o $@
+%.out:%_main.o $(lib)
+  # Remember, it's important that the '-l xyz' from $(LIBS) come after the
+  # 'bla.o' file (but only on some compilers which is tricky)
+	$(CC) $(LDFLAGS) $< $(LIBS) -o $@
 
 clean:
 	rm -f *.o; rm -f $(EXECUTABLES); rm -rf $(SWDEST) .fo ; rm -rf *.d
