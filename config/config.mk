@@ -9,8 +9,17 @@ LIBDIR=$(SWDEST)/lib
 OPTDIR=$(SWDEST)/opt
 INCDIR=$(SWDEST)/include
 BINDIR=$(SWDEST)/bin
-# XML_INCLUDE_DIR=/usr/local/Cellar/libxml2/2.9.9_2/include/libxml2
+
+
+# libxml2 stuff
 XML_LIB_DIR=/usr/local/Cellar/libxml2/2.9.9_2/lib
+XML_INCLUDE_DIR = /usr/local/Cellar/libxml2/2.9.9_2/include/libxml2
+# XML_INCLUDE_DIR = /usr/include/libxml2
+# XML_INCLUDE_DIR = /usr/local/Cellar/libxml2/2.9.7/include/libxml2
+
+OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2q/include/
+OPENSSL_LIB_DIR=/usr/local/Cellar/openssl/1.0.2q/lib/
+
 
 # platform specific definition
 ifeq ($(MACHINE),Linux)
