@@ -34,3 +34,4 @@ tsvinfo
 *.d
 cmake-build*
 build
+exp/*
