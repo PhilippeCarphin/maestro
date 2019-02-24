@@ -22,8 +22,6 @@ set(lib_sources
         SeqUtilServer.c
         XmlUtils.c
         expcatchup.c
-        expcatchup_main.c
-        getdef_main.c
         getopt_long.c
         l2d2_Util.c
         l2d2_admin_main.c
@@ -37,7 +35,6 @@ set(lib_sources
         maestro.c
         nodeinfo.c
         nodelogger.c
-        nodelogger_main.c
         ocmjinfo.c
         runcontrollib.c
         tictac.c
@@ -46,9 +43,10 @@ set(lib_sources
 
 message("-- PROJECT_NAME : ${PROJECT_NAME}")
 
-add_library(${PROJECT_NAME} ${lib_sources})
+add_library(seq SHARED ${lib_sources})
 
-target_compile_options(${PROJECT_NAME} PUBLIC -Wno-pointer-sign -Werror=incompatible-pointer-types)
+target_link_libraries(seq ${LIBXML2_LIBRARIES} crypto)
+target_compile_options(seq PUBLIC -Wno-pointer-sign -Werror=incompatible-pointer-types -Werror=sometimes-uninitialized -Werror=uninitialized -Werror=parentheses)
 
 link_libraries(seq ${LIBXML2_LIBRARIES} crypto)
 

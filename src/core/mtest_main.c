@@ -148,9 +148,10 @@ int test_checkValidityData()
 
    SeqNodeDataPtr ndp = SeqNode_createNode("Phil");
    SeqNameValuesPtr loopsArgs = NULL;
-   
-   free(ndp->extension);
-   free(ndp->datestamp);
+
+   free((char*)ndp->extension);
+   free((char*)ndp->datestamp);
+
    ndp->extension = "";
    ndp->datestamp = strdup("20160102030405");
 
@@ -225,7 +226,7 @@ int test_Resource_createContext()
       SeqUtil_TRACE(TL_FULL_TRACE, " xmlFile=%s\nexpected=%s\n", xmlFile, expected);
       raiseError("TEST FAILED");
    }
-   free(xmlFile);
+   free((char*)xmlFile);
 
    /* TEST 2 : With the node being of type Task */
    ndp->type = Task;
@@ -361,7 +362,7 @@ int test_isValid()
 
    /* TEST : With the datestamp and the extension of 0, the VALIDITY node should
     * be considered valid. */
-   free(ndp->datestamp);
+   free((char*)ndp->datestamp);
    ndp->datestamp = strdup("20160102030405");
    free(ndp->extension);
    ndp->extension = strdup("+0");
@@ -437,7 +438,7 @@ int test_parseNodeDFS()
     * nodeDataPtr with a datestamp and an extension for validity checking */
    SeqNodeDataPtr ndp = SeqNode_createNode("phil");
    SeqNameValuesPtr loopsArgs = NULL;
-   free(ndp->datestamp);
+   free((char*)ndp->datestamp);
    ndp->datestamp = strdup("20160102030405");
    const char * xmlFile = absolutePath("loop_container.xml");
    ResourceVisitorPtr rv = createTestResourceVisitor(ndp,NULL,xmlFile,NULL);
@@ -450,7 +451,7 @@ int test_parseNodeDFS()
 
    rv->loopResourcesFound = 0;
    SeqUtil_TRACE(TL_FULL_TRACE,"============================ test with datestamp hour = 12\n");
-   free(ndp->datestamp);
+   free((char*)ndp->datestamp);
    ndp->datestamp = strdup("20160102120000");
    Resource_parseNodeDFS(rv, ndp, Resource_getLoopAttributes);
    expression = SeqNameValues_getValue( ndp->data, "EXPRESSION" );
@@ -481,7 +482,7 @@ int test_Resource_parseWorkerPath()
    header("parseWorkerPath");
    SeqNodeDataPtr ndp = SeqNode_createNode("phil");
    SeqNameValuesPtr loopsArgs = NULL;
-   free(ndp->datestamp);
+   free((char*)ndp->datestamp);
    ndp->datestamp = strdup("20160102120000");
    free(ndp->extension);
    ndp->extension = strdup("+1");
@@ -495,7 +496,7 @@ int test_Resource_parseWorkerPath()
 
    if( strcmp(ndp->workerPath, "this/is/the/end" ) != 0 ) raiseError("TEST FAILED");
 
-   free(ndp->datestamp);
+   free((char*)ndp->datestamp);
    ndp->datestamp = strdup("20160101030405");
    free(ndp->workerPath);
    ndp->workerPath = strdup("HELLO");
@@ -536,7 +537,7 @@ int test_getVarName()
 {
    header("getVarName()");
    char *input = "$((varname))";
-   char * output = getVarName(input, "$((", "))");
+   const char * output = getVarName(input, "$((", "))");
    fprintf(stderr, "%s -> %s\n",input,output);
    if(strcmp(output,"varname") != 0)
       raiseError("TEST_FAILED:%s()[%s:%d]\n",__func__,__FILE__,__LINE__);
