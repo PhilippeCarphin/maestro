@@ -29,7 +29,7 @@ clean:
 
 distclean: clean
 	rm -fr bin/$(BASE_ARCH) ; \
-	git clean -fX && git clean -fx
+	git clean -dfX && git clean -dfx
 	# find . -name "*~" -exec rm -f {} \;
 
 install: all
