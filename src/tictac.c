@@ -89,10 +89,10 @@ Inputs:
 
 */
 
-extern char* tictac_getDate( char* _expHome, char *format, char * datestamp ) {
+const char* tictac_getDate(const char* _expHome, const char *format, const char * datestamp ) {
 
    int i = 0;
-   char *dateFileName = NULL, *tmpstrtok = NULL, *tmpLatestFile=NULL;
+   char *dateFileName = NULL, *tmpLatestFile=NULL;
    char statePattern[SEQ_MAXFIELD] = {'\0'};
    char dateValue[PADDED_DATE_LENGTH+1] = {'\0'};
    char* returnDate = NULL, *envDate=NULL;
@@ -131,8 +131,8 @@ extern char* tictac_getDate( char* _expHome, char *format, char * datestamp ) {
             free(statbuf);
          }
          globfree(&glob_logs);
-         dateFileName = (char*) SeqUtil_getPathLeaf( (const char*) (tmpLatestFile) );
-         sprintf(dateValue,"%s", (char*) strtok( dateFileName, "_" ));
+         dateFileName = SeqUtil_getPathLeaf( (const char*) (tmpLatestFile) );
+         sprintf(dateValue,"%s", strtok( dateFileName, "_" ));
       }
    }
 
@@ -146,21 +146,21 @@ extern char* tictac_getDate( char* _expHome, char *format, char * datestamp ) {
    SeqUtil_TRACE(TL_FULL_TRACE,"tictac_getDate() checking validity of dateValue ... \n");
    checkValidDatestamp(dateValue);
 
-   if (format != NULL) tmpstrtok = (char*) strtok( format, "%" );
-   while ( tmpstrtok != NULL ) {
-      if (strcmp(tmpstrtok,"Y")==0)
-         printf("%.*s", 4, &dateValue[0] );
-      if (strcmp(tmpstrtok,"M")==0)
-         printf("%.*s", 2, &dateValue[4] );
-      if (strcmp(tmpstrtok,"D")==0)
-         printf("%.*s", 2, &dateValue[6] );
-      if (strcmp(tmpstrtok,"H")==0)
-         printf("%.*s", 2, &dateValue[8] );
-      if (strcmp(tmpstrtok,"Min")==0)
-         printf("%.*s", 2, &dateValue[10] );
-      if (strcmp(tmpstrtok,"S")==0)
-         printf("%.*s", 2, &dateValue[12] );
-      tmpstrtok = (char*) strtok(NULL,"%");
+   if (format != NULL) {
+      for_tokens(tmpstrtok, format, "%", sp) {
+         if (strcmp(tmpstrtok, "Y") == 0)
+            printf("%.*s", 4, &dateValue[0]);
+         if (strcmp(tmpstrtok, "M") == 0)
+            printf("%.*s", 2, &dateValue[4]);
+         if (strcmp(tmpstrtok, "D") == 0)
+            printf("%.*s", 2, &dateValue[6]);
+         if (strcmp(tmpstrtok, "H") == 0)
+            printf("%.*s", 2, &dateValue[8]);
+         if (strcmp(tmpstrtok, "Min") == 0)
+            printf("%.*s", 2, &dateValue[10]);
+         if (strcmp(tmpstrtok, "S") == 0)
+            printf("%.*s", 2, &dateValue[12]);
+      }
    }
 
    if ((returnDate = malloc( strlen(dateValue) + 1 )) != NULL ) {
@@ -172,7 +172,7 @@ extern char* tictac_getDate( char* _expHome, char *format, char * datestamp ) {
    free(dateFileName);
    free(tmpLatestFile);
 
-   return returnDate;
+   return (const char *)returnDate;
 }
 
 

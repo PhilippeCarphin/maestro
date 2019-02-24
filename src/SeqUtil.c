@@ -270,7 +270,7 @@ void raiseError(const char* fmt, ... ) {
    exit(1);
 }
 
-void SeqUtil_checkExpHome (char * _expHome) {
+void SeqUtil_checkExpHome (const char * _expHome) {
 
    DIR *dirp = NULL;
 

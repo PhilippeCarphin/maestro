@@ -45,7 +45,7 @@ OPTIONS:\n\
     -h, --help\n\
         Show this help screen\n\
 \n\
-\n\ file can be the special shortcut keyword resources which will be replaced by ${SEQ_EXP_HOME}/resources/resources.def \n\
+\nfile can be the special shortcut keyword resources which will be replaced by ${SEQ_EXP_HOME}/resources/resources.def \n\
 EXAMPLES:\n\
 \n\
     getdef -e ${SEQ_EXP_HOME} resources some_variable\n\

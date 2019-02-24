@@ -383,7 +383,7 @@ int  writeNodeWaitedFile ( const char * string , FILE *mlog )
           snprintf(this_line, sizeof(this_line),"exp=%s node=%s datestamp=%s args=%s\n",this_exp,this_node,this_datestamp,this_loopArgs); 
           /* fprintf( waitingFile,"%s", this_line );  */
           num = fwrite(this_line ,sizeof(char) , strlen(this_line) , waitingFile); 
-	  if ( num != strlen(this_line) )  fprintf(mlog,"writeNodeWaitFile Error: written:%zu out of:%d \n",num,strlen(this_line));
+	  if ( num != strlen(this_line) )  fprintf(mlog,"writeNodeWaitFile Error: written:%zu out of:%ld \n",num,strlen(this_line));
     }
     fclose( waitingFile );
     return(0);
@@ -453,7 +453,7 @@ int writeInterUserDepFile (const char * tbuffer, FILE *mlog)
      if ( stat(filename,&st) != 0 ) {
                fprintf(mlog,"maestro server cannot stat interUser dependency file:%s\n",filename );
 	       return(1);
-     } else fprintf(mlog,"size of InterUserDepFile is :%ld\n",st.st_size);
+     } else fprintf(mlog,"size of InterUserDepFile is :%lld\n",st.st_size);
 
      /* Create server dependency directory (based on maestro version) 
       * Note: multiple clients from diff. experiment could try to create this */

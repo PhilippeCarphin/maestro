@@ -269,7 +269,7 @@ int OpenConnectionToMLLServer (const char * node ,const char *signal , const cha
     
     gethostname(thisHost, sizeof(thisHost));
 
-    ret=do_Login(sock,pid,node,_seq_exp_home,signal,passwdEnt->pw_name,&m5sum); 
+    ret=do_Login(sock,pid, node,_seq_exp_home,signal,passwdEnt->pw_name,&m5sum);
     free(m5sum);
 
     if ( ret != 0 ) close(sock);

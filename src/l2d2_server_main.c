@@ -68,13 +68,13 @@ extern char *page_start_dep , *page_end_dep;
 
 /* globals vars */
 unsigned int pidTken = 0;
-unsigned int ChildPids[MAX_PROCESS]={0};
+volatile unsigned int ChildPids[MAX_PROCESS]={0};
 unsigned long int epoch_diff;
 double diff_t;
 
 /* global default data for l2d2server */
 _clean_times L2D2_cleantimes = {1,48,48,25,25};
-_l2d2server L2D2 = {0,0,0,0,30,24,1,4,20,'\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',0,0};
+_l2d2server L2D2 = {0,0,0,0,30,24,1,4,20,{'\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0','\0',0,0}};
 
 /* variable for Signal handlers */
 volatile sig_atomic_t ProcessCount = 0; /* number of workers */
@@ -153,14 +153,14 @@ void DependencyManager (_l2d2server l2d2 ) {
      /* redirect  streams 
         Note : dup2 should handle close and open , but it does not !!*/
      close(STDIN_FILENO);
-     if (fd = open("/dev/null", O_RDONLY) != -1) {
+     if ((fd = open("/dev/null", O_RDONLY)) != -1) {
         if(dup2(fd, STDIN_FILENO) < 0) {
               exit (1);
         }
      }
      close(STDOUT_FILENO);
      close(STDERR_FILENO);
-     if (fd = open("/dev/null", O_WRONLY) != -1) {
+     if((fd = open("/dev/null", O_WRONLY)) != -1) {
         if(dup2(fd, STDOUT_FILENO) < 0) {
              exit (1);
         }
@@ -232,7 +232,7 @@ void DependencyManager (_l2d2server l2d2 ) {
 	 fp = fopen(l2d2.web_dep , "w");
 	 fwrite(page_start_dep, 1, strlen(page_start_dep) , fp);
          
-	 while ( pd=readdir(dp))
+	 while ( (pd = readdir(dp)))
 	 {
 	    memset(listings,'\0',sizeof(listings));
 	    memset(linkname,'\0',sizeof(linkname));
@@ -287,7 +287,7 @@ void DependencyManager (_l2d2server l2d2 ) {
 	                                            fprintf(dmlg,"DependencyManager(): Dependency:%s Timed Out\n",filename);
 	                                            fprintf(dmlg,"source     exp  name:%s\n",depXp->xpd_sname);
 	                                            fprintf(dmlg,"dependency node name:%s\n",depXp->xpd_name);
-	                                            fprintf(dmlg,"current_epoch=%d registred_epoch=%d epoch_diff(hours)=%lu\n",current_epoch,atoi(depXp->xpd_regtimepoch), epoch_diff);
+	                                            fprintf(dmlg,"current_epoch=%ld registred_epoch=%d epoch_diff(hours)=%lu\n",current_epoch,atoi(depXp->xpd_regtimepoch), epoch_diff);
 						    fprintf(dmlg,"\n");
 						    
 						    /* log into exp. nodelog file */
@@ -361,7 +361,7 @@ void DependencyManager (_l2d2server l2d2 ) {
 	
 	 /* check controller */
 	 if ( stat(ControllerAlive,&st) == 0 ) {
-	        if ( (diff_t=abs(difftime(current_epoch,st.st_mtime))) > 20 ) {
+	        if ( (diff_t=fabs(difftime(current_epoch,st.st_mtime))) > 20 ) {
 	              if ( (ret=kill(l2d2.pid,0)) != 0 ) {
 			      fprintf(dmlg,"Controller pid=%u is dead\n",l2d2.pid); 
 			      KILL_SERVER=TRUE;
@@ -891,21 +891,21 @@ static void l2d2SelectServlet( int listen_sd , TypeOfWorker tworker)
 					g_result = glob(buf, 0, NULL, &g_AliveFiles);
                                         if (  g_result == 0 && g_AliveFiles.gl_pathc == 1  ) {
 				                 if ( stat(*(g_AliveFiles.gl_pathv), &stbuf) == 0) {
-					                epoch_diff=abs(now - stbuf.st_mtime); 
+					                epoch_diff=labs(now - stbuf.st_mtime); 
 							/* 120 sec for DM heartbeat */
 					                if ( epoch_diff >=  180  ) {
-	                                                        snprintf(buf,sizeof(buf),"0 Problems with Dependency Manager: heartbeat \0");
+                                  snprintf(buf,sizeof(buf),"0 Problems with Dependency Manager: heartbeat%c", '\0');
 					                        ret=write(i,buf,strlen(buf));
 			                                        break;
 					                }
 						 }
                                         } else if (g_AliveFiles.gl_pathc > 1 ) {
-	                                       snprintf(buf,sizeof(buf),"0 Problems with Dependency Manager: Multiple instances\0");
+                                                snprintf(buf,sizeof(buf),"0 Problems with Dependency Manager: Multiple instances%c", '\0');
 					       ret=write(i,buf,strlen(buf));
 			                       break;
 					} else {
 					       /* issue a kill here before sending message */
-	                                       snprintf(buf,sizeof(buf),"0 Problems with Dependency Manager: process dead \0");
+                                                snprintf(buf,sizeof(buf),"0 Problems with Dependency Manager: process dead %c", '\0');
 					       ret=write(i,buf,strlen(buf));
 			                       break;
 					}
@@ -920,25 +920,25 @@ static void l2d2SelectServlet( int listen_sd , TypeOfWorker tworker)
 					                     epoch_diff=(int)(now - stbuf.st_mtime); 
 							     /* 60 sec for EW heartbeat if no coonections  */
 					                     if ( epoch_diff >= 100 ) {
-	                                                             snprintf(buf,sizeof(buf),"0 Problems with Eternal worker: heartbeat\0");
+                                       snprintf(buf,sizeof(buf),"0 Problems with Eternal worker: heartbeat%c", '\0');
 					                             ret=write(i,buf,strlen(buf));
 			                                             break;
 					                     }
 						      }
                                              } else if (g_AliveFiles.gl_pathc > 1 ) {
-	                                            snprintf(buf,sizeof(buf),"0 Problems with Eternal worker: Multiple instances\0");
+                                                     snprintf(buf,sizeof(buf),"0 Problems with Eternal worker: Multiple instances%c", '\0');
 					            ret=write(i,buf,strlen(buf));
 			                            break;
 					     } else {
 					       /* issue a kill here before sending message */
-	                                       snprintf(buf,sizeof(buf),"0 Problems with Eternal worker: process dead \0");
+                                                     snprintf(buf,sizeof(buf),"0 Problems with Eternal worker: process dead %c", '\0');
 					       ret=write(i,buf,strlen(buf));
 			                       break;
 					     }
 					} 
 
 			                /* send_reply(i,0); */
-	                                snprintf(buf,sizeof(buf),"0 Server is Alive on host=%s version=%s, Dependency Manager ok, Eworker ok \0",L2D2.host, L2D2.mversion);
+                      snprintf(buf,sizeof(buf),"0 Server is Alive on host=%s version=%s, Dependency Manager ok, Eworker ok %c",L2D2.host, L2D2.mversion, '\0');
 					ret=write(i,buf,strlen(buf));
 			                break;
 	                       case 'Z':/* download waited file to client */
@@ -1028,7 +1028,7 @@ void maestro_l2d2_main_process_server (int fserver)
  
   /* redirect streams : same comment as in Dependency manager */
   close(STDIN_FILENO);
-  if (fd = open("/dev/null", O_RDONLY, 0) != -1) {
+  if ((fd = open("/dev/null", O_RDONLY, 0)) != -1) {
         if(dup2(fd, STDIN_FILENO) < 0) {
               perror("dup2 stdin");
              exit (1);

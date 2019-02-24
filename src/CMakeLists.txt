@@ -50,11 +50,14 @@ add_library(${PROJECT_NAME} ${lib_sources})
 
 target_compile_options(${PROJECT_NAME} PUBLIC -Wno-pointer-sign -Werror=incompatible-pointer-types)
 
-# pymaestro.c
-# tsvinfo_main.c
-# tictac_main.c
-# l2d2_server_main.c
-# logreader_main.c
-# maestro_main.c
-# mtest_main.c
-# nodeinfo_main.c
+link_libraries(seq ${LIBXML2_LIBRARIES} crypto)
+
+add_executable(maestro maestro_main.c)
+add_executable(tsvinfo tsvinfo_main.c)
+add_executable(tictac tictac_main.c)
+add_executable(l2d2_server l2d2_server_main.c)
+add_executable(mtest mtest_main.c)
+add_executable(getdef getdef_main.c)
+add_executable(expcatchup expcatchup_main.c)
+add_executable(nodeinfo maestro_main.c)
+add_executable(nodelogger nodelogger_main.c)

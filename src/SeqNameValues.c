@@ -28,7 +28,7 @@
 /********************************************************************************
 * SeqListNode_insertItem: Inserts an Item into the list
 ********************************************************************************/
-void SeqNameValues_insertItem(SeqNameValuesPtr *listPtrPtr, char *name, char *value)
+void SeqNameValues_insertItem(SeqNameValuesPtr *listPtrPtr, const char *name, const char *value)
 {
  SeqNameValuesPtr newPtr=NULL, previousPtr=NULL, currentPtr=NULL;
 
@@ -118,7 +118,7 @@ SeqNameValuesPtr SeqNameValues_clone(  SeqNameValuesPtr listPtr ){
 }
 
 /* returns the value that is found for a specific name attributes stored in the list */
-char* SeqNameValues_getValue( SeqNameValuesPtr ptr, char* attr_name ) {
+char* SeqNameValues_getValue( SeqNameValuesPtr ptr, const char* attr_name ) {
    char* returnValue = NULL;
 
    while ( ptr != NULL ) {
@@ -134,7 +134,7 @@ char* SeqNameValues_getValue( SeqNameValuesPtr ptr, char* attr_name ) {
 /* changes the value of a specific attribute from the attribute list
    if not found, it will ADD it to the list
  */
-void SeqNameValues_setValue( SeqNameValuesPtr *ptr, char* attr_name, char* attr_value ) {
+void SeqNameValues_setValue( SeqNameValuesPtr *ptr, const char* attr_name, const char* attr_value ) {
    int found = 0;
    SeqNameValuesPtr thisPtr = *ptr;
 

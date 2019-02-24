@@ -32,3 +32,5 @@ mtest
 tsvinfo
 *.dSYM
 *.d
+cmake-build*
+build
