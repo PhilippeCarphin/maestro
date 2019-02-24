@@ -1,8 +1,13 @@
+import subprocess
 from prompt_toolkit.completion import Completion, Completer, FuzzyCompleter, FuzzyWordCompleter, WordCompleter, PathCompleter
 from prompt_toolkit.styles import style_from_pygments_cls, Style
 from prompt_toolkit import prompt, PromptSession
 from prompt_toolkit.history import FileHistory
 import os
+import re
+
+class MaestroShellError(Exception):
+    pass
 
 
 def prompt_exp_home():
@@ -14,9 +19,9 @@ def prompt_exp_home():
 
 
 
-def make_maestro_shell_session(exp_home):
+def make_maestro_shell_session(exp_home, datestamp):
 
-    maestro_completer = FuzzyWordCompleter(get_node_paths(), WORD=True)
+    maestro_completer = FuzzyWordCompleter(get_node_paths(exp_home, datestamp), WORD=True)
     # maestro_completer = PathCompleter(WordCompleter(bunch_of_paths))
 
     prompt_style = Style.from_dict({
@@ -40,18 +45,40 @@ def verify_tsvinfo_available():
     # TODO
     pass
 
-def get_node_paths():
-    # run tsvinfo -e {} -d {} --readable-output {}.format(exp_home, make_maestro_datestamp(), tsvfile)
+def get_node_paths(exp_home, datestamp):
+    tsvfile = '.tsvtmp'
+    this_dir = os.path.dirname(__file__)
+    cmd = '{}/tsvinfo.out -e {} -d {} --readable-output {}'.format(this_dir, exp_home, datestamp, tsvfile)
+    print(cmd)
+    retval = subprocess.call(cmd.split())
 
+    if retval != 0:
+        raise MaestroShellError('tsvinfo has failed to execute for experiment {}'.format(exp_home))
     # Convert to just paths
-    # run grep '^[^ ]' > {}".format(paths_list)
 
-    # return f.readlines()
-    bunch_of_paths = None
-    with open('node_paths.txt') as f:
-        return [l.strip() for l in f.readlines()]
+    node_re_str = r'^[^ ].*'
+    node_re = re.compile(node_re_str)
+
+    paths = []
+    with open(tsvfile) as f:
+        for l in f.readlines():
+            if l and not l.startswith(' ') and not l.startswith('\t') and l != '\n':
+                paths.append(l)
+
+    return [p.strip() for p in paths]
 
 if __name__ == "__main__":
-    exp_home = prompt_exp_home()
-    sesh = make_maestro_shell_session(exp_home)
-    prompt_node(sesh)
+    try:
+        datestamp = '20190223102400'
+        exp_home = prompt_exp_home()
+        #TODO else if exists $PWD/EntryModule, use that as exp_home
+        #TODO else if exists env:SEQ_EXP_HOME use that
+        sesh = make_maestro_shell_session(exp_home, datestamp)
+        prompt_node(sesh)
+    except EOFError:
+        pass
+    except KeyboardInterrupt:
+        pass
+    except MaestroShellError as e:
+        print("MaestroShellError : " + str(e))
+
