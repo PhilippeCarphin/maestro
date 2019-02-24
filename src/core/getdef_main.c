@@ -27,7 +27,6 @@
 static void printUsage()
 {
    char * usage = "For complete and up to date information on this command, see the man page by typing 'man getdef'.";
-   puts(usage);
 }
 
 int main ( int argc, char * argv[] )

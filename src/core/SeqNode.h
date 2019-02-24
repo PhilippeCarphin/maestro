@@ -101,7 +101,7 @@ typedef struct _SeqNodeData {
    char* workerPath;
    char* alias;
    char* args;
-   char* datestamp;
+   const char* datestamp;
    char* submitOrigin;
    char* workdir;
    char* expHome;
@@ -146,7 +146,7 @@ typedef struct _SeqNodeData {
 
 typedef SeqNodeData *SeqNodeDataPtr;
 
-SeqNodeDataPtr SeqNode_createNode ( char* name );
+SeqNodeDataPtr SeqNode_createNode ( const char* name );
 void SeqNode_printDependencies( SeqNodeDataPtr _nodeDataPtr, FILE * filename, int isPrettyPrint );
 void SeqNode_setCpu ( SeqNodeDataPtr node_ptr, const char* cpu );
 void SeqNode_setCpuMultiplier ( SeqNodeDataPtr node_ptr, const char* cpu_multiplier );
@@ -154,7 +154,7 @@ void SeqNode_setMachine ( SeqNodeDataPtr node_ptr, const char* machine );
 void SeqNode_setQueue ( SeqNodeDataPtr node_ptr, const char* queue );
 void SeqNode_setMemory ( SeqNodeDataPtr node_ptr, const char* memory );
 void SeqNode_setShell ( SeqNodeDataPtr node_ptr, const char* shell );
-void SeqNode_addNumLoop ( SeqNodeDataPtr node_ptr, char* loop_name, char* start, char* step, char* set, char* end, char* expression );
+void SeqNode_addNumLoop ( SeqNodeDataPtr node_ptr, const char* loop_name, const char* start, const char* step, const char* set, const char* end, const char* expression );
 void SeqNode_addSubmit ( SeqNodeDataPtr node_ptr, char* data );
 void SeqNode_setWorkerPath ( SeqNodeDataPtr node_ptr, const char* workerPath );
 void SeqNode_setWorkq ( SeqNodeDataPtr node_ptr, char* workq );
@@ -180,7 +180,7 @@ void SeqNode_setModule ( SeqNodeDataPtr node_ptr, const char* module );
 void SeqNode_addSwitch ( SeqNodeDataPtr _nodeDataPtr, const char* switchName, const char* switchType, const char* returnValue);
 void SeqNode_showLoops(SeqLoopsPtr loopsPtr,int trace_level);
 
-const char *SeqNode_getCfgPath( SeqNodeDataPtr node_ptr);
+char * SeqNode_getCfgPath(SeqNodeDataPtr node_ptr);
 const char *SeqNode_getTaskPath(SeqNodeDataPtr node_ptr);
 const char *SeqNode_getResourcePath(SeqNodeDataPtr node_ptr);
 

@@ -343,6 +343,8 @@ int main (int argc, char* argv[])
   memset(buffer,'\0',sizeof(buffer));
   switch ( whatAction ) 
   {
+      case NONE:
+          break;
       case SHUT_DOWN_SERVER:
            alarm(5);
            bytes_sent=write(sock, "X ", 2);

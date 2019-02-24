@@ -69,7 +69,7 @@ int   SeqUtil_getTraceLevel () ;
 void SeqUtil_setTraceFlag(int flag, int value);
 void SeqUtil_setTraceEnv();
 void SeqUtil_showTraceInfo();
-void  SeqUtil_checkExpHome (char * _expHome) ;
+void  SeqUtil_checkExpHome (const char * _expHome) ;
 void  actions(char *signal, char* flow, char *node) ;
 void  actionsEnd(char *signal, char* flow, char* node) ;
 int   genFileList(LISTNODEPTR *fileList,const char *directory,LISTNODEPTR *filterList) ;

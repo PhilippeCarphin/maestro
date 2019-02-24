@@ -27,7 +27,7 @@
 
 extern SeqNodeDataPtr nodeinfo ( const char* node, unsigned int filters,
                                  SeqNameValuesPtr _loops, const char* _exp_home,
-                                 char *extraArgs, char* datestamp, const char * switch_args );
+                                 char *extraArgs, const char* datestamp, const char * switch_args );
 extern int doesNodeExist(const char* node, const char* _exp_home, const char * datestamp);
 char * switchReturn( SeqNodeDataPtr _nodeDataPtr, const char* switchType );
 void parseLoopAttributes (xmlXPathObjectPtr _result, const char* _loop_node_path, SeqNodeDataPtr _nodeDataPtr);

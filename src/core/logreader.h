@@ -114,20 +114,20 @@ extern void read_file  ( char *base);
 extern void insert_node( char S, char *node, char *loop, char *stime, char *btime, char *etime , char *atime, char *itime , char *wtime, char *dtime, char * exectime, char * submitdelay, char * waitmsg ); 
 extern void print_LListe ( struct _ListListNodes MyListListNodes, FILE *outputFile);
 
-extern void getAverage(char *exp, char *datestamp);
+extern void getAverage(const char *exp, const char *datestamp);
 extern char *getNodeAverageLine(char *node, char *member);
-extern void computeAverage(char *exp, char *datestamp, int stats_days, FILE *outputFile);
+extern void computeAverage(const char *exp, const char *datestamp, int stats_days, FILE *outputFile);
 extern int getStats(FILE *_stats);
 extern int parseStatsLine(char line[1024]);
 extern int addStatsNode(char *node, char *member, char *stime, char *btime, char *etime, char *exectime, char *submitdelay, char *deltafromstart);
-extern int processStats(char *exp, char *datestamp, FILE *outputFile);
+extern int processStats(const char *exp, const char *datestamp, FILE *outputFile);
 extern char *secondsToChar (int seconds);
 extern int charToSeconds (char *timestamp);
 extern void reset_branch (char *node, char *ext);
 extern char * previousDay(char today[9]);
-extern char * sconcat(char *ptr1,char *ptr2);
+extern char * sconcat(const char *ptr1, const char *ptr2);
 extern void delete_node(struct _ListNodes *node, struct _ListListNodes *list);
 
-void logreader(char * inputFilePath, char * outputFilePath, char * exp, char * datestamp, int type, int statWindow, int clobberFile); 
+void logreader(const char * inputFilePath, const char * outputFilePath, const char * exp, const char * datestamp, int type, int statWindow, int clobberFile);
 
 #endif
