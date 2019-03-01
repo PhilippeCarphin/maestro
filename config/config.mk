@@ -12,13 +12,16 @@ BINDIR=$(SWDEST)/bin
 
 
 # libxml2 stuff
-XML_LIB_DIR=/usr/local/Cellar/libxml2/2.9.9_2/lib
-XML_INCLUDE_DIR = /usr/local/Cellar/libxml2/2.9.9_2/include/libxml2
-# XML_INCLUDE_DIR = /usr/include/libxml2
+# XML_LIB_DIR=/usr/local/Cellar/libxml2/2.9.9_2/lib
+XML_LIB_DIR=/usr/lib/x86_64-linux-gnu/
+## XML_INCLUDE_DIR = /usr/local/Cellar/libxml2/2.9.9_2/include/libxml2
+XML_INCLUDE_DIR = /usr/include/libxml2
 # XML_INCLUDE_DIR = /usr/local/Cellar/libxml2/2.9.7/include/libxml2
 
 OPENSSL_INCLUDE_DIR=/usr/local/Cellar/openssl/1.0.2q/include/
+OPENSSL_INCLUDE_DIR=/usr/include/openssl
 OPENSSL_LIB_DIR=/usr/local/Cellar/openssl/1.0.2q/lib/
+OPENSSL_LIB_DIR=/usr/lib/x86_64-linux-gnu/
 
 
 # platform specific definition

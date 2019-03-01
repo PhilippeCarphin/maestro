@@ -33,8 +33,8 @@ CFLAGS += -O3
 # All warnings except some of the more useless ones
 CFLAGS += -Wall -Wno-unused-label -Wno-pointer-sign -Wno-unused-function
 # Turn these very useful warnings into errors
-CFLAGS += -Werror=implicit-function-declaration
-CFLAGS += -Werror=incompatible-pointer-types
+# CFLAGS += -Werror=implicit-function-declaration
+# CFLAGS += -Werror=incompatible-pointer-types
 # Tell the compiler to write a *.d file that know
 # what *.h files a given source file depends on
 CFLAGS += -MMD
@@ -42,7 +42,7 @@ CFLAGS += -MMD
 CFLAGS += -I $(XML_INCLUDE_DIR) -I $(OPENSSL_INCLUDE_DIR)
 
 # Add link directories of external libraries
-LDFLAGS += -L $(XML_LIB_DIR) -L $(OPENSSL_LIB_DIR)
+LDFLAGS += -L $(XML_LIB_DIR) -L $(OPENSSL_LIB_DIR) -L /usr/lib
 # Link with external libraries
 LIBS += -l xml2 -l crypto
 # Link with other external libraries
