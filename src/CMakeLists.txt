@@ -1,5 +1,6 @@
-cmake_minimum_required(VERSION 3.0)
+cmake_minimum_required(VERSION 2.8)
 project(maestro)
+message("-- PROJECT_NAME : ${PROJECT_NAME}")
 
 find_package(libxml2 REQUIRED)
 # find_package(PkgConfig REQUIRED)
@@ -43,7 +44,6 @@ set(lib_sources
         tsvinfo.c
         )
 
-message("-- PROJECT_NAME : ${PROJECT_NAME}")
 
 add_library(seq SHARED ${lib_sources})
 
