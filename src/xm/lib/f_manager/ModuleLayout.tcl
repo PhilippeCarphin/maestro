@@ -212,7 +212,7 @@ proc ModuleLayout_createNode { _expPath _moduleNode _newNode _nodeType {_extraAr
          set resourceFile ${resourceWorkDir}${relativePath}.xml
          MaestroConsole_addMsg "create [file dirname ${resourceFile}]."
          file mkdir [file dirname "${resourceFile}"]
-	 set sampleResFile $env(SEQ_SRC)/xflow/etc/samples/task_res_sample.xml
+	 set sampleResFile $env(SEQ_SRC)/xm/etc/samples/task_res_sample.xml
          MaestroConsole_addMsg "cp ${sampleResFile} ${resourceFile}"
 	 exec cp ${sampleResFile} ${resourceFile}
       }
