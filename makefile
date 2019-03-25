@@ -22,8 +22,9 @@ export BUILD_PLATFORM_FOLDER=${BUILD_FOLDER}/${SSMPACKAGE}
 export BIN_FOLDER=${BUILD_PLATFORM_FOLDER}/bin
 export TCL_BIN_FOLDER=${BUILD_PLATFORM_FOLDER}/tcl_bin
 export WRAPPER_PREFIX=maestro_${VERSION}.
-export WRAPPERS_BUILD_FOLDER=${BUILD_PLATFORM_FOLDER}/bin/wrappers
+export WRAPPERS_BUILD_FOLDER=${BUILD_PLATFORM_FOLDER}/src/core/wrappers
 export SCRIPTS_FOLDER=${PWD}/scripts
+export SSM_FOLDER=${PWD}/ssm
 export MAN_FOLDER=${BUILD_PLATFORM_FOLDER}/man/man1
 CC=cc
 
@@ -50,7 +51,7 @@ all: clean
 	
 	${SCRIPTS_FOLDER}/copy_wrappers.sh ${WRAPPER_PREFIX} ${WRAPPERS_BUILD_FOLDER}
 	cp -r src ${BUILD_PLATFORM_FOLDER}/
-	cp -r .ssm.d ${BUILD_PLATFORM_FOLDER}/
+	cp -r ssm/.ssm.d ${BUILD_PLATFORM_FOLDER}/
 
 	${XC40_MODULE_SWITCH} make -C ${BUILD_PLATFORM_FOLDER}/src/core
 
@@ -65,18 +66,11 @@ all: clean
 		${XC40_MODULE_SWITCH} make -C ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
 	fi \
 	
-	# Move all bins to the root bin folder
-	
-
-	cd ${BUILD_PLATFORM_FOLDER}/.ssm.d ; . ${SCRIPTS_FOLDER}/create_ssm_control_files_here.sh
-	
-	./scripts/package-ssm.sh
+	. ${SSM_FOLDER}/create_ssm_control_files.sh ${BUILD_PLATFORM_FOLDER}/.ssm.d
+	${SSM_FOLDER}/package-ssm.sh
 	
 clean:
-	echo "version = ${VERSION}"
-
 	rm -rf ${BIN_FOLDER}
-
 	# Delete all builds for this ord environment platform
 	rm -rf ${BUILD_FOLDER}/*${ORDENV_PLAT}*
 

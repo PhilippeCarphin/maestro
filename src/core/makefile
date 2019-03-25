@@ -24,7 +24,7 @@ EXECUTABLES=nodelogger maestro nodeinfo tictac expcatchup getdef logreader mserv
 BINDIR?=bin
 INCDIR=include
 LIBDIR=lib
-WRAPDIR=$(BINDIR)/wrappers
+WRAPDIR=src/core/wrappers
 XML_INCLUDE_DIR=/usr/include/libxml2
 XML_LIB_DIR=/usr/lib
 

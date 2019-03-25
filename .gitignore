@@ -1,6 +1,6 @@
 /bin
 /build
-/ssm
+*.ssm
 /venv
 /man/roff
 /man/man1
