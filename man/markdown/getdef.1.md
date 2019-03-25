@@ -21,5 +21,5 @@ Starting with the most commonly used:
 ## EXAMPLES
 
 ```
-getdef -e /home/smco500/.suites/rdps/r1 resources/resources.def hr_start
+getdef -e /home/smco500/.suites/rdps/r1 resources hr_start
 ```
