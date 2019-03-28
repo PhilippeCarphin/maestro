@@ -52,6 +52,10 @@ if [[ -n $(command -v python3) ]] ; then
 fi
 
 echo
-echo
-echo ". ssmuse-sh -d $SSM_DOMAIN_PATH"
+echo "To use the new SSM package:
 
+     . ssmuse-sh -d $SSM_DOMAIN_PATH
+
+You may also want to start the mserver with the new maestro version:
+
+     . ssmuse-sh -d $SSM_DOMAIN_PATH ; mserver_check -m maestro1"
