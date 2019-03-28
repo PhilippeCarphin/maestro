@@ -1345,7 +1345,7 @@ int main ( int argc , char * argv[] )
   char *ip=NULL;
 
   // mserver has no arguments, so if some are given, assume it is -h or --help or the user needs a usage page.
-  if(argc>0){
+  if(argc>1){
 		show_usage();
 		exit(1);
   }
