@@ -14,5 +14,5 @@
 
 (Si vous le pouvez, décrivez les étapes de développement nécessaires pour implémenter cette fonctionnalité)
 
-<! - Laissez ceci ici pour que l'enjeu soit automatiquement catégorisé comme une fonctionnalité ->
+<!-- Laissez ceci ici pour que l'enjeu soit automatiquement catégorisé comme une fonctionnalité -->
 /label ~type:feature

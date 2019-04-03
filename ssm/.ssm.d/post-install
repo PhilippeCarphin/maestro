@@ -29,7 +29,7 @@ export SEQ_TCL_SRC=${PACKAGE_HOME}/src/tcl
 export SEQ_MANAGER_SRC=${PACKAGE_HOME}/src/xm
 
 #this is the folder which contains the 'wrappers' folders
-export SEQ_WRAPPERS=${PACKAGE_HOME}/src/core/wrappers
+export SEQ_WRAPPERS=${PACKAGE_HOME}/src/core
 
 export SEQ_MAESTRO_DOMAIN=${DOMAIN_HOME}
 export SEQ_MAESTRO_SHORTCUT=\". ssmuse-sh -d ${DOMAIN_HOME}\"
