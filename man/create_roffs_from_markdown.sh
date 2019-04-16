@@ -44,13 +44,13 @@ $VENV/bin/pip3 install -r requirements.txt
 for markdown in `find $SOURCE_FOLDER -name "*.md"` ; do    
     name=`basename $markdown`
     name=${name::-5}
-    echo "Converting '$name'"
     
     # Copy markdown to a temp file and append the footer.md to it.
     temp_markdown=$TARGET_FOLDER/$(basename $markdown)
     cp $markdown $temp_markdown
     cat footer.md >> $temp_markdown
     
+    echo "Converting markdown to man page for '$name'."
     $VENV/bin/python3 mrkd.py $temp_markdown $TARGET_FOLDER/$name.1
     rm $temp_markdown
 done
