@@ -1,0 +1,14 @@
+#!/bin/bash
+
+echo "
+RUNNING MAESTRO PYTHON TESTS
+----------------------------------------------------------------------
+"
+cd ..
+
+./run_python_tests.py
+
+echo "
+TESTS COMPLETED
+"
+
