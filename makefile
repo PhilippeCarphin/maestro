@@ -15,7 +15,7 @@ ifeq (${IS_XC40}, true)
 		export XC40_DYNAMIC_FLAG=-dynamic
 endif
 
-export VERSION=$(shell ${PWD}/scripts/get_repo_version.sh )
+VERSION?=$(${pwd}/scripts/get_repo_version.sh)
 export SSMPACKAGE=maestro_${VERSION}_${ORDENV_PLAT}
 export BUILD_FOLDER=${PWD}/build
 export BUILD_PLATFORM_FOLDER=${BUILD_FOLDER}/${SSMPACKAGE}

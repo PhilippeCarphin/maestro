@@ -13,7 +13,7 @@ commit_hash_length=8
 unknown="unknown_version"
 
 if [[ -n "$output1" && $output1 != *"fatal:"* ]] ; then
-		version=${output1:0:$commit_hash_length}
+		version=${output1}
 
 		if [ -z "$version" ] ; then
 				echo $unknown
