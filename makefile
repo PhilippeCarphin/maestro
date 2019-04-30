@@ -41,8 +41,8 @@ all: clean
 		${XC40_MODULE_SWITCH} make -C ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
 	fi \
 	
-	. ${SSM_FOLDER}/create_ssm_control_files.sh ${BUILD_PLATFORM_FOLDER}/.ssm.d
-	${SSM_FOLDER}/package-ssm.sh
+	. ${SSM_FOLDER}/create_ssm_control_files.sh "${VERSION}" "${BUILD_PLATFORM_FOLDER}/.ssm.d"
+	${SSM_FOLDER}/package-ssm.sh "${VERSION}"
 	
 clean:
 	rm -rf ${BIN_FOLDER}

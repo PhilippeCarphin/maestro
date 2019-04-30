@@ -4,12 +4,13 @@
 # It creates "control" and "control.json" in <target-folder>.
 # If given, <project-url> is added to the description of the package.
 # Usage:
-#     ./create_ssm_control_files.sh <target-folder> [<project-url>]
+#     ./create_ssm_control_files.sh <version> <target-folder> [<project-url>]
 
 set -eu
 
-TARGET_FOLDER=$1
-PROJECT_URL=${2-}
+VERSION=$1
+TARGET_FOLDER=$2
+PROJECT_URL=${3-}
 
 DESCRIPTION="Maestro is a suite of tools which organize, visualize, schedule, validate, and submit tasks to computer systems."
 if [ ! -z "${PROJECT_URL:-}" ]; then
