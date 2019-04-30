@@ -17,7 +17,7 @@ Tcl and Tk are used for the user interfaces of Maestro tools. Tcl is a general p
 
 There are three steps to share a new Maestro version.
 
-* Build: developers use the source code to create an installer file - an SSM package.
+* Build: developers use the source code to compile executables and create an installer file - an SSM package.
 * Install: system administrators use an SSM package to unpack the files to any location, and make it available for use.
 * Use: users run `ssmuse-sh` to use an installed SSM package to their environment so that they can use it.
 
@@ -31,7 +31,13 @@ To compile Maestro and create an SSM package simply use the makefile by typing:
  make
 ```
 
-The build process uses the version or tags of your git repo to version the Maestro SSM package. If no tags (like 0.1.6) are present, it will use the first portion of the latest commit hash. This makes it difficult to release different Maestro SSM packages with the same version name. To see your current version:
+If you want the build to have a specific version label:
+
+```bash
+make VERSION=1.6-rc4
+```
+
+If no `VERSION` is provided, the build process uses the version or tags of your git repo to version the Maestro SSM package. If no tags (like 0.1.6) are present, it will use the first portion of the latest commit hash. This makes it difficult to release different Maestro SSM packages with the same version name. To see your current version:
 
 ```bash
 git describe
@@ -43,7 +49,7 @@ If there are no tags, you'll need to either create one, or pull tags from the re
 git fetch --tags
 ```
 
-The first compile may take awhile because of compiling Tcl and its libraries. However, if you create a shortcut called "_tcl" in the maestro folder (which points to a previous tcl compilation) you can speed up compilation a lot:
+The first compile may take awhile because of compiling Tcl and its libraries. At this time, running make on Tcl always recompiles all files which is slow. However, if you create a shortcut called in the maestro folder (which points to a previous Tcl compilation) you can speed up compilation a lot:
 
 ```bash
  cd maestro
@@ -53,34 +59,30 @@ The first compile may take awhile because of compiling Tcl and its libraries. Ho
  
  # Copy the results of the build process
  # Replace ${SSM_PACKAGE} with the folder created by "make". Example: maestro_a0c8517c_ubuntu-14.04-amd64-64
- cp -r build/${SSM_PACKAGE}/src/tcl ../tcl-maestro-backup-compiled
- ln -s ../tcl-maestro-backup-compiled _tcl
+ TCL_BACKUPS=../maestro-tcl-backup-compilations
+ cp -r build/${SSM_PACKAGE}/src/tcl/$ORDENV_PLAT $TCL_BACKUPS/$ORDENV_PLAT
+ ln -s $TCL_BACKUPS _tcl
  
- # This make will be faster
+ # This make will be much faster
  make
 ```
 
-You have to move **tcl-maestro-backup-compiled** to somewhere outside the root Maestro folder, as the make process may delete build files for a clean make.
-
-This system, and the Tcl dependencies, are being reconsidered.
+You have to move `$TCL_BACKUPS` to somewhere outside the root Maestro folder, as the make process may delete build files for a clean make. If the large tcl make process is improved, this step could be removed.
 
 ### Install
 
-After the build process, you can install and publish the SSM package in the usual way. Here's a script you can copy paste:
+After the build process, you can install and publish the SSM package in the usual way. If you're unfamiliar with installing SSM packages, the `reinstall-ssm.sh` script can get you started. Note: this will delete all files in the `<ssm-root>` folder, by default this is `$HOME/ssm/maestro`:
 
 ```bash
 cd maestro
+./reinstall-ssm.sh 1.6-rc4
+```
 
-VERSION=`./scripts/get_repo_version.sh`
-SSM_DOMAIN_PATH=$HOME/ssm/maestro/$VERSION
-PLATFORM=ubuntu-14.04-amd64-64
-SSM_PACKAGE=ssm/maestro_${VERSION}_${PLATFORM}.ssm
+You can also specify the `<ssm-root>` folder:
 
-rm -rf $HOME/ssm/maestro/$VERSION
-ssm created -d $SSM_DOMAIN_PATH
-ssm install -f $SSM_PACKAGE -d $SSM_DOMAIN_PATH
-ssm publish -p maestro_${VERSION}_${PLATFORM} -d $SSM_DOMAIN_PATH -pp $PLATFORM 
-echo ". ssmuse-sh -d $SSM_DOMAIN_PATH"
+```bash
+cd maestro
+./reinstall-ssm.sh 1.6-rc4 $HOME/tmp/dev4/ssm
 ```
 
 ### Use
@@ -93,12 +95,6 @@ After you or a system administrator has installed and published an SSM package, 
 . ssmuse-sh -d ~/ssm/maestro/1.5.1/
 
 . ssmuse-sh -d eccc/cmo/isst/maestro/1.5.1-rc22
-```
-
-Note that the last line in the previous `Install` section will echo (output) the appropriate `ssmuse-sh` line to use your package:
-
-```
-echo ". ssmuse-sh -d $SSM_DOMAIN_PATH"
 ```
 
 For more information on your environment setup see: https://wiki.cmc.ec.gc.ca/wiki/HPCS/ordenv
