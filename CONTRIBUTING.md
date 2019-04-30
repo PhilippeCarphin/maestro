@@ -9,6 +9,18 @@ Thanks for checking out Maestro! We've put together the following guidelines to 
 1. When adding content, please consider if it is widely valuable. A simple feature written for just one person still adds complexity to the project.
 1. Always seek code review from at least one other developer before merging your changes. [Here's a short video](https://www.youtube.com/watch?v=0AT7JxqoIps&list=PLRf-PfhVvwFA7tGxwEgxgnJIY7aVevqqo) about how you might share your work for a code review and merge.
 
+## New Releases
+
+These are the steps you should follow to share a new release of Maestro.
+
+1. Run the test suite. All tests must pass.
+1. Verify that all [issues](https://gitlab.science.gc.ca/CMOI/maestro/issues) for this milestone and version are resolved.
+1. Create, install, and publish the SSM package in a location similar to previous versions.
+1. Tag your commit. Example: `git tag -a 1.6`. You may also want to do `git push --tags`.
+1. Write release notes for this version on the wiki. [Here's an example](https://wiki.cmc.ec.gc.ca/wiki/Maestro/1.6.0).
+1. Send an email to the Maestro mailing list.
+1. Post a message in the Maestro chat.
+
 ## How to contribute
 
 If you'd like to contribute, start by searching through the [issues](https://gitlab.science.gc.ca/CMOI/maestro/issues) and [merge requests](https://gitlab.science.gc.ca/CMOI/maestro/merge_requests) to see whether someone else has raised a similar idea or question.
@@ -26,5 +38,6 @@ Wherever possible, do not take these conversations to private channels, includin
 ## See Also
 
 * [GCcollab chat about Maestro](https://message.gccollab.ca/channel/maestro).
+* [Maestro mailing list](http://internallists.cmc.ec.gc.ca/cgi-bin/mailman/listinfo/maestro_users).
 * [Maestro wiki page on the CMC wiki](https://wiki.cmc.ec.gc.ca/wiki/Maestro) with training resources, documentation, and release notes.
 * There are some introduction to Maestro tutorial videos on the [Computer Specialist (CS) Training for Public Servants](https://www.youtube.com/playlist?list=PLRf-PfhVvwFA7tGxwEgxgnJIY7aVevqqo) playlist.
