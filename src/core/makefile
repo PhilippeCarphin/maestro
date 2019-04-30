@@ -1,15 +1,8 @@
-
-MAKEFLAGS += --warn-undefined-variables
-SHELL := bash
-.SHELLFLAGS := -eu -o pipefail -c
-.DEFAULT_GOAL := all
-.DELETE_ON_ERROR:
-.SUFFIXES:
-.SUFFIXES: .c .o
+include shared-make-configuration.cfg
 
 WERROR_FLAGS= -Wall -Werror=implicit-function-declaration -Werror=return-type -Werror=unused-but-set-variable -Werror=unused-variable -Werror=strict-aliasing=3
 CFLAGS = -Wall -Wimplicit-function-declaration -Wl,--allow-multiple-definition 
-LIB=-lc -lcrypto -lz -ldl
+LIB=-lc -lcrypto -lz -ldl ${XC40_DYNAMIC_FLAG}
 LIBTH=-lpthread
 CFLAGS1 = 
 CFLAGS2 = -lefence -I../inc -DREENTRANT -Wall -Wextra -Wno-unused -D__DEBUG -DIGNORE_EMPTY_TEXT_NODES
@@ -32,7 +25,9 @@ all: prep
 	$(MAKE) prep $(EXECUTABLES)
 	
 clean:
-	rm -f *.o; rm -f $(EXECUTABLES); rm -rf $(BUILD_PLATFORM_FOLDER) .fo
+	find . -name "*\.o" -exec rm {} \;
+	rm -f $(EXECUTABLES)
+	rm -rf $(BUILD_PLATFORM_FOLDER) .fo
 
 prep:
 	mkdir -p $(LIBDIR) $(INCDIR) $(BINDIR)
@@ -174,7 +169,7 @@ MAESTRO_OBJECTS = maestro.o logreader.o nodelogger.o tictac.o nodeinfo.o \
 	FlowVisitor.o SeqDepends.o
 
 maestro: maestro_main.c $(MAESTRO_OBJECTS)
-	$(CC) $^ -I $(INCDIR) $(XC40_DYNAMIC_FLAG) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o maestro; \
+	$(CC) $^ -I $(INCDIR) -L $(XML_LIB_DIR) -lxml2 $(LIB) -o maestro; \
 	mv maestro $(BINDIR);
 
 EXPCATCHUP_OBJECTS = expcatchup.o getopt_long.o SeqUtil.o XmlUtils.o           \
