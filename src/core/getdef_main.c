@@ -26,33 +26,7 @@
 #include "getopt.h"
 static void printUsage()
 {
-   char * usage = "For complete and up to date information on this command, see the man page by typing 'man getdef'. Old:\n\
-\n\
-		   DESCRIPTION: getdef: Searches in _file_ for the value of _key_ where file contains\n\
-    lines of the form \"key=value\".\n\
-\n\
-USAGE:\n\
-\n\
-    getdef [-v] [-e experiment_home] file key\n\
-\n\
-OPTIONS:\n\
-\n\
-    -e, --exp \n\
-        Experiment path.  If it is not supplied, the environment variable \n\
-        SEQ_EXP_HOME will be used.\n\
-\n\
-    -v, --verbose\n\
-        Turn on full tracing\n\
-\n\
-    -h, --help\n\
-        Show this help screen\n\
-\n\
-\n\ file can be the special shortcut keyword resources which will be replaced by ${SEQ_EXP_HOME}/resources/resources.def \n\
-EXAMPLES:\n\
-\n\
-    getdef -e ${SEQ_EXP_HOME} resources some_variable\n\
-    getdef resources some_other_variable   ($SEQ_EXP_HOME must be defined) \n\
-    getdef some_file yet_another_variable \n"; 
+   char * usage = "For complete and up to date information on this command, see the man page by typing 'man getdef'.";
    puts(usage);
 }
 

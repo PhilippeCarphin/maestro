@@ -38,46 +38,8 @@ static void alarm_handler() { fprintf(stderr,"@@@@@@ EXCEEDED TIME IN LOOP ITERA
 
 static void printUsage()
 {
-char * usage = "For complete and up to date information on this command, see the man page by typing 'man nodelogger'. Old:\n\n\
-		DESCRIPTION: Nodelogger\n\
-\n\
-USAGE:\n\
-\n\
-    nodelogger -n node -s signal -m message [-l loop_args] [-e exp] [-d datestamp]\n\
-\n\
-OPTIONS:\n\
-\n\
-    -n, --node\n\
-        Specify the full path of the node (mandatory)\n\
-\n\
-    -s, --signal\n\
-        Specify the message type (i.e. abort, event, info, begin, end, etc) (mandatory)\n\
-\n\
-    -l, --loop-args\n\
-        Specify the loop arguments as a comma seperated value loop index: inner_Loop=1,outer_Loop=3\n\
-\n\
-    -m, --message \n\
-        Supply a detailed message (optionnal)\n\
-\n\
-    -d, --datestamp\n\
-        Specify the 14 character date of the experiment ex: 20080530000000\n\
-        (anything shorter will be padded with 0s until 14 characters) Default\n\
-        value is the date of the experiment.\n\
-\n\
-    -e, --exp \n\
-        Experiment path.  If it is not supplied, the environment variable \n\
-        SEQ_EXP_HOME will be used.\n\
-\n\
-    -h, --help\n\
-        Show this help screen\n\
-\n\
-    -v, --verbose\n\
-        Turn on full tracing\n\
-\n\
-EXAMPLES:\n\
-    \n\
-    nodelogger -n regional/assimilation/00/task_0 -s abort -m \"invalid hour number\"\n";
-puts(usage);
+    char * usage = "For complete and up to date information on this command, see the man page by typing 'man nodelogger'.";
+    puts(usage);
 }
 
 int main (int argc, char * argv[])

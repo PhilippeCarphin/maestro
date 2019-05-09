@@ -40,59 +40,7 @@
 *************************************************************************************/
 static void printSeqUsage()
 {
-   char * usage = "For complete and up to date information on this command, see the man page by typing 'man maestro'. Old:\n\n\
-		   DESCRIPTION: Maestro\n\
-\n\
-USAGE\n\
-\n\
-    maestro -n node -s signal [-i] [-e exp] [-d datestamp] [-v] [-l loopargs] [-f flow] [-o extra_soumet_args]\n\
-\n\
-OPTIONS\n\
-\n\
-    -n, --node\n\
-        Specify the full path of task or family node (mandatory (except -f root))\n\
-\n\
-    -l, --loop-args\n\
-        Specify the loop arguments as a comma seperated value loop index: inner_Loop=1,\n\
-        outer_Loop=3\n\
-\n\
-    -f, --flow\n\
-        Set the flow to continue (default) or stop, representing whether the flow should \n\
-        continue after this node.\n\
-\n\
-    -s, --signal\n\
-        Specify the signal as one of:\n\
-            submit\n\
-            begin\n\
-            end\n\
-            abort\n\
-            initbranch\n\
-            initnode\n\
-\n\
-    -o, --extra-soumet-args\n\
-        Specify extra arguments to be given to ord_soumet by the job (ex. -waste=50)\n\
-\n\
-    -i, --ignore-dependencies\n\
-        Ignore dependencies and catchup values\n\
-\n\
-    -d, --datestamp\n\
-        Specify the 14 character date of the experiment ex: 20080530000000\n\
-        (anything shorter will be padded with 0s until 14 characters) Default\n\
-        value is the date of the experiment.\n\
-\n\
-    -e, --exp \n\
-        Experiment path.  If it is not supplied, the environment variable \n\
-        SEQ_EXP_HOME will be used.\n\
-\n\
-    -v, --verbose\n\
-        Turn on full tracing\n\
-\n\
-    -h, --help\n\
-        Show this help screen\n\
-\n\
-EXAMPLES:\n\
-\n\
-    maestro -s submit -n regional/assimilation/00/task_0 -f continue\n"; 
+   char * usage = "For complete and up to date information on this command, see the man page by typing 'man maestro'.";
    puts(usage);
 }
 

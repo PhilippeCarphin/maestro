@@ -32,62 +32,7 @@
 
 static void printUsage()
 {
-   char * usage = "For complete and up to date information on this command, see the man page by typing 'man logreader'. Old:\n\
-\n\
-		   DESCRIPTION: Logreader\n\
-\n\
-USAGE:\n\
-    \n\
-    logreader [-i inputfile] [-t type] [-o outputfile] | -t avg [-n days]) [-e exp] [-d datestamp] [-v] [-c]\n\
-\n\
-OPTIONS:\n\
-\n\
-    -i, --input-file\n\
-        Specify the logfile to read (default ${SEQ_EXP_HOME}/logs/${datestamp}_nodelog)\n\
-\n\
-    -o, --output-file\n\
-        Specify the file where the stats are logged (if defined)\n\
-\n\
-    -t, --type\n\
-        Specify an output filter : log (statuses & stats, used for xflow), statuses, \n\
-        stats or avg (default is log)\n\
-\n\
-    -n, --days\n\
-        Specify a number of days for averaging: Used with -t avg to define the number \n\
-        of days for the averages since \"datestamp\" (default is 7). This is a 10% truncated \n\
-        average to account for extremes.\n\
-\n\
-    -c, --check\n\
-        check if output file is present before trying to write. Will not write if file is present.\n\
-\n\
-    \n\
-    -d, --datestamp\n\
-        Specify the 14 character date of the experiment ex: 20080530000000\n\
-        (anything shorter will be padded with 0s until 14 characters) Default\n\
-        value is the date of the experiment.\n\
-\n\
-    -e, --exp \n\
-        Experiment path.  If it is not supplied, the environment variable \n\
-        SEQ_EXP_HOME will be used.\n\
-\n\
-    -v, --verbose\n\
-        Turn on full tracing\n\
-\n\
-    -h, --help\n\
-        Show this help screen\n\
-\n\
-EXAMPLES:\n\
-\n\
-    logreader -d $datestamp             \n\
-        will read that experiment's log, output the statuses and stats to stdout \n\
-\n\
-    logreader -d $datestamp -t stats    \n\
-        will read that experiment's log, create a statistics file \n\
-        (default ${SEQ_EXP_HOME}/stats/${datestamp}\n\
-\n\
-    logreader -d $datestamp -t avg      \n\
-        will calculate the x-day truncated average and create a averages file \n\
-        (default ${SEQ_EXP_HOME}/stats/${datestamp}_avg\n";
+   char * usage = "For complete and up to date information on this command, see the man page by typing 'man logreader'.";
    puts(usage);
 }
 

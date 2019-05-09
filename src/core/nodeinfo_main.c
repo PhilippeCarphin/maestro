@@ -35,52 +35,8 @@ int MLLServerConnectionFid=0;
 static void printUsage()
 {
    char *seq_exp_home = NULL;
-   char * usage = "For complete and up to date information on this command, see the man page by typing 'man nodeinfo'. Old:\n\n\
-DESCRIPTION: Nodeinfo\n\
-\n\
-USAGE\n\
-\n\
-    nodeinfo -n node [-f filters -l loopargs -d datestamp -e expHome -v]\n\
-\n\
-OPTIONS\n\
-\n\
-    -n, --node\n\
-        Specify the full path of task or family node (mandatory (except -f root))\n\
-\n\
-    -l, --loop-args\n\
-        Specify the loop arguments as a comma seperated value loop index: inner_Loop=1,outer_Loop=3\n\
-\n\
-    -f, --filters\n\
-        Specify a comma separated list of filters (optional):\n\
-            all      (default)\n\
-            task     (node task path only)\n\
-            cfg      (node config path only)\n\
-            res      (batch resource only)\n\
-            res_path (batch resource path only)\n\
-            type     (node type only (unused))\n\
-            node     (node name and extention if applicable)\n\
-            root     (root node name)\n\
-            var      (variables exported in wrapper)\n\
-\n\
-    -d, --datestamp\n\
-        Specify the 14 character date of the experiment ex: 20080530000000\n\
-        (anything shorter will be padded with 0s until 14 characters) Default\n\
-        value is the date of the experiment.\n\
-\n\
-    -e, --exp \n\
-        Experiment path.  If it is not supplied, the environment variable \n\
-        SEQ_EXP_HOME will be used.\n\
-\n\
-    -v, --verbose\n\
-        Turn on full tracing\n\
-\n\
-    -h, --help\n\
-        Show this help screen\n\
-\n\
-EXAMPLES:\n\
-\n\
-    nodeinfo -n regional/assimilation/00/task_0\n";
-puts(usage);
+   char * usage = "For complete and up to date information on this command, see the man page by typing 'man nodeinfo'.";
+   puts(usage);
 }
 
 int main ( int argc, char * argv[] )

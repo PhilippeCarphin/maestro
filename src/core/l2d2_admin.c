@@ -83,28 +83,7 @@ static void alarm_handler() { /* nothing */ }
 
 void print_usage (FILE* stream , int exit_code)
 {
-  fprintf (stream, "For complete and up to date information on this command, see the man page by typing 'man madmin'. Old:\n\n\
-				  Usage:  %s options [ args ... ]\n", program_name);
-  fprintf (stream,
-           "  -h                      Display usage information.\n"
-           "  -c   config.xml         re-load maestro server configuration file.\n"
-           "  -l   xp_name            xp_name: list current registered dependencies for this xp_name\n"
-	   "                          none: list current registered dependencies of defined SEQ_EXP_HOME\n" 
-	   " \n"
-           "  -r   key|xp_name|all    key: remove current registered dependency identified by the given key\n"
-	   "                          xp_name: remove current registered dependencies for this xp_name\n"
-	   "                          all: remove all current registered dependencies for this user\n"
-	   "                          none: remove current registered dependencies of defined SEQ_EXP_HOME\n"
-           "  -t   xp_name            list xp who are depending on this xp_name \n"
-           "                          none: list xp who are depending on defined SEQ_EXP_HOME \n"
-           "  -s                      Shutdown maestro server \n" 
-           "  -i                      Inquire if maestro server is alive \n" 
-	   "-----------------------------------------------------------------\n"
-	   "xp_name    :refers to a valid experiment name\n"
-	   "all        :string \"all\"\n"
-	   "key        :key given by list command (-l)\n"
-	   "\n");
-
+  fprintf (stream, "For complete and up to date information on this command, see the man page by typing 'man madmin'.\n");
   exit (exit_code);
 }
 
