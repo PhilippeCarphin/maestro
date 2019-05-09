@@ -11,14 +11,11 @@ BUILD_FOLDER=${PWD}/build
 BUILD_PLATFORM_FOLDER=${BUILD_FOLDER}/${SSMPACKAGE}
 SCRIPTS_FOLDER=${PWD}/scripts
 
-	cp -r .ssm.d ${BUILD_PLATFORM_FOLDER}/
 
-	
-	cd ${BUILD_PLATFORM_FOLDER}/.ssm.d ; . ${SCRIPTS_FOLDER}/create_ssm_control_files_here.sh
-	./scripts/package-ssm.sh
-	
-	
-	
+
+cp -r .ssm.d ${BUILD_PLATFORM_FOLDER}/
+cd ${BUILD_PLATFORM_FOLDER}/.ssm.d ; . ${SCRIPTS_FOLDER}/create_ssm_control_files_here.sh
+./scripts/package-ssm.sh
 
 rm -f ssm/*
 mkdir -p ssm

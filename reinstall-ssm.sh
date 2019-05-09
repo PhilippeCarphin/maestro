@@ -26,6 +26,14 @@ SSM_DOMAIN_PATH=$INSTALLED_MAESTRO_PATH/$VERSION
 # If we find builds for these platforms, make them into ssm packages.
 PLATFORMS="ubuntu-14.04-amd64-64 sles-11-amd64-64"
 
+# Abort if no builds found matching this version
+build_count=$(find build -maxdepth 1 -name "*$VERSION*" | wc -l)
+echo build_count = $build_count
+if [ $build_count == "0" ] ; then
+    echo "Aborted. Found no builds with version '${VERSION}' in build folder."
+    exit 1
+fi
+
 # Remove previous
 rm -rf $INSTALLED_MAESTRO_PATH
 
