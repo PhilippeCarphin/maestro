@@ -520,7 +520,7 @@ namespace eval ::trashSel {
     # based on the current filename.
     proc 'load_resources {filebase} {
         global env
-        set dirbase $env(SEQ_SRC)/etc/constants/
+        set dirbase $env(SEQ_SRC)/xflow/etc/constants/
 	set filebase [file rootname $filebase]
         set filebase [file tail $filebase]
 	option readfile ${dirbase}${filebase}.ad widgetDefault

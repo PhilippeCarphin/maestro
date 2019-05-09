@@ -147,7 +147,7 @@ proc xflow_maestroCmds { parent } {
       text ${txtW} -width 30 -wrap word -yscrollcommand [list ${topW}.yscroll set]
       
       # get the info 
-      set infoFile $env(SEQ_SRC)/etc/command_summary.txt
+      set infoFile $env(SEQ_SRC)/xflow/etc/command_summary.txt
       if { [file readable ${infoFile}] } {
          set infoTxt [exec -ignorestderr  cat ${infoFile}]
          ${txtW} insert end ${infoTxt}
@@ -2381,7 +2381,7 @@ proc xflow_evalConfigCreateWidgets { exp_path datestamp node extension caller_w 
    global xflow_EvalConfigFullConfigVar xflow_SubmitHostsVar
    if { ! [info exists xflow_SubmitHostsVar] } {
       set xflow_SubmitHostsVar ""
-      set hostsFile $env(SEQ_SRC)/etc/submit_hosts
+      set hostsFile $env(SEQ_SRC)/xflow/etc/submit_hosts
       if { [file readable ${hostsFile}] } {
          set xflow_SubmitHostsVar [exec -ignorestderr cat ${hostsFile}]
       }

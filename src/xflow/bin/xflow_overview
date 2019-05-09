@@ -38,7 +38,7 @@ else
    export DISPLAY=${display:-${DISPLAY}}
 fi
 
-[[ -f "${SEQ_SRC}/etc/check_deprecation" ]] && . "${SEQ_SRC}/etc/check_deprecation"
+[[ -f "${SEQ_SRC}/xflow/etc/check_deprecation" ]] && . "${SEQ_SRC}/xflow/etc/check_deprecation"
 
 print "\ndisplay=${display}"
 print "\nusing DISPLAY=$DISPLAY"

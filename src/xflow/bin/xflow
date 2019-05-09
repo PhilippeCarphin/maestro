@@ -20,7 +20,7 @@ if [[ "${SEQ_BIN}" == "" ]] ; then
    exit 
 fi
 
-[[ -f "${SEQ_SRC}/etc/check_deprecation" ]] && . "${SEQ_SRC}/etc/check_deprecation"
+[[ -f "${SEQ_SRC}/xflow/etc/check_deprecation" ]] && . "${SEQ_SRC}/xflow/etc/check_deprecation"
 
 arguments=$*
 eval `cclargs $0 "[For complete and up to date information on this command, see the man page by typing 'man xflow']" \
