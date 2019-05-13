@@ -7,7 +7,7 @@ class TestMaestro(unittest.TestCase):
     @classmethod 
     def setUpClass(cls):
         home = expanduser("~")
-        cls.output = get_output(SSM_USE_COMMAND + "maestro -n module -s begin -e "+ home +"/maestro/tests/mock_files/sample_exp -d 20191102111111")
+        cls.output = get_output(SSM_USE_COMMAND + "maestro -n module -s begin -e "+ home +"/maestro/tests/mock_files/sample_exp")
 		
     def test_basic_usage(self):
         self.assertNotIn("SEQ_EXP_HOME", self.output[0])
