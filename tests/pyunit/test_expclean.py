@@ -2,8 +2,6 @@ import unittest
 from utilities.utils import *
 from os.path import expanduser
  
- 
- 
 class TestExpClean(unittest.TestCase):
 	
     @classmethod 
