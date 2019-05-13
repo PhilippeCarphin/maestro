@@ -1,5 +1,15 @@
-TIMESTAMP=20190426.17:55:40:SEQNODE=/module/module2:MSGTYPE=init:SEQLOOP=:SEQMSG=
-TIMESTAMP=20190426.17:55:41:SEQNODE=/module/module2:MSGTYPE=begin:SEQLOOP=:SEQMSG=host=cs1be-004p05 job_ID=8463871.cs1fe01
-TIMESTAMP=20190426.17:55:41:SEQNODE=/module/module2/dhour_switch:MSGTYPE=submit:SEQLOOP=:SEQMSG=Machine=ppp1 Queue=null CPU=1 (x1 CPU Multiplier as 1 MPIxOMP) Memory=500M Wallclock Limit=5 mpi=0 Submit method=Submitted by jobID=8463871.cs1fe01 Node Name=module2 from host cs1be-004p05 soumetArgs="" container mode
-TIMESTAMP=20190426.17:55:41:SEQNODE=/module/module2/dhour_switch:MSGTYPE=abort:SEQLOOP=:SEQMSG=ord_soumet failed on cs1be-004p05. Check submission listing. cannot create /home/yao001/tests/mock_files/sample_exp/sequencing/wrapped/module/module2/dhour_switch.wrapped.20191102111111.644-eccc-ppp1-20190426175541
-TIMESTAMP=20190426.17:55:41:SEQNODE=/module:MSGTYPE=beginx:SEQLOOP=:SEQMSG=host=cs1be-004p05 job_ID=8463871.cs1fe01
+TIMESTAMP=20190513.17:32:15:SEQNODE=/module:MSGTYPE=init:SEQLOOP=:SEQMSG=
+TIMESTAMP=20190513.17:32:16:SEQNODE=/module:MSGTYPE=begin:SEQLOOP=:SEQMSG=host=eccc1-ppp1-prod job_ID=
+TIMESTAMP=20190513.17:32:16:SEQNODE=/module/module2:MSGTYPE=submit:SEQLOOP=:SEQMSG=Machine=ppp1 Queue=null CPU=1 (x1 CPU Multiplier as 1 MPIxOMP) Memory=500M Wallclock Limit=5 mpi=0 Submit method=Manual or cron submitted from host eccc1-ppp1-prod soumetArgs="" container mode
+TIMESTAMP=20190513.17:32:27:SEQNODE=/module/module2:MSGTYPE=init:SEQLOOP=:SEQMSG=
+TIMESTAMP=20190513.17:32:27:SEQNODE=/module/module2:MSGTYPE=begin:SEQLOOP=:SEQMSG=host=cs1be-001p08 job_ID=376846.cs1fe01
+TIMESTAMP=20190513.17:32:27:SEQNODE=/module/module2/dhour_switch:MSGTYPE=submit:SEQLOOP=:SEQMSG=Machine=ppp1 Queue=null CPU=1 (x1 CPU Multiplier as 1 MPIxOMP) Memory=500M Wallclock Limit=5 mpi=0 Submit method=Submitted by jobID=376846.cs1fe01 Node Name=module2 from host cs1be-001p08 soumetArgs="" container mode
+TIMESTAMP=20190513.17:32:37:SEQNODE=/module/module2/dhour_switch:MSGTYPE=init:SEQLOOP=:SEQMSG=
+TIMESTAMP=20190513.17:32:37:SEQNODE=/module/module2/dhour_switch:MSGTYPE=begin:SEQLOOP=:SEQMSG=host=cs1be-002p17 job_ID=376856.cs1fe01
+TIMESTAMP=20190513.17:32:38:SEQNODE=/module/module2/dhour_switch:MSGTYPE=submit:SEQLOOP=+11:SEQMSG=Machine=ppp1 Queue=null CPU=1 (x1 CPU Multiplier as 1 MPIxOMP) Memory=500M Wallclock Limit=5 mpi=0 Submit method=Submitted by jobID=376856.cs1fe01 Node Name=dhour_switch from host cs1be-002p17 soumetArgs="" container mode
+TIMESTAMP=20190513.17:32:49:SEQNODE=/module/module2/dhour_switch:MSGTYPE=init:SEQLOOP=+11:SEQMSG=
+TIMESTAMP=20190513.17:32:49:SEQNODE=/module/module2/dhour_switch:MSGTYPE=begin:SEQLOOP=+11:SEQMSG=host=cs1be-001p15 job_ID=376868.cs1fe01
+TIMESTAMP=20190513.17:32:49:SEQNODE=/module/module2/dhour_switch:MSGTYPE=end:SEQLOOP=+11:SEQMSG=job_ID=376868.cs1fe01
+TIMESTAMP=20190513.17:32:49:SEQNODE=/module/module2/dhour_switch:MSGTYPE=endx:SEQLOOP=:SEQMSG=job_ID=376868.cs1fe01
+TIMESTAMP=20190513.17:32:49:SEQNODE=/module/module2:MSGTYPE=endx:SEQLOOP=:SEQMSG=job_ID=376868.cs1fe01
+TIMESTAMP=20190513.17:32:49:SEQNODE=/module:MSGTYPE=endx:SEQLOOP=:SEQMSG=job_ID=376868.cs1fe01

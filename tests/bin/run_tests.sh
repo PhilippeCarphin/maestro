@@ -5,8 +5,7 @@ RUNNING MAESTRO PYTHON TESTS
 ----------------------------------------------------------------------
 "
 cd ..
-
-./run_python_tests.py
+python -m unittest discover -v 
 
 echo "
 TESTS COMPLETED
