@@ -5,7 +5,7 @@ class TestLogReader(unittest.TestCase):
 	
     @classmethod        
     def setUpClass(cls):
-        cls.output = get_output(SSM_USE_COMMAND + "logreader -e mock_files/sample_exp -d 20191122111111")
+        cls.output = get_output(SSM_USE_COMMAND + "logreader -e mock_files/sample_exp -d 33331122111111")
     
     def test_basic_usage(self): 
         self.assertNotIn("Cannot open", self.output[0])

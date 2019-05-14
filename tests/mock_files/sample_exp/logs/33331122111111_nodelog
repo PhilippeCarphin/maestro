@@ -1,0 +1,3 @@
+TIMESTAMP=20190514.15:26:44:SEQNODE=/module:MSGTYPE=init:SEQLOOP=:SEQMSG=
+TIMESTAMP=20190514.15:26:45:SEQNODE=/module:MSGTYPE=begin:SEQLOOP=:SEQMSG=host=eccc1-ppp1-prod job_ID=
+TIMESTAMP=20190514.15:26:45:SEQNODE=/module/module2:MSGTYPE=submit:SEQLOOP=:SEQMSG=Machine=ppp1 Queue=null CPU=1 (x1 CPU Multiplier as 1 MPIxOMP) Memory=500M Wallclock Limit=5 mpi=0 Submit method=Manual or cron submitted from host eccc1-ppp1-prod soumetArgs="" container mode
