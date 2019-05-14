@@ -17,4 +17,5 @@ class TestExpClean(unittest.TestCase):
 				
     def test_exit_status(self):
         self.assertNotEqual(1, self.output[1],"Exit Status 1")
-        self.assertEqual(0, self.output[1],"Exit Status 0")	
+        self.assertEqual(0, self.output[1],"Exit Status 0")
+        
