@@ -32,5 +32,5 @@ if [[ "${SEQ_BIN}" == "" ]]; then
    fi
    exit 1
 else
-   ${SEQ_SRC}low
+   ${SEQ_BIN}/xflow
 fi
