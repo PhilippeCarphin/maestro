@@ -3,16 +3,6 @@ Set_ex="-ex"
 seqno=""
 keep="keep"
 SelfJobRemove="true"
-if [[ "${USER}" = "afsiops" || "${USER}" = "afsipar" ]]; then
-   # send email to cmois when job is deleted
-   mail="cmois@ec.gc.ca"
-fi
-
-# these two users are always op on every cluster
-[[ "${USER}" = "afsiops" || "${USER}" = "afseeer" ]] && OperationalUser="yes"
-
-# afsipar is not op on p7
-[[ "${USER}" = "afsipar" && "${d:-${mach}}" != "spica" && "${d:-${mach}}" != "hadar" ]] && OperationalUser="yes"
 
 test "$clone" != "0" && FatalError "Cannot clone when running with maestro"
 test "{jn}"  = ""  && FatalError "job name is mandatory with maestro"
@@ -21,11 +11,6 @@ if [[ "${SEQ_BIN}" = "" ]]; then
    test $(which maestro) && SEQ_BIN=$(dirname `which maestro`) || FatalError "SEQ_BIN not set properly, can't find path to sequencer binaries!"
 fi
 
-if [[ "${SEQ_BIN}" = "" ]]; then
-   test $(which nodetracer) && SEQ_BIN$(dirname `which nodetracer`) || FatalError "SEQ_BIN not set properly, can't find path to sequencer utilities!"
-fi
-
-echo "Using SEQ_BIN=${SEQ_BIN}"
 echo "Using SEQ_BIN=${SEQ_BIN}"
 
 eval "$(grep SEQ_DATE ${jobcfg})"
@@ -139,7 +124,8 @@ function Sys_AddWrapper
        # add the task setup and chaindot utilities
        printf "\n \t \${SEQ_BIN}/chaindot.py -e \${SEQ_EXP_HOME} -n \${SEQ_NODE} -o \${SEQ_TMP_CFG}.complete" >>  ${dest_file}
        #default workbase value
-       printf "\n \t export SEQ_WORKBASE=\$(\${SEQ_BIN}/nodework -n \${SEQ_NODE} -base | cut -d ':' -f 2)" >> ${dest_file}
+       printf "\n \t export SEQ_WORKBASE=\$(nodework -n \${SEQ_NODE} \${SEQ_LOOP_ARGS} -base | cut -d ':' -f 2)" >> ${dest_file}
+
        printf "\n if [[ -d \${SEQ_WORKBASE} ]]; then " >> ${dest_file}
        printf "\n \t touch \${SEQ_WORKBASE}" >> ${dest_file}
        printf "\n else " >> ${dest_file}
@@ -147,8 +133,7 @@ function Sys_AddWrapper
        printf "\n fi" >> ${dest_file}
 
        #run task_setup
-       printf "\n \t . \${SEQ_BIN}/task_setup.dot -f \${SEQ_TMP_CFG}.complete --base \$(nodework -n \${SEQ_NODE} -ext \${SEQ_LOOP_EXT} | cut -d ':' -f 2) --clean --verbose --force" >>  ${dest_file}
-      # printf "\n \t . \${SEQ_BIN}/use_fast_tmp" >>  ${dest_file}
+       printf "\n \t . \${SEQ_BIN}/task_setup.dot -f \${SEQ_TMP_CFG}.complete --base \$(nodework -n \${SEQ_NODE} \${SEQ_LOOP_ARGS} | cut -d ':' -f 2) --clean --verbose --force" >>  ${dest_file}
        printf "\n \t cd \${TASK_WORK} " >>  ${dest_file}
 
        #end of task_setup check
