@@ -5,6 +5,8 @@
 /man/roff
 /man/man1
 
+tests/
+
 build.cfg
 _*
 !__init__.py
