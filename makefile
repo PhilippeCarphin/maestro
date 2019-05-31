@@ -38,7 +38,8 @@ all: clean
 	elif [ ${IS_XC40} != "true" ] ; then \
 		echo "Could not find _tcl folder, building tcl from source." ;\
 		sleep 4 ;\
-		${XC40_MODULE_SWITCH} make -C ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
+		echo "Piping make command to bash so that the long and fragile tcl compilation does not inherit the maestro build environment. This first caused a problem after the variable VERSION was used." ;\
+		echo "${XC40_MODULE_SWITCH} cd ${BUILD_PLATFORM_FOLDER}/src/tcl ; make" | env -i bash ;\
 	fi \
 	
 	. ${SSM_FOLDER}/create_ssm_control_files.sh "${VERSION}" "${BUILD_PLATFORM_FOLDER}/.ssm.d"
