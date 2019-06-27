@@ -281,21 +281,15 @@ proc ::DrawUtils::drawLosange { exp_path datestamp canvas tx1 ty1 text textfill 
    set size   6
    set color  "normal" 
    set i      0
-   set j      0
-   set ok     0
-
+ 
    if { ${NODE_DISPLAY_PREF} == "Relative Progress" } {
      set i [llength $l_txt]
-     while {$j < $i && !$ok} {
-        if {[string match *min* [lindex $l_txt $j]]} {
-          set color [lindex [lindex $l_txt $j] end]
-          set rpy   [expr {$newty1 + $i }]
-          set ok  1
-        }
-        incr j
+     if {$i > 1 && [string match *min* [lindex $l_txt end]]} {
+       set color [lindex [lindex $l_txt end] end]
+       set rpy   [expr {$newty1 + $i}]
      }
    }
- 
+
    if {[lsearch -exact $text ${color}] != "-1"} {
        switch ${color} {
           normal {set text [string map {" normal" ""} ${text}]}
@@ -410,21 +404,14 @@ proc ::DrawUtils::drawOval { exp_path datestamp canvas tx1 ty1 txt maxtext textf
    set size   6
    set color  "normal"
    set i      0
-   set j      0
-   set ok     0
-
+ 
    if { ${NODE_DISPLAY_PREF} == "Relative Progress" } {
      set i [llength $l_txt]
-     while {$j < $i && !$ok} {
-        if {[string match *min* [lindex $l_txt $j]]} {
-          set color [lindex [lindex $l_txt $j] end]
-          set rpy   [expr {$newrpy + $i }]
-          set ok  1
-        }
-        incr j
+     if {$i > 1 && [string match *min* [lindex $l_txt end]]} {
+       set color [lindex [lindex $l_txt end] end]
+       set rpy   [expr {$newrpy + $i }]
      }
    }
- 
    if {[lsearch -exact $maxtext ${color}] != "-1"} {
        switch ${color} {
           normal {set maxtext [string map {" normal" ""} ${maxtext}]}

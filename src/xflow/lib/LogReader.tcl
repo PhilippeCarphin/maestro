@@ -69,12 +69,7 @@ proc LogReader_readMonitorDatestamps { {start_delay -1} } {
       puts stderr "ERROR in LogReader_readMonitorDatestamps: ${message}"
    }
 
-   set READ_DELAY [SharedData_getMiscData LOG_READ_DELAY]
-   if { ${READ_DELAY} == "" } {
-      set READ_DELAY 4000
-   }
-   puts "LogReader_readMonitorDatestamps READ_DELAY:$READ_DELAY"
-   set READ_LOG_AFTER_ID [after ${READ_DELAY} LogReader_readMonitorDatestamps]
+   set READ_LOG_AFTER_ID [after 4000 LogReader_readMonitorDatestamps]
 }
 
 # read_type is one of all, no_overview, refresh_flow
