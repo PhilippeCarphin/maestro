@@ -7,6 +7,9 @@
 build.cfg
 _*
 
+# git
+*.orig
+
 # Python
 !__init__.py
 
