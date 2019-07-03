@@ -46,6 +46,7 @@ These are the steps you should follow:
 
 1. Run the test suite. All tests must pass.
 1. Verify that all [issues](https://gitlab.science.gc.ca/CMOI/maestro/issues) for this milestone and version are resolved.
+1. Manually test all [user stories](USER_STORIES.md).
 1. Tag your commit. Example: `git tag -a 1.6`. You may also want to do `git push --tags`.
 1. Create, install, and publish the SSM package in a location similar to previous versions.
 1. Upgrade the live operational versions of Maestro by following [these instructions](https://wiki.cmc.ec.gc.ca/wiki/Maestro/Update).
