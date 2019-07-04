@@ -73,7 +73,6 @@ proc LogReader_readMonitorDatestamps { {start_delay -1} } {
    if { ${READ_DELAY} == "" } {
       set READ_DELAY 4000
    }
-   puts "LogReader_readMonitorDatestamps READ_DELAY:$READ_DELAY"
    set READ_LOG_AFTER_ID [after ${READ_DELAY} LogReader_readMonitorDatestamps]
 }
 
