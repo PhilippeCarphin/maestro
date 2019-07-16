@@ -9,6 +9,12 @@ Maestro is a suite of tools which organize, visualize, schedule, validate, and s
 
 Do you have a bug to report, feature request, or want to write and review code? See the [contributing guide](CONTRIBUTING.md).
 
+Developers can contribute changes to the git repo using [this git branching model](https://nvie.com/posts/a-successful-git-branching-model/). In summary:
+
+* Create release branches named `release-*` like `release-1.6`.
+* Create feature branches named `add-button-xyz-to-abc-window`.
+* Submit [merge requests](https://www.youtube.com/watch?v=0AT7JxqoIps&list=PLRf-PfhVvwFA7tGxwEgxgnJIY7aVevqqo&index=5) when your branch is ready.
+
 ## History
 
 Maestro has a long development history. Let the maintainers know if you have any ideas on how to modernize, standardize, or simplify the codebase.
