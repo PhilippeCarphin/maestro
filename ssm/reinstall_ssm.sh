@@ -22,7 +22,7 @@ SSM_ROOT=${2:-$HOME/ssm}
 INSTALLED_MAESTRO_PATH=$SSM_ROOT/$NAME
 SSM_DOMAIN_PATH=$INSTALLED_MAESTRO_PATH/$VERSION
 # If we find builds for these platforms, make them into ssm packages.
-PLATFORMS="ubuntu-14.04-amd64-64 sles-11-amd64-64"
+PLATFORMS="ubuntu-14.04-amd64-64 sles-11-amd64-64 ubuntu-18.04-skylake-64"
 
 set -exu
 
