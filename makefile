@@ -31,15 +31,18 @@ all: clean
 	${XC40_MODULE_SWITCH} make -C ${BUILD_PLATFORM_FOLDER}/src/core
 
 	# Use != instead of == so that IS_XC40==true is explicitly the only way we skip this important step.
-	if [ -d "_tcl" ] && [ ${IS_XC40} != "true" ] ; then \
-		echo "Using _tcl folder instead of building tcl from source." ;\
+	if [ -d "${TCL_COMPILE_BACKUP_FOLDER}" ] && [ ${IS_XC40} != "true" ] ; then \
+		echo "Using '${TCL_COMPILE_BACKUP_FOLDER}' instead of building tcl from source." ;\
 		rm -rf ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
-		cp -r _tcl/ ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
+		cp -r ${TCL_COMPILE_BACKUP_FOLDER} ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
 	elif [ ${IS_XC40} != "true" ] ; then \
 		echo "Could not find _tcl folder, building tcl from source." ;\
 		sleep 4 ;\
 		echo "Piping make command to bash so that the long and fragile tcl compilation does not inherit the maestro build environment. This first caused a problem after the variable VERSION was used." ;\
 		echo "${XC40_MODULE_SWITCH} cd ${BUILD_PLATFORM_FOLDER}/src/tcl ; make" | env -i bash ;\
+		echo "Copying compiled tcl library to backup folder so future makes are faster: '${TCL_COMPILE_BACKUP_FOLDER}'" ;\
+		mkdir -p ${TCL_COMPILE_BACKUP_FOLDER} ;\
+		cp -r ${BUILD_PLATFORM_FOLDER}/src/tcl ${TCL_COMPILE_BACKUP_FOLDER} ;\
 	fi \
 	
 	. ${SSM_FOLDER}/create_ssm_control_files.sh "${VERSION}" "${BUILD_PLATFORM_FOLDER}/.ssm.d"
