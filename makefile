@@ -34,7 +34,8 @@ all: clean
 	if [ -d "${TCL_COMPILE_BACKUP_FOLDER}" ] && [ ${IS_XC40} != "true" ] ; then \
 		echo "Using '${TCL_COMPILE_BACKUP_FOLDER}' instead of building tcl from source." ;\
 		rm -rf ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
-		cp -r ${TCL_COMPILE_BACKUP_FOLDER} ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
+		mkdir -p ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
+		cp -a ${TCL_COMPILE_BACKUP_FOLDER}/tcl ${BUILD_PLATFORM_FOLDER}/src/ ;\
 	elif [ ${IS_XC40} != "true" ] ; then \
 		echo "Could not find _tcl folder, building tcl from source." ;\
 		sleep 4 ;\
