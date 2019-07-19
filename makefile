@@ -43,7 +43,7 @@ all: clean
 		echo "${XC40_MODULE_SWITCH} cd ${BUILD_PLATFORM_FOLDER}/src/tcl ; make" | env -i bash ;\
 		echo "Copying compiled tcl library to backup folder so future makes are faster: '${TCL_COMPILE_BACKUP_FOLDER}'" ;\
 		mkdir -p ${TCL_COMPILE_BACKUP_FOLDER} ;\
-		cp -r ${BUILD_PLATFORM_FOLDER}/src/tcl ${TCL_COMPILE_BACKUP_FOLDER} ;\
+		cp -a ${BUILD_PLATFORM_FOLDER}/src/tcl ${TCL_COMPILE_BACKUP_FOLDER} ;\
 	fi \
 	
 	. ${SSM_FOLDER}/create_ssm_control_files.sh "${VERSION}" "${BUILD_PLATFORM_FOLDER}/.ssm.d"
