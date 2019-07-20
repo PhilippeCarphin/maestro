@@ -90,3 +90,4 @@ dkms.conf
 
 # Do not ignore the ssm metadata folder
 !.ssm.d
+cmake-build-debug
