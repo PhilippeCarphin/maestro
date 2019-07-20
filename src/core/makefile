@@ -1,4 +1,4 @@
-include shared-make-configuration.cfg
+# include shared-make-configuration.cfg
 
 WERROR_FLAGS= -Wall -Werror=implicit-function-declaration -Werror=return-type -Werror=unused-but-set-variable -Werror=unused-variable -Werror=strict-aliasing=3
 CFLAGS = -Wall -Wimplicit-function-declaration -Wl,--allow-multiple-definition 
