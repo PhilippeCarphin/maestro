@@ -21,7 +21,9 @@
 #include <stdio.h>
 #include <string.h>
 #include <stdlib.h>
+#ifndef __APPLE__
 #include <malloc.h>
+#endif
 #include "l2d2_lists.h"
 
 
