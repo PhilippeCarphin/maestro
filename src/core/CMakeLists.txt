@@ -47,7 +47,8 @@ set(lib_sources
 
 add_library(seq SHARED ${lib_sources})
 
-target_compile_options(seq PUBLIC -Wno-pointer-sign -Werror=incompatible-pointer-types -Werror=sometimes-uninitialized -Werror=uninitialized -Werror=parentheses)
+# OOps can't do that for now :)
+# target_compile_options(seq PUBLIC -Wno-pointer-sign -Werror=incompatible-pointer-types -Werror=sometimes-uninitialized -Werror=uninitialized -Werror=parentheses)
 
 
 link_libraries(seq)
