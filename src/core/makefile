@@ -21,7 +21,16 @@ WRAPDIR=src/core/wrappers
 XML_INCLUDE_DIR=/usr/include/libxml2
 XML_LIB_DIR=/usr/lib
 
-all: prep 
+MAC_OPENSSL_INCLUDE_DIR = /usr/local/opt/openssl/include
+MAC_OPENSSL_LIBRARY_DIR = /usr/local/opt/openssl/lib
+
+MAC_LIBXML2_INCLUDE_DIR = /usr/local/opt/libxml2/include/libxml2
+MAC_LIBXML2_LIBRARY_DIR = /usr/local/opt/libxml2/lib
+
+CFLAGS += -I $(MAC_OPENSSL_INCLUDE_DIR) -I $(MAC_LIBXML2_INCLUDE_DIR)
+LIB += -L $(MAC_OPENSSL_LIBRARY_DIR) -L $(MAC_LIBXML2_LIBRARY_DIR)
+
+all: prep
 	$(MAKE) prep $(EXECUTABLES)
 	
 clean:
