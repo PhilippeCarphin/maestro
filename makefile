@@ -14,7 +14,7 @@ all: clean
 		cd man ; ./create_roffs_from_markdown.sh ;\
 		mkdir -p ${MAN_FOLDER} ;\
 		cp -r man/roff/* ${MAN_FOLDER} ;\
-	else
+	else \
 		echo "Skipping generation of man pages, as there seems to be no internet." ;\
 	fi
 
