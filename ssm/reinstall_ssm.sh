@@ -1,47 +1,42 @@
 #!/bin/bash
 
 echo "Fast way to erase and reinstall the ssm package. Convenient for development.
-If <version> is not provided, assemble a guess from the git hash/tags.
-If <ssm-root> is not provided, use '$HOME/ssm'.
 
 Usage:
-    ./reinstall-ssm.sh [--delete-all]
-    ./reinstall-ssm.sh <version> [--delete-all]
-    ./reinstall-ssm.sh <version> <ssm-root> [--delete-all]
+    ./reinstall-ssm.sh <version> [--ssm-root=<path>] [--delete-all]
     
 Options:
-    --delete-all: Delete all installed and published SSMs for this package in the <ssm-root>.
+    --ssm-root=<path>     Install and publish the SSM in this folder. Default: $HOME/ssm
+    --delete-all          Delete all installed and published SSMs for this package in the --ssm-root.
 "
-
-# Define constants
-
-PROJECT_PATH=$(git rev-parse --show-toplevel)
-NAME=$(basename $PROJECT_PATH)
-
-# Use $1 and $2, or these defaults if they are empty.
-VERSION=${1:-$($PROJECT_PATH/scripts/get_repo_version.sh)}
-SSM_ROOT=${2:-$HOME/ssm}
-
-INSTALLED_MAESTRO_PATH=$SSM_ROOT/$NAME
-SSM_DOMAIN_PATH=$INSTALLED_MAESTRO_PATH/$VERSION
-# If we find builds for these platforms, make them into ssm packages.
-PLATFORMS="ubuntu-14.04-amd64-64 sles-11-amd64-64 ubuntu-18.04-skylake-64"
 
 set -exu
 
 # idiomatic parameter and option handling in sh
-CLEAN_SSM_FOLDER=false
+VERSION=$1
+SSM_ROOT=$HOME/ssm
+DELETE_ALL_SSM=false
 while test $# -gt 0
 do
     case "$1" in
-        --delete-all) CLEAN_SSM_FOLDER=true
+        --delete-all) DELETE_ALL_SSM=true
+            ;;
+        --ssm-root=*) SSM_ROOT="${1#*=}"
             ;;
     esac
     shift
 done
 
+# Constants
+PROJECT_PATH=$(git rev-parse --show-toplevel)
+NAME=$(basename $PROJECT_PATH)
+INSTALLED_MAESTRO_PATH=$SSM_ROOT/$NAME
+SSM_DOMAIN_PATH=$INSTALLED_MAESTRO_PATH/$VERSION
+# If we find builds for these platforms, make them into ssm packages.
+PLATFORMS="ubuntu-14.04-amd64-64 sles-11-amd64-64 ubuntu-18.04-skylake-64"
+
 # Remove previous
-if [[ $CLEAN_SSM_FOLDER = "true" ]]; then
+if [[ $DELETE_ALL_SSM = "true" ]]; then
     rm -rf $INSTALLED_MAESTRO_PATH
 fi
 

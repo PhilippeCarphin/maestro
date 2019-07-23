@@ -10,9 +10,13 @@ all: clean
 		exit 1 ;\
 	fi
 
-	cd man ; ./create_roffs_from_markdown.sh
-	mkdir -p ${MAN_FOLDER}
-	cp -r man/roff/* ${MAN_FOLDER}
+	if [[ ${HAS_INTERNET} = "true" ]] ; then \
+		cd man ; ./create_roffs_from_markdown.sh ;\
+		mkdir -p ${MAN_FOLDER} ;\
+		cp -r man/roff/* ${MAN_FOLDER} ;\
+	else
+		echo "Skipping generation of man pages, as there seems to be no internet." ;\
+	fi
 
 	if [ -n "${IS_XC40}" ] ; then \
 			echo "Compiling on some architectures like xc40 requires that we specify a module for a different 'gcc'." ;\
