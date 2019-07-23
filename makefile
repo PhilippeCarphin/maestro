@@ -18,12 +18,12 @@ all: clean
 		echo "Skipping generation of man pages, as there seems to be no internet." ;\
 	fi
 
-	if [ -n "${IS_XC40}" ] ; then \
-			echo "Compiling on some architectures like xc40 requires that we specify a module for a different 'gcc'." ;\
+	if [ -n "${IS_XC}" ] ; then \
+			echo "Compiling on some architectures like xc40 and xc50 requires that we specify a module for a different 'gcc'." ;\
 			echo "In this case we are using this module switch:" ;\
-			echo "        ${XC40_MODULE_SWITCH}" ;\
+			echo "        ${XC_MODULE_SWITCH}" ;\
 			echo "And adding these compiler flags:" ;\
-			echo "        ${XC40_DYNAMIC_FLAG}" ;\
+			echo "        ${XC_DYNAMIC_FLAG}" ;\
 	fi
 
 	mkdir -p ${BUILD_PLATFORM_FOLDER} ${BIN_FOLDER} ${WRAPPERS_BUILD_FOLDER}
@@ -32,19 +32,18 @@ all: clean
 	cp ${SHARED_MAKE_CONFIGURATION} ${BUILD_PLATFORM_FOLDER}/
 	cp -r src ssm/.ssm.d scripts ${BUILD_PLATFORM_FOLDER}/
 
-	${XC40_MODULE_SWITCH} make -C ${BUILD_PLATFORM_FOLDER}/src/core
+	${XC_MODULE_SWITCH} make -C ${BUILD_PLATFORM_FOLDER}/src/core
 
-	# Use != instead of == so that IS_XC40==true is explicitly the only way we skip this important step.
-	if [ -d "${TCL_COMPILE_BACKUP_FOLDER}" ] && [ ${IS_XC40} != "true" ] ; then \
+	if [ -d "${TCL_COMPILE_BACKUP_FOLDER}" ] ; then \
 		echo "Using '${TCL_COMPILE_BACKUP_FOLDER}' instead of building tcl from source." ;\
 		rm -rf ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
 		mkdir -p ${BUILD_PLATFORM_FOLDER}/src/tcl ;\
 		cp -a ${TCL_COMPILE_BACKUP_FOLDER}/tcl ${BUILD_PLATFORM_FOLDER}/src/ ;\
-	elif [ ${IS_XC40} != "true" ] ; then \
+	elif [ -z ${IS_XC} ] ; then \
 		echo "Could not find _tcl folder, building tcl from source." ;\
 		sleep 4 ;\
 		echo "Piping make command to bash so that the long and fragile tcl compilation does not inherit the maestro build environment. This first caused a problem after the variable VERSION was used." ;\
-		echo "${XC40_MODULE_SWITCH} cd ${BUILD_PLATFORM_FOLDER}/src/tcl ; make" | env -i bash ;\
+		echo "${XC_MODULE_SWITCH} cd ${BUILD_PLATFORM_FOLDER}/src/tcl ; make" | env -i bash ;\
 		echo "Copying compiled tcl library to backup folder so future makes are faster: '${TCL_COMPILE_BACKUP_FOLDER}'" ;\
 		mkdir -p ${TCL_COMPILE_BACKUP_FOLDER} ;\
 		cp -a ${BUILD_PLATFORM_FOLDER}/src/tcl ${TCL_COMPILE_BACKUP_FOLDER} ;\
