@@ -5,9 +5,12 @@ If <version> is not provided, assemble a guess from the git hash/tags.
 If <ssm-root> is not provided, use '$HOME/ssm'.
 
 Usage:
-    ./reinstall-ssm.sh
-    ./reinstall-ssm.sh <version>
-    ./reinstall-ssm.sh <version> <ssm-root>
+    ./reinstall-ssm.sh [--delete-all]
+    ./reinstall-ssm.sh <version> [--delete-all]
+    ./reinstall-ssm.sh <version> <ssm-root> [--delete-all]
+    
+Options:
+    --delete-all: Delete all installed and published SSMs for this package in the <ssm-root>.
 "
 
 # Define constants
@@ -26,8 +29,21 @@ PLATFORMS="ubuntu-14.04-amd64-64 sles-11-amd64-64 ubuntu-18.04-skylake-64"
 
 set -exu
 
+# idiomatic parameter and option handling in sh
+CLEAN_SSM_FOLDER=false
+while test $# -gt 0
+do
+    case "$1" in
+        --delete-all) CLEAN_SSM_FOLDER=true
+            ;;
+    esac
+    shift
+done
+
 # Remove previous
-rm -rf $INSTALLED_MAESTRO_PATH
+if [[ $CLEAN_SSM_FOLDER = "true" ]]; then
+    rm -rf $INSTALLED_MAESTRO_PATH
+fi
 
 # Install new
 ssm created -d $SSM_DOMAIN_PATH
