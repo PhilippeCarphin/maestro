@@ -27,6 +27,7 @@
 #include "regex.h"
 #include <openssl/md5.h>
 #include <stdio.h>
+#include <ctype.h> // for toupper
 
 #define SEQ_MAXFIELD 2048
 

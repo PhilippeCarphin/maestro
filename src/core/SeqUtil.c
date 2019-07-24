@@ -659,11 +659,11 @@ int SeqUtil_tokenCount( const char* source, const char* tokenSeparator )
 
    tmpSource = (char*) malloc( strlen( source ) + 1 );
    strcpy( tmpSource, source );
-   tmpstrtok = (char*) strtok( tmpSource, tokenSeparator );
+   tmpstrtok = strtok( tmpSource, tokenSeparator );
 
    while ( tmpstrtok != NULL ) {
         count++;
-        tmpstrtok = (char*) strtok(NULL, tokenSeparator);
+        tmpstrtok = strtok(NULL, tokenSeparator);
    }
 
    free(tmpSource);
@@ -1025,13 +1025,13 @@ char* SeqUtil_relativePathEvaluation( char* path, SeqNodeDataPtr _nodeDataPtr) {
 	        returnString=strdup(_nodeDataPtr->container);
             tmpString = (char*) malloc( strlen( path ) + 1 );
             strcpy( tmpString, path );
-            tmpstrtok = (char*) strtok( tmpString, ".." );
+            tmpstrtok = strtok( tmpString, ".." );
 	         while (tmpstrtok != NULL ) {
  		        newString=SeqUtil_getPathBase(returnString);
                 free(returnString); 
                 returnString=newString; 
                 prevPtr=tmpstrtok; 
-                tmpstrtok = (char*) strtok( NULL, ".." );
+                tmpstrtok = strtok( NULL, ".." );
 	         }
             SeqUtil_stringAppend(&returnString,prevPtr);
             SeqUtil_TRACE(TL_FULL_TRACE,"SeqUtil_relativePathEvaluation(): parent keyword replacement: replacing %s with %s\n",path,returnString);
@@ -1299,7 +1299,7 @@ int lock_nfs ( const char * filename , const char * datestamp, const char * _seq
                  if ( (ret=touch_nfs(src,_seq_exp_home)) != 0 ) fprintf(stderr,"cannot touch file:lock on %s \n",lpath);
      }
 
-     md5Token = (char *) str2md5(filename,strlen(filename));
+     md5Token = str2md5(filename,strlen(filename));
      snprintf(dest,sizeof(dest),"%s/%s",lpath,md5Token);
 
      for ( i=0 ; i < 5 ; i++ ) {
@@ -1349,7 +1349,7 @@ int unlock_nfs ( const char * filename , const char * datestamp , const char * _
 	     return(1);
      }
     
-     md5Token = (char *) str2md5(filename,strlen(filename));
+     md5Token = str2md5(filename,strlen(filename));
      snprintf(src,sizeof(src),"%s/%s",lpath,md5Token);
 
      get_time(Ltime,3);

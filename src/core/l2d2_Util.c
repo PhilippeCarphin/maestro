@@ -32,6 +32,7 @@
 #include <pwd.h>
 #include <glob.h>
 #include <time.h>
+#include <utime.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -45,6 +46,7 @@
 #include "SeqLoopsUtil.h"
 #include "SeqNameValues.h"
 #include "SeqUtil.h"
+#include "l2d2_commun.h"
 
 
 extern _l2d2server L2D2;

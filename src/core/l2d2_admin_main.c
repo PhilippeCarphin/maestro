@@ -32,6 +32,7 @@
 #include <errno.h>
 #include <pwd.h>
 #include <libgen.h>
+#include <sys/time.h>
 #include <time.h>
 #include <unistd.h>
 #include <sys/types.h>
@@ -41,7 +42,9 @@
 #include <sys/param.h>
 #include "l2d2_roxml.h"
 #include "l2d2_server.h"
+#include "l2d2_socket.h"
 #include "l2d2_lists.h"
+#include "l2d2_commun.h"
 
 extern char *get_Authorization(char *, char * ,char **);
 extern dpnode *getDependencyFiles(char *ddep , char *xp, FILE *fp , const char *deptype);

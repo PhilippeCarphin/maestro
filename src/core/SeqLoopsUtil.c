@@ -88,7 +88,7 @@ char * SeqLoops_indexToExt(const char * index)
    *     if( localIndex != NULL && strlen( localIndex ) > 0 ) {
    *        SeqUtil_TRACE(TL_FULL_TRACE, "maestro.validateDependencies() localIndex=%s\n", localIndex );
    *        SeqLoops_parseArgs(&loopArgsPtr, localIndex);
-   *        tmpExt = (char*) SeqLoops_getExtFromLoopArgs(loopArgsPtr);
+   *        tmpExt = SeqLoops_getExtFromLoopArgs(loopArgsPtr);
    *        SeqUtil_stringAppend( &localIndexString, tmpExt );
    *        free(tmpExt);
    *     }
@@ -129,7 +129,7 @@ int SeqLoops_parseArgs( SeqNameValuesPtr* nameValuesPtr, const char* cmd_args ) 
    */
    
    tmp_args = strdup( cmd_args );
-   tmpstrtok = (char*) strtok( tmp_args, "," );
+   tmpstrtok = strtok( tmp_args, "," );
    while ( tmpstrtok != NULL ) {
       /* any alphanumeric characters and special chars
          _:/-$()* are supported */
@@ -146,7 +146,7 @@ int SeqLoops_parseArgs( SeqNameValuesPtr* nameValuesPtr, const char* cmd_args ) 
          SeqUtil_TRACE(TL_FULL_TRACE,"SeqLoops_parseArgs inserted %s = %s\n", loopName, loopValue ); 
          SeqNameValues_insertItem( nameValuesPtr, loopName, loopValue );
       }
-      tmpstrtok = (char*) strtok(NULL,",");
+      tmpstrtok = strtok(NULL,",");
    }
    SeqUtil_TRACE(TL_FULL_TRACE,"SeqLoops_parseArgsdone exit status: %d\n", isError ); 
    free( tmp_args );
@@ -194,14 +194,14 @@ SeqNameValuesPtr SeqLoops_convertExtension ( SeqLoopsPtr loops_ptr, char* extens
    char *token = NULL;
    char *leaf = NULL;
    if (extension != NULL){
-       token = (char*) strtok( extension, EXT_TOKEN );
+       token = strtok( extension, EXT_TOKEN );
        while ( token != NULL ) {
           free( leaf );
-          leaf = (char*) SeqUtil_getPathLeaf( loops_ptr->loop_name );
+          leaf = SeqUtil_getPathLeaf( loops_ptr->loop_name );
           SeqNameValues_insertItem( &nameValuesPtr, leaf, token );
 
           loops_ptr = loops_ptr->nextPtr;
-          token = (char*) strtok( NULL, EXT_TOKEN );
+          token = strtok( NULL, EXT_TOKEN );
        }
    }
    SeqNameValues_printList( nameValuesPtr );
@@ -271,7 +271,7 @@ char* SeqLoops_ContainerExtension( SeqLoopsPtr loops_ptr, SeqNameValuesPtr loop_
       loopContainerName = loops_ptr->loop_name;
       /* inside the SeqLoopsPtr, the loop_name value is stored with the full path node 
          of the loop while the loop_name function argument is only the leaf part */
-      loopLeafName = (char*) SeqUtil_getPathLeaf( loopContainerName );
+      loopLeafName = SeqUtil_getPathLeaf( loopContainerName );
       SeqUtil_TRACE(TL_FULL_TRACE,"SeqLoops_ContainerExtension loopLeafName=%s\n", loopLeafName ); 
       thisLoopArgPtr = loop_args_ptr;
       while( thisLoopArgPtr != NULL && isError == 0 ) {
@@ -625,7 +625,7 @@ static LISTNODEPTR switch_to_extension_list(SeqLoopsPtr loopPtr){
    char buffer[128] = {'\0'};
    SeqUtil_TRACE(TL_FULL_TRACE,"switch_to_extension_list() begin call\n");
 
-   switch_value = (char*)SeqLoops_getLoopAttribute( loopPtr->values, "VALUE" );
+   switch_value = SeqLoops_getLoopAttribute( loopPtr->values, "VALUE" );
 
    sprintf(buffer,"%s%s", EXT_TOKEN,switch_value);
    SeqListNode_insertItem(&newList, buffer);
@@ -645,18 +645,18 @@ static LISTNODEPTR numerical_to_reverse_extension_list(SeqNameValuesPtr loopData
    LISTNODEPTR retval = NULL;
    SeqUtil_TRACE(TL_FULL_TRACE,"numerical_to_reverse_extension_list(): begin call\n");
 
-   if ( (attrib = (char*)SeqLoops_getLoopAttribute( loopData, "EXPRESSION" )) != NULL && strcmp(attrib,"") != 0 ){
+   if ( (attrib = SeqLoops_getLoopAttribute( loopData, "EXPRESSION" )) != NULL && strcmp(attrib,"") != 0 ){
       retval = expression_to_reverse_extension_list( attrib );
    } else {
-      if ( (attrib = (char*)SeqLoops_getLoopAttribute( loopData, "START" )) != NULL ){
+      if ( (attrib = SeqLoops_getLoopAttribute( loopData, "START" )) != NULL ){
          start = atoi(attrib);
          free(attrib);
       }
-      if ( (attrib = (char*)SeqLoops_getLoopAttribute( loopData, "END" )) != NULL ){
+      if ( (attrib = SeqLoops_getLoopAttribute( loopData, "END" )) != NULL ){
          end = atoi(attrib);
          free(attrib);
       }
-      if ( (attrib = (char*)SeqLoops_getLoopAttribute( loopData, "STEP" )) != NULL ){
+      if ( (attrib = SeqLoops_getLoopAttribute( loopData, "STEP" )) != NULL ){
          step = atoi(attrib);
          free(attrib);
       }
@@ -1214,7 +1214,7 @@ int SeqLoops_validateLoopArgs( const SeqNodeDataPtr _nodeDataPtr, SeqNameValuesP
       }
 
       /* build loop extension for containers */
-      if( (loopExtension = (char*) SeqLoops_ContainerExtension( loopsPtr, _loop_args )) == NULL ) {
+      if( (loopExtension = SeqLoops_ContainerExtension( loopsPtr, _loop_args )) == NULL ) {
          raiseError( "SeqLoops_validateLoopArgs(): Missing loop arguments for container loop!\n" );
       }
       SeqUtil_TRACE(TL_FULL_TRACE, "SeqLoops_validateLoopArgs() loop extension:%s\n", loopExtension );

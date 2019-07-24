@@ -131,7 +131,7 @@ extern char* tictac_getDate( char* _expHome, char *format, char * datestamp ) {
             free(statbuf);
          }
          globfree(&glob_logs);
-         dateFileName = (char*) SeqUtil_getPathLeaf( (const char*) (tmpLatestFile) );
+         dateFileName = SeqUtil_getPathLeaf( (const char*) (tmpLatestFile) );
          sprintf(dateValue,"%s", (char*) strtok( dateFileName, "_" ));
       }
    }
@@ -146,7 +146,7 @@ extern char* tictac_getDate( char* _expHome, char *format, char * datestamp ) {
    SeqUtil_TRACE(TL_FULL_TRACE,"tictac_getDate() checking validity of dateValue ... \n");
    checkValidDatestamp(dateValue);
 
-   if (format != NULL) tmpstrtok = (char*) strtok( format, "%" );
+   if (format != NULL) tmpstrtok = strtok( format, "%" );
    while ( tmpstrtok != NULL ) {
       if (strcmp(tmpstrtok,"Y")==0)
          printf("%.*s", 4, &dateValue[0] );
@@ -160,7 +160,7 @@ extern char* tictac_getDate( char* _expHome, char *format, char * datestamp ) {
          printf("%.*s", 2, &dateValue[10] );
       if (strcmp(tmpstrtok,"S")==0)
          printf("%.*s", 2, &dateValue[12] );
-      tmpstrtok = (char*) strtok(NULL,"%");
+      tmpstrtok = strtok(NULL,"%");
    }
 
    if ((returnDate = malloc( strlen(dateValue) + 1 )) != NULL ) {

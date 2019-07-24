@@ -32,7 +32,7 @@ CFLAGS += -O3
 # All warnings except some of the more useless ones
 # CFLAGS += -Wall -Wno-unused-label -Wno-pointer-sign -Wno-unused-function
 # Turn these very useful warnings into errors
-# CFLAGS += -Werror=implicit-function-declaration
+CFLAGS += -Werror=implicit-function-declaration
 # CFLAGS += -Werror=incompatible-pointer-types
 # Tell the compiler to write a *.d file that know
 # what *.h files a given source file depends on

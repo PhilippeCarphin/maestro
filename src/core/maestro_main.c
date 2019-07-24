@@ -21,13 +21,16 @@
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <unistd.h> 
+#include <unistd.h>
+#include <libxml/parser.h> // For xmlCleanupParser()
 #include "maestro.h"
 #include "SeqListNode.h"
 #include "SeqUtil.h"
 #include "SeqNameValues.h"
 #include "SeqDatesUtil.h"
 #include "getopt.h"
+#include "SeqLoopsUtil.h"
+
 /***********************************************************************************
 * name: maestro
 *
@@ -162,7 +165,7 @@ int main (int argc, char * argv [])
    free(extraArgs);
    fprintf(stderr, "maestro_main exiting with code %d\n", status );
    SeqUtil_unmapfiles();
-   xmlCleanupParser();
+   xmlCleanupParser(); // shouldn't this go somewhere else
    exit(status);
 }
 

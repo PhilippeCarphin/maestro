@@ -961,7 +961,7 @@ static int setEndState(const char* _signal, const SeqNodeDataPtr _nodeDataPtr) {
 
        if((char*) SeqLoops_getLoopAttribute( _nodeDataPtr->loop_args, _nodeDataPtr->nodeName ) != NULL) {
             SeqNameValues_deleteItem(&newArgs, _nodeDataPtr->nodeName );
-            containerLoopExt = (char*) SeqLoops_getExtFromLoopArgs(newArgs);
+            containerLoopExt = SeqLoops_getExtFromLoopArgs(newArgs);
             SeqUtil_TRACE(TL_FULL_TRACE, "maestro.setEndState() containerLoopExt %s\n", containerLoopExt);
             SeqUtil_stringAppend( &nptExt, containerLoopExt );
             free(containerLoopExt);
@@ -1339,7 +1339,7 @@ int prepFEFile( const SeqNodeDataPtr _nodeDataPtr, char * _target_state, char * 
    char filename[SEQ_MAXFIELD];
    char *loopArgs = NULL, *depBase = NULL;
    int status = 0 , ret;
-   loopArgs = (char*) SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
+   loopArgs = SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
 
    memset(filename,'\0',sizeof filename);
 
@@ -1348,7 +1348,7 @@ int prepFEFile( const SeqNodeDataPtr _nodeDataPtr, char * _target_state, char * 
 
    /* create dirs if not there */
    
-   depBase = (char*) SeqUtil_getPathBase( (const char*) _nodeDataPtr->forEachTarget->node );
+   depBase = SeqUtil_getPathBase( (const char*) _nodeDataPtr->forEachTarget->node );
    /* write in sequencing/status/depends/$datestamp */
    sprintf(filename,"%s/%s/%s/%s", _nodeDataPtr->forEachTarget->exp, LOCAL_DEPENDS_DIR, _target_datestamp, depBase );
    _SeqUtil_mkdir( filename, 1 ,_nodeDataPtr->expHome);
@@ -1395,7 +1395,7 @@ int prepInterUserFEFile( const SeqNodeDataPtr _nodeDataPtr, char * _target_state
    struct timeval tv;
    struct tm* ptm;
    int ret;
-   loopArgs = (char*) SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
+   loopArgs = SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
 
    current_passwd = getpwuid(getuid());  
 
@@ -1435,7 +1435,7 @@ int prepInterUserFEFile( const SeqNodeDataPtr _nodeDataPtr, char * _target_state
     * Also when submiting with no depend.
    */
 
-   depBase = (char*) SeqUtil_getPathBase( (const char*) _nodeDataPtr->name );
+   depBase = SeqUtil_getPathBase( (const char*) _nodeDataPtr->name );
 
    /* write in local xperiment: sequencing/status/inter_depends/$datestamp */
    sprintf(filename,"%s/%s/%s/%s", _nodeDataPtr->expHome, INTER_DEPENDS_DIR, _nodeDataPtr->datestamp, depBase );
@@ -1610,7 +1610,7 @@ static int go_submit(const char *_signal, char *_flow , const SeqNodeDataPtr _no
    SeqNodeDataPtr workerDataPtr = NULL;
    char mpi_flag[5];
 
-   loopArgs = (char*) SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
+   loopArgs = SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
    
    SeqUtil_TRACE(TL_FULL_TRACE, "maestro.go_submit() node=%s signal=%s flow=%s ignoreAllDeps=%d\n ", _nodeDataPtr->name, _signal, _flow, ignoreAllDeps );
    actions( (char*) _signal, _flow, _nodeDataPtr->name );
@@ -2089,7 +2089,7 @@ static void submitDependencies ( const SeqNodeDataPtr _nodeDataPtr, const char* 
 		    SeqNameValues_getValue(loopArgsPtr, _nodeDataPtr->nodeName), tmpValue, _nodeDataPtr->nodeName); 
       SeqNameValues_setValue( &loopArgsPtr, _nodeDataPtr->nodeName, tmpValue);
    }
-   tmpExt = (char*) SeqLoops_getExtFromLoopArgs(loopArgsPtr);
+   tmpExt = SeqLoops_getExtFromLoopArgs(loopArgsPtr);
    SeqUtil_stringAppend( &extName, _nodeDataPtr->name );
    if( strlen( _nodeDataPtr->extension ) > 0 ) {
       SeqUtil_stringAppend( &extName, "." );
@@ -2237,9 +2237,9 @@ static void submitForEach ( const SeqNodeDataPtr _nodeDataPtr, const char* _sign
 
    newArgs=SeqNameValues_clone(_nodeDataPtr->loop_args);
    SeqNameValues_popValue(&newArgs, poppedValue,sizeof(poppedValue));
-   tmpExt = (char*) SeqLoops_getExtFromLoopArgs(newArgs);
+   tmpExt = SeqLoops_getExtFromLoopArgs(newArgs);
    SeqUtil_stringAppend( &extName, _nodeDataPtr->name );
-   if(  (tmpExt = (char*) SeqLoops_getExtFromLoopArgs(newArgs)) != NULL ) {
+   if(  (tmpExt = SeqLoops_getExtFromLoopArgs(newArgs)) != NULL ) {
       SeqUtil_stringAppend( &extName, "." );
       SeqUtil_stringAppend( &extName, tmpExt );
    }
@@ -2410,7 +2410,7 @@ static int writeNodeWaitedFile( const SeqNodeDataPtr _nodeDataPtr, const char* _
 
    /* create dirs if not there */
    
-   depBase = (char*) SeqUtil_getPathBase( (const char*) _dep_node );
+   depBase = SeqUtil_getPathBase( (const char*) _dep_node );
    if( _dep_scope == IntraSuite ) {
      /* write in sequencing/status/depends/$datestamp */
       sprintf(filename,"%s/%s/%s/%s", _dep_exp_path, LOCAL_DEPENDS_DIR, _dep_datestamp, depBase );
@@ -2434,7 +2434,7 @@ static int writeNodeWaitedFile( const SeqNodeDataPtr _nodeDataPtr, const char* _
       }
    }
    /* create  waited_end file if not exists */
-   loopArgs = (char*) SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
+   loopArgs = SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
 
    status = _WriteNWFile (_nodeDataPtr->expHome, _nodeDataPtr->name, _nodeDataPtr->datestamp, loopArgs, filename, statusfile );
  
@@ -2894,7 +2894,7 @@ int processDepStatus_OCM( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep, 
    putenv(env);
    strncpy(dhour,&(dep->datestamp)[8],2);
    strncpy(ocm_datestamp,&(dep->datestamp)[0],10);
-   char *Ldpname = (char*) SeqUtil_getPathLeaf( dep->node_name );
+   char *Ldpname = SeqUtil_getPathLeaf( dep->node_name );
    snprintf(job,sizeof(job),"%s_%s",Ldpname,dhour);
 
    /* check catchup */
@@ -2989,7 +2989,7 @@ int writeInterUserNodeWaitedFile ( const SeqNodeDataPtr _nodeDataPtr, const char
    SeqUtil_TRACE(TL_FULL_TRACE, "Processing Inter-User dependency \n" );
 
    current_passwd = getpwuid(getuid());  
-   loopArgs = (char*) SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
+   loopArgs = SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
 
    /* Empty the buffers */
    memset( depParam, '\0', sizeof(depParam));
@@ -3033,7 +3033,7 @@ int writeInterUserNodeWaitedFile ( const SeqNodeDataPtr _nodeDataPtr, const char
     * Also when submiting with no depend.
    */
 
-   depBase = (char*) SeqUtil_getPathBase( (const char*) _nodeDataPtr->name );
+   depBase = SeqUtil_getPathBase( (const char*) _nodeDataPtr->name );
 
    /* write in local xperiment: sequencing/status/inter_depends/$datestamp */
    sprintf(filename,"%s/%s/%s/%s", _nodeDataPtr->expHome, INTER_DEPENDS_DIR, _nodeDataPtr->datestamp, depBase );

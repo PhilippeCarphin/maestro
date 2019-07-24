@@ -113,7 +113,7 @@ int checkValidity(SeqNodeDataPtr _nodeDataPtr, ValidityDataPtr val )
    SeqUtil_TRACE(TL_FULL_TRACE, "checkValidity() begin\n");
    printValidityData(val);
    int retval = RESOURCE_TRUE;
-   char * localArgs = (char*) SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
+   char * localArgs = SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
 
 
    const char * incrementedDatestamp = SeqDatesUtil_getIncrementedDatestamp( _nodeDataPtr->datestamp, val->hour, val->time_delta);

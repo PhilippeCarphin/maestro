@@ -152,7 +152,7 @@ void SeqNode_setCpu ( SeqNodeDataPtr node_ptr, const char* cpu ) {
       }
   
       /* parse NPEX */
-      tmpstrtok = (char*) strtok( tmpCpu, "x" );
+      tmpstrtok = strtok( tmpCpu, "x" );
       if ( tmpstrtok != NULL ) {
           free( node_ptr->npex );
 	  if ((node_ptr->npex=malloc( strlen(tmpstrtok) +1))!=NULL) { 
@@ -162,7 +162,7 @@ void SeqNode_setCpu ( SeqNodeDataPtr node_ptr, const char* cpu ) {
           }
       }
       /* NPEY */
-      tmpstrtok = (char*) strtok( NULL, "x" );
+      tmpstrtok = strtok( NULL, "x" );
       if ( tmpstrtok != NULL ) {
           free( node_ptr->npey );
 	  if ((node_ptr->npey=malloc( strlen(tmpstrtok) +1))!=NULL){ 
@@ -172,7 +172,7 @@ void SeqNode_setCpu ( SeqNodeDataPtr node_ptr, const char* cpu ) {
           }
       }
       /* OMP */
-      tmpstrtok = (char*) strtok( NULL, "x" );
+      tmpstrtok = strtok( NULL, "x" );
       if ( tmpstrtok != NULL ) {
           free( node_ptr->omp );
 	  if ((node_ptr->omp=malloc( strlen(tmpstrtok) +1))!=NULL) { 
@@ -250,10 +250,10 @@ void SeqNode_setCpuMultiplier ( SeqNodeDataPtr node_ptr, const char* cpu_multipl
   int mult=1;
   tmpMult = strdup(cpu_multiplier);
   if ( cpu_multiplier != NULL ) {
-    tmpMultTok = (char*) strtok( tmpMult, "x" );
+    tmpMultTok = strtok( tmpMult, "x" );
     while ( tmpMultTok != NULL ) {
       mult = mult * atoi(tmpMultTok);
-      tmpMultTok = (char*) strtok( NULL, "x" );
+      tmpMultTok = strtok( NULL, "x" );
     }
     snprintf(result,10,"%d",mult);
     free( node_ptr->cpu_multiplier );
@@ -1125,7 +1125,7 @@ void SeqNode_generateConfig (const SeqNodeDataPtr _nodeDataPtr, const char* flow
    }
    SeqUtil_printOrWrite( tmpFile, "export SEQ_NODE=%s\n", _nodeDataPtr->name );
    SeqUtil_printOrWrite( tmpFile, "export SEQ_NAME=%s\n", _nodeDataPtr->nodeName );
-   loopArgs = (char*) SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
+   loopArgs = SeqLoops_getLoopArgs( _nodeDataPtr->loop_args );
    if( strlen( loopArgs ) > 0 ) {
       SeqUtil_printOrWrite( tmpFile, "export SEQ_LOOP_ARGS=\"-l %s\"\n", loopArgs );
    } else {
@@ -1140,8 +1140,8 @@ void SeqNode_generateConfig (const SeqNodeDataPtr _nodeDataPtr, const char* flow
    /*container arguments, used in npass tasks mostly*/
    containerLoopArgsList = (SeqNameValuesPtr) SeqLoops_getContainerArgs(_nodeDataPtr, _nodeDataPtr->loop_args);
    if ( containerLoopArgsList != NULL) {
-      containerLoopArgs = (char*) SeqLoops_getLoopArgs(containerLoopArgsList);
-      containerLoopExt =  (char*) SeqLoops_getExtFromLoopArgs(containerLoopArgsList);
+      containerLoopArgs = SeqLoops_getLoopArgs(containerLoopArgsList);
+      containerLoopExt = SeqLoops_getExtFromLoopArgs(containerLoopArgsList);
    }
    if ( containerLoopArgs != NULL ) {
       SeqUtil_printOrWrite( tmpFile, "export SEQ_CONTAINER_LOOP_ARGS=\"-l %s\"\n", containerLoopArgs );

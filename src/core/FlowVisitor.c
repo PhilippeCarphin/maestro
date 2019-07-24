@@ -767,7 +767,7 @@ int Flow_setPathToModule(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataP
 int Flow_setSuiteName(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_setSuiteName() begin\n");
-   char *suiteName = (char*) SeqUtil_getPathLeaf(_flow_visitor->expHome);
+   char *suiteName = SeqUtil_getPathLeaf(_flow_visitor->expHome);
    SeqNode_setSuiteName( _nodeDataPtr, suiteName );
    free(suiteName);
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_setSuiteName() end\n");

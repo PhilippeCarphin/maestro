@@ -769,7 +769,7 @@ int doesNodeExist (const char *_nodePath, const char *_seq_exp_home , const char
    SeqUtil_TRACE(TL_FULL_TRACE, "doesNodeExist() begin\n");
    FlowVisitorPtr flow_visitor = Flow_newVisitor(_nodePath, _seq_exp_home, NULL);
    int nodeExists = FLOW_FALSE;
-   char * newNode = (char*) SeqUtil_fixPath( _nodePath );
+   char * newNode = SeqUtil_fixPath( _nodePath );
    SeqNodeDataPtr tempNode = (SeqNodeDataPtr) SeqNode_createNode ( newNode );
    const char * newDatestamp = tictac_getDate(_seq_exp_home,NULL,_datestamp);
    SeqNode_setDatestamp( tempNode, (const char *) newDatestamp );
