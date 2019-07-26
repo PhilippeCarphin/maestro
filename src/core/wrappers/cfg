@@ -7,7 +7,8 @@ SelfJobRemove="true"
 test "$clone" != "0" && FatalError "Cannot clone when running with maestro"
 test "{jn}"  = ""  && FatalError "job name is mandatory with maestro"
 
-#temporarily replace jn to remove caret, PBS 19.2 restriction 
+# PBS 19.2 rejects caret character in job names, so remove caret in jn.
+# This line can be removed in the future if we stop using PBS, or this restriction changes in a future PBS version.
 jn=$(echo $jn | sed 's/\^/-/g')
 
 if [[ "${SEQ_BIN}" = "" ]]; then
