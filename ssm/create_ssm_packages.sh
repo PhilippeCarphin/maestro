@@ -1,28 +1,32 @@
 #!/bin/bash
 
-# 
+# This script is run after the compilation to create an ssm package for each folder found in the builds folder.
+# Usage:
+#     package-ssm.sh <version>
 
 set -eu
 
-ORDENV_PLAT=$(${PWD}/scripts/adjust_ordenv_plat.sh)
-VERSION=$(${PWD}scripts/get_repo_version.sh)
-SSMPACKAGE=maestro_${VERSION}_${ORDENV_PLAT}
-BUILD_FOLDER=${PWD}/build
-BUILD_PLATFORM_FOLDER=${BUILD_FOLDER}/${SSMPACKAGE}
-SCRIPTS_FOLDER=${PWD}/scripts
+VERSION=$1
+PROJECT_PATH=$(git rev-parse --show-toplevel)
+BUILD_FOLDER=${PROJECT_PATH}/build
+SSM_FOLDER=${PROJECT_PATH}/ssm
+HAS_INTERNET=$($PROJECT_PATH/scripts/has_internet.sh)
 
+mkdir -p ${PROJECT_PATH}/ssm
+rm -f ${PROJECT_PATH}/ssm/*.ssm
 
-
-cp -r .ssm.d ${BUILD_PLATFORM_FOLDER}/
-cd ${BUILD_PLATFORM_FOLDER}/.ssm.d ; . ${SCRIPTS_FOLDER}/create_ssm_control_files_here.sh
-./scripts/package-ssm.sh
-
-rm -f ssm/*
-mkdir -p ssm
-
-packages=`ls build`
+packages=$(ls ${BUILD_FOLDER})
 for package in $packages ; do
-		tar -zcvf ssm/${package}.ssm -C build ${package}/man ${package}/bin ${package}/src/core ${package}/src/utilities ${package}/src/xflow ${package}/src/xm ${package}/src/tcl ${package}/.ssm.d
+    cp -r ${SSM_FOLDER}/.ssm.d ${BUILD_FOLDER}/$package/
+    
+    . ${SSM_FOLDER}/create_ssm_control_files.sh ${VERSION} ${BUILD_PLATFORM_FOLDER}/.ssm.d
+
+    MAN_FOLDER=
+    if [[ $HAS_INTERNET = "true" ]]; then
+	    MAN_FOLDER="${package}/man"
+    fi
+
+    tar -zcvf ssm/${package}.ssm -C build $MAN_FOLDER ${package}/bin ${package}/src/core ${package}/src/utilities ${package}/src/xflow ${package}/src/xm ${package}/src/tcl ${package}/.ssm.d
 done
 
 echo

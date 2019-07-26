@@ -13,9 +13,10 @@ all: clean
 	if [[ ${HAS_INTERNET} = "true" ]] ; then \
 		cd man ; ./create_roffs_from_markdown.sh ;\
 		mkdir -p ${MAN_FOLDER} ;\
-		cp -r man/roff/* ${MAN_FOLDER} ;\
+		cp -r ${MAESTRO_PROJECT_ROOT}/man/roff/* ${MAN_FOLDER} ;\
 	else \
 		echo "Skipping generation of man pages, as there seems to be no internet." ;\
+		sleep 2 ;\
 	fi
 
 	if [ -n "${IS_XC}" ] ; then \
@@ -50,7 +51,7 @@ all: clean
 	fi \
 	
 	. ${SSM_FOLDER}/create_ssm_control_files.sh "${VERSION}" "${BUILD_PLATFORM_FOLDER}/.ssm.d"
-	${SSM_FOLDER}/package-ssm.sh "${VERSION}"
+	${SSM_FOLDER}/create_ssm_packages.sh "${VERSION}"
 	
 clean:
 	rm -rf ${BIN_FOLDER}
