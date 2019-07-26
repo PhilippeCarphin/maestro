@@ -37,7 +37,9 @@ PLATFORMS="ubuntu-14.04-amd64-64 sles-11-amd64-64 ubuntu-18.04-skylake-64"
 
 # Remove previous
 if [[ $DELETE_ALL_SSM = "true" ]]; then
-    rm -rf $INSTALLED_MAESTRO_PATH
+    	rm -rf $INSTALLED_MAESTRO_PATH
+else
+    	rm -rf $SSM_DOMAIN_PATH
 fi
 
 # Install new
