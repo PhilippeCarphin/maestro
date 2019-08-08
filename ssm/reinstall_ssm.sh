@@ -43,11 +43,15 @@ sles-15-skylake-64-xc50"
 if [[ $DELETE_ALL_SSM = "true" ]]; then
     	rm -rf $INSTALLED_MAESTRO_PATH
 else
-    	rm -rf $SSM_DOMAIN_PATH
+    	rm -rf $SSM_DOMAIN_PATH/*${ORDENV_PLAT}*
 fi
 
 # Install new
-ssm created -d $SSM_DOMAIN_PATH
+
+if [[ ! -d $SSM_DOMAIN_PATH ]] ; then
+	ssm created -d $SSM_DOMAIN_PATH
+fi
+
 cd $PROJECT_PATH
 SSM_PACKAGES=""
 for platform in $PLATFORMS ; do
