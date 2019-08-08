@@ -21,8 +21,9 @@ for package in $packages ; do
     
     . ${SSM_FOLDER}/create_ssm_control_files.sh ${VERSION} ${BUILD_PLATFORM_FOLDER}/.ssm.d
 
+    # In some cases the man pages cannot be built. If so, do not include 'man' in the tar command.
     MAN_FOLDER=
-    if [[ $HAS_INTERNET = "true" ]]; then
+    if [[ -d ${package}/man ]]; then
 	    MAN_FOLDER="${package}/man"
     fi
 
