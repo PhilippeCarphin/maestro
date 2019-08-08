@@ -35,6 +35,8 @@ SSM_DOMAIN_PATH=$INSTALLED_MAESTRO_PATH/$VERSION
 # If we find builds for these platforms, make them into ssm packages.
 PLATFORMS="ubuntu-14.04-amd64-64 sles-11-amd64-64 ubuntu-18.04-skylake-64"
 
+PLATFORMS="sles-15-amd64-64.ssm sles-15-skylake-64-xc50.ssm ubuntu-14.04-amd64-64.ssm"
+
 # Remove previous
 if [[ $DELETE_ALL_SSM = "true" ]]; then
     	rm -rf $INSTALLED_MAESTRO_PATH
