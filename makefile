@@ -13,9 +13,13 @@ all: clean
 	if [[ ${HAS_INTERNET} = "true" ]] ; then \
 		cd man ; ./create_roffs_from_markdown.sh ;\
 		mkdir -p ${MAN_FOLDER} ;\
-		cp -r ${MAESTRO_PROJECT_ROOT}/man/roff/* ${MAN_FOLDER} ;\
+		cp -r ${MAESTRO_PROJECT_ROOT}/man/roff/* ${MAN_FOLDER}/ ;\
+		echo "Creating a man page backup which survive clean makes, for offline makes." ;\
+		mkdir -p ${OFFLINE_MAN_BACKUP} ;\
+		cp -r ${MAESTRO_PROJECT_ROOT}/man/roff/* ${OFFLINE_MAN_BACKUP}/ ;\
 	else \
-		echo "Skipping generation of man pages, as there seems to be no internet." ;\
+		echo "Skipping generation of man pages, as there seems to be no internet. Using roff files generated from previous online builds instead." ;\
+		cp -r ${OFFLINE_MAN_BACKUP}/* ${MAN_FOLDER} ;\
 		sleep 2 ;\
 	fi
 
@@ -26,8 +30,6 @@ all: clean
 			echo "And adding these compiler flags:" ;\
 			echo "        ${XC_DYNAMIC_FLAG}" ;\
 	fi
-
-	echo "777 root makefile XC_DYNAMIC_FLAG='${XC_DYNAMIC_FLAG}' HAS_INTERNET='${HAS_INTERNET}' IS_XC='${IS_XC}' ORDENV_PLAT='${ORDENV_PLAT}'"
 
 	mkdir -p ${BUILD_PLATFORM_FOLDER} ${BIN_FOLDER} ${WRAPPERS_BUILD_FOLDER}
 	
