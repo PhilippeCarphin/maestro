@@ -9,10 +9,10 @@ all: clean
 		echo "Aborted. Failed to find VERSION." ;\
 		exit 1 ;\
 	fi
-
+	
+	mkdir -p ${MAN_FOLDER}
 	if [[ ${HAS_INTERNET} = "true" ]] ; then \
 		cd man ; ./create_roffs_from_markdown.sh ;\
-		mkdir -p ${MAN_FOLDER} ;\
 		cp -r ${MAESTRO_PROJECT_ROOT}/man/roff/* ${MAN_FOLDER}/ ;\
 		echo "Creating a man page backup which survive clean makes, for offline makes." ;\
 		mkdir -p ${OFFLINE_MAN_BACKUP} ;\
@@ -62,5 +62,6 @@ clean:
 	# Delete all builds for this ord environment platform
 	rm -rf ${BUILD_FOLDER}/*${ORDENV_PLAT}*
 	find . -name "*\.o" -exec rm {} \;
+	rm -f ${SSM_FOLDER}/*${ORDENV_PLAT}*.ssm
 
 	mkdir -p build

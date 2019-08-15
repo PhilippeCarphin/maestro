@@ -27,7 +27,7 @@ for package in $packages ; do
 	    MAN_FOLDER="${package}/man"
     fi
 
-    tar -zcvf ssm/${package}.ssm -C build $MAN_FOLDER ${package}/bin ${package}/src/core ${package}/src/utilities ${package}/src/xflow ${package}/src/xm ${package}/src/tcl ${package}/.ssm.d
+    tar -zcf ssm/${package}.ssm -C build $MAN_FOLDER ${package}/bin ${package}/src/core ${package}/src/utilities ${package}/src/xflow ${package}/src/xm ${package}/src/tcl ${package}/.ssm.d
 done
 
 echo
