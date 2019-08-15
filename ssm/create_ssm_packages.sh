@@ -4,7 +4,7 @@
 # Usage:
 #     package-ssm.sh <version>
 
-set -eu
+set -exu
 
 VERSION=$1
 PROJECT_PATH=$(git rev-parse --show-toplevel)
@@ -23,7 +23,7 @@ for package in $packages ; do
 
     # In some cases the man pages cannot be built. If so, do not include 'man' in the tar command.
     MAN_FOLDER=
-    if [[ -d ${package}/man ]]; then
+    if [[ -d ${BUILD_FOLDER}/${package}/man ]]; then
 	    MAN_FOLDER="${package}/man"
     fi
 

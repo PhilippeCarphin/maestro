@@ -6,7 +6,7 @@
 # Usage:
 #     ./create_ssm_control_files.sh <version> <target-folder> [<project-url>]
 
-set -eu
+set -exu
 
 VERSION=$1
 TARGET_FOLDER=$2
