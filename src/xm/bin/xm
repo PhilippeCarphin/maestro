@@ -31,6 +31,7 @@ fi
 export PATH=${PATH}:${SEQ_TCL_BIN}
 export TCL_LIBRARY=${TCL_LIBRARY}:${SEQ_TCL_SRC}/lib/tcl8.5
 export TK_LIBRARY=${TK_LIBRARY}:${SEQ_TCL_SRC}/lib/tk8.5
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SEQ_TCL_LIB
 
 TCLSH=$(which maestro_wish8.5)
 

@@ -1,13 +1,17 @@
 /bin
 /build
+build.cfg
+_*
+*~
+
+# Generated files
 *.ssm
+*.log
 /venv
 /man/roff
 /man/man1
 /man/.offline_man_backup
-
-build.cfg
-_*
+.ssm.d/control*
 
 # git
 *.orig
@@ -21,14 +25,8 @@ tests/mock_files/sample_exp/listings
 !*/tests/mock_files/sample_exp/logs/33331122111111
 tests/mock_files/sample_exp/hub
 
-# ssm control files change automatically with every new build
-.ssm.d/control*
-
 # IBM network file system files
 .nfs*
-
-# Temp files
-*~
 
 # Vim swap files
 *.swp
