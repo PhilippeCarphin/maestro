@@ -152,7 +152,6 @@ NODELOGGER_OBJECTS = nodelogger.o SeqUtil.o l2d2_commun.o SeqUtilServer.o \
 	FlowVisitor.o ResourceVisitor.o SeqDepends.o
 
 nodelogger: nodelogger_main.c $(NODELOGGER_OBJECTS)
-	echo "777 src/core/makefile XC_DYNAMIC_FLAG='$(XC_DYNAMIC_FLAG)' HAS_INTERNET='${HAS_INTERNET}' IS_XC='${IS_XC}' ORDENV_PLAT='${ORDENV_PLAT}'"
 	$(CC) $^ -I $(XML_INCLUDE_DIR) -L$(XML_LIB_DIR) -lxml2 $(LIB) -I$(INCDIR) -o nodelogger
 	mv nodelogger $(BINDIR)
 
