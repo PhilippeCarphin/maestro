@@ -59,25 +59,7 @@ If there are no tags, you'll need to either create one, or pull tags from the re
 git fetch --tags
 ```
 
-The first compile may take awhile because of compiling Tcl and its libraries. At this time, running make on Tcl always recompiles all files which is slow. However, if you create a shortcut called in the maestro folder (which points to a previous Tcl compilation) you can speed up compilation a lot:
-
-```bash
- cd maestro
- 
- # This make will be slow
- make
- 
- # Copy the results of the build process
- # Replace ${SSM_PACKAGE} with the folder created by "make". Example: maestro_a0c8517c_ubuntu-14.04-amd64-64
- TCL_BACKUPS=../maestro-tcl-backup-compilations
- cp -r build/${SSM_PACKAGE}/src/tcl/$ORDENV_PLAT $TCL_BACKUPS/$ORDENV_PLAT
- ln -s $TCL_BACKUPS _tcl
- 
- # This make will be much faster
- make
-```
-
-You have to move `$TCL_BACKUPS` to somewhere outside the root Maestro folder, as the make process may delete build files for a clean make. If the large tcl make process is improved, this step could be removed.
+The first compile may take awhile because of compiling Tcl and its libraries. At this time, running make on Tcl always recompiles all files which is slow.
 
 ### Install
 
@@ -85,15 +67,17 @@ After the build process, you can install and publish the SSM package in the usua
 
 ```bash
 cd maestro
-./reinstall-ssm.sh 1.6-rc4
+./reinstall_ssm.sh 1.6-rc4
 ```
 
 You can also specify the `<ssm-root>` folder:
 
 ```bash
 cd maestro
-./reinstall-ssm.sh 1.6-rc4 $HOME/tmp/dev4/ssm
+./reinstall_ssm.sh 1.6-rc4 --ssm-root=$HOME/tmp/dev4/ssm
 ```
+
+See the top of the `reinstall_ssm.sh` file for all options.
 
 ### Use
 
