@@ -1,5 +1,10 @@
 #!/bin/bash
 
+if [[ $(which maestro) ]] ; then
+    echo "Aborted. You need to run the maestro unit tests in a clean environment that does not have maestro. Perhaps in your profile there is a ssmuse maestro line."
+    exit 1
+fi
+
 set -eu
 
 PROJECT_PATH=$(git rev-parse --show-toplevel)
