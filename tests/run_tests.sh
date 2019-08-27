@@ -16,7 +16,7 @@ mkdir -p $INSTALLED_MAESTRO_PATH
 cd ${PROJECT_PATH}
 make VERSION=$VERSION
 
-./reinstall-ssm.sh $VERSION $SSM_ROOT
+ssm/reinstall_ssm.sh $VERSION --ssm-root=$SSM_ROOT
 
 echo "
 RUNNING PYTHON TESTS
