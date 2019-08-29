@@ -1,13 +1,11 @@
 import unittest
 from utilities.utils import *
-from os.path import expanduser
 
 class TestMaestro(unittest.TestCase):
 
     @classmethod 
     def setUpClass(cls):
-        home = expanduser("~")
-        cls.output = get_output(SSM_USE_COMMAND + "maestro -n module -s begin -e "+ home +"/maestro/tests/mock_files/sample_exp -d 20191102111111")
+        cls.output = get_output(SSM_USE_COMMAND + "maestro -n module -s begin -e " + exp_path + " -d 20191102111111")
 		
     def test_basic_usage(self):
         self.assertNotIn("SEQ_EXP_HOME", self.output[0])
@@ -31,5 +29,4 @@ class TestMaestro(unittest.TestCase):
         self.assertIs(type(self.output), tuple)
 		
     def test_exit_status(self):
-        self.assertNotEqual(1, self.output[1],"Exit Status 1")
         self.assertEqual(0, self.output[1],"Exit Status 0")

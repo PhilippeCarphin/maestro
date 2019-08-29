@@ -22,6 +22,7 @@ _*
 # test suite
 tests/mock_files/sample_exp/sequencing
 tests/mock_files/sample_exp/listings
+tests/mock_files/sample_exp/logs/
 !*/tests/mock_files/sample_exp/logs/33331122111111
 tests/mock_files/sample_exp/hub
 
