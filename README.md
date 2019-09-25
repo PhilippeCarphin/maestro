@@ -67,14 +67,14 @@ After the build process, you can install and publish the SSM package in the usua
 
 ```bash
 cd maestro
-./reinstall_ssm.sh 1.6-rc4
+./ssm/reinstall_ssm.sh 1.6-rc4
 ```
 
 You can also specify the `<ssm-root>` folder:
 
 ```bash
 cd maestro
-./reinstall_ssm.sh 1.6-rc4 --ssm-root=$HOME/tmp/dev4/ssm
+./ssm/reinstall_ssm.sh 1.6-rc4 --ssm-root=$HOME/tmp/dev4/ssm
 ```
 
 See the top of the `reinstall_ssm.sh` file for all options.

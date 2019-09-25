@@ -1,6 +1,5 @@
 import unittest, os
-from constants import *
-from utilities import *
+from utilities.utils import *
 
 class TestEnvironment(unittest.TestCase):
     def test_variable_values(self):
@@ -9,7 +8,7 @@ class TestEnvironment(unittest.TestCase):
         # SEQ_WRAPPERS is set
         cmd="echo $SEQ_WRAPPERS"
         output,status = get_output(SSM_USE_COMMAND + cmd)
-        self.assertTrue(output)        
+        self.assertNotEqual(output,"\n")        
         
         # wrappers folder was found
         cmd="ls ${%s}/wrappers"%key

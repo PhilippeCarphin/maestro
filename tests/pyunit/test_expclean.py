@@ -1,13 +1,11 @@
 import unittest
 from utilities.utils import *
-from os.path import expanduser
  
 class TestExpClean(unittest.TestCase):
 	
     @classmethod 
     def setUpClass(cls):
-        home = expanduser("~")
-        cls.output = get_output(SSM_USE_COMMAND + "expclean -e "+ home +"/maestro/tests/mock_files/sample_exp -d 20191102111111 -l")
+        cls.output = get_output(SSM_USE_COMMAND + "expclean -e "+ exp_path +" -d 20191102111111 -l")
         
     def test_basic_usage(self):
         self.assertNotIn("SEQ_EXP_HOME", self.output[0])

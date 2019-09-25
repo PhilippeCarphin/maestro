@@ -2,7 +2,8 @@ import os
 import time
 import signal
 import subprocess
-from constants import *
+from utilities.constants import *
+from utilities.config import *
 from subprocess import check_output, CalledProcessError, Popen
 
 def get_output(cmd, use_popen = False):

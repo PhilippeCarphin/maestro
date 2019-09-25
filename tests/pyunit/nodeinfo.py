@@ -1,6 +1,5 @@
 import unittest
-from constants import *
-from utilities import *
+from utilities.utils import *
 from os.path import expanduser
 
 class TestNodeInfo(unittest.TestCase):
