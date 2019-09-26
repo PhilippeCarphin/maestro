@@ -1,7 +1,11 @@
+import os
 
 class PATH:
     MOCK_FILES="mock_files"
     SAMPLE_EXP1="mock_files/sample_experiment1"
+
+SSM_DOMAIN_PATH=os.environ["SSM_DOMAIN_PATH"]
+SSM_USE_COMMAND=". ssmuse-sh -d %s ; "%SSM_DOMAIN_PATH
 
 "this is a dictionary of simple commands which can be run and should have a successful exist status"
 success_commands={"getdef":"getdef -e %s resources FRONTEND"%PATH.SAMPLE_EXP1,

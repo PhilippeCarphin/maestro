@@ -8,13 +8,23 @@ Maestro should not be in the environment until the SSM use command is run on the
 class TestEnvironment(unittest.TestCase):
     def test_before_after_ssm(self):
         
-        "environment variables are not in environment, SSM adds them"
-        cmd="echo $SEQ_WRAPPERS"
+        "required by test suite"
+        cmd="echo $SSM_DOMAIN_PATH"
         output,status = get_output(cmd)
-        self.assertFalse(output.strip())        
-        
-        output,status = get_output(SSM_USE_COMMAND + cmd)
         self.assertTrue(output.strip())
+        
+        "ssm use success"
+        output,status = get_output(SSM_USE_COMMAND)
+        self.assertEqual(status,0)
+        
+        "environment variables are not in environment, SSM adds them"
+        variables=("SEQ_WRAPPERS",)
+        for variable in variables:
+            cmd="echo $"+variable
+            output,status = get_output(cmd)
+            self.assertFalse(output.strip())        
+            output,status = get_output(SSM_USE_COMMAND + cmd)
+            self.assertTrue(output.strip())
         
         "executables are not in environment, SSM adds them"
         executables = ("maestro","xflow","xflow_overview","expbegin", "expclean", "getdef", "logreader","mserver","nodeinfo", "nodelogger", "scanexp","madmin")        

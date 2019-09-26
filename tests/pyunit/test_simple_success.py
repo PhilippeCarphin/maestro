@@ -11,6 +11,6 @@ class TestSimpleSuccess(unittest.TestCase):
         for key in success_commands:
             cmd=SSM_USE_COMMAND+success_commands[key]
             output,status = get_output(cmd)
-            message="\nFull command used:\n    "+command
+            message="\nFull command used:\n    "+cmd
             self.assertEqual(status,0,msg=message)
             
