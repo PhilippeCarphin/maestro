@@ -4,7 +4,7 @@ from utilities import *
 class TestNodeInfo(unittest.TestCase):
 	
     def test_basic_usage(self):
-        cmd=success_commands["nodeinfo"]
+        cmd=SSM_USE_COMMAND+success_commands["nodeinfo"]
         output,status = get_output(cmd)
         
         expected="node.name=/sample/Different_Hosts/IBMTask"
@@ -13,8 +13,9 @@ class TestNodeInfo(unittest.TestCase):
         self.assertIn(expected, output)
     
     def test_nodesource(self):
-        cmd=success_commands["nodesource"]
+        cmd=SSM_USE_COMMAND+success_commands["nodesource"]
         output,status = get_output(cmd)
         expected="getdef resources FRONTEND"
-        self.assertIn(expected, output)
+        message="\n\nCommand used:\n    "+cmd
+        self.assertIn(expected, output,msg=message)
         

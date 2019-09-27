@@ -37,6 +37,6 @@ class TestEnvironment(unittest.TestCase):
     
     def test_ssm_folders(self):
         "wrappers folder exists"
-        cmd="ls $SEQ_WRAPPERS/wrappers"
+        cmd=SSM_USE_COMMAND+"ls $SEQ_WRAPPERS/wrappers"
         output,status = get_output(SSM_USE_COMMAND + cmd)
         self.assertEqual(status,0)

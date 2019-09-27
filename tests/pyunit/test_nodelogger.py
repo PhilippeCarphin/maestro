@@ -8,6 +8,6 @@ Message = hello"""
 class TestNodeLogger(unittest.TestCase):
     
     def test_basic_usage(self):
-        cmd=success_commands["nodelogger"]
+        cmd=SSM_USE_COMMAND+success_commands["nodelogger"]
         output,status = get_output(cmd)
         self.assertIn(expected1, output)
