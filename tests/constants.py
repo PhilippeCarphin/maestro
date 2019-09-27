@@ -14,7 +14,6 @@ success_commands={"getdef":"getdef -e %s resources FRONTEND"%PATH.SAMPLE_EXP1,
                   "expclean":"expclean -e "+ PATH.SAMPLE_EXP1 +" -d 20191102111111 -l",
                   "scanexp":"scanexp -e "+PATH.SAMPLE_EXP1+" -s current_index_dep",
                   "maestro":"maestro -d 20191102111111 -n /sample/Different_Hosts/IBMTask -s submit -f continue -e "+PATH.SAMPLE_EXP1,
-                  "nodesource":"SEQ_EXP_HOME="+PATH.SAMPLE_EXP1+" ; nodesource -n /sample/Different_Hosts/VAR",
+                  "nodesource":"export SEQ_EXP_HOME="+PATH.SAMPLE_EXP1+" ; nodesource -n /sample/Different_Hosts/VAR",
                   "nodelogger":"nodelogger -n /sample/Different_Hosts/IBMTask -s info -m hello -e "+PATH.SAMPLE_EXP1+" -d 20191102111111",
-                  "nodeinfo":"nodeinfo -n /sample/Different_Hosts/IBMTask -e "+PATH.SAMPLE_EXP1,
-                  "madmin":"madmin -i"}
+                  "nodeinfo":"nodeinfo -n /sample/Different_Hosts/IBMTask -e "+PATH.SAMPLE_EXP1}

@@ -14,7 +14,7 @@ class TestSimpleSuccess(unittest.TestCase):
                 if expect_success:
                     cmd=SSM_USE_COMMAND+cmd
                 output,status = get_output(cmd)
-                message="\nFull command used:\n    "+cmd     
+                message="\nCommand used:\n    "+cmd     
                 
                 if expect_success:
                     self.assertEqual(status,0,msg=message)

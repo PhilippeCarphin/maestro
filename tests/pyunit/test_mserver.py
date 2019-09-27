@@ -12,11 +12,15 @@ class TestMServer(unittest.TestCase):
     def tearDownClass(cls):
         delete_parameters_file()
         
-    def test_basic_usage(self):
+    def test_mserver(self):
+        
+        # this is necessary to setup the maestro parameters file
         mcheck=" mserver_check -m maestro1 ; "
-        cmd=SSM_USE_COMMAND+mcheck+success_commands["madmin"]
+        
+        cmd=SSM_USE_COMMAND+mcheck+"madmin -i"
         output,status = get_output(cmd)
         self.assertIn("Server is Alive", output)
+        self.assertEqual(status,0)
 
 def delete_parameters_file():
     try:

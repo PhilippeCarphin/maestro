@@ -23,15 +23,15 @@ def get_matching_paths_recursively(rootdir, extension, verbose=0):
                 results.append(path)
     return results
 
-def get_output(cmd, use_popen = False):
+def get_output(cmd, seconds=1, use_popen = False):
     
     if use_popen:
         FNULL = open(os.devnull,'w')    
         process = Popen(cmd,shell=True,stdout = FNULL, stdin = subprocess.PIPE, stderr = subprocess.PIPE, preexec_fn=os.setsid)
-        time.sleep(1)
+        time.sleep(seconds)
+        return_code = process.poll()
         os.killpg(os.getpgid(process.pid),signal.SIGTERM)
-        errorcode = process.poll()
-        return (process.stderr.read().decode("utf-8"),errorcode)
+        return (process.stderr.read().decode("utf-8"),return_code)
     else:
         try:
             return (check_output(cmd, shell=True, stderr=subprocess.STDOUT).decode("utf8"),0)

@@ -8,16 +8,16 @@ Maestro should not be in the environment until the SSM use command is run on the
 class TestEnvironment(unittest.TestCase):
     def test_before_after_ssm(self):
         
-        "required by test suite"
+        # required by test suite
         cmd="echo $SSM_DOMAIN_PATH"
         output,status = get_output(cmd)
         self.assertTrue(output.strip())
         
-        "ssm use success"
+        # ssm use success
         output,status = get_output(SSM_USE_COMMAND)
         self.assertEqual(status,0)
         
-        "environment variables are not in environment, SSM adds them"
+        # environment variables are not in environment, SSM adds them
         variables=("SEQ_WRAPPERS",)
         for variable in variables:
             cmd="echo $"+variable
@@ -26,7 +26,7 @@ class TestEnvironment(unittest.TestCase):
             output,status = get_output(SSM_USE_COMMAND + cmd)
             self.assertTrue(output.strip())
         
-        "executables are not in environment, SSM adds them"
+        # executables are not in environment, SSM adds them
         executables = ("maestro","xflow","xflow_overview","expbegin", "expclean", "getdef", "logreader","mserver","nodeinfo", "nodelogger", "scanexp","madmin")        
         for executable in executables:
             cmd="which "+executable
@@ -36,7 +36,7 @@ class TestEnvironment(unittest.TestCase):
             self.assertEqual(status,0)
     
     def test_ssm_folders(self):
-        "wrappers folder exists"
+        # wrappers folder exists
         cmd=SSM_USE_COMMAND+"ls $SEQ_WRAPPERS/wrappers"
         output,status = get_output(SSM_USE_COMMAND + cmd)
         self.assertEqual(status,0)
