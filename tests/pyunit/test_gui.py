@@ -11,9 +11,5 @@ class TestGui(unittest.TestCase):
                   "xm")
         for command in commands:
             cmd=SSM_USE_COMMAND + command
-            output,status = get_output(cmd, seconds=1, use_popen = True)
-            message="\n\nCommand used:\n    "+cmd+"\nStatus = "+str(status)
-            
-            has_terminated=status is None
-            is_success=not has_terminated
-            self.assertTrue(is_success,msg=message)
+            is_success=is_success_after_x_seconds(cmd, 1)
+            self.assertTrue(is_success,msg=cmd)

@@ -1,6 +1,7 @@
 import os
 import unittest
 from utilities import *
+from config import *
 
 class TestMServer(unittest.TestCase):
     
@@ -15,7 +16,7 @@ class TestMServer(unittest.TestCase):
     def test_mserver(self):
         
         # this is necessary to setup the maestro parameters file
-        mcheck=" mserver_check -m maestro1 ; "
+        mcheck=" mserver_check -m %s ; "%MSERVER_MACHINE
         
         cmd=SSM_USE_COMMAND+mcheck+"madmin -i"
         output,status = get_output(cmd)
