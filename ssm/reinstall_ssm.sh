@@ -1,17 +1,18 @@
 #!/bin/bash
 
-echo "Fast way to reinstall the ssm package. Optionally delete some, or all, previously installed packages. Convenient for development.
+USAGE="Fast way to reinstall the ssm package. By default, only installs a package. You can also optionally delete some, or all, previously installed packages. Convenient for development.
 
 Usage:
     ./reinstall-ssm.sh <version> [--ssm-root=<path>] [--delete-all]
     
 Options:
+    -h --help             Show help.
     --ssm-root=<path>     Install and publish the SSM in this folder. Default: $HOME/ssm
     --delete-all          Delete all installed and published SSMs for this package in the --ssm-root.
     --reinstall           If this version is already installed, uninstall it first.
 "
 
-set -exu
+set -eu
 
 # idiomatic parameter and option handling in sh
 VERSION=$1
@@ -23,6 +24,10 @@ do
     case "$1" in
         --delete-all) DELETE_ALL_SSM=true
             ;;
+        --help) echo "$USAGE" ; exit 0
+            ;;
+        -h) echo "$USAGE" ; exit 0
+            ;;
         --reinstall) REINSTALL=true
             ;;
         --ssm-root=*) SSM_ROOT="${1#*=}"
@@ -30,6 +35,10 @@ do
     esac
     shift
 done
+
+echo "$USAGE"
+
+set -x
 
 # Constants
 PROJECT_PATH=$(git rev-parse --show-toplevel)
