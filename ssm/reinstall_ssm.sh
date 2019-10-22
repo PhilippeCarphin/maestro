@@ -1,6 +1,6 @@
 #!/bin/bash
 
-echo "Fast way to erase and reinstall the ssm package. Convenient for development.
+echo "Fast way to reinstall the ssm package. Optionally delete some, or all, previously installed packages. Convenient for development.
 
 Usage:
     ./reinstall-ssm.sh <version> [--ssm-root=<path>] [--delete-all]
@@ -8,6 +8,7 @@ Usage:
 Options:
     --ssm-root=<path>     Install and publish the SSM in this folder. Default: $HOME/ssm
     --delete-all          Delete all installed and published SSMs for this package in the --ssm-root.
+    --reinstall           If this version is already installed, uninstall it first.
 "
 
 set -exu
@@ -16,10 +17,13 @@ set -exu
 VERSION=$1
 SSM_ROOT=$HOME/ssm
 DELETE_ALL_SSM=false
+REINSTALL=false
 while test $# -gt 0
 do
     case "$1" in
         --delete-all) DELETE_ALL_SSM=true
+            ;;
+        --reinstall) REINSTALL=true
             ;;
         --ssm-root=*) SSM_ROOT="${1#*=}"
             ;;
@@ -33,16 +37,13 @@ NAME=$(basename $PROJECT_PATH)
 INSTALLED_MAESTRO_PATH=$SSM_ROOT/$NAME
 SSM_DOMAIN_PATH=$INSTALLED_MAESTRO_PATH/$VERSION
 # If we find builds for these platforms, make them into ssm packages.
-PLATFORMS="ubuntu-14.04-amd64-64
-ubuntu-18.04-skylake-64
-sles-11-amd64-64
-sles-15-amd64-64
-sles-15-skylake-64-xc50"
+PLATFORMS=$(cat $PROJECT_PATH/ssm/supported_platforms)
 
 # Remove previous
 if [[ $DELETE_ALL_SSM = "true" ]]; then
     	rm -rf $INSTALLED_MAESTRO_PATH
-else
+fi
+if [[ $REINSTALL = "true" ]]; then
     	rm -rf $SSM_DOMAIN_PATH/*${ORDENV_PLAT}*
 fi
 
