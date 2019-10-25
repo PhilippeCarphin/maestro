@@ -730,7 +730,8 @@ proc LogReader_processFlowLine { _exp_path _node _datestamp _type _loopExt _time
 
             # 2 - then we refresh the display... redisplay the node text?
             if { [SharedData_getMiscData STARTUP_DONE] == "true" && [SharedFlowNode_isRefreshNeeded ${_exp_path} ${flowNode} ${_datestamp} ${_loopExt}] == "true" } {
-               LogReader_updateNodes ${_exp_path} ${_datestamp} ${flowNode}
+               # LogReader_updateNodes ${_exp_path} ${_datestamp} ${flowNode}
+               LogReader_updateSingleNode ${_exp_path} ${_datestamp} ${flowNode}
             }
       }
    }
@@ -743,7 +744,7 @@ proc LogReader_processFlowLine { _exp_path _node _datestamp _type _loopExt _time
 # level..
 proc LogReader_updateNodes { exp_path datestamp node } {
    global LOGREADER_UPDATE_NODES_${exp_path}_${datestamp} 
-   ::log::log debug "LogReader_updateNodes exp_path:${exp_path} datestamp:${datestamp} node=${node}"
+   ::log::log debug "LogReader_updateNodes exp_path:${exp_path} datestamp:${datestamp} node=${node} [set LOGREADER_UPDATE_NODES_${exp_path}_${datestamp}]"
    if { ! [info exists LOGREADER_UPDATE_NODES_${exp_path}_${datestamp}] } {
       set LOGREADER_UPDATE_NODES_${exp_path}_${datestamp} ${node}
    } else {
@@ -783,6 +784,39 @@ proc LogReader_updateNodes { exp_path datestamp node } {
       ::log::log debug "LogReader_updateNodes exp_path:${exp_path} datestamp:${datestamp} node=${node} DONE"
    }
 
+}
+
+# when multiple updates are needed for nodes
+# only refresh once on the common parent node instead
+# of refreshing multiple times for each modified branch
+proc LogReader_updateSingleNode { exp_path datestamp node } {
+
+   # puts "LogReader_updateSingleNode node:$node"
+   global LOGREADER_UPDATE_NODES_${exp_path}_${datestamp} 
+   if { ! [info exists LOGREADER_UPDATE_NODES_${exp_path}_${datestamp}] || [set LOGREADER_UPDATE_NODES_${exp_path}_${datestamp}] == "" } {
+      set LOGREADER_UPDATE_NODES_${exp_path}_${datestamp} ${node}
+   } else {
+
+      # current stored node
+      set updatedNodeList [set LOGREADER_UPDATE_NODES_${exp_path}_${datestamp}]
+      set splitChar /
+      set currentSplittedList [split [string range ${updatedNodeList} 1 end] ${splitChar}] 
+      set newSplittedList [split [string range ${node} 1 end] ${splitChar}] 
+      set newUpdatedNode ""
+   
+      # compare the parent container nodes and stop as soon as one differs 
+      foreach currentListValue ${currentSplittedList} newListValue ${newSplittedList} {
+         if { [ string equal ${currentListValue} ${newListValue} ] == 1 } {
+            append newUpdatedNode ${splitChar}${currentListValue}
+         } else {
+            break
+         }
+      }
+     
+      set LOGREADER_UPDATE_NODES_${exp_path}_${datestamp} ${newUpdatedNode}
+   }
+
+   # puts "LogReader_updateSingleNode LOGREADER_UPDATE_NODES_${exp_path}_${datestamp} [set LOGREADER_UPDATE_NODES_${exp_path}_${datestamp}]"
 }
 
 # the date is sorted in reverse order, the most recent date will appear first
