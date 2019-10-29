@@ -3535,9 +3535,6 @@ proc xflow_redrawNodes { exp_path datestamp node {canvas ""} } {
       eval [set cmdList_${exp_path}_${datestamp}]
       xflow_drawNode ${exp_path} ${datestamp} ${canvas} ${node} ${nodePosition}
       xflow_resetScrollRegion ${canvas}
-      if { [xflow_needBgImageRefresh ${exp_path} ${datestamp} ${canvas}] == true } {
-         xflow_addBgImage ${exp_path} ${datestamp} ${canvas} [winfo width ${canvas}] [winfo height ${canvas}]
-      }
    }
    xflow_setRefreshMode ${exp_path} ${datestamp} false
 }
