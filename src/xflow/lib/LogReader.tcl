@@ -730,7 +730,6 @@ proc LogReader_processFlowLine { _exp_path _node _datestamp _type _loopExt _time
 
             # 2 - then we refresh the display... redisplay the node text?
             if { [SharedData_getMiscData STARTUP_DONE] == "true" && [SharedFlowNode_isRefreshNeeded ${_exp_path} ${flowNode} ${_datestamp} ${_loopExt}] == "true" } {
-               # LogReader_updateNodes ${_exp_path} ${_datestamp} ${flowNode}
                LogReader_updateSingleNode ${_exp_path} ${_datestamp} ${flowNode}
             }
       }
