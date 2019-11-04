@@ -21,23 +21,35 @@ rm -f ${TCL_BIN_FOLDER}
 ln -s ${PACKAGE_HOME}/src/tcl/bin ${TCL_BIN_FOLDER}
 
 echo "
+# Many of these values are duplicates for backwards compatibility.
+# This happened after many projects and packages were consolidated into one.
+
 export SEQ_PACKAGE_HOME=${PACKAGE_HOME}
+
 export SEQ_BIN=${BIN_FOLDER}
-export SEQ_SRC=${PACKAGE_HOME}/src
+export SEQ_MANAGER_BIN=${BIN_FOLDER}
+export SEQ_XFLOW_BIN=${BIN_FOLDER}
+export SEQ_UTILS_BIN=${BIN_FOLDER}
 export SEQ_TCL_BIN=${TCL_BIN_FOLDER}
-export SEQ_TCL_SRC=${PACKAGE_HOME}/src/tcl
-export SEQ_TCL_LIB=${PACKAGE_HOME}/src/tcl/lib
+
+export SEQ_SRC=${PACKAGE_HOME}/src
 export SEQ_MANAGER_SRC=${PACKAGE_HOME}/src/xm
+export SEQ_TCL_SRC=${PACKAGE_HOME}/src/tcl
+
+export SEQ_TCL_LIB=${PACKAGE_HOME}/src/tcl/lib
 
 #this is the folder which contains the 'wrappers' folders
 export SEQ_WRAPPERS=${PACKAGE_HOME}/src/core
 
 export SEQ_MAESTRO_DOMAIN=${DOMAIN_HOME}
+export SEQ_MANAGER_DOMAIN=${DOMAIN_HOME}
+export SEQ_XFLOW_DOMAIN=${DOMAIN_HOME}
+export SEQ_UTILS_DOMAIN=${DOMAIN_HOME}
+
 export SEQ_MAESTRO_SHORTCUT=\". ssmuse-sh -d ${DOMAIN_HOME}\"
 export TMPDIR=\${TMPDIR:-/tmp/\$USER/\$\$}
 mkdir -p \${TMPDIR}
 export TRUE_HOST=\${TRUE_HOST:-\$(hostname)}
-
 export MANPATH=\$MANPATH:${PACKAGE_HOME}/man:
 
 " >> ${PROFILE_SCRIPT}
