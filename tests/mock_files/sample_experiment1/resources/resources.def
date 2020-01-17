@@ -1,4 +1,4 @@
-FRONTEND=eccc-ppp2
+FRONTEND=eccc-ppp1
 BACKEND=brooks
 
 SEQ_DEFAULT_MACHINE=eccc-ppp1
