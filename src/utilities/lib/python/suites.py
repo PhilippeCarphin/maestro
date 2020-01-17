@@ -1,4 +1,4 @@
-#!/usr/bin/env python3
+#!/usr/bin/env python
 import optparse,os,sys
 import xml.etree.ElementTree
 

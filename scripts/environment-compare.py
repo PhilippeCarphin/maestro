@@ -5,10 +5,7 @@ This script compares the executables in $PATH and environment variables in the s
 This is a good way to compare a development ssm package to a stable version.
 
 Usage:
-    environment-compare.py <ssm-domain1> [<ssm-domain2>] [options]
-
-Options:
-    -h --help   Show this description.
+    environment-compare.py <ssm-domain1> [<ssm-domain2>]
 """
 
 from utilities.docopt import docopt

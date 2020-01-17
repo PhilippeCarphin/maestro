@@ -1,21 +1,27 @@
 import unittest
-from utilities import *
+from utilities.utils import *
 
 class TestNodeInfo(unittest.TestCase):
 	
+    @classmethod 
+    def setUpClass(cls):
+        cls.output = get_output(SSM_USE_COMMAND + "nodeinfo -n module -e mock_files/sample_exp")
+		
     def test_basic_usage(self):
-        cmd=SSM_USE_COMMAND+success_commands["nodeinfo"]
-        output,status = get_output(cmd)
+        self.assertNotIn("specified node", self.output[0])
+        self.assertNotIn("requires an argument", self.output[0])
+        self.assertNotIn("invalid SEQ_EXP_HOME", self.output[0])
+        self.assertIn("node.name", self.output[0])
+		
+    def test_loop_argument(self):
+        self.assertNotIn("Invalid loop arguments", self.output[0])
+	
+    def test_filter(self):
+        self.assertNotIn("Unrecognized filter", self.output[0])
         
-        expected="node.name=/sample/Different_Hosts/IBMTask"
-        self.assertIn(expected, output)
-        expected="node.container=/sample/Different_Hosts"        
-        self.assertIn(expected, output)
-    
-    def test_nodesource(self):
-        cmd=SSM_USE_COMMAND+success_commands["nodesource"]
-        output,status = get_output(cmd)
-        expected="getdef resources FRONTEND"
-        message="\n\nCommand used:\n    "+cmd
-        self.assertIn(expected, output,msg=message)
-        
+    def test_get_output(self):
+        self.assertIs(type(self.output), tuple)
+		
+    def test_exit_status(self):
+        self.assertNotEqual(1, self.output[1],"Exit Status 1")
+        self.assertEqual(0, self.output[1],"Exit Status 0")
