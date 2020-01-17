@@ -34,7 +34,7 @@ WARNING: not creating man pages. Python 3 is required, but was not found."
 fi
 
 # Setup Python virtual environment if necessary
-VENV=../venv
+VENV=../python_venv/$ORDENV_PLAT
 if [ ! -d $VENV ] ; then
     virtualenv -p python3 $VENV || python3 -m venv $VENV
 fi

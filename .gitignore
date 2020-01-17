@@ -8,6 +8,7 @@ _*
 *.ssm
 *.log
 /venv
+/python_venv
 /man/roff
 /man/man1
 /man/.offline_man_backup
