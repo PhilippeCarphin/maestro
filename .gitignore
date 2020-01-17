@@ -12,7 +12,6 @@ _*
 /man/man1
 /man/.offline_man_backup
 .ssm.d/control*
-tests/config.py
 
 # git
 *.orig

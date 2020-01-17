@@ -4717,7 +4717,6 @@ proc xflow_parseCmdOptions {} {
       }
 
       SharedData_readProperties ${rcFile}
-      ::DrawUtils::init
 
       if { $params(logfile) != "" } {
          puts "xflow writing to log file: $params(logfile)"

@@ -1,4 +1,4 @@
-#!/usr/bin/env python2
+#!/usr/bin/env python
 
 #/* Part of the Maestro sequencer software package.
 # * Copyright (C) 2011-2015  Canadian Meteorological Centre
