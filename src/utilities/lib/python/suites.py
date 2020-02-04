@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 import optparse,os,sys
 import xml.etree.ElementTree
 
@@ -17,4 +17,3 @@ class Suites(dict):
     def print_active(self):
         """Generate a list of active experiments"""
         [sys.stdout.write(exp+"\n") for exp in self.exps]
-

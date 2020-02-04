@@ -1,4 +1,4 @@
-#!/usr/bin/env python
+#!/usr/bin/env python2
 #/* Part of the Maestro sequencer software package.
 # * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
 # *                          Environment Canada
@@ -129,4 +129,3 @@ def insideQuotes(position, singlesList, doublesList):
 
 if __name__ == "__main__":
     main()
-
