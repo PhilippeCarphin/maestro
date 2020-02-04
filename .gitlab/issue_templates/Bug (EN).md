@@ -1,18 +1,18 @@
 ### Summary
 
-<!-- (Summarize the bug encountered in just one or two sentences) -->
+(Summarize the bug encountered in just one or two sentences)
 
 ### Steps to reproduce
 
-<!-- (How do we reproduce this bug? Note: If the developer cannot reproduce your bug with your exact steps, your bug cannot be fixed.) -->
+(How do we reproduce this bug? Note: If the developer cannot reproduce your bug with your exact steps, your bug cannot be fixed.)
 
 ### Expected Behaviour
 
-<!-- (What is the expected correct behaviour?) -->
+(What is the expected correct behaviour?)
 
 ### Actual Behaviour
 
-<!-- (What actually happened?) -->
+(What actually happened?)
 
 ### Details, logs, code, and screenshots (optional)
 

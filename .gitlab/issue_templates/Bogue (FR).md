@@ -1,18 +1,18 @@
 ### Résumé
 
-<!-- (Résumez le bogue rencontré en une ou deux phrases) -->
+(Résumez le bogue rencontré en une ou deux phrases)
 
 ### Étapes à suivre pour reproduire
 
-<!-- (Comment reproduisons-nous ce bogue? Remarque: si le développeur ne peut pas reproduire votre bogue avec vos étapes exactes, votre bogue ne peut pas être corrigé.) -->
+(Comment reproduisons-nous ce bogue? Remarque: si le développeur ne peut pas reproduire votre bogue avec vos étapes exactes, votre bogue ne peut pas être corrigé.)
 
 ### Comportement attendu
 
-<!-- (Quel est le comportement correct attendu?) -->
+(Quel est le comportement correct attendu?)
 
 ### Comportement actuel
 
-<!-- (Ce qui s'est réellement passé) -->
+(Ce qui s'est réellement passé)
 
 ### Détails, journaux, code et captures d'écran (facultatif)
 
