@@ -81,7 +81,7 @@ fi
 
 # Parse $fullnode into nodeContainer, nodeLeaf, and nodeExt
 # fullnode has the form /path/to/node/nodeLeaf.ext where ext is defined by ext_re :
-subext_re='\(+[0-9A-Za-z^_]\+\)'                                # plus sign followed a string of [alphanumerics or '^' or '_']
+subext_re='\(+[0-9A-Za-z^_-]\+\)'                                # plus sign followed a string of [alphanumerics or accepted special characters '^' '_']
 ext_re='\.'$subext_re'\+$'                                      # a dot followed by one or more subextensions at end of string
 nodeContainer=${fullnode%/*}                                    # Everything until the last slash
 nodeLeafWithExt=${fullnode##*/}                                 # Everything after the last slash
