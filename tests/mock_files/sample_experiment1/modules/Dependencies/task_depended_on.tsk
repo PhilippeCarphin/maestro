@@ -1,0 +1,10 @@
+
+command -v jobst 
+echo $PATH
+alias
+jobst -u $USER
+
+env 
+
+strace echo "blah" >  /space/hall1/sitestore/eccc/cmod/cmoi/dor001/toto
+
