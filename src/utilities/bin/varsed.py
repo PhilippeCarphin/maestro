@@ -129,3 +129,4 @@ def insideQuotes(position, singlesList, doublesList):
 
 if __name__ == "__main__":
     main()
+

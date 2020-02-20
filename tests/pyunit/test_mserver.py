@@ -1,18 +1,30 @@
+import os
 import unittest
-from utilities.utils import *
+from utilities import *
+from config import *
 
 class TestMServer(unittest.TestCase):
-	
-    @classmethod 
+    
+    @classmethod
     def setUpClass(cls):
-        cls.output = get_output(SSM_USE_COMMAND + "madmin -i")
-		
-    def test_basic_usage(self):	
-        self.assertIn("Server is Alive", self.output[0])
+        delete_parameters_file()
+    
+    @classmethod
+    def tearDownClass(cls):
+        delete_parameters_file()
         
-    def test_get_output(self):
-        self.assertIs(type(self.output), tuple)
-		
-    def test_exit_status(self):
-        self.assertNotEqual(1, self.output[1],"Exit Status 1")
-        self.assertEqual(0, self.output[1],"Exit Status 0")
+    def test_mserver(self):
+        
+        # this is necessary to setup the maestro parameters file
+        mcheck=" mserver_check -m %s ; "%MSERVER_MACHINE
+        
+        cmd=SSM_USE_COMMAND+mcheck+"madmin -i"
+        output,status = get_output(cmd)
+        self.assertIn("Server is Alive", output)
+        self.assertEqual(status,0)
+
+def delete_parameters_file():
+    try:
+        os.remove(MAESTRO_PARAMETERS_FILE)
+    except:
+        pass

@@ -17,3 +17,4 @@ class Suites(dict):
     def print_active(self):
         """Generate a list of active experiments"""
         [sys.stdout.write(exp+"\n") for exp in self.exps]
+

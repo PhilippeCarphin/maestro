@@ -63,21 +63,17 @@ The first compile may take awhile because of compiling Tcl and its libraries. At
 
 ### Install
 
-After the build process, you can install and publish the SSM package in the usual way. If you're unfamiliar with installing SSM packages, the `reinstall-ssm.sh` script can get you started. Note: this will delete all files in the `<ssm-root>` folder, by default this is `$HOME/ssm/maestro`:
+After the build process, you can install and publish the SSM package in the usual ways. If you're unfamiliar with installing SSM packages, the `reinstall-ssm.sh` script is a convenient shortcut:
 
 ```bash
-cd maestro
-./ssm/reinstall_ssm.sh 1.6-rc4
+cd maestro/ssm
+
+# Simple example
+./reinstall_ssm.sh 1.6.3
+
+# To see usage help and more options
+./reinstall_ssm.sh -h
 ```
-
-You can also specify the `<ssm-root>` folder:
-
-```bash
-cd maestro
-./ssm/reinstall_ssm.sh 1.6-rc4 --ssm-root=$HOME/tmp/dev4/ssm
-```
-
-See the top of the `reinstall_ssm.sh` file for all options.
 
 ### Use
 
