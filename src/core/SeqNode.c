@@ -697,7 +697,7 @@ void SeqNode_init ( SeqNodeDataPtr nodePtr ) {
    SeqNode_setCpuMultiplier( nodePtr, "1" );
    SeqNode_setQueue( nodePtr, "null" );
    SeqNode_setMachine( nodePtr, "" );
-   SeqNode_setMemory( nodePtr, "500M" );
+   SeqNode_setMemory( nodePtr, "3G" );
    SeqNode_setArgs( nodePtr, "" );
    SeqNode_setSoumetArgs( nodePtr, "" );
    SeqNode_setWorkq( nodePtr, "" );
