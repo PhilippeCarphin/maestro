@@ -1,9 +1,9 @@
 #!/bin/bash
 
-USAGE="Fast way to reinstall the ssm package. By default, only installs a package. You can also optionally delete some, or all, previously installed packages. Convenient for development.
+USAGE="Fast way to install the ssm package. By default, only installs a package. You can also optionally delete some, or all, previously installed packages. Convenient for development.
 
 Usage:
-    ./reinstall-ssm.sh <version> [--ssm-root=<path>] [--delete-all]
+    ./install-ssm.sh <version> [--ssm-root=<path>] [--delete-all]
     
 Options:
     -h --help             Show help.

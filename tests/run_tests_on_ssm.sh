@@ -6,7 +6,7 @@ Usage:
     ./run_tests.sh [<path-to-installed-ssm>]
 
 Options:
-    <path-to-ssm-to-test>     If no path is given, the project will be compiled, built into an SSM, installed, and then that will be tested.
+    <path-to-installed-ssm>     This is the SSM that will be tested. If no path is given, the project will be compiled, built into an SSM, installed, and then that will be tested.
 "
 
 if [[ $(which maestro) ]] ; then
@@ -38,7 +38,7 @@ if [[ -z $SSM_DOMAIN_PATH ]]; then
     cd ${PROJECT_PATH}
     make VERSION=$VERSION
     
-    ssm/reinstall_ssm.sh $VERSION --ssm-root=$SSM_ROOT
+    ssm/install_ssm.sh $VERSION --ssm-root=$SSM_ROOT
 fi
 
 if [[ ! -d $SSM_DOMAIN_PATH ]]; then

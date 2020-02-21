@@ -63,16 +63,16 @@ The first compile may take awhile because of compiling Tcl and its libraries. At
 
 ### Install
 
-After the build process, you can install and publish the SSM package in the usual ways. If you're unfamiliar with installing SSM packages, the `reinstall-ssm.sh` script is a convenient shortcut:
+After the build process, you can install and publish the SSM package in the usual ways. If you're unfamiliar with installing SSM packages, the `install-ssm.sh` script is a convenient shortcut:
 
 ```bash
 cd maestro/ssm
 
 # Simple example
-./reinstall_ssm.sh 1.6.3
+./install_ssm.sh 1.6.3
 
 # To see usage help and more options
-./reinstall_ssm.sh -h
+./install_ssm.sh -h
 ```
 
 ### Use
