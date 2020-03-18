@@ -432,6 +432,7 @@ proc Utils_logFileContent { _level _filename } {
 }
 proc Utils_createTmpDir {} {
    global env SESSION_TMPDIR
+   global env TmpDir
    if { ! [info exists SESSION_TMPDIR] } {
       set thisPid [thread::id]
       set userTmpDir [SharedData_getMiscData USER_TMP_DIR]
@@ -445,6 +446,7 @@ proc Utils_createTmpDir {} {
             Utils_fatalError . "Xflow Startup Error" "TMPDIR environment variable does not exists!"
          }
          set rootTmpDir $env(TMPDIR)
+         set TmpDir $env(TMPDIR)
       }
       set id [clock seconds]
       set myTmpDir ${rootTmpDir}/maestro_${thisPid}_${id}
