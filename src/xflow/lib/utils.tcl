@@ -446,7 +446,6 @@ proc Utils_createTmpDir {} {
             Utils_fatalError . "Xflow Startup Error" "TMPDIR environment variable does not exists!"
          }
          set rootTmpDir $env(TMPDIR)
-         set TmpDir $env(TMPDIR)
       }
       set id [clock seconds]
       set myTmpDir ${rootTmpDir}/maestro_${thisPid}_${id}

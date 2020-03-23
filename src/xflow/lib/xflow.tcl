@@ -4241,7 +4241,7 @@ proc xflow_getXflowInstances { exp_path } {
 proc xflow_quit { exp_path datestamp {from_overview false} } {
    global NODE_DISPLAY_PREF_${exp_path}_${datestamp}
    global SESSION_TMPDIR TITLE_AFTER_ID_${exp_path}_${datestamp} XFLOW_FIND_AFTER_ID_${exp_path}_${datestamp}
-   global TmpDir
+   
    ::log::log debug "xflow_quit exiting Xflow thread id:[thread::id]"
    set isOverviewMode [SharedData_getMiscData OVERVIEW_MODE]
 
@@ -4913,10 +4913,10 @@ proc xflow_msgCenterThreadReady {} {
 }
 
 proc xflow_tmpdir_cleanup {} {
-global TmpDir
+global SESSION_TMPDIR
 
-puts "Removing tmp directory:${TmpDir}"
-exec rm -rf $TmpDir
+puts "Removing tmp directory:${SESSION_TMPDIR}"
+exec rm -rf $SESSION_TMPDIR
 
 }
 
