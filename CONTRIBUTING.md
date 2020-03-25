@@ -5,7 +5,7 @@ Thanks for checking out Maestro! We've put together the following guidelines to 
 
 ## Submit a commandline idea for faster remote work
 
-Do you have an idea for a maestro commandline tool for fast remote work? You can submit a feature request [here](https://gitlab.science.gc.ca/CMOI/maestro/issues). However please provide example "input" and "output" so we know precisely what you are looking for. For example:
+Do you have an idea for a maestro commandline tool for fast remote work? You can submit a feature request [here](https://gitlab.science.gc.ca/CMOI/maestro/issues). Select the "feature" template. Also, please provide example "input" and "output" so we know precisely what you are looking for. For example:
 
 This is the command I want to run:
 
