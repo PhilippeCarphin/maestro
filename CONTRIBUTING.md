@@ -3,6 +3,25 @@
 
 Thanks for checking out Maestro! We've put together the following guidelines to help you figure out where you can best be helpful. Interested in making a contribution? Read on!
 
+## Submit a commandline idea for faster remote work
+
+Do you have an idea for a maestro commandline tool for fast remote work? You can submit a feature request [here](https://gitlab.science.gc.ca/CMOI/maestro/issues). However please provide example "input" and "output" so we know precisely what you are looking for. For example:
+
+This is the command I want to run:
+
+```
+m.flow /home/smco500/.suites/gdps/verification --filter=abort,waiting --date=2020032200
+```
+
+and this is the output I want to see:
+
+```
+gdps_verif/SCORES_VS_OBSERVATIONS/Geps_mean_scores ABORT
+gdps_verif/SCORES_VS_OBSERVATIONS/residus_alt WAITING
+```
+
+where "ABORT" is red.
+
 ## Submit a bug report
 
 Found a bug? You can submit a new bug report [here](https://gitlab.science.gc.ca/CMOI/maestro/issues). Select the "bug" template.
