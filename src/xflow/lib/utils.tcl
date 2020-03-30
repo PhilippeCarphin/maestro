@@ -432,7 +432,6 @@ proc Utils_logFileContent { _level _filename } {
 }
 proc Utils_createTmpDir {} {
    global env SESSION_TMPDIR
-   global env TmpDir
    if { ! [info exists SESSION_TMPDIR] } {
       set thisPid [thread::id]
       set userTmpDir [SharedData_getMiscData USER_TMP_DIR]
