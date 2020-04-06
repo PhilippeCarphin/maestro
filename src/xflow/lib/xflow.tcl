@@ -4241,7 +4241,7 @@ proc xflow_getXflowInstances { exp_path } {
 proc xflow_quit { exp_path datestamp {from_overview false} } {
    global NODE_DISPLAY_PREF_${exp_path}_${datestamp}
    global SESSION_TMPDIR TITLE_AFTER_ID_${exp_path}_${datestamp} XFLOW_FIND_AFTER_ID_${exp_path}_${datestamp}
-
+   
    ::log::log debug "xflow_quit exiting Xflow thread id:[thread::id]"
    set isOverviewMode [SharedData_getMiscData OVERVIEW_MODE]
 
@@ -4252,6 +4252,7 @@ proc xflow_quit { exp_path datestamp {from_overview false} } {
       if { [xflow_getXflowInstances ${exp_path}] > 1 } {
          xflow_closeExpDatestamp ${exp_path} ${datestamp}
       } else {
+         xflow_tmpdir_cleanup
          exit
       }
    }
@@ -4911,12 +4912,20 @@ proc xflow_msgCenterThreadReady {} {
    set MSG_CENTER_READY 1
 }
 
+proc xflow_tmpdir_cleanup {} {
+global SESSION_TMPDIR
+
+puts "Removing tmp directory:${SESSION_TMPDIR}"
+exec rm -rf $SESSION_TMPDIR
+
+}
+
 proc xflow_init { {exp_path ""} } {
    global env DEBUG_TRACE
    global AUTO_MSG_DISPLAY NODE_DISPLAY_PREF SUBMIT_POPUP COLLAPSE_DISABLED_NODES
    global SHADOW_STATUS MSG_CENTER_FOCUS_GRAB
    global SESSION_TMPDIR FLOW_SCALE
-
+   
    set SHADOW_STATUS 0
    
    # initate array containg name for widgets used in the application
@@ -4966,8 +4975,9 @@ proc xflow_init { {exp_path ""} } {
    }
    xflow_setWidgetNames 
    xflow_setErrorMessages
-
+   
    # xflow_createTmpDir
+
 }
 
 proc xflow_setRefreshMode { exp_path datestamp value } {
@@ -5026,3 +5036,4 @@ if { ! [info exists XFLOW_STANDALONE] || ${XFLOW_STANDALONE} == "1" } {
    xflow_parseCmdOptions
    xflow_checkExpPermission
 }
+
