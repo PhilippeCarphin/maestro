@@ -42,7 +42,7 @@ DESCRIPTION: tsvinfo\n\
 \n\
 USAGE\n\
 \n\
-    tsvinfo -e SEQ_EXP_HOME -d datestamp [-t tsv-output-file -h human-readable-file]\n\
+    tsvinfo -e SEQ_EXP_HOME -d datestamp [-t tsv-output-file] [-r human-readable-file]\n\
 \n\
 OPTIONS\n\
 \n\
