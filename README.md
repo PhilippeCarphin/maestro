@@ -1,9 +1,10 @@
 Maestro is a suite of tools which organize, visualize, schedule, validate, and submit tasks to computer systems. 
 
-## Community
+## Community & Resources
 
 * See the [Maestro article](https://wiki.cmc.ec.gc.ca/wiki/Maestro) in the CMC wiki.
 * Chat with Maestro users and developers on the gccollab chat [Maestro group](https://message.gccollab.ca/channel/maestro).
+* Review the [Linux man pages for most of the maestro commandline tools](https://wiki.cmc.ec.gc.ca/wiki/Maestro/man_pages) or view the pages as [markdown files](https://gitlab.science.gc.ca/CMOI/maestro/tree/master/man/markdown).
 
 ## Contributing
 
