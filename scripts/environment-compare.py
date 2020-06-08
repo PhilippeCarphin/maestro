@@ -8,7 +8,8 @@ Usage:
     environment-compare.py <ssm-domain1> [<ssm-domain2>] [options]
 
 Options:
-    -h --help   Show this description.
+    -h --help              Show this description.
+    --loader=<command>     Use this command to load the package, like 'ssmuse-sh -d' or 'r.load.dot' [default: ssmuse-sh -d]
 """
 
 from utilities.docopt import docopt
@@ -55,9 +56,10 @@ def compare_lines_from_commands(cmd1,cmd2):
 def main(args):
     domain1=args["<ssm-domain1>"]
     domain2=args["<ssm-domain2>"]
+    loader=args["--loader"]
 
-    cmd1=". ssmuse-sh -d %s ; env ; compgen -c"%domain1
-    cmd2=". ssmuse-sh -d %s ; env ; compgen -c"%domain2
+    cmd1=". %s %s ; env ; compgen -c"%(loader,domain1)
+    cmd2=". %s %s ; env ; compgen -c"%(loader,domain2)
 
     print_yellow("\nComparing fresh environment to '%s'"%domain1)
     compare_lines_from_commands("env ; compgen -c",cmd1)
