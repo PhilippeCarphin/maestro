@@ -53,7 +53,14 @@ if [[ $DELETE_ALL_SSM = "true" ]]; then
     	rm -rf $INSTALLED_MAESTRO_PATH
 fi
 if [[ $REINSTALL = "true" ]]; then
-    	rm -rf $SSM_DOMAIN_PATH/*${ORDENV_PLAT}*
+	rm -rf $SSM_DOMAIN_PATH/*${ORDENV_PLAT}*
+	SSM_PACKAGES=""
+	for platform in $PLATFORMS ; do
+		if [[ -f $SSM_PACKAGE ]]; then
+			ssm unpublish -p maestro_${VERSION}_${platform} -d $SSM_DOMAIN_PATH
+			ssm uninstall -p maestro_${VERSION}_${platform} -d $SSM_DOMAIN_PATH
+		fi
+	done
 fi
 
 # Install new
