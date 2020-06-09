@@ -3,11 +3,9 @@
 """
 mflow visualizes maestro suites and tasks like xflow, but purely as a commandline application. This project aims to be simple and fast. Version %s.
 
-Press 'q' or 'x' to quit.
-
-Press 'e' to go into edit mode. Normally, temporary copies of CFG/TSK/XML files are created for viewing in a text editor. In edit mode, the actual real files are opened for editing instead.
-
-https://gitlab.science.gc.ca/CMOI/mflow-prototype
+Keyboard keys:
+* Press 'q' or 'x' to quit.
+* Press 'e' to go into edit mode. Normally, temporary copies of CFG/TSK/XML files are created for viewing in a text editor. In edit mode, the actual real files are opened for editing instead.
 
 Config:
     You can find good defaults for the '--config' option here:
@@ -27,6 +25,9 @@ Options:
     --verbose                    Enable verbose debug logging in the "$HOME/logs/mflow" files.
     
     -h --help   Show this description.
+
+See Also:
+    https://gitlab.science.gc.ca/CMOI/maestro
 """
 
 import traceback
