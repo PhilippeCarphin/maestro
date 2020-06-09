@@ -1,6 +1,6 @@
-from constants.path import PROJECT_ROOT
+from constants.path import MFLOW_ROOT
 
-TESTS_FOLDER=PROJECT_ROOT+"src/tests/"
+TESTS_FOLDER=MFLOW_ROOT+"src/tests/"
 MOCK_FILES=TESTS_FOLDER+"mock_files/"
 BIG_ME_PATH=MOCK_FILES+"complete_experiment/"
 TURTLE_ME_PATH=MOCK_FILES+"simple_experiment/"

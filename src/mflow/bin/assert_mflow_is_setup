@@ -1,10 +1,10 @@
 #!/bin/bash
 
-PROJECT_ROOT=$(dirname $(dirname $(realpath $0)))
-VENV=$PROJECT_ROOT/venv
+MFLOW_ROOT=$(dirname $(dirname $(realpath $0)))
+VENV=$MFLOW_ROOT/venv
 
 if [[ ! -d $VENV ]] ; then
-	echo "The project '$PROJECT_ROOT' is not setup. Missing venv: '$VENV'. Run setup scripts."
+	echo "The project '$MFLOW_ROOT' is not setup. Missing venv: '$VENV'. Run setup scripts."
 	exit 1
 fi
 

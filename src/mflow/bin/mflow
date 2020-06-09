@@ -1,8 +1,8 @@
 #!/bin/bash
 
-PROJECT_ROOT=$(dirname $(dirname $(realpath $0)))
+MFLOW_ROOT=$(dirname $(dirname $(realpath $0)))
 
-$PROJECT_ROOT/bin/assert_mflow_is_setup || exit 1
+$MFLOW_ROOT/bin/assert_mflow_is_setup || exit 1
 
 # This value is used to distinguish multiple instances of mflow.
 # This helps with persistence for relaunches within the loop below.
@@ -30,5 +30,5 @@ while [[ $FIRST_LOOP == "true" || -f $TMP_BASH_WRAPPER_COMMAND_FILE ]] ; do
         rm -f $TMP_BASH_WRAPPER_COMMAND_FILE
     fi
     
-    $PROJECT_ROOT/venv/bin/python3 $PROJECT_ROOT/src/mflow.py $@ --tui-id=$TUI_ID
+    $MFLOW_ROOT/venv/bin/python3 $MFLOW_ROOT/src/mflow.py $@ --tui-id=$TUI_ID
 done
