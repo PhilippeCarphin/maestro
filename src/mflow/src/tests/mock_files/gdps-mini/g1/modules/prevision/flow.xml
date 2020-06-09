@@ -1,0 +1,40 @@
+<MODULE name="prevision">
+    <SUBMITS sub_name="terrestre"/>
+    <SUBMITS sub_name="marine"/>
+    <FAMILY name="terrestre">
+        <SUBMITS sub_name="interpol_champ_essai"/>
+        <SUBMITS sub_name="sampling"/>
+        <SUBMITS sub_name="krigging"/>
+        <SUBMITS sub_name="scmt1"/>
+        <SUBMITS sub_name="scst1"/>
+        <TASK name="interpol_champ_essai">
+            <SUBMITS sub_name="umos_mist_grille"/>
+            <SUBMITS sub_name="umos_mist_station"/>
+        </TASK>
+        <MODULE name="umos_mist_grille"/>
+        <MODULE name="umos_mist_station"/>
+        <TASK name="sampling"/>
+        <TASK name="krigging"/>
+        <MODULE name="scmt1"/>
+        <TASK name="scst1">
+            <SUBMITS sub_name="scbt1"/>
+        </TASK>
+        <TASK name="scbt1">
+            <SUBMITS sub_name="scxt1"/>
+        </TASK>
+        <TASK name="scxt1"/>
+    </FAMILY>
+    <FAMILY name="marine">
+        <SUBMITS sub_name="scmm1"/>
+        <SUBMITS sub_name="scsm1"/>
+        <MODULE name="scmm1"/>
+        <TASK name="scsm1">
+            <SUBMITS sub_name="scbm1"/>
+        </TASK>
+        <TASK name="scbm1">
+            <SUBMITS sub_name="scxm1"/>
+        </TASK>
+        <TASK name="scxm1"/>
+    </FAMILY>
+</MODULE>
+

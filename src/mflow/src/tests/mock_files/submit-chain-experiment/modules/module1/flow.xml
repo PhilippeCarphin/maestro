@@ -1,0 +1,17 @@
+<?xml version='1.0'?>
+<MODULE name="module1">
+    <SUBMITS sub_name="task1"/>
+    <TASK name="task1">
+        <SUBMITS sub_name="task2"/>
+    </TASK>
+    <TASK name="task2">
+        <SUBMITS sub_name="task3" type="user"/>
+    </TASK>
+    <NPASS_TASK name="task3">
+        <SUBMITS sub_name="task4" type="user"/> 
+    </NPASS_TASK>
+     <NPASS_TASK name="task4">
+        <SUBMITS sub_name="task5" type="user"/> 
+    </NPASS_TASK>
+    <NPASS_TASK name="task5"/>
+</MODULE>

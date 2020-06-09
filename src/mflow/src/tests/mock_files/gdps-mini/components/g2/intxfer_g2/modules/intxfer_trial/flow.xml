@@ -1,0 +1,9 @@
+<MODULE name="intxfer_trial">
+  <SUBMITS sub_name="interp_trialeta"/>
+  <SUBMITS sub_name="interp_trialpres"/>
+  <TASK name="interp_trialeta"/>
+  <TASK name="interp_trialpres"/>
+</MODULE>
+
+
+

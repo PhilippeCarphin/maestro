@@ -1,0 +1,365 @@
+<MODULE name="cmoi_post_processing">
+    <SUBMITS sub_name="sm_intervalle_6h"/>
+    <SUBMITS sub_name="sm_intervalle_12h"/>
+    <SUBMITS sub_name="sm_oceanic_6h"/>
+    <SUBMITS sub_name="igmac_h"/>
+    <SUBMITS sub_name="gen_spicrosection_img"/>
+    <SUBMITS sub_name="ivmac"/>
+    <SUBMITS sub_name="CMAC_FST_files_NAmericaNAtlantic"/>
+    <SUBMITS sub_name="grib_family"/>
+    <SUBMITS sub_name="xf00"/>
+    <SUBMITS sub_name="xf006"/>
+    <SUBMITS sub_name="xf030"/>
+    <SUBMITS sub_name="xf036"/>
+    <SUBMITS sub_name="xf048"/>
+    <SUBMITS sub_name="xf090"/>
+    <SUBMITS sub_name="xf120"/>
+    <SUBMITS sub_name="xf144"/>
+    <SUBMITS sub_name="xf168"/>
+    <SUBMITS sub_name="xf240"/>
+    <SUBMITS sub_name="run_gb"/>
+    <SUBMITS sub_name="nato_fl_loop"/>
+    <SUBMITS sub_name="nato_aviation_loop"/>
+    <SUBMITS sub_name="grib_giops_f"/>
+    <SUBMITS sub_name="SGPD"/>
+    <LOOP name="sm_intervalle_6h">
+        <SUBMITS sub_name="sm"/>
+        <TASK name="sm"/>
+    </LOOP>
+    <LOOP name="sm_intervalle_12h">
+        <SUBMITS sub_name="sm"/>
+        <TASK name="sm"/>
+    </LOOP>
+    <LOOP name="sm_oceanic_6h">
+        <SUBMITS sub_name="sm"/>
+        <TASK name="sm"/>
+    </LOOP>
+    <TASK name="igmac_h">
+        <SUBMITS sub_name="igmac_m"/>
+    </TASK>
+    <TASK name="igmac_m">
+        <SUBMITS sub_name="igmac_l"/>
+    </TASK>
+    <TASK name="igmac_l"/>
+    <TASK name="gen_spicrosection_img"/>
+    <TASK name="ivmac"/>
+    <TASK name="CMAC_FST_files_NAmericaNAtlantic"/>
+    <FAMILY name="grib_family">
+        <SUBMITS sub_name="run_grib"/>
+        <SWITCH name="run_grib" type="datestamp_hour">
+            <SWITCH_ITEM name="00">
+                <SUBMITS sub_name="grib_pres"/>
+                <FAMILY name="grib_pres">
+                    <SUBMITS sub_name="dfo"/>
+                    <SUBMITS sub_name="ninjo_thetaw"/>
+                    <TASK name="dfo"/>
+                    <TASK name="ninjo_thetaw"/>
+                </FAMILY>
+                <SUBMITS sub_name="grib_eta"/>
+                <FAMILY name="grib_eta">
+                    <SUBMITS sub_name="grib_eta_000_144"/>
+                    <SUBMITS sub_name="grib_eta_156_204"/>
+                    <SUBMITS sub_name="grib_eta2_000_204"/>
+                    <LOOP name="grib_eta_000_144">
+                        <SUBMITS sub_name="bulletins_specific_time"/>
+                        <SUBMITS sub_name="arctic_weather_center"/>
+                        <SUBMITS sub_name="fcst_trenton_dnd"/>
+                        <SUBMITS sub_name="fcst_gaussian_ice"/>
+                        <SUBMITS sub_name="fcst_precip_kwbc"/>
+                        <SUBMITS sub_name="fcst_costa_rica"/>
+                        <SUBMITS sub_name="fcst_barbados_training_inst"/>
+                        <TASK name="bulletins_specific_time"/>
+                        <TASK name="arctic_weather_center"/>
+                        <TASK name="fcst_trenton_dnd"/>
+                        <TASK name="fcst_gaussian_ice"/>
+                        <TASK name="fcst_precip_kwbc"/>
+                        <TASK name="fcst_costa_rica"/>
+                        <TASK name="fcst_barbados_training_inst"/>
+                    </LOOP>
+                    <LOOP name="grib_eta_156_204">
+                        <SUBMITS sub_name="bulletins_specific_time"/>
+                        <TASK name="bulletins_specific_time"/>
+                    </LOOP>
+                    <LOOP name="grib_eta2_000_204">
+                        <SUBMITS sub_name="fcst_BC_hydro"/>
+                        <TASK name="fcst_BC_hydro"/>
+                    </LOOP>
+                </FAMILY>
+                <SUBMITS sub_name="grib_diag"/>
+                <FAMILY name="grib_diag">
+                    <SUBMITS sub_name="grib_diag_000_144"/>
+                    <LOOP name="grib_diag_000_144">
+                        <SUBMITS sub_name="ggrib2_sspookie_ninjo"/>
+                        <SUBMITS sub_name="ggrib2_sspookie_ninjo_ngrid"/>
+                        <TASK name="ggrib2_sspookie_ninjo"/>
+                        <TASK name="ggrib2_sspookie_ninjo_ngrid"/>
+                    </LOOP>
+                </FAMILY>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="12">
+                <SUBMITS sub_name="grib_pres"/>
+                <FAMILY name="grib_pres">
+                    <SUBMITS sub_name="dfo"/>
+                    <SUBMITS sub_name="ninjo_thetaw"/>
+                    <TASK name="dfo"/>
+                    <TASK name="ninjo_thetaw"/>
+                </FAMILY>
+                <SUBMITS sub_name="grib_eta"/>
+                <FAMILY name="grib_eta">
+                    <SUBMITS sub_name="grib_eta_000_072"/>
+                    <SUBMITS sub_name="grib_eta2_000_072"/>
+                    <LOOP name="grib_eta_000_072">
+                        <SUBMITS sub_name="arctic_weather_center"/>
+                        <SUBMITS sub_name="fcst_trenton_dnd"/>
+                        <SUBMITS sub_name="fcst_gaussian_ice"/>
+                        <SUBMITS sub_name="fcst_precip_kwbc"/>
+                        <SUBMITS sub_name="fcst_costa_rica"/>
+                        <TASK name="arctic_weather_center"/>
+                        <TASK name="fcst_trenton_dnd"/>
+                        <TASK name="fcst_gaussian_ice"/>
+                        <TASK name="fcst_precip_kwbc"/>
+                        <TASK name="fcst_costa_rica"/>
+                    </LOOP>
+                    <LOOP name="grib_eta2_000_072">
+                        <SUBMITS sub_name="fcst_BC_hydro"/>
+                        <TASK name="fcst_BC_hydro"/>
+                    </LOOP>
+                </FAMILY>
+                <SUBMITS sub_name="grib_diag"/>
+                <FAMILY name="grib_diag">
+                    <SUBMITS sub_name="grib_diag_000_144"/>
+                    <LOOP name="grib_diag_000_144">
+                        <SUBMITS sub_name="ggrib2_sspookie_ninjo"/>
+                        <SUBMITS sub_name="ggrib2_sspookie_ninjo_ngrid"/>
+                        <TASK name="ggrib2_sspookie_ninjo"/>
+                        <TASK name="ggrib2_sspookie_ninjo_ngrid"/>
+                    </LOOP>
+                </FAMILY>
+            </SWITCH_ITEM>
+        </SWITCH>
+    </FAMILY>
+    <FAMILY name="xf00">
+        <SUBMITS sub_name="sm000"/>
+        <SUBMITS sub_name="comp_classic2dm"/>
+        <SUBMITS sub_name="profa"/>
+        <SUBMITS sub_name="panal"/>
+        <TASK name="sm000"/>
+        <TASK name="comp_classic2dm"/>
+        <TASK name="profa"/>
+        <SWITCH name="panal" type="datestamp_hour">
+            <SWITCH_ITEM name="00">
+                <SUBMITS sub_name="bulletins_specific_time"/>
+                <TASK name="bulletins_specific_time"/>
+                <SUBMITS sub_name="oa_pacific_wx"/>
+                <TASK name="oa_pacific_wx"/>
+                <SUBMITS sub_name="gaussian_ice"/>
+                <TASK name="gaussian_ice"/>
+                <SUBMITS sub_name="anal_costa_rica"/>
+                <TASK name="anal_costa_rica"/>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="12">
+                <SUBMITS sub_name="oa_pacific_wx"/>
+                <TASK name="oa_pacific_wx"/>
+                <SUBMITS sub_name="gaussian_ice"/>
+                <TASK name="gaussian_ice"/>
+                <SUBMITS sub_name="anal_costa_rica"/>
+                <TASK name="anal_costa_rica"/>
+            </SWITCH_ITEM>
+        </SWITCH>
+    </FAMILY>
+    <FAMILY name="xf006">
+        <SUBMITS sub_name="tril6"/>
+        <TASK name="tril6"/>
+    </FAMILY>
+    <FAMILY name="xf030">
+        <SUBMITS sub_name="cmnvc"/>
+        <TASK name="cmnvc"/>
+    </FAMILY>
+    <FAMILY name="xf036">
+        <SUBMITS sub_name="hltgb"/>
+        <TASK name="hltgb"/>
+    </FAMILY>
+    <FAMILY name="xf048">
+        <SUBMITS sub_name="cmacld"/>
+        <TASK name="cmacld">
+            <SUBMITS sub_name="avngb"/>
+        </TASK>
+        <TASK name="avngb"/>
+    </FAMILY>
+    <FAMILY name="xf090">
+        <SUBMITS sub_name="cmmetfrance"/>
+        <TASK name="cmmetfrance"/>
+    </FAMILY>
+    <FAMILY name="xf120">
+        <SUBMITS sub_name="gbdnd"/>
+        <SUBMITS sub_name="profp"/>
+        <TASK name="gbdnd"/>
+        <TASK name="profp">
+            <SUBMITS sub_name="profe"/>
+        </TASK>
+        <TASK name="profe">
+            <SUBMITS sub_name="stprf"/>
+            <SUBMITS sub_name="prbar"/>
+        </TASK>
+        <TASK name="stprf">
+            <SUBMITS sub_name="dndbf"/>
+        </TASK>
+        <TASK name="dndbf"/>
+        <TASK name="prbar"/>
+    </FAMILY>
+    <FAMILY name="xf144">
+        <SUBMITS sub_name="cmiml"/>
+        <SUBMITS sub_name="grbhy"/>
+        <SUBMITS sub_name="run_bcriv"/>
+        <TASK name="cmiml"/>
+        <TASK name="grbhy"/>
+        <SWITCH name="run_bcriv" type="datestamp_hour">
+            <SWITCH_ITEM name="00">
+                <SUBMITS sub_name="bcriv"/>
+                <TASK name="bcriv"/>
+            </SWITCH_ITEM>
+        </SWITCH>
+    </FAMILY>
+    <FAMILY name="xf168">
+        <SUBMITS sub_name="afwag"/>
+        <SUBMITS sub_name="g1bcter"/>
+        <SUBMITS sub_name="diony"/>
+        <TASK name="afwag"/>
+        <TASK name="g1bcter"/>
+        <TASK name="diony">
+            <SUBMITS sub_name="imgdi"/>
+        </TASK>
+        <TASK name="imgdi"/>
+    </FAMILY>
+    <FAMILY name="xf240">
+        <SUBMITS sub_name="ncepe"/>
+        <SUBMITS sub_name="gbice"/>
+        <SUBMITS sub_name="cmmnr"/>
+        <SUBMITS sub_name="cmwpr"/>
+        <SUBMITS sub_name="hyq_glbwind_ascii_data"/>
+        <SUBMITS sub_name="cmcmq"/>
+        <TASK name="ncepe"/>
+        <TASK name="gbice"/>
+        <TASK name="cmmnr"/>
+        <TASK name="cmwpr"/>
+        <TASK name="hyq_glbwind_ascii_data"/>
+        <TASK name="cmcmq">
+            <SUBMITS sub_name="cmhyq"/>
+        </TASK>
+        <TASK name="cmhyq"/>
+    </FAMILY>
+    <SWITCH name="run_gb" type="datestamp_hour">
+        <SWITCH_ITEM name="00">
+            <SUBMITS sub_name="gbres"/>
+            <TASK name="gbres"/>
+            <SUBMITS sub_name="gbjma"/>
+            <TASK name="gbjma"/>
+        </SWITCH_ITEM>
+        <SWITCH_ITEM name="12">
+            <SUBMITS sub_name="gbwmo"/>
+            <TASK name="gbwmo"/>
+            <SUBMITS sub_name="gbres"/>
+            <TASK name="gbres"/>
+            <SUBMITS sub_name="gbjma"/>
+            <TASK name="gbjma"/>
+        </SWITCH_ITEM>
+    </SWITCH>
+    <LOOP name="nato_fl_loop">
+        <SUBMITS sub_name="nato_fl"/>
+        <TASK name="nato_fl"/>
+    </LOOP>
+    <LOOP name="nato_aviation_loop">
+        <SUBMITS sub_name="nato_dvsi"/>
+        <TASK name="nato_dvsi">
+            <SUBMITS sub_name="nato_icing"/>
+        </TASK>
+        <TASK name="nato_icing">
+            <SUBMITS sub_name="nato_sm_images"/>
+        </TASK>
+        <TASK name="nato_sm_images"/>
+    </LOOP>
+    <FAMILY name="grib_giops_f">
+        <SUBMITS sub_name="loop_hours"/>
+        <SUBMITS sub_name="Clean_and_Archive"/>
+        <LOOP name="loop_hours">
+            <SUBMITS sub_name="gen_grib2"/>
+            <TASK name="gen_grib2">
+                <SUBMITS sub_name="feed_to_client"/>
+            </TASK>
+            <TASK name="feed_to_client"/>
+        </LOOP>
+        <TASK name="Clean_and_Archive"/>
+    </FAMILY>
+    
+   <FAMILY name="SGPD">
+    <SUBMITS sub_name="Switch_GRIB"/>
+    <SWITCH name="Switch_GRIB" type="datestamp_hour">
+        <SWITCH_ITEM name="00,12">
+            <SUBMITS sub_name="Loop_Hours"/>
+            <LOOP name="Loop_Hours">
+                <SUBMITS sub_name="Loop_Resol"/>
+                <LOOP name="Loop_Resol">
+                    <SUBMITS sub_name="Gen-GRIB2"/>
+                    <TASK name="Gen-GRIB2">
+                        <SUBMITS sub_name="Feed-to-DADS"/>
+                    </TASK>
+                    <TASK name="Feed-to-DADS"/>
+                </LOOP>
+                <SUBMITS sub_name="Gen-GRIB2-25km-Datamart"/>
+                <TASK name="Gen-GRIB2-25km-Datamart">
+                    <SUBMITS sub_name="Feed-to-DADS-25km-Datamart"/>
+                    <SUBMITS sub_name="Feed-to-Geomet-25km"/>
+                </TASK>
+                <TASK name="Feed-to-DADS-25km-Datamart"/>
+                <TASK name="Feed-to-Geomet-25km"/>
+                <SUBMITS sub_name="Gen-GRIB2-15km-Datamart"/>
+                <TASK name="Gen-GRIB2-15km-Datamart">
+                    <SUBMITS sub_name="Feed-to-DADS-15km-Datamart"/>
+                    <SUBMITS sub_name="Feed-to-Geomet-15km"/>
+                </TASK>
+                <TASK name="Feed-to-DADS-15km-Datamart"/>
+                <TASK name="Feed-to-Geomet-15km"/>
+            </LOOP>
+            <SUBMITS sub_name="Loop_Ninjo"/>
+            <LOOP name="Loop_Ninjo">
+                <SUBMITS sub_name="Gen-Ninjo-Grib2"/>
+                <TASK name="Gen-Ninjo-Grib2">
+                    <SUBMITS sub_name="Feed-to-DADS"/>
+                </TASK>
+                <TASK name="Feed-to-DADS"/>
+            </LOOP>
+            <SUBMITS sub_name="Loop_Ninjo2"/>
+            <LOOP name="Loop_Ninjo2">
+                <SUBMITS sub_name="Gen-Ninjo-Grib2"/>
+                <TASK name="Gen-Ninjo-Grib2">
+                    <SUBMITS sub_name="Feed-to-DADS"/>
+                </TASK>
+                <TASK name="Feed-to-DADS"/>
+            </LOOP>
+            <SUBMITS sub_name="Gen_NCEP_Grib2"/>
+            <TASK name="Gen_NCEP_Grib2"/>
+            <SUBMITS sub_name="DND_extra"/>
+            <TASK name="DND_extra">
+                <SUBMITS sub_name="send_to_DND"/>
+            </TASK>
+            <TASK name="send_to_DND"/>
+            <SUBMITS sub_name="gen_nato_grib2"/>
+            <TASK name="gen_nato_grib2"/>
+            <SUBMITS sub_name="snow_density"/>
+            <TASK name="snow_density"/>
+            <SUBMITS sub_name="Validation-Product"/>
+            <TASK name="Validation-Product">
+                <SUBMITS sub_name="Clean_and_Archive"/>
+                <SUBMITS sub_name="Alt_Clean_and_Archive"/>
+            </TASK>
+            <TASK name="Clean_and_Archive"/>
+            <TASK name="Alt_Clean_and_Archive"/>
+        </SWITCH_ITEM>
+    </SWITCH>
+</FAMILY>
+
+ 
+    
+    
+</MODULE>
+

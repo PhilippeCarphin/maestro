@@ -1,0 +1,23 @@
+<MODULE name="surface_analysis">
+    <SUBMITS sub_name="run_cutoff"/>
+    <SUBMITS sub_name="get_arcdata_derisfc"/>
+    <SUBMITS sub_name="get_arcdata_sfc"/>
+    <SUBMITS sub_name="validation"/>
+
+    <TASK name="run_cutoff">
+        <SUBMITS sub_name="cutoff"/>
+    </TASK>
+    <MODULE name="cutoff"/>
+    <TASK name="get_arcdata_derisfc">
+        <DEPENDS_ON dep_name="./cutoff" status="end" type="node"/>
+        <SUBMITS sub_name="derisfc"/>
+    </TASK>
+    <MODULE name="derisfc"/>
+    <TASK name="get_arcdata_sfc">
+        <DEPENDS_ON dep_name="./derisfc" status="end" type="node"/>
+        <SUBMITS sub_name="sfc"/>
+    </TASK>
+    <MODULE name="sfc"/>
+    <MODULE name="validation"/>
+</MODULE>
+

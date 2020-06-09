@@ -1,0 +1,37 @@
+<MODULE name="cmde_post_processing">
+    <SUBMITS sub_name="post_snow"/>
+    <SUBMITS sub_name="post_sst"/>
+    <FAMILY name="post_snow">
+        <SUBMITS sub_name="hour"/>
+        <SWITCH name="hour" type="datestamp_hour">
+            <SWITCH_ITEM name="00">
+                <SUBMITS sub_name="sd_cdf4ouranos"/>
+                <TASK name="sd_cdf4ouranos">
+                    <SUBMITS sub_name="send_netcdf_to_DADS"/>
+                </TASK>
+                <TASK name="send_netcdf_to_DADS"/>
+            </SWITCH_ITEM>
+
+            <SWITCH_ITEM name="18">
+                <SUBMITS sub_name="sd_cdf4noaa"/>
+                <TASK name="sd_cdf4noaa">
+                    <SUBMITS sub_name="send_netcdf_to_DADS"/>
+                </TASK>
+                <TASK name="send_netcdf_to_DADS"/>
+            </SWITCH_ITEM>
+        </SWITCH>
+    </FAMILY>
+    <FAMILY name="post_sst">
+        <SUBMITS sub_name="hour"/>
+        <SWITCH name="hour" type="datestamp_hour">
+            <SWITCH_ITEM name="00">
+                <SUBMITS sub_name="SST_gen_nc"/>
+                <TASK name="SST_gen_nc">
+                    <SUBMITS sub_name="send_netcdf_to_DADS"/>
+                </TASK>
+                <TASK name="send_netcdf_to_DADS"/>
+            </SWITCH_ITEM>
+        </SWITCH>
+    </FAMILY>
+</MODULE>
+

@@ -1,0 +1,12 @@
+# Machine stuff
+FRONTEND=frontend-ov-home2
+DBASE_SERVER=eccc-ppp3
+SEQ_DEFAULT_MACHINE=eccc-ppp3
+
+BACKEND_XFER_Q=xfer
+FRONTEND_XFER_Q=xfer
+BACKEND_DEFAULT_Q=production
+FRONTEND_DEFAULT_Q=production
+
+# fasttmp
+TMPFSSIZE=4000

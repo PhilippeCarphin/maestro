@@ -1,0 +1,5 @@
+<MODULE name="cmde_post_processing">
+    <SUBMITS sub_name="postproc_user"/>
+    <MODULE name="postproc_user"/>
+</MODULE>
+

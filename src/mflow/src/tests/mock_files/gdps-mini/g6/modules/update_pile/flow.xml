@@ -1,0 +1,9 @@
+<MODULE name="update_pile">
+    <SUBMITS sub_name="ice"/>
+    <SUBMITS sub_name="snow"/>
+    <SUBMITS sub_name="sst"/>
+    <TASK name="ice"/>
+    <TASK name="snow"/>
+    <TASK name="sst"/>
+</MODULE>
+

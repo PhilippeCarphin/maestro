@@ -1,0 +1,11 @@
+<MODULE name="main">
+    <SUBMITS sub_name="surface_analysis"/>
+    <MODULE name="surface_analysis"/>
+    <SUBMITS sub_name="cmdw_post_processing"/>
+    <MODULE name="cmdw_post_processing"/>
+    <SUBMITS sub_name="run_orji"/>
+    <TASK name="run_orji"/>
+    <SUBMITS sub_name="archive_listings"/>
+    <TASK name="archive_listings"/>
+</MODULE>
+

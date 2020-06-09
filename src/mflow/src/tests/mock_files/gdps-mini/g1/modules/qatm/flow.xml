@@ -1,0 +1,8 @@
+<MODULE name="qatm">
+    <SUBMITS sub_name="loop_qatm_run"/>
+    <LOOP name="loop_qatm_run">
+        <SUBMITS sub_name="qatm_prep"/>
+        <TASK name="qatm_prep"/>
+    </LOOP>
+</MODULE>
+

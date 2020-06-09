@@ -1,0 +1,89 @@
+<MODULE name="assimcycle">
+  <SUBMITS sub_name="coldstart"/>
+  <MODULE  name="coldstart"/>
+
+  <SUBMITS sub_name="get_arcdata_bgckalt"/>
+  <TASK  name="get_arcdata_bgckalt">
+    <SUBMITS sub_name="bgckalt"/>
+  </TASK>
+  <MODULE  name="bgckalt"/>
+
+  <SUBMITS sub_name="get_arcdata_genbiascorr"/>
+  <TASK  name="get_arcdata_genbiascorr">
+    <SUBMITS sub_name="genbiascorr"/>
+  </TASK>
+  <MODULE  name="genbiascorr">
+    <DEPENDS_ON dep_name="./bgckalt" status="end" type="node"/>
+  </MODULE>
+
+  <SUBMITS sub_name="get_arcdata_anlalt"/>
+  <TASK  name="get_arcdata_anlalt">
+    <SUBMITS sub_name="anlalt"/>
+  </TASK>
+  <FAMILY name="anlalt">
+    <SUBMITS sub_name="envar"/>
+    <MODULE name="envar"/>
+  </FAMILY>
+
+  <SUBMITS sub_name="get_arcdata_anlsfc"/>
+  <TASK  name="get_arcdata_anlsfc">
+    <SUBMITS sub_name="anlsfc"/>
+  </TASK>
+  <FAMILY  name="anlsfc">
+    <SUBMITS sub_name="sfc"/>
+    <MODULE name="sfc"/>
+    <SUBMITS sub_name="land"/>
+    <MODULE name="land">
+      <DEPENDS_ON dep_name="./sfc" status="end" type="node"/>
+    </MODULE>
+  </FAMILY>
+
+  <SUBMITS sub_name="get_arcdata_getsfc"/>
+  <TASK  name="get_arcdata_getsfc">
+    <SUBMITS sub_name="getsfc"/>
+    <SUBMITS sub_name="getalt"/>
+  </TASK>
+  <TASK  name="getsfc">
+    <DEPENDS_ON dep_name="./anlsfc" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./get_arcdata_bgckalt" status="end" type="node"/>
+  </TASK>
+  <TASK  name="getalt"/>
+
+  <SUBMITS sub_name="get_arcdata_forecast"/>
+  <TASK  name="get_arcdata_forecast">
+    <SUBMITS sub_name="forecast"/>
+  </TASK>
+  <MODULE  name="forecast">
+    <DEPENDS_ON dep_name="./getsfc" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./anlalt/envar/transferAnalysis" status="end" type="node"/>
+  </MODULE>
+
+  <SUBMITS sub_name="get_arcdata_anlpost"/>
+  <TASK  name="get_arcdata_anlpost">
+    <SUBMITS sub_name="anlpost"/>
+  </TASK>
+  <FAMILY name="anlpost">
+    <DEPENDS_ON dep_name="./getsfc" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./anlalt/envar/transferAnalysis" status="end" type="node"/>
+
+    <SUBMITS sub_name="forecast"/>
+    <MODULE name="forecast"/>
+
+    <SUBMITS sub_name="anlpres"/>
+    <TASK name="anlpres">
+      <DEPENDS_ON dep_name="./forecast" status="end" type="node"/>
+    </TASK>
+    
+  </FAMILY>
+
+  <SUBMITS sub_name="validation"/>
+  <TASK  name="validation">
+    <DEPENDS_ON dep_name="./bgckalt" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./genbiascorr" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./anlalt" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./anlsfc" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getsfc" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./forecast" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./anlpost" status="end" type="node"/>
+  </TASK>
+</MODULE>

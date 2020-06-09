@@ -1,0 +1,56 @@
+#!/bin/bash
+
+PROJECT_ROOT=$(dirname $(dirname $(realpath $0)))
+VENV=$PROJECT_ROOT/venv
+
+if [[ ! -d $VENV ]] ; then
+	echo "The project '$PROJECT_ROOT' is not setup. Missing venv: '$VENV'. Run setup scripts."
+	exit 1
+fi
+
+version_compare () {
+    # Usage:
+    #   version_compare 12.04 18.10
+    # Returns 0 if versions are equal
+    # Returns 1 if $1 > $2
+    # Returns 2 if $1 < $2
+    
+    if [[ $1 == $2 ]]
+    then
+        echo 0
+        return
+    fi
+    local IFS=.
+    local i ver1=($1) ver2=($2)
+    # fill empty fields in ver1 with zeros
+    for ((i=${#ver1[@]}; i<${#ver2[@]}; i++))
+    do
+        ver1[i]=0
+    done
+    for ((i=0; i<${#ver1[@]}; i++))
+    do
+        if [[ -z ${ver2[i]} ]]
+        then
+            # fill empty fields in ver2 with zeros
+            ver2[i]=0
+        fi
+        if ((10#${ver1[i]} > 10#${ver2[i]}))
+        then
+            echo 1
+            return
+        fi
+        if ((10#${ver1[i]} < 10#${ver2[i]}))
+        then
+            echo 2
+            return
+        fi
+    done
+    echo 0
+}
+
+minimum_version=18.04
+current_version=$(lsb_release -sr)
+if [[ $(version_compare $minimum_version $current_version) == 1 ]] ; then
+    echo "mflow requires Ubuntu version $minimum_version or greater. You have version ${current_version}. The line must be drawn somewhere! If you do not have access to a ${minimum_version}+ machine, let the developers of mflow know."
+    exit 1
+fi

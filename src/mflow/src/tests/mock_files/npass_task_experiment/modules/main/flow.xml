@@ -1,0 +1,8 @@
+<MODULE name="main">
+    <SUBMITS sub_name="launcher"/>
+    <TASK name="launcher">
+        <SUBMITS sub_name="npass_task" type="user"/>
+    </TASK>
+    <NPASS_TASK name="npass_task"/>
+</MODULE>
+

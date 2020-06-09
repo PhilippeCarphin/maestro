@@ -1,0 +1,7 @@
+<MODULE name="main">
+
+  <SUBMITS sub_name="pre_assimcycle"/>
+  <MODULE name="pre_assimcycle"/>
+
+</MODULE>
+

@@ -1,0 +1,44 @@
+<MODULE name="surface_analysis">
+    <SUBMITS sub_name="coldstart"/>
+    <SUBMITS sub_name="run_cutoff"/>
+    <SUBMITS sub_name="hour"/>
+    <SUBMITS sub_name="get_sfc"/>
+    <SUBMITS sub_name="get_land"/>
+    <SUBMITS sub_name="precip_oa"/>
+    <SUBMITS sub_name="get_arcdata_anl_ice"/>
+
+    <MODULE name="coldstart"/>
+    <TASK name="run_cutoff">
+        <SUBMITS sub_name="cutoff"/>
+    </TASK>
+    <MODULE name="cutoff"/>
+    <SWITCH name="hour" type="datestamp_hour">
+        <SWITCH_ITEM name="00">
+            <SUBMITS sub_name="get_arcdata_anl_sst"/>
+            <TASK  name="get_arcdata_anl_sst">
+              <SUBMITS sub_name="anl_sst"/>
+            </TASK>
+            <MODULE  name="anl_sst"/>
+        </SWITCH_ITEM>
+    </SWITCH>
+    <TASK name="get_sfc">
+        <DEPENDS_ON dep_name="./precip_oa" status="end" type="node"/>
+        <SUBMITS sub_name="srsop"/>
+    </TASK>
+    <TASK name="srsop"/>
+    <TASK name="get_land">
+      <DEPENDS_ON dep_name="./get_sfc" status="end" type="node"/>
+    </TASK>
+    <TASK name="precip_oa"/>
+    <TASK  name="get_arcdata_anl_ice">
+        <DEPENDS_ON dep_name="./hour/get_arcdata_anl_sst" index="hour=00" valid_hour="00" status="end" type="node"/>
+        <SUBMITS sub_name="anl_ice"/>
+    </TASK>
+    <MODULE name="anl_ice">
+        <DEPENDS_ON dep_name="./cutoff" status="end" type="node"/>
+        <DEPENDS_ON dep_name="./anl_ice" hour="-6" status="end" type="node"/>
+    </MODULE>
+    <SUBMITS sub_name="validation"/>
+    <MODULE name="validation"/>
+</MODULE>
+

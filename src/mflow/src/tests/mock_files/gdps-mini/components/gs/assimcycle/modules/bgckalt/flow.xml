@@ -1,0 +1,95 @@
+<MODULE name="bgckalt">
+  <SUBMITS sub_name="getObservations"/>
+  <SUBMITS sub_name="getTrials"/>
+  <SUBMITS sub_name="getAnal"/>
+  <SUBMITS sub_name="getBCorr"/>
+  <SUBMITS sub_name="getStats"/>
+
+  <TASK name="getTrials"/>
+  <TASK name="getAnal"/>
+  <TASK name="getBCorr"/>
+  <TASK name="getStats"/>
+  <TASK name="getObservations">
+    <SUBMITS sub_name="BgckAmsua"/>
+    <SUBMITS sub_name="BgckAmsub"/>
+    <SUBMITS sub_name="BgckSsmis"/>
+    <SUBMITS sub_name="BgckAtms"/>
+    <SUBMITS sub_name="BgckAirs"/>
+    <SUBMITS sub_name="BgckIasi"/>
+    <SUBMITS sub_name="BgckCris"/>
+    <SUBMITS sub_name="BgckCSR"/>
+    <!-- <SUBMITS sub_name="BgckChem"/> -->
+    <SUBMITS sub_name="BgckConv"/>
+  </TASK>
+
+  <TASK name="BgckAmsua">
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getStats"  status="end" type="node"/>
+  </TASK>
+  <TASK name="BgckAmsub">
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getStats"  status="end" type="node"/>
+  </TASK>
+  <TASK name="BgckAirs">
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getStats"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getAnal"   status="end" type="node"/>
+  </TASK>
+  <TASK name="BgckIasi">
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getStats"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getAnal"   status="end" type="node"/>
+  </TASK>
+  <TASK name="BgckSsmis">
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getStats"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getAnal"   status="end" type="node"/>
+  </TASK>
+  <TASK name="BgckCSR">
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getStats"  status="end" type="node"/>
+  </TASK>
+  <TASK name="BgckAtms">
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getStats"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getAnal"   status="end" type="node"/>
+  </TASK>
+  <TASK name="BgckCris">
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getStats"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getAnal"   status="end" type="node"/>
+  </TASK>
+  <!-- <TASK name="BgckChem">
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getStats"  status="end" type="node"/>
+  </TASK> -->
+  <TASK name="BgckConv">
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getStats"  status="end" type="node"/>
+
+    <SUBMITS sub_name="Transfer"/>
+  </TASK>
+
+  <TASK name="Transfer">
+    <DEPENDS_ON dep_name="./BgckAmsua"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./BgckAmsub"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./BgckAirs"   status="end" type="node"/>
+    <DEPENDS_ON dep_name="./BgckIasi"   status="end" type="node"/>
+    <DEPENDS_ON dep_name="./BgckSsmis"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./BgckCSR"    status="end" type="node"/>
+    <DEPENDS_ON dep_name="./BgckAtms"   status="end" type="node"/>
+    <DEPENDS_ON dep_name="./BgckCris"   status="end" type="node"/>
+    <!-- <DEPENDS_ON dep_name="./BgckChem"   status="end" type="node"/> -->
+  </TASK>
+</MODULE>
+

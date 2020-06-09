@@ -1,0 +1,67 @@
+<MODULE name="SGPD">
+    <SUBMITS sub_name="Switch_GRIB"/>
+    <SWITCH name="Switch_GRIB" type="datestamp_hour">
+        <SWITCH_ITEM name="00,12">
+            <SUBMITS sub_name="Loop_Hours"/>
+            <LOOP name="Loop_Hours">
+                <SUBMITS sub_name="Loop_Resol"/>
+                <LOOP name="Loop_Resol">
+                    <SUBMITS sub_name="Gen-GRIB2"/>
+                    <TASK name="Gen-GRIB2">
+                        <SUBMITS sub_name="Feed-to-DADS"/>
+                    </TASK>
+                    <TASK name="Feed-to-DADS"/>
+                </LOOP>
+                <SUBMITS sub_name="Gen-GRIB2-25km-Datamart"/>
+                <TASK name="Gen-GRIB2-25km-Datamart">
+                    <SUBMITS sub_name="Feed-to-DADS-25km-Datamart"/>
+                    <SUBMITS sub_name="Feed-to-Geomet-25km"/>
+                </TASK>
+                <TASK name="Feed-to-DADS-25km-Datamart"/>
+                <TASK name="Feed-to-Geomet-25km"/>
+                <SUBMITS sub_name="Gen-GRIB2-15km-Datamart"/>
+                <TASK name="Gen-GRIB2-15km-Datamart">
+                    <SUBMITS sub_name="Feed-to-DADS-15km-Datamart"/>
+                    <SUBMITS sub_name="Feed-to-Geomet-15km"/>
+                </TASK>
+                <TASK name="Feed-to-DADS-15km-Datamart"/>
+                <TASK name="Feed-to-Geomet-15km"/>
+            </LOOP>
+            <SUBMITS sub_name="Loop_Ninjo"/>
+            <LOOP name="Loop_Ninjo">
+                <SUBMITS sub_name="Gen-Ninjo-Grib2"/>
+                <TASK name="Gen-Ninjo-Grib2">
+                    <SUBMITS sub_name="Feed-to-DADS"/>
+                </TASK>
+                <TASK name="Feed-to-DADS"/>
+            </LOOP>
+            <SUBMITS sub_name="Loop_Ninjo2"/>
+            <LOOP name="Loop_Ninjo2">
+                <SUBMITS sub_name="Gen-Ninjo-Grib2"/>
+                <TASK name="Gen-Ninjo-Grib2">
+                    <SUBMITS sub_name="Feed-to-DADS"/>
+                </TASK>
+                <TASK name="Feed-to-DADS"/>
+            </LOOP>
+            <SUBMITS sub_name="Gen_NCEP_Grib2"/>
+            <TASK name="Gen_NCEP_Grib2"/>
+            <SUBMITS sub_name="DND_extra"/>
+            <TASK name="DND_extra">
+                <SUBMITS sub_name="send_to_DND"/>
+            </TASK>
+            <TASK name="send_to_DND"/>
+            <SUBMITS sub_name="gen_nato_grib2"/>
+            <TASK name="gen_nato_grib2"/>
+            <SUBMITS sub_name="snow_density"/>
+            <TASK name="snow_density"/>
+            <SUBMITS sub_name="Validation-Product"/>
+            <TASK name="Validation-Product">
+                <SUBMITS sub_name="Clean_and_Archive"/>
+                <SUBMITS sub_name="Alt_Clean_and_Archive"/>
+            </TASK>
+            <TASK name="Clean_and_Archive"/>
+            <TASK name="Alt_Clean_and_Archive"/>
+        </SWITCH_ITEM>
+    </SWITCH>
+</MODULE>
+

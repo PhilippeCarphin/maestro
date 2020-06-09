@@ -1,0 +1,53 @@
+<MODULE name="cmdw_post_processing">
+
+    <SUBMITS sub_name="surface_preliminaire"/>
+    <FAMILY      name="surface_preliminaire">
+        <SUBMITS sub_name="pljaa"/>
+        <TASK        name="pljaa"/>
+
+        <SUBMITS sub_name="pljab"/>
+        <TASK        name="pljab"/>
+
+        <SUBMITS sub_name="pljac"/>
+        <TASK        name="pljac"/>
+    </FAMILY>
+
+    <SUBMITS sub_name="precipitations_observees"/>
+    <FAMILY      name="precipitations_observees">
+        <SUBMITS sub_name="pljaf"/>
+        <TASK        name="pljaf"/>
+
+        <SUBMITS sub_name="run"/>
+        <SWITCH      name="run" type="datestamp_hour">
+            <SWITCH_ITEM name="00,12">
+                <SUBMITS sub_name="pljag"/>
+                <TASK        name="pljag"/>
+                <SUBMITS sub_name="pljah"/>
+                <TASK        name="pljah"/>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="06,18"/>
+        </SWITCH>
+    </FAMILY>
+
+    <SUBMITS sub_name="verification_des_precipitations"/>
+    <FAMILY      name="verification_des_precipitations">
+        <SUBMITS sub_name="run"/>
+        <SWITCH      name="run" type="datestamp_hour">
+            <SWITCH_ITEM name="00,12">
+                <SUBMITS sub_name="pljaj"/>
+                <TASK        name="pljaj"/>
+                <SUBMITS sub_name="pljal"/>
+                <TASK        name="pljal"/>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="06,18"/>
+        </SWITCH>
+    </FAMILY>
+
+    <SUBMITS sub_name="dfxsm"/>
+    <TASK        name="dfxsm"/>
+
+    <SUBMITS sub_name="pcp_cumul"/>
+    <TASK        name="pcp_cumul"/>
+
+</MODULE>
+

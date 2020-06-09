@@ -1,0 +1,33 @@
+<NODE_RESOURCES>
+  <LOOP expression="0:84:6:15"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME_0hr}" index="post_gem=0" status="end" type="node" local_index="loop_prog=0"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=0" status="end" type="node" local_index="loop_prog=0"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=24" status="end" type="node" local_index="loop_prog=6"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=48" status="end" type="node" local_index="loop_prog=6"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=72" status="end" type="node" local_index="loop_prog=12"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=96" status="end" type="node" local_index="loop_prog=12"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=120" status="end" type="node" local_index="loop_prog=18"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=144" status="end" type="node" local_index="loop_prog=18"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=168" status="end" type="node" local_index="loop_prog=24"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=192" status="end" type="node" local_index="loop_prog=24"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=216" status="end" type="node" local_index="loop_prog=30"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=240" status="end" type="node" local_index="loop_prog=30"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=264" status="end" type="node" local_index="loop_prog=36"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=288" status="end" type="node" local_index="loop_prog=36"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=312" status="end" type="node" local_index="loop_prog=42"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=336" status="end" type="node" local_index="loop_prog=42"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=360" status="end" type="node" local_index="loop_prog=48"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=384" status="end" type="node" local_index="loop_prog=48"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=408" status="end" type="node" local_index="loop_prog=54"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=432" status="end" type="node" local_index="loop_prog=54"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=456" status="end" type="node" local_index="loop_prog=60"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=480" status="end" type="node" local_index="loop_prog=60"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=504" status="end" type="node" local_index="loop_prog=66"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=528" status="end" type="node" local_index="loop_prog=66"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=552" status="end" type="node" local_index="loop_prog=72"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=576" status="end" type="node" local_index="loop_prog=72"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=600" status="end" type="node" local_index="loop_prog=78"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=624" status="end" type="node" local_index="loop_prog=78"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=648" status="end" type="node" local_index="loop_prog=84"/>
+  <DEPENDS_ON exp="${FORECAST_EXP}" dep_name="${INTXFER_GEM_TRANSFER_NAME}" index="post_gem=672" status="end" type="node" local_index="loop_prog=84"/>
+</NODE_RESOURCES>

@@ -1,0 +1,29 @@
+<MODULE name = "validation">
+
+   <SUBMITS sub_name = "analyses"/>
+   <FAMILY      name = "analyses">
+      <SUBMITS sub_name = "run"/>
+      <SWITCH      name = "run" type = "datestamp_hour">
+         <SWITCH_ITEM name = "00,12"/>
+         <SWITCH_ITEM name = "06,18">
+            <SUBMITS sub_name = "validation_analyses"/>
+            <MODULE      name = "validation_analyses"/>
+         </SWITCH_ITEM>
+      </SWITCH>
+   </FAMILY>
+
+   <SUBMITS sub_name = "run"/>
+   <SWITCH      name = "run" type="datestamp_hour">
+      <SWITCH_ITEM name = "00,06,12"/>
+      <SWITCH_ITEM name = "18">
+         <SUBMITS sub_name = "validation_ymos3"/>
+         <MODULE      name = "validation_ymos3"/>
+      </SWITCH_ITEM>
+   </SWITCH>
+
+   <SUBMITS sub_name = "validation_precipitations_observees"/>
+   <MODULE      name = "validation_precipitations_observees"/>
+   <SUBMITS sub_name = "validation_pcp_cumul"/>
+   <MODULE      name = "validation_pcp_cumul"/>
+</MODULE>
+

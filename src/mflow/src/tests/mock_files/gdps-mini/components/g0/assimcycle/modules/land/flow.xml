@@ -1,0 +1,22 @@
+<MODULE name="land">
+  <SUBMITS sub_name="getObservations"/>
+  <SUBMITS sub_name="getTrials"/>
+  <SUBMITS sub_name="getTses"/>
+  <TASK name="getTrials"/>
+  <TASK name="getTses"/>
+  <TASK name="getObservations">
+    <SUBMITS sub_name="isba"/>
+  </TASK>
+  <TASK name="isba">
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getTses"   status="end" type="node"/>
+    <SUBMITS sub_name="ts4snow"/>
+  </TASK>
+  <TASK name="ts4snow">
+    <SUBMITS sub_name="snow"/>
+  </TASK>
+  <TASK name="snow">
+    <SUBMITS sub_name="Transfer"/>
+  </TASK>
+  <TASK name="Transfer"/>
+</MODULE>

@@ -1,0 +1,7 @@
+<MODULE name="validation">
+    <SUBMITS sub_name="validation_analyses"/>
+    <SUBMITS sub_name="validation_perfect_prog"/>
+    <MODULE name="validation_analyses"/>
+    <MODULE name="validation_perfect_prog"/>
+</MODULE>
+
