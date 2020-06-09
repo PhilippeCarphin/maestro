@@ -170,6 +170,8 @@ class PopupManager:
                 key=prefix+"_path"
                 path=node_data.get(key,"")
                 is_file=path and os.path.isfile(path)
+                if not is_file:
+                    logger.debug("Not a file: '%s'"%path)
                 if is_file or self.is_edit_mode:
                     verb="view" if open_tmp_copy else "edit"
                     button_label="File: %s %s"%(verb,label)

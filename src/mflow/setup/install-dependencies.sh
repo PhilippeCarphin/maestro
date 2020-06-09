@@ -1,6 +1,6 @@
 #!/bin/bash
 
-MAESTRO_ROOT=$(git rev-parse --show-toplevel)
+MAESTRO_ROOT=$(realpath $(dirname $(dirname $(dirname $(dirname $0)))))
 set -u
 
 VENV=$MAESTRO_ROOT/venv
