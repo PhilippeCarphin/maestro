@@ -65,7 +65,7 @@ typedef struct {
    _clean_times clean_times;
 } _l2d2server;
 
-struct _depParameters {
+typedef struct _depParameters {
    char xpd_name[256];
    char xpd_node[256];
    char xpd_indx[15];
