@@ -12,7 +12,7 @@ from maestro.datestamp import get_day_of_week
 from constants import NODE_TYPE, SWITCH_TYPE
 from maestro.xml import get_combined_flow_for_experiment_path, get_node_type_from_element, get_submits_from_flow_element, \
 get_flow_children_from_flow_element, get_module_name_from_flow_xml, get_paths_from_element, get_module_name_for_element
-from utilities import pretty_kwargs, superstrip
+from utilities import pretty_kwargs, superstrip, pk
 
 class ME_Flow():
 
@@ -65,7 +65,13 @@ class ME_Flow():
         self.root_module_name=get_module_name_from_flow_xml(entry_flow)     
         self.root_node_path=self.root_module_name
         self.root_flow=get_combined_flow_for_experiment_path(self.path)
-        
+        """
+        pk(root_flow_branch=self.root_flow_branch,
+           root_module_name=self.root_module_name,
+           root_node_path=self.root_node_path,
+           root_flow=self.root_flow,
+           path=self.path)
+        """
         "exclude non-elements in document, like comments"
         children=[child for child in self.root_flow.iter() if type(child) is lxml.etree._Element]
         

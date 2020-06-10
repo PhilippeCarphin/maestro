@@ -51,19 +51,16 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
         """
         self.resource_xml_cache={}
         
-        self.path=find_exp_home_in_path(path)
-        if not self.path:
-            msg="Could not find an experiment for path:\n   %s\nA valid experiment folder contains an 'EntryModule' link file or folder."%path
-            logger.error(msg)
-            self.validation_errors.append(msg)
-            return
-        
+        self.path=find_exp_home_in_path(path)        
         self.name=get_experiment_name(path)
         
         if user_home:
             self.user_home=user_home
         else:
             self.find_user_home()
+            
+        if not self.basic_experiment_validation():
+            raise ValueError("Experiment validation errors:\n"+"\n".join(self.validation_errors))
             
         self.inspect_flow()
                 

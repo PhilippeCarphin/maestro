@@ -1,6 +1,0 @@
-<MODULE name="main">
-
-  <SUBMITS sub_name="surface_analysis"/>
-  <MODULE name="surface_analysis"/>
-
-</MODULE>

@@ -1,5 +1,0 @@
-<MODULE name="main">
-    <SUBMITS sub_name="cmde_post_processing"/>
-    <MODULE name="cmde_post_processing"/>
-</MODULE>
-

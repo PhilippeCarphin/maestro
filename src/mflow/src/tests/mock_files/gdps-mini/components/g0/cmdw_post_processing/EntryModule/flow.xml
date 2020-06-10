@@ -1,9 +1,0 @@
-<MODULE name="main">
-    <SUBMITS sub_name="cmdw_post_processing"/>
-    <SUBMITS sub_name="validation"/>
-    <SUBMITS sub_name="cleanup"/>
-    <MODULE name="cmdw_post_processing"/>
-    <MODULE name="validation"/>
-    <MODULE name="cleanup"/>
-</MODULE>
-

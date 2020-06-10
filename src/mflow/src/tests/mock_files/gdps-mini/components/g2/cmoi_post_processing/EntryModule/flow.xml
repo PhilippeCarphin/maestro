@@ -1,5 +1,0 @@
-<MODULE name="main">
-    <SUBMITS sub_name="cmoi_post_processing"/>
-    <MODULE name="cmoi_post_processing"/>
-</MODULE>
-
