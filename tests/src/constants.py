@@ -5,8 +5,9 @@ See also "config.py".
 
 import os
 
+d=os.path.dirname
 class PATH:
-    MOCK_FILES=os.path.dirname(os.path.realpath(__file__))+"/mock_files"
+    MOCK_FILES=d(d(os.path.realpath(__file__)))+"/mock_files"
     SSM_DOMAIN=os.environ["SSM_DOMAIN_PATH"]
 PATH.SAMPLE_EXP1=PATH.MOCK_FILES+"/sample_experiment1"
 
