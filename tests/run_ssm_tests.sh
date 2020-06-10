@@ -1,9 +1,9 @@
 #!/bin/bash
 
-USAGE="Maestro automated tests.
+USAGE="Run automated tests on an installed maestro SSM package.
 
 Usage:
-    ./run_tests.sh [<path-to-installed-ssm>]
+    ./run_ssm_tests.sh [<path-to-installed-ssm>]
 
 Options:
     <path-to-installed-ssm>     This is the SSM that will be tested. If no path is given, the project will be compiled, built into an SSM, installed, and then that will be tested.
@@ -55,5 +55,5 @@ RUNNING PYTHON TESTS
 "
 
 export SSM_DOMAIN_PATH
-cd ${PROJECT_PATH}/tests
-./run_python_tests.py
+cd ${PROJECT_PATH}/tests/src
+./run_ssm_tests.py

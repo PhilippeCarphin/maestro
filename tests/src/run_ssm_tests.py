@@ -1,8 +1,9 @@
 #!/usr/bin/python3
 
-import unittest,sys,os
+import unittest
+import sys
 from utilities import *
 
-tests = unittest.TestLoader().discover("pyunit", pattern ='*.py')
+tests = unittest.TestLoader().discover("ssm", pattern ='*.py')
 runner = unittest.TextTestRunner(sys.stdout, verbosity=2)
 runner.run(tests)
