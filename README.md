@@ -1,5 +1,16 @@
 Maestro is a suite of tools which organize, visualize, schedule, validate, and submit tasks to computer systems. 
 
+## Tools
+
+Here are some of the main tools in the Maestro suite:
+
+* [xflow](https://wiki.cmc.ec.gc.ca/wiki/Maestro/xflow) monitors and visualizes a single experiment created by Maestro.
+* [mflow](https://wiki.cmc.ec.gc.ca/wiki/Maestro/mflow) is a simple and fast alternative to xflow, especially good for remote work.
+* [xflow_overview](https://wiki.cmc.ec.gc.ca/wiki/Maestro/xflow_overview) monitors and visualizes many experiments created by Maestro.
+* The [sequencer](https://wiki.cmc.ec.gc.ca/wiki/Maestro/sequencer) manages the sequenced execution of task nodes.
+* [xm](https://wiki.cmc.ec.gc.ca/wiki/Maestro/xm) is a visual tool used to create new Maestro experiments.
+* Finally, many commandline tools.
+
 ## Community & Resources
 
 * See the [Maestro article](https://wiki.cmc.ec.gc.ca/wiki/Maestro) in the CMC wiki.
