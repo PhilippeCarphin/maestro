@@ -30,7 +30,6 @@
 #include "getopt.h"
 #include "SeqDatesUtil.h"
 
-int MLLServerConnectionFid=0;
 
 static void printUsage()
 {

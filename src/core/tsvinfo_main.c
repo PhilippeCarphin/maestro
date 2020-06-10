@@ -27,8 +27,6 @@
 #include "tsvinfo.h"
 
 
-int MLLServerConnectionFid=0;
-
 static void printUsage()
 {
    char * usage = "\
