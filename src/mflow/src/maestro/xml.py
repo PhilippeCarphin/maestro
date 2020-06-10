@@ -423,10 +423,9 @@ def get_combined_flow_from_text_list(xml_datas,verbose=False):
                 
             made_progress=True
     
-    for m in incomplete_modules:
-        pprint(m)
     if incomplete_modules:
-        logger.error("combine flow XML failed to resolve all modules containing empty module children.")
+        message="\n\n".join([pretty(m) for m in incomplete_modules])
+        logger.error("combine flow XML failed to resolve all modules containing empty module children. incomplete_modules =\n"+message)
     
     return main_flow
         
