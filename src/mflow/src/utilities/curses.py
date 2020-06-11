@@ -15,7 +15,16 @@ def get_curses_attr_from_color(curses_color_index,is_reversed=True):
             
         return attr
     except curses.error:
-        logger.error("get_curses_attr_from_color failed. Maybe curses is not init yet? index = '%s'"%curses_color_index)
+
+        "for some reason this happens a lot, until it is resolved, only log once per launch"
+        try:
+            get_curses_attr_from_color.curses_error_count
+        except AttributeError:
+            get_curses_attr_from_color.curses_error_count=0
+        get_curses_attr_from_color.curses_error_count+=1
+        if get_curses_attr_from_color.curses_error_count==0:
+            logger.error("get_curses_attr_from_color failed. Maybe curses is not init yet? index = '%s'"%curses_color_index)
+
         return 0
 
 def get_curses_attr_from_string(color_string,default=0,is_reversed=False):

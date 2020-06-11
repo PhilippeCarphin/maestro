@@ -154,6 +154,8 @@ class PopupManager:
             for log_type in log_types:
                 log_path=me.get_latest_log(node_path,log_type)
                 is_file=log_path and os.path.isfile(log_path)
+                if not is_file:
+                    logger.debug("Path to '%s log' is not a file: '%s'"%(log_type,log_path))
                 if is_file:
                     choice={"label":"Logs: show latest %s"%log_type,
                             "function": self.get_function_to_view_file(log_path)}
@@ -171,7 +173,7 @@ class PopupManager:
                 path=node_data.get(key,"")
                 is_file=path and os.path.isfile(path)
                 if not is_file:
-                    logger.debug("Not a file: '%s'"%path)
+                    logger.debug("Path to '%s' is not a file: '%s'"%(prefix,path))
                 if is_file or self.is_edit_mode:
                     verb="view" if open_tmp_copy else "edit"
                     button_label="File: %s %s"%(verb,label)
