@@ -63,7 +63,7 @@ def get_qstat_data(logger=None):
             if len(msg)>1000:
                 msg=msg[:1000]+" ..."
             logger.error(msg)
-        return True
+        return None
     
     try:
         return get_qstat_data_from_text(output)
