@@ -54,6 +54,14 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
         self.path=find_exp_home_in_path(path)        
         self.name=get_experiment_name(path)
         
+        """
+        If this value is set outside this class, maestro can give additional 
+        info and warnings if the user cannot submit to a queue.
+        MaestroExperiment doesn't find this itself since that may be slow and
+        in many cases it is not used.
+        """
+        self.qstat_data=None
+        
         if user_home:
             self.user_home=user_home
         else:

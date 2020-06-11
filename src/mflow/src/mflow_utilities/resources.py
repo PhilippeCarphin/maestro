@@ -1,4 +1,6 @@
 
+import os.path
+
 from utilities.shell import get_true_host
 from constants import DEFAULT_BATCH_RESOURCES
 
@@ -11,3 +13,5 @@ def insert_default_batch_data(node_data,
             
     if default_machine_is_truehost and not node_data["machine"]:
         node_data["machine"]=get_true_host()
+
+

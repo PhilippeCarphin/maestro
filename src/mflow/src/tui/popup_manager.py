@@ -201,7 +201,7 @@ class PopupManager:
                     "function":self.get_function_to_confirm_cmd("ls")}
             choices.append(choice)
         
-        if me.can_user_send_maestro_signals() or self.is_debug:
+        if me.can_user_send_maestro_signals(node_data=node_data) or self.is_debug:
             choices+=self.get_sequencer_choices(node_path)
         else:
             choice={"label":"Submit (disabled). Explain why.",
