@@ -79,10 +79,11 @@ class ME_Validation():
         messages=[]
         user=os.environ.get("USER","")
         
-        queue=node_data["queue"]
-        if not self.can_user_submit_to_queue(user,queue):
-            messages.append("User '%s' cannot submit to queue '%s'."%(user,queue))
-        
+        if node_data:
+            queue=node_data["queue"]
+            if not self.can_user_submit_to_queue(user,queue):
+                messages.append("User '%s' cannot submit to queue '%s'."%(user,queue))
+            
         folders=["listings","logs","sequencing","hub"]
         for folder in folders:
             path=self.path+folder
