@@ -203,7 +203,7 @@ class PopupManager:
             choices+=self.get_sequencer_choices(node_path)
         else:
             choice={"label":"Submit (disabled). Explain why.",
-                    "function":self.popup_explain_disabled_submit}
+                    "function":functools.partial(self.popup_explain_disabled_submit,node_data)}
             choices.append(choice)
         
         return choices        
@@ -351,8 +351,8 @@ class PopupManager:
                                choice_functions,
                                top_border_text=top_border_text)
     
-    def popup_explain_disabled_submit(self):
-        messages=self.maestro_experiment.explain_cannot_send_maestro_signals()
+    def popup_explain_disabled_submit(self,node_data=None):
+        messages=self.maestro_experiment.explain_cannot_send_maestro_signals(node_data=node_data)
         if messages:
             message="The 'maestro' command isn't going to work.\n * "+"\n * ".join(messages)
         else:
