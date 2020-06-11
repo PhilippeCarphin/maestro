@@ -53,30 +53,27 @@ class ME_Resources():
                         element.attrib[key]=new_value
         return root
 
-    def get_batch_resource_from_xml(self,path):
+    def get_batch_data_from_xml(self,path):
         """
         Given a resources XML path, returns a batch resource dictionary
         with keys like 'cpu' and 'wallclock'.
-        If values are missing, use values in DEFAULT_BATCH_RESOURCES
         """
         
         root=self.get_resource_xml(path)
         
         if root is None:
-            return DEFAULT_BATCH_RESOURCES
+            return {}
                 
         batch_elements=root.xpath("//BATCH")
         if len(batch_elements)==0:
             logger.debug("did not find <BATCH> in resource XML: '%s'"%path)
-            return DEFAULT_BATCH_RESOURCES
+            return {}
         
         batch=batch_elements[0]
         result={}
         for key in DEFAULT_BATCH_RESOURCES:
             if key in batch.attrib:
                 result[key]=batch.attrib[key]
-            else:
-                result[key]=DEFAULT_BATCH_RESOURCES[key]
         return result
     
     def get_resource_value_from_key(self,key):

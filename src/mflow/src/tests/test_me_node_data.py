@@ -4,7 +4,7 @@ from maestro_experiment import MaestroExperiment
 from constants.test import BIG_ME_PATH, TURTLE_ME_PATH, SUBMIT_CHAIN_ME_PATH
 from constants import JSON_SCHEMAS, NODE_TYPE
 from utilities import assert_valid_json, pretty, get_true_host
-from mflow_utilities.resources import insert_default_batch_resources
+from mflow_utilities.resources import insert_default_batch_data
 from tests.cache import G1_MINI_ME, TURTLE_ME, BIG_ME, SUBMIT_CHAIN_ME
 
 """
@@ -50,7 +50,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "submits_children_node_paths":children,
                   "task_path":"",
                   "type":NODE_TYPE.MODULE}
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)
@@ -74,7 +74,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "submits_children_node_paths":[],
                   "task_path":me.path+"modules/cutoff/cutoff.tsk",
                   "type":NODE_TYPE.NPASS_TASK}
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)
@@ -104,7 +104,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "task_path":TURTLE_ME_PATH+"modules/turtle/turtleTask1.tsk",
                   "type":NODE_TYPE.TASK,
                   "wallclock":60} 
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)
@@ -128,7 +128,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "submits_children_node_paths":[],
                   "task_path":TURTLE_ME_PATH+"modules/turtle/TurtlePower/shredderTask.tsk",
                   "type":NODE_TYPE.TASK}       
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)
@@ -152,7 +152,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "submits_children_node_paths":[],
                   "task_path":TURTLE_ME_PATH+"modules/turtle/TurtlePower/BossaNova/donatello.tsk",
                   "type":NODE_TYPE.TASK}        
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)
@@ -187,7 +187,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "submits_children_node_paths":children,
                   "task_path":"",
                   "type":NODE_TYPE.LOOP}        
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)
@@ -212,7 +212,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "submits_children_node_paths":children,
                   "task_path":"",
                   "type":NODE_TYPE.LOOP}
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)

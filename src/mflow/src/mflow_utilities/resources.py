@@ -14,7 +14,7 @@ DEFAULT_BATCH_RESOURCES={"catchup":4,
                          "soumet_args":"",
                          "wallclock":5}
 
-def insert_default_batch_resources(node_data,overwrite=False):
+def insert_default_batch_data(node_data,overwrite=False):
     for key,item in DEFAULT_BATCH_RESOURCES.items():
         if overwrite or key not in node_data:
             node_data[key]=DEFAULT_BATCH_RESOURCES[key]
