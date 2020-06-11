@@ -5,9 +5,8 @@ This code handles code related node_data for the MaestroExperiment class.
 This abstract class is not meant to be instantiated, only inherited.
 """
 
-from constants import NODE_TYPE
-from mflow_utilities import DEFAULT_BATCH_RESOURCES
-from utilities import pretty, superstrip
+from constants import NODE_TYPE, DEFAULT_BATCH_RESOURCES
+from utilities import pretty, superstrip, get_true_host
 from maestro.xml import is_container
 
 class ME_NodeData():
@@ -62,7 +61,7 @@ class ME_NodeData():
                 "flow_path":flow_data["flow_path"],
                 "type":node_type}
         
-        self.add_batch_resource_to_node_data(node_data,resource_path)
+        self.add_batch_data_to_node_data(node_data,resource_path)
         self.cast_node_data(node_data)
         
         if node_type == NODE_TYPE.SWITCH:
@@ -90,31 +89,39 @@ class ME_NodeData():
             if type(default) != type(node_data[key]):
                 node_data[key]=default
     
-    def add_batch_resource_to_node_data(self,node_data,resource_path):
+    def add_batch_data_to_node_data(self,node_data,resource_path):
         """
         Read this resource XML and add some of its <BATCH> attributes to this 
         node_data dictionary, like "cpu" and "catchup"
         """
         
-        partial_node_data=self.get_batch_resource_from_xml(resource_path)
+        batch_data=self.get_batch_data_from_xml(resource_path)
         
         "replace values like '${FRONTEND}' with the resource value for FRONTEND"
-        for key,item in partial_node_data.items():
+        for key,item in batch_data.items():
             if type(item) is str and item.startswith("$"):
                 name=superstrip(item,"${}")
                 value=self.get_resource_value_from_key(name)
-                partial_node_data[key]=value
+                batch_data[key]=value
         
         """
         insert resource data into node_data
-        for key each, use defaults if not in resource data
+        for each key, use defaults if not in resource data
         """
         for key,default in DEFAULT_BATCH_RESOURCES.items():
-            if key in partial_node_data:
-                node_data[key]=partial_node_data[key]
+            if key in batch_data:
+                node_data[key]=batch_data[key]
             else:
                 node_data[key]=DEFAULT_BATCH_RESOURCES[key]
-    
+        
+        "if no machine in <BATCH> use default in resources"
+        key="machine"
+        if key not in node_data:
+            node_data[key]=self.get_resource_value_from_key("SEQ_DEFAULT_MACHINE")
+        
+        "if still not machine, use true host"
+        if not node_data[key]:
+            node_data[key]=get_true_host()
     
     
     

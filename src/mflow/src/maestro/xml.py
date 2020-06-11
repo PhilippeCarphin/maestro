@@ -11,7 +11,7 @@ import lxml
 from lxml import etree
 from utilities.shell import safe_check_output, safe_check_output_with_status
 from utilities import pprint, pretty, pprint_kwargs, xml_cache
-from mflow_utilities import logger, DEFAULT_BATCH_RESOURCES
+from mflow_utilities import logger
 from constants import TMP_FOLDER, NODE_TYPE, NODE_TYPES, CONTAINER_TAGS
 
 "A regex where group(1) is the contents of the 'catchup' attribute."
@@ -424,7 +424,8 @@ def get_combined_flow_from_text_list(xml_datas,verbose=False):
             made_progress=True
     
     if incomplete_modules:
-        logger.error("combine flow XML failed to resolve all modules containing empty module children.")
+        message="\n\n".join([pretty(m) for m in incomplete_modules])
+        logger.error("combine flow XML failed to resolve all modules containing empty module children. incomplete_modules =\n"+message)
     
     return main_flow
         

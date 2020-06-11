@@ -4,7 +4,7 @@ from maestro_experiment import MaestroExperiment
 from constants.test import BIG_ME_PATH, TURTLE_ME_PATH, SUBMIT_CHAIN_ME_PATH
 from constants import JSON_SCHEMAS, NODE_TYPE
 from utilities import assert_valid_json, pretty, get_true_host
-from mflow_utilities.resources import insert_default_batch_resources
+from mflow_utilities.resources import insert_default_batch_data
 from tests.cache import G1_MINI_ME, TURTLE_ME, BIG_ME, SUBMIT_CHAIN_ME
 
 """
@@ -18,6 +18,15 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.maxDiff=5000
+        
+    def test_default_machine(self):
+        "machine is SEQ_DEFAULT_MACHINE from resources.def if undefined in <BATCH>"
+        
+        me=TURTLE_ME
+        node_data=me.get_node_data("turtle/TurtlePower/BossaNova/donatello")
+        result=node_data["machine"]
+        expected="turtle-default-machine"
+        self.assertEqual(expected,result)        
             
     def test_get_node_data_module(self):
         node_path="sample"
@@ -43,6 +52,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[],
                   "flow_branch":node_path,
                   "flow_path":me.path+"modules/sample/flow.xml",
+                  "machine":"complete-exp-default-machine",
                   "module_name":"sample",
                   "name":"sample",
                   "path":node_path,
@@ -50,7 +60,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "submits_children_node_paths":children,
                   "task_path":"",
                   "type":NODE_TYPE.MODULE}
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)
@@ -67,6 +77,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[],
                   "flow_branch":"main/pre_assimcycle/get_arcdata_cutoff/cutoff/submit_families/cutoff",
                   "flow_path":me.path+"modules/cutoff/flow.xml",
+                  "machine":"g1-mini-default-machine",
                   "module_name":"cutoff",
                   "name":"cutoff",
                   "path":node_path,
@@ -74,7 +85,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "submits_children_node_paths":[],
                   "task_path":me.path+"modules/cutoff/cutoff.tsk",
                   "type":NODE_TYPE.NPASS_TASK}
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)
@@ -93,7 +104,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[],
                   "flow_branch":node_path,
                   "flow_path":me.path+"modules/turtle/flow.xml",
-                  "machine":"eccc-ppp3",
+                  "machine":"turtle-default-machine",
                   "memory":"4G",
                   "module_name":"turtle",
                   "name":"turtleTask1",
@@ -104,7 +115,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "task_path":TURTLE_ME_PATH+"modules/turtle/turtleTask1.tsk",
                   "type":NODE_TYPE.TASK,
                   "wallclock":60} 
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)
@@ -121,6 +132,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[],
                   "flow_branch":node_path,
                   "flow_path":me.path+"modules/turtle/flow.xml",
+                  "machine":"turtle-default-machine",
                   "module_name":"turtle",
                   "name":"shredderTask",
                   "path":node_path,
@@ -128,7 +140,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "submits_children_node_paths":[],
                   "task_path":TURTLE_ME_PATH+"modules/turtle/TurtlePower/shredderTask.tsk",
                   "type":NODE_TYPE.TASK}       
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)
@@ -145,6 +157,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[],
                   "flow_branch":node_path,
                   "flow_path":me.path+"modules/turtle/flow.xml",
+                  "machine":"turtle-default-machine",
                   "module_name":"turtle",
                   "name":"donatello",
                   "path":node_path,
@@ -152,7 +165,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "submits_children_node_paths":[],
                   "task_path":TURTLE_ME_PATH+"modules/turtle/TurtlePower/BossaNova/donatello.tsk",
                   "type":NODE_TYPE.TASK}        
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)
@@ -180,6 +193,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[0,1],
                   "flow_branch":node_path,
                   "flow_path":me.path+"modules/turtle/flow.xml",
+                  "machine":"turtle-default-machine",
                   "module_name":"turtle",
                   "name":"TurtlePower",
                   "path":node_path,
@@ -187,7 +201,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "submits_children_node_paths":children,
                   "task_path":"",
                   "type":NODE_TYPE.LOOP}        
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)
@@ -205,6 +219,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[0,3,6,9],
                   "flow_branch":node_path,
                   "flow_path":me.path+"modules/turtle/flow.xml",
+                  "machine":"turtle-default-machine",
                   "module_name":"turtle",
                   "name":"BossaNova",
                   "path":node_path,
@@ -212,7 +227,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "submits_children_node_paths":children,
                   "task_path":"",
                   "type":NODE_TYPE.LOOP}
-        insert_default_batch_resources(expected)
+        insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)
         self.assertEqual(expected,result,msg=msg)

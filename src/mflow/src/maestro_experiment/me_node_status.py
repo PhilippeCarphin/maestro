@@ -16,7 +16,7 @@ class ME_NodeStatus():
     def get_node_status(self,node_path,loop_index_selection=None,node_log_refresh_interval=10):
         """
         Find the appropriate status file and return its status. Example status file:           
-        simple_experiment/sequencing/status/20200401000000/turtle/TurtlePower/BossaNova/donatello.+0+0.end
+        turtle_experiment/sequencing/status/20200401000000/turtle/TurtlePower/BossaNova/donatello.+0+0.end
         
         loop_index_selection = {"loop1":5,"loop2":7}
         """

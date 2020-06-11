@@ -3,7 +3,7 @@ from constants.path import MFLOW_ROOT
 TESTS_FOLDER=MFLOW_ROOT+"src/tests/"
 MOCK_FILES=TESTS_FOLDER+"mock_files/"
 BIG_ME_PATH=MOCK_FILES+"complete_experiment/"
-TURTLE_ME_PATH=MOCK_FILES+"simple_experiment/"
+TURTLE_ME_PATH=MOCK_FILES+"turtle_experiment/"
 BIG_LOOP_ME_PATH=MOCK_FILES+"big_loop_experiment/"
 SUBMIT_CHAIN_ME_PATH=MOCK_FILES+"submit-chain-experiment/"
 GDPS_MINI_ME_PATH=MOCK_FILES+"gdps-mini/"
@@ -28,5 +28,6 @@ NODE_LOG_UTF8_ERROR=MOCK_FILES+"20200604120000_nodelog_utf8_error"
 
 RESOURCES_HOME1=MOCK_FILES+"resources-home1/"
 RESOURCES_HOME2=MOCK_FILES+"resources-home2/"
+RESOURCES_HOME3=MOCK_FILES+"resources-home3/"
 
 TURTLE_DATESTAMP1="2020040100"
