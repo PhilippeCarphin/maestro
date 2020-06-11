@@ -18,6 +18,15 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.maxDiff=5000
+        
+    def test_default_machine(self):
+        "machine is SEQ_DEFAULT_MACHINE from resources.def if undefined in <BATCH>"
+        
+        me=TURTLE_ME
+        node_data=me.get_node_data("turtle/TurtlePower/BossaNova/donatello")
+        result=node_data["machine"]
+        expected="turtle-default-machine"
+        self.assertEqual(expected,result)        
             
     def test_get_node_data_module(self):
         node_path="sample"
@@ -43,6 +52,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[],
                   "flow_branch":node_path,
                   "flow_path":me.path+"modules/sample/flow.xml",
+                  "machine":"complete-exp-frontend",
                   "module_name":"sample",
                   "name":"sample",
                   "path":node_path,
@@ -67,6 +77,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[],
                   "flow_branch":"main/pre_assimcycle/get_arcdata_cutoff/cutoff/submit_families/cutoff",
                   "flow_path":me.path+"modules/cutoff/flow.xml",
+                  "machine":"g1-mini-default-machine",
                   "module_name":"cutoff",
                   "name":"cutoff",
                   "path":node_path,
@@ -93,7 +104,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[],
                   "flow_branch":node_path,
                   "flow_path":me.path+"modules/turtle/flow.xml",
-                  "machine":"eccc-ppp3",
+                  "machine":"turtle-frontend",
                   "memory":"4G",
                   "module_name":"turtle",
                   "name":"turtleTask1",
@@ -121,6 +132,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[],
                   "flow_branch":node_path,
                   "flow_path":me.path+"modules/turtle/flow.xml",
+                  "machine":"turtle-frontend",
                   "module_name":"turtle",
                   "name":"shredderTask",
                   "path":node_path,
@@ -145,6 +157,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[],
                   "flow_branch":node_path,
                   "flow_path":me.path+"modules/turtle/flow.xml",
+                  "machine":"turtle-frontend",
                   "module_name":"turtle",
                   "name":"donatello",
                   "path":node_path,
@@ -180,6 +193,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[0,1],
                   "flow_branch":node_path,
                   "flow_path":me.path+"modules/turtle/flow.xml",
+                  "machine":"turtle-frontend",
                   "module_name":"turtle",
                   "name":"TurtlePower",
                   "path":node_path,
@@ -205,6 +219,7 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
                   "loop_indexes_available":[0,3,6,9],
                   "flow_branch":node_path,
                   "flow_path":me.path+"modules/turtle/flow.xml",
+                  "machine":"turtle-frontend",
                   "module_name":"turtle",
                   "name":"BossaNova",
                   "path":node_path,

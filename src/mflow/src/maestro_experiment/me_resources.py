@@ -9,7 +9,7 @@ from lxml import etree
 import os.path
 
 from utilities import get_key_value_from_path, logger, superstrip
-from mflow_utilities import DEFAULT_BATCH_RESOURCES
+from constants import DEFAULT_BATCH_RESOURCES
 
 class ME_Resources():    
 

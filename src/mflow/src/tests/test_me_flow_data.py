@@ -18,7 +18,7 @@ class TestMaestroExperimentFlowData(unittest.TestCase):
     def setUpClass(cls):
         cls.maxDiff=2000
             
-    def test_simple_experiment_flow_data(self):
+    def test_turtle_experiment_flow_data(self):
         node_path="turtle"
         me=MaestroExperiment(TURTLE_ME_PATH)
         result=me.get_flow_data(node_path)

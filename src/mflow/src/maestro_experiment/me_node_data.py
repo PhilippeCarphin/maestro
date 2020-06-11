@@ -5,9 +5,8 @@ This code handles code related node_data for the MaestroExperiment class.
 This abstract class is not meant to be instantiated, only inherited.
 """
 
-from constants import NODE_TYPE
-from mflow_utilities import DEFAULT_BATCH_RESOURCES
-from utilities import pretty, superstrip
+from constants import NODE_TYPE, DEFAULT_BATCH_RESOURCES
+from utilities import pretty, superstrip, get_true_host
 from maestro.xml import is_container
 
 class ME_NodeData():
@@ -114,7 +113,11 @@ class ME_NodeData():
                 node_data[key]=batch_data[key]
             else:
                 node_data[key]=DEFAULT_BATCH_RESOURCES[key]
-    
+        
+        if not node_data["machine"]:
+            node_data["machine"]=self.get_resource_value_from_key("SEQ_DEFAULT_MACHINE")
+        if not node_data["machine"]:
+            node_data["machine"]=get_true_host()
     
     
     

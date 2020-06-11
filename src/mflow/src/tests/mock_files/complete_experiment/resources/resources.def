@@ -1,7 +1,7 @@
-FRONTEND=eccc-ppp1
+FRONTEND=complete-exp-frontend
 BACKEND=brooks
 
-SEQ_DEFAULT_MACHINE=eccc-ppp1
+SEQ_DEFAULT_MACHINE=complete-exp-default-machine
 
 #SEQ_CONTAINER_METHOD=submit
 SEQ_CONTAINER_METHOD=immediate

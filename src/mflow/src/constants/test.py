@@ -3,7 +3,7 @@ from constants.path import MFLOW_ROOT
 TESTS_FOLDER=MFLOW_ROOT+"src/tests/"
 MOCK_FILES=TESTS_FOLDER+"mock_files/"
 BIG_ME_PATH=MOCK_FILES+"complete_experiment/"
-TURTLE_ME_PATH=MOCK_FILES+"simple_experiment/"
+TURTLE_ME_PATH=MOCK_FILES+"turtle_experiment/"
 BIG_LOOP_ME_PATH=MOCK_FILES+"big_loop_experiment/"
 SUBMIT_CHAIN_ME_PATH=MOCK_FILES+"submit-chain-experiment/"
 GDPS_MINI_ME_PATH=MOCK_FILES+"gdps-mini/"
