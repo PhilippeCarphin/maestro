@@ -29,13 +29,21 @@ class TestMaestroResources(unittest.TestCase):
         
         "ignore default_resources.def because task resource xml exists"
         result=me.get_resource_value_from_key("FRONTEND")
-        expected="eccc-ppp3"
+        expected="turtle-frontend"
+        self.assertEqual(result,expected)
+        
+        result=me.get_resource_value_from_key("SEQ_DEFAULT_MACHINE")
+        expected="turtle-default-machine"
         self.assertEqual(result,expected)
     
         "ignore task resource xml because overrides.def exists"
         me=MaestroExperiment(TURTLE_ME_PATH,user_home=RESOURCES_HOME2)
         result=me.get_resource_value_from_key("FRONTEND")
-        expected="frontend-ov-home2"
+        expected="overrides-home2-frontend"
+        self.assertEqual(result,expected)
+        
+        result=me.get_resource_value_from_key("SEQ_DEFAULT_MACHINE")
+        expected="overrides-home2-default-machine"
         self.assertEqual(result,expected)
     
     def test_me_node_data_resources(self):
@@ -57,7 +65,7 @@ class TestMaestroResources(unittest.TestCase):
         me=MaestroExperiment(TURTLE_ME_PATH,user_home=RESOURCES_HOME2)
         node_path="turtle/turtleTask1"
         result_node_data=me.get_node_data(node_path)
-        machine="frontend-ov-home2"
+        machine="overrides-home2-default-machine"
         expected=machine
         result=result_node_data["machine"]
         self.assertEqual(result,expected)

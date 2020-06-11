@@ -106,7 +106,7 @@ class ME_NodeData():
         
         """
         insert resource data into node_data
-        for key each, use defaults if not in resource data
+        for each key, use defaults if not in resource data
         """
         for key,default in DEFAULT_BATCH_RESOURCES.items():
             if key in batch_data:
@@ -114,10 +114,14 @@ class ME_NodeData():
             else:
                 node_data[key]=DEFAULT_BATCH_RESOURCES[key]
         
-        if not node_data["machine"]:
-            node_data["machine"]=self.get_resource_value_from_key("SEQ_DEFAULT_MACHINE")
-        if not node_data["machine"]:
-            node_data["machine"]=get_true_host()
+        "if no machine in <BATCH> use default in resources"
+        key="machine"
+        if key not in node_data:
+            node_data[key]=self.get_resource_value_from_key("SEQ_DEFAULT_MACHINE")
+        
+        "if still not machine, use true host"
+        if not node_data[key]:
+            node_data[key]=get_true_host()
     
     
     

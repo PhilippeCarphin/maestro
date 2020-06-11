@@ -1,8 +1,7 @@
 import unittest
 
-from utilities import get_true_host
 from maestro_experiment import MaestroExperiment
-from constants import TURTLE_ME_PATH
+from constants import TURTLE_ME_PATH, RESOURCES_HOME3
 
 """
 Tests for the TestMaestroExperiment class.
@@ -16,9 +15,11 @@ class TestMaestroExperimentLogs(unittest.TestCase):
         
     def test_get_listings(self):
         datestamp="2020032200"
-        me=MaestroExperiment(TURTLE_ME_PATH,datestamp=datestamp)
+        me=MaestroExperiment(TURTLE_ME_PATH,
+                             datestamp=datestamp,
+                             user_home=RESOURCES_HOME3)
         folder=TURTLE_ME_PATH+"listings/latest/"
-        host=get_true_host()
+        host="eccc-ppp3"
         
         expected=folder+"turtle.20200322000000.submission@"+host
         result=me.get_latest_submission_log("turtle")

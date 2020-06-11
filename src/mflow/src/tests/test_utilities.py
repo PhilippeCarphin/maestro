@@ -9,7 +9,7 @@ class TestUtilities(unittest.TestCase):
     def test_get_variable_value_from_file(self):
         path=TURTLE_ME_PATH+"/resources/resources.def"
         result=get_variable_value_from_file(path,"FRONTEND")
-        self.assertEqual(result,"eccc-ppp3")
+        self.assertEqual(result,"turtle-frontend")
         
     def test_get_day_of_week(self):
         expected=4

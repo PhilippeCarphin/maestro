@@ -1,7 +1,7 @@
 import unittest
 
 from maestro_experiment import MaestroExperiment
-from constants import BIG_ME_PATH, TURTLE_ME_PATH, JSON_SCHEMAS, NODE_TYPE
+from constants import BIG_ME_PATH, TURTLE_ME_PATH, JSON_SCHEMAS, NODE_TYPE, RESOURCES_HOME3
 from utilities import assert_valid_json, pretty
 
 """
@@ -31,7 +31,7 @@ class TestMaestroExperiment(unittest.TestCase):
         datestamp="2020040100"
         me=MaestroExperiment(TURTLE_ME_PATH,
                              datestamp=datestamp,
-                             user_home="")
+                             user_home=RESOURCES_HOME3)
         node_path="turtle/turtleTask1"
         result=me.get_workdir_path(node_path)
         expected=TURTLE_ME_PATH+"hub/eccc-ppp3/work/%s0000/turtle/turtleTask1/"%datestamp
