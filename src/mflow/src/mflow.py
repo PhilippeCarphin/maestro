@@ -37,7 +37,7 @@ from tui.docstring import adjust_docstring
 __doc__=adjust_docstring(__doc__)
 
 from utilities.docopt import docopt
-from utilities import print_red, get_config
+from utilities import print_red, get_config, logger, get_qstat_data
 from tui import TuiManager
 from maestro_experiment import MaestroExperiment
 from maestro.datestamp import get_latest_yyyymmddhh_from_experiment_path, get_yyyymmddhh
@@ -73,6 +73,9 @@ def main(args):
         for error in me.validation_errors:
             print_red(error)
         return
+    
+    print("Querying qstat for user and queue data.")
+    me.qstat_data=get_qstat_data(logger=logger)
     
     tui=TuiManager(me,
                    tui_config=tui_config,

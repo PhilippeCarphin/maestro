@@ -10,7 +10,7 @@ from maestro_experiment import MaestroExperiment
 from utilities.curses import get_curses_attr_from_string
 from utilities import clamp, get_console_dimensions, pretty, safe_write, run_shell_cmd
 from mflow_utilities import logger, set_log_level
-from constants import NAVIGATION_KEYS, CURSES_COLOR_INDEX, TUI_STATE, MFLOW_VERSION, KEYBOARD_NAVIGATION_TYPE, TMP_BASH_WRAPPER_COMMAND_FILE_PREFIX, MINIMUM_CONSOLE_DIMENSIONS, TMP_FOLDER, LOG_FOLDER
+from constants import NAVIGATION_KEYS, TUI_STATE, MFLOW_VERSION, KEYBOARD_NAVIGATION_TYPE, TMP_BASH_WRAPPER_COMMAND_FILE_PREFIX, MINIMUM_CONSOLE_DIMENSIONS, TMP_FOLDER, LOG_FOLDER
 from config import get_config
 from tui.text_flow import TextFlow
 from tui import PopupManager
@@ -57,7 +57,7 @@ class TuiManager(PopupManager):
         if debug_q_after_keypresses and debug_keypresses:
             debug_keypresses.append(ord("q"))
         self.debug_keypresses=debug_keypresses
-        
+                
         """
         immediately launch then exit okay popups with these messages
         """
@@ -130,7 +130,7 @@ class TuiManager(PopupManager):
         
         if old_state != new_state:
             self.rebuild_chunks()
-    
+                
     def is_node_collapsed(self,node):
         return self.text_flow.is_node_collapsed(node)
     
