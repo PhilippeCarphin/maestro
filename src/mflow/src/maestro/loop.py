@@ -71,6 +71,9 @@ def get_loop_composite_data_from_xml(xml):
     many start/end/step/set values.
     """
     
+    if not xml:
+        return []
+    
     if type(xml) is str:
         root=xml_cache.get(xml)
         if root is None:

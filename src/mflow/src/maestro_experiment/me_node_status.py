@@ -21,6 +21,9 @@ class ME_NodeStatus():
         loop_index_selection = {"loop1":5,"loop2":7}
         """
         
+        if not self.datestamp:
+            raise ValueError("get_node_status failed because MaestroExperiment has no datestamp. Set a snapshot with 'set_snapshot'.")
+        
         "check if a status is in the node_log, which overrides the 'sequencing/status' files."
         node_log_status=self.node_log_parser.get_status(node_path)
         node_data=self.get_node_data(node_path)        

@@ -5,7 +5,7 @@ from tui import TuiManager
 from maestro_experiment import MaestroExperiment
 from utilities import get_console_dimensions, get_config
 from constants import TURTLE_ME_PATH, BIG_LOOP_ME_PATH
-from tests.cache import TURTLE_ME
+from tests.cache import TURTLE_ME, G1_MINI_ME
 
 """
 Tests for the TuiManager class.
@@ -42,6 +42,26 @@ class TestTuiManager(unittest.TestCase):
                            debug_keypresses=keys)
             tui.start()
         
+    def test_tree_jump(self):
+        """
+        nodes are close, but on very different branches
+        press up should jump to that close node
+        """
+        
+        r=curses.KEY_RIGHT
+        d=curses.KEY_DOWN
+        u=curses.KEY_UP
+        keys=[r,d,d,r,r,r,u]
+        tui=TuiManager(G1_MINI_ME,
+                       tui_config=get_test_config(),
+                       debug_keypresses=keys)
+        tui.start()
+        
+        xy=tui.cursor["xy"]
+        result=tui.text_flow.get_node_path_from_xy(xy[0],xy[1])
+        expected="main/assimcycle/anlpost/anlpres"
+        self.assertEqual(result,expected,msg=str(xy))
+        
     def test_node_select_popup(self):
         datestamp="2020040100"
         me=MaestroExperiment(TURTLE_ME_PATH,datestamp=datestamp)
@@ -65,7 +85,7 @@ class TestTuiManager(unittest.TestCase):
         xy=(20,1)
         
         "press enter, scroll around the popup options, cancel and quit"
-        keys=[ord("\n"),ord("\n")]+[curses.KEY_DOWN]*200+[ord("c")]
+        keys=[ord("\n"),curses.KEY_DOWN,ord("\n")]+[curses.KEY_DOWN]*200+[ord("c")]
         tui=TuiManager(me,
                        tui_config=get_test_config(),
                        cursor_start_xy=xy,
