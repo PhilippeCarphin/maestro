@@ -2,8 +2,8 @@
 The contents of this script are generally useful and can be copied, without modification, to other python projects.
 """
 
-import os, gzip, os.path, datetime
-from utilities.colors import *
+import os, gzip, os.path
+from utilities.colors import print_green
 from utilities.path import get_matching_paths_recursively
 
 def get_change_time(path):
@@ -24,6 +24,12 @@ def insert_into_dictionary(a,b):
     for key,item in b.items():
         if key not in a:
             a[key]=b[key]
+
+def get_distance(x1,x2,y1,y2):
+    "returns float cartesian distance between two points"
+    x=abs(x1-x2)
+    y=abs(y1-y2)
+    return (x**2+y**2)**0.5
 
 def get_key_value_from_path(key,path):
     """

@@ -71,7 +71,8 @@ def get_loop_composite_data_from_xml(xml):
     many start/end/step/set values.
     """
     
-    if not xml:
+    "is_element precedes 'not xml' to avoid silly lxml warning about boolean checks on elements"
+    if not is_element(xml) and not xml:
         return []
     
     if type(xml) is str:

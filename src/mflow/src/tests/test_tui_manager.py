@@ -55,9 +55,7 @@ class TestTuiManager(unittest.TestCase):
         me=MaestroExperiment(G1_MINI_ME_PATH)
         me.set_snapshot("2020040100")
         
-        tui=TuiManager(me,
-                       debug_keypresses=keys,
-                       debug_keypress_sleep=0.2)
+        tui=TuiManager(me,debug_keypresses=keys)
         tui.start()
         
         xy=tui.cursor["xy"]

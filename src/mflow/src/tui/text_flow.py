@@ -49,6 +49,8 @@ class TextFlow():
              "min_y":0,
              "max_x":0,
              "max_y":0,
+             "center_x":0,
+             "center_y":0,
              "width":0,
              "height":0}
         """
@@ -268,6 +270,8 @@ class TextFlow():
                 "max_y":y+height-1,
                 "width":width,
                 "height":height}
+        rect["center_x"]=int((rect["min_x"]+rect["max_x"])/2)
+        rect["center_y"]=int((rect["min_y"]+rect["max_y"])/2)
         
         "add node rect to (x,y) lookup map"
         self.node_rects[node_path]=rect

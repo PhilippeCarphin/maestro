@@ -8,7 +8,7 @@ from curses import wrapper
 
 from maestro_experiment import MaestroExperiment
 from utilities.curses import get_curses_attr_from_string
-from utilities import clamp, get_console_dimensions, pretty, safe_write, run_shell_cmd
+from utilities import clamp, get_console_dimensions, pretty, safe_write, run_shell_cmd, get_distance
 from mflow_utilities import logger, set_log_level
 from constants import NAVIGATION_KEYS, TUI_STATE, MFLOW_VERSION, KEYBOARD_NAVIGATION_TYPE, TMP_BASH_WRAPPER_COMMAND_FILE_PREFIX, MINIMUM_CONSOLE_DIMENSIONS, TMP_FOLDER, LOG_FOLDER
 from config import get_config
@@ -58,6 +58,7 @@ class TuiManager(PopupManager):
         if debug_q_after_keypresses and debug_keypresses:
             debug_keypresses.append(ord("q"))
         self.debug_keypresses=debug_keypresses
+        self.allow_user_input=not bool(debug_keypresses)
         
         """
         Wait this many seconds between debug key presses.
@@ -425,6 +426,9 @@ class TuiManager(PopupManager):
                 time.sleep(self.debug_keypress_sleep)
             self.debug_keypresses=[]
         
+        if not self.allow_user_input:
+            return
+        
         if self.debug_okay_messages and self.tui_state != TUI_STATE.CHOICE_POPUP:
             message=self.debug_okay_messages.pop(0)
             
@@ -559,22 +563,14 @@ class TuiManager(PopupManager):
         current_node_path=self.text_flow.get_node_path_from_xy(x,y)
         if not current_node_path:
             logger.error("keyboard tree navigation failed. Cursor is not on any node, but it should always be.")
-            return        
-        siblings=self.maestro_experiment.get_siblings(current_node_path)
+            return
         new_target_node=""
-        sibling_index=siblings.index(current_node_path)
         
         "handle all cases up/down/left/right"
         if c == curses.KEY_UP:
-            sibling_index-=1
-            if sibling_index<0:
-                sibling_index=len(siblings)-1
-            new_target_node=siblings[sibling_index]
+            new_target_node=self.process_tree_navigation_up_down(True,current_node_path)
         elif c == curses.KEY_DOWN:
-            sibling_index+=1
-            if sibling_index>=len(siblings):
-                sibling_index=0
-            new_target_node=siblings[sibling_index]
+            new_target_node=self.process_tree_navigation_up_down(False,current_node_path)
         elif c == curses.KEY_LEFT:
             parent=self.maestro_experiment.get_parent(current_node_path)
             if parent:
@@ -602,6 +598,95 @@ class TuiManager(PopupManager):
                 self.move_cursor(xy[0],xy[1])            
                 self.clamp_cursor_and_flow()
                 self.rebuild_chunks()
+                
+    def process_tree_navigation_up_down(self,is_up,current_node_path):
+        """
+        In tree navigation mode, up/down was pressed.
+        Returns the node_path that we should have selected after this keypress.
+        """
+        siblings=self.maestro_experiment.get_siblings(current_node_path)
+        sibling_index=siblings.index(current_node_path)
+        is_bjump=self.tui_config["NAVIGATION_BRANCH_JUMPS"]
+        rect=self.text_flow.node_rects.get(current_node_path)
+        
+        if is_up:
+            sibling_index-=1
+        else:
+            sibling_index+=1
+        
+        "if we scrolled too high, loop, or jump"
+        if sibling_index<0:
+            if is_bjump:
+                x,y=rect["center_x"],rect["min_y"]-1
+                jump_target=self.get_branch_jump_target(x,y,is_up=True)
+                if jump_target:
+                    return jump_target
+                return current_node_path
+            else:
+                sibling_index=len(siblings)-1
+        
+        "if we scrolled too low, loop, or jump"
+        if sibling_index>=len(siblings):
+            if is_bjump:
+                x,y=rect["center_x"],rect["max_y"]+1
+                jump_target=self.get_branch_jump_target(x,y,is_up=False)
+                if jump_target:
+                    return jump_target
+                return current_node_path
+            else:
+                sibling_index=0
+        
+        return siblings[sibling_index]
+    
+    def get_branch_jump_target(self,start_x,start_y,is_up):
+        """
+        Starting at (x,y), scans either up or down
+        to find the nearest node to (x,y)
+        Returns None if no node is found.
+        """
+        logger.debug("get_branch_jump_target (%s,%s) is_up=%s"%(start_x,start_y,is_up))
+        "find all rects within a large box above/below this point"
+        rects={}
+        
+        "define the box we will scan"
+        half_width=10+self.tui_config["NODE_ARROW_DASH_COUNT"]
+        height=4*self.tui_config["NODE_MARGIN_BOTTOM"]
+        min_x=start_x-half_width
+        max_x=start_x+half_width
+        
+        if is_up:
+            min_y=start_y-height
+            max_y=start_y
+        else:
+            min_y=start_y
+            max_y=start_y+height
+            
+        "find all node_path rects within that box"
+        for node_path,rect in self.text_flow.node_rects.items():
+            if rect["max_x"]<min_x:
+                continue
+            if rect["min_x"]>max_x:
+                continue
+            if rect["max_y"]<min_y:
+                continue
+            if rect["min_y"]>max_y:
+                continue
+            rects[node_path]=rect
+            
+        "find the node_path with the smallest distance"
+        best_distance=0
+        best_node_path=""
+        
+        for node_path,rect in rects.items():
+            
+            "sideways distance costs more"
+            distance=abs(start_x-rect["center_x"])*2+abs(start_y-rect["center_y"])
+            
+            if not best_node_path or distance<best_distance:
+                best_distance=distance
+                best_node_path=node_path
+                
+        return best_node_path
                 
     def debug_input_char(self,c):
         """

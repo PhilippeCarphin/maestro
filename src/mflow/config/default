@@ -15,6 +15,10 @@ TEXT_VIEWER_AND_EDITOR=vim
 # 'coordinate' or 'tree'
 KEYBOARD_NAVIGATION=tree
 
+# Pressing up/down will try to jump to the nearest node, even if
+# it is on a very different branch.
+NAVIGATION_BRANCH_JUMPS=true
+
 # How much vertical space is between node siblings
 NODE_MARGIN_BOTTOM=2
 
