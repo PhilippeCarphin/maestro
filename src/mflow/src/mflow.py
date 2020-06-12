@@ -38,7 +38,7 @@ __doc__=adjust_docstring(__doc__)
 
 from utilities.docopt import docopt
 from utilities import print_red, get_config, logger
-from mflow_utilities.async import async_set_qstat_data_in_maestro_experiment
+from mflow_utilities.threading import async_set_qstat_data_in_maestro_experiment
 from tui import TuiManager
 from maestro_experiment import MaestroExperiment
 from maestro.datestamp import get_latest_yyyymmddhh_from_experiment_path, get_yyyymmddhh
