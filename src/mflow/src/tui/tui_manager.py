@@ -27,6 +27,7 @@ class TuiManager(PopupManager):
                  debug_keypresses=None,
                  debug_q_after_keypresses=True,
                  debug_okay_messages=None,
+                 debug_keypress_sleep=0,
                  verbose=False,
                  tui_id=None):
         
@@ -57,6 +58,12 @@ class TuiManager(PopupManager):
         if debug_q_after_keypresses and debug_keypresses:
             debug_keypresses.append(ord("q"))
         self.debug_keypresses=debug_keypresses
+        
+        """
+        Wait this many seconds between debug key presses.
+        Useful to see the automated tui interaction in tests.
+        """
+        self.debug_keypress_sleep=debug_keypress_sleep
                 
         """
         immediately launch then exit okay popups with these messages
@@ -415,6 +422,7 @@ class TuiManager(PopupManager):
         if self.debug_keypresses:
             for c in self.debug_keypresses:
                 self.process_user_input_char(c)
+                time.sleep(self.debug_keypress_sleep)
             self.debug_keypresses=[]
         
         if self.debug_okay_messages and self.tui_state != TUI_STATE.CHOICE_POPUP:

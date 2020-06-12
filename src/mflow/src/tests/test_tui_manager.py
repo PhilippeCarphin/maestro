@@ -4,7 +4,7 @@ import curses
 from tui import TuiManager
 from maestro_experiment import MaestroExperiment
 from utilities import get_console_dimensions, get_config
-from constants import TURTLE_ME_PATH, BIG_LOOP_ME_PATH
+from constants import TURTLE_ME_PATH, BIG_LOOP_ME_PATH, G1_MINI_ME_PATH
 from tests.cache import TURTLE_ME, G1_MINI_ME
 
 """
@@ -52,9 +52,12 @@ class TestTuiManager(unittest.TestCase):
         d=curses.KEY_DOWN
         u=curses.KEY_UP
         keys=[r,d,d,r,r,r,u]
-        tui=TuiManager(G1_MINI_ME,
-                       tui_config=get_test_config(),
-                       debug_keypresses=keys)
+        me=MaestroExperiment(G1_MINI_ME_PATH)
+        me.set_snapshot("2020040100")
+        
+        tui=TuiManager(me,
+                       debug_keypresses=keys,
+                       debug_keypress_sleep=0.2)
         tui.start()
         
         xy=tui.cursor["xy"]
