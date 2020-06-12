@@ -37,7 +37,8 @@ from tui.docstring import adjust_docstring
 __doc__=adjust_docstring(__doc__)
 
 from utilities.docopt import docopt
-from utilities import print_red, get_config, logger, get_qstat_data
+from utilities import print_red, get_config, logger
+from mflow_utilities.async import async_set_qstat_data_in_maestro_experiment
 from tui import TuiManager
 from maestro_experiment import MaestroExperiment
 from maestro.datestamp import get_latest_yyyymmddhh_from_experiment_path, get_yyyymmddhh
@@ -74,8 +75,11 @@ def main(args):
             print_red(error)
         return
     
-    print("Querying qstat for user and queue data.")
-    me.qstat_data=get_qstat_data(logger=logger)
+    """
+    Launch a different thread to run, parse, and eventually set qstat_data
+    Not required, but nice to have for user/queue checks.
+    """
+    async_set_qstat_data_in_maestro_experiment(me)
     
     tui=TuiManager(me,
                    tui_config=tui_config,

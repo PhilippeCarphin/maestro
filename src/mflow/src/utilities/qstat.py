@@ -1,6 +1,6 @@
 import os.path
 
-from utilities import safe_check_output_with_status
+from utilities.shell import safe_check_output_with_status
 
 def get_qstat_data_from_path(path):
     if not os.path.isfile(path):
