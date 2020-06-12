@@ -32,9 +32,7 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
                  datestamp=None,
                  node_log_refresh_interval=10,
                  user_home=None):
-        
-        self.node_log_refresh_interval=clamp(node_log_refresh_interval,1,600)
-        
+                
         """
         A list of strings describing any errors in parsing or reading this experiment path.
         """
@@ -71,6 +69,15 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
             raise ValueError("Experiment validation errors:\n"+"\n".join(self.validation_errors))
             
         self.inspect_flow()
+        
+        """
+        Avoid a situation where a user preference requests a full refresh on all
+        statuses every 0.01 seconds for very large suites.
+        Minimum interval is according to a square root function of node count.
+        """
+        node_count=len(self.node_datas)
+        min_interval=1+node_count**(1/2)/10
+        self.node_log_refresh_interval=clamp(node_log_refresh_interval,min_interval,600)
                 
         if datestamp:
             self.set_snapshot(datestamp)
