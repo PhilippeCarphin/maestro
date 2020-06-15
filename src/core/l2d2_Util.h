@@ -67,4 +67,10 @@ dpnode *getDependencyFiles(char *DDep, char *xp , FILE *fp, const char *deptype)
 int globerr(const char *path, int eerrno);
 int sendmail(const char *to, const char *from, const char *cc , const char *subject, const char *message, FILE *);
 int l2d2_Util_isNodeXState (const char* node, const char* loopargs, const char* datestamp, const char* exp, const char* state);
+
+
+extern char *page_start_dep;
+extern char *page_end_dep;
+extern char *page_start_blocked;
+extern char *page_end_blocked;
 #endif
