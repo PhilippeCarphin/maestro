@@ -62,6 +62,11 @@
 
 #define MAX_LOCK_TRY 11
 
+static void maestro_l2d2_main_process_server (int fserver);
+static void l2d2server_shutdown (pid_t pid , FILE *fp);
+static void l2d2server_remove (FILE *fp);
+static void l2d2SelectServlet( int sock , TypeOfWorker twrk );
+
 /* globals vars */
 unsigned int pidTken = 0;
 unsigned int ChildPids[MAX_PROCESS]={0};
@@ -999,7 +1004,7 @@ static void l2d2SelectServlet( int listen_sd , TypeOfWorker tworker)
 }
 
 
-void maestro_l2d2_main_process_server (int fserver)
+static void maestro_l2d2_main_process_server (int fserver)
 {
   FILE *smlog, *fp;
   pid_t pid_eworker, kpid;  /* pid_eworker : pid of eternal worker */
