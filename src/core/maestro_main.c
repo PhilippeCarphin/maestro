@@ -27,7 +27,9 @@
 #include "SeqUtil.h"
 #include "SeqNameValues.h"
 #include "SeqDatesUtil.h"
+#include "SeqLoopsUtil.h"
 #include "getopt.h"
+#include <libxml/parser.h>
 /***********************************************************************************
 * name: maestro
 *
