@@ -1,0 +1,59 @@
+<MODULE name="envar">
+  <SUBMITS sub_name="getObservations"/>
+  <SUBMITS sub_name="getTrials"/>
+  <SUBMITS sub_name="getEnsTrials"/>
+  <SUBMITS sub_name="getStats"/>
+
+  <TASK name="getObservations"/>
+  <TASK name="getStats"/>
+
+  <TASK name="getTrials">
+    <SUBMITS sub_name="VAR"/>
+  </TASK>
+
+  <TASK name="VAR">
+    <DEPENDS_ON dep_name="./getObservations"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getEnsTrials"     status="end" type="node"/>
+    <DEPENDS_ON dep_name="./interpEnsTrials"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getStats"         status="end" type="node"/>
+    <DEPENDS_ON dep_name="./putMeanEns"          status="end" type="node"/>
+
+    <SUBMITS sub_name="getAnalysis"/>
+    <SUBMITS sub_name="getPostalt"/>
+  </TASK>
+
+  <TASK name="getAnalysis">
+    <SUBMITS sub_name="transferAnalysis"/>
+  </TASK>
+
+  <TASK name="getEnsTrials">
+    <SUBMITS sub_name="interpEnsTrials"/>
+  </TASK>
+
+  <TASK name="interpEnsTrials">
+    <SUBMITS sub_name="meanEns"/>
+    <SUBMITS sub_name="putMeanEns"/>
+  </TASK>
+
+  <TASK name="meanEns">
+    <DEPENDS_ON dep_name="./getStats" status="end" type="node"/>
+  </TASK>
+
+  <TASK name="putMeanEns">
+    <DEPENDS_ON dep_name="./meanEns" status="end" type="node"/>
+  </TASK>
+
+  <TASK name="getPostalt">
+    <SUBMITS sub_name="postalt"/>
+  </TASK>
+
+  <TASK name="postalt">
+    <SUBMITS sub_name="transfer"/>
+  </TASK>
+
+  <TASK name="transferAnalysis"/>
+  <TASK name="transfer">
+    <DEPENDS_ON dep_name="./VAR" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./transferAnalysis" status="end" type="node"/>
+  </TASK>
+</MODULE>

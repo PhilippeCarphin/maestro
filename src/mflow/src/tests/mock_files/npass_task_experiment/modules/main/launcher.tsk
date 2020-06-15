@@ -1,0 +1,4 @@
+
+for index in 111 222 333 ; do 
+	maestro -s submit -n $SEQ_CONTAINER/npass_task -l "npass_task=$index"
+done

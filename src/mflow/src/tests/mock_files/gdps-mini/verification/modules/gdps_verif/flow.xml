@@ -1,0 +1,60 @@
+<MODULE name="gdps_verif">
+    <SUBMITS sub_name="SCORES_VS_OBSERVATIONS"/>
+    <SUBMITS sub_name="SCORES_VS_ANALYSIS"/>
+    <SUBMITS sub_name="QPF"/>
+    <SUBMITS sub_name="CMC_verif"/>
+    <SUBMITS sub_name="DAILY_ERR"/>
+    <SUBMITS sub_name="archive_listings"/>
+    <FAMILY name="SCORES_VS_OBSERVATIONS">
+        <SUBMITS sub_name="build_past_obs"/>
+        <TASK name="build_past_obs">
+            <SUBMITS sub_name="residus_alt"/>
+            <SUBMITS sub_name="Foreign_scores"/>
+            <SUBMITS sub_name="Geps_mean_scores"/>
+        </TASK>
+        <TASK name="residus_alt">
+            <SUBMITS sub_name="residus_sfc"/>
+        </TASK>
+        <TASK name="residus_sfc">
+            <SUBMITS sub_name="gdps_scores"/>
+        </TASK>
+        <TASK name="gdps_scores"/>
+        <FAMILY name="Foreign_scores">
+            <SUBMITS sub_name="Nam_scores"/>
+            <TASK name="Nam_scores">
+                <SUBMITS sub_name="Gfs_scores"/>
+            </TASK>
+            <TASK name="Gfs_scores"/>
+        </FAMILY>
+        <TASK name="Geps_mean_scores"/>
+    </FAMILY>
+    <FAMILY name="SCORES_VS_ANALYSIS">
+        <SUBMITS sub_name="gdps_1.5deg"/>
+        <TASK name="gdps_1.5deg"/>
+    </FAMILY>
+    <FAMILY name="QPF">
+        <SUBMITS sub_name="qpf_scores"/>
+        <TASK name="qpf_scores"/>
+    </FAMILY>
+    <FAMILY name="CMC_verif">
+        <SUBMITS sub_name="gdps_mean_errors"/>
+        <TASK name="gdps_mean_errors">
+            <SUBMITS sub_name="gdps_trial_errors"/>
+        </TASK>
+        <TASK name="gdps_trial_errors">
+            <SUBMITS sub_name="gdps_absolute_errors"/>
+        </TASK>
+        <TASK name="gdps_absolute_errors">
+            <SUBMITS sub_name="gdps_canadien_regions_scores"/>
+        </TASK>
+        <TASK name="gdps_canadien_regions_scores"/>
+    </FAMILY>
+    <FAMILY name="DAILY_ERR">
+        <SUBMITS sub_name="gdps_anl_final_g1_daily_errors"/>
+        <SUBMITS sub_name="gdps_anl_prelim_g1_daily_errors"/>
+        <TASK name="gdps_anl_final_g1_daily_errors"/>
+        <TASK name="gdps_anl_prelim_g1_daily_errors"/>
+    </FAMILY>
+    <TASK name="archive_listings"/>
+</MODULE>
+

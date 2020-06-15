@@ -1,0 +1,39 @@
+<MODULE name="pre_assimcycle">
+    <SUBMITS sub_name="get_arcdata_cutoff"/>
+    <SUBMITS sub_name="get_arcdata_derisfc"/>
+    <SUBMITS sub_name="get_arcdata_derialt"/>
+    <SUBMITS sub_name="get_arcdata_derieval"/>
+    <SUBMITS sub_name="get_arcdata_evalalt"/>
+
+    <TASK name="get_arcdata_cutoff">
+        <SUBMITS sub_name="cutoff"/>
+    </TASK>
+    <MODULE name="cutoff"/>
+    <TASK name="get_arcdata_derisfc">
+        <SUBMITS sub_name="derisfc"/>
+    </TASK>
+    <MODULE name="derisfc">
+        <DEPENDS_ON dep_name="./cutoff" status="end" type="node"/>
+    </MODULE>
+    <TASK name="get_arcdata_derialt">
+        <SUBMITS sub_name="derialt"/>
+    </TASK>
+    <MODULE name="derialt">
+        <DEPENDS_ON dep_name="./cutoff" status="end" type="node"/>
+    </MODULE>
+    <TASK name="get_arcdata_derieval">
+        <SUBMITS sub_name="derieval"/>
+    </TASK>
+    <MODULE name="derieval">
+        <DEPENDS_ON dep_name="./cutoff" status="end" type="node"/>
+        <DEPENDS_ON dep_name="./derialt" status="end" type="node"/>
+    </MODULE>
+    <TASK name="get_arcdata_evalalt">
+        <SUBMITS sub_name="evalalt"/>
+    </TASK>
+    <MODULE name="evalalt">
+        <DEPENDS_ON dep_name="./derieval" status="end" type="node"/>
+    </MODULE>
+
+</MODULE>
+

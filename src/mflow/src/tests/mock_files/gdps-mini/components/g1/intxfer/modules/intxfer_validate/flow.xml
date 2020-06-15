@@ -1,0 +1,18 @@
+<MODULE name="intxfer_validate">
+    <SUBMITS sub_name="anal_pres"/>
+    <SUBMITS sub_name="anal_eta"/>
+    <SUBMITS sub_name="trial"/>
+    <SUBMITS sub_name="prog_hyb_iau"/>
+    <SUBMITS sub_name="prog_hyb"/>
+    <SUBMITS sub_name="prog_eta"/>
+    <SUBMITS sub_name="prog_pres"/>
+    <SUBMITS sub_name="prog_mas"/>
+    <TASK name="anal_pres"/>
+    <TASK name="anal_eta"/>
+    <TASK name="trial"/>
+    <TASK name="prog_hyb_iau"/>
+    <TASK name="prog_hyb"/>
+    <TASK name="prog_eta"/>
+    <TASK name="prog_pres"/>
+    <TASK name="prog_mas"/>
+</MODULE>

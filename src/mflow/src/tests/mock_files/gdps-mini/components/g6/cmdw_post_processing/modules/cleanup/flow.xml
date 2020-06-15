@@ -1,0 +1,15 @@
+<MODULE name="cleanup">
+  <SUBMITS sub_name="frontend_cleanup"/>
+  <!--SUBMITS sub_name="backend_cleanup"/-->
+
+  <TASK name="frontend_cleanup">
+    <SUBMITS sub_name="seqcleanup"/>
+  </TASK>
+
+  <!--TASK name="backend_cleanup"/-->
+
+  <TASK name="seqcleanup">
+    <!--DEPENDS_ON dep_name="./backend_cleanup" status="end" type="node"/-->
+  </TASK>
+
+</MODULE>

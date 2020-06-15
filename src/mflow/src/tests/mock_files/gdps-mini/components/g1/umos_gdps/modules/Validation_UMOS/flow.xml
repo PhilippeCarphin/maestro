@@ -1,0 +1,26 @@
+<MODULE name="Validation_UMOS">
+    <SUBMITS sub_name="validation_umos_obs"/>
+    <SUBMITS sub_name="validation_umos_pred"/>
+    <SUBMITS sub_name="validation_umos_prev_dm"/>
+    <SUBMITS sub_name="validation_umos_prev"/>
+    <SUBMITS sub_name="validation_umos_qc"/>
+    <SUBMITS sub_name="validation_umos_sscp_saison1"/>
+    <SUBMITS sub_name="validation_umos_sscp_saison2"/>
+    <SUBMITS sub_name="validation_umos_coef"/>
+    <SUBMITS sub_name="validation_umos_csv_prev"/>
+    <SUBMITS sub_name="validation_verif"/>
+    <MODULE name="validation_umos_obs"/>
+    <MODULE name="validation_umos_pred"/>
+    <MODULE name="validation_umos_prev_dm"/>
+    <MODULE name="validation_umos_prev"/>
+    <MODULE name="validation_umos_qc"/>
+    <MODULE name="validation_umos_sscp_saison1"/>
+    <MODULE name="validation_umos_sscp_saison2"/>
+    <MODULE name="validation_umos_coef"/>
+    <MODULE name="validation_umos_csv_prev"/>
+    <LOOP name="validation_verif">
+        <SUBMITS sub_name="validation_umos_verif"/>
+        <MODULE name="validation_umos_verif"/>
+    </LOOP>
+</MODULE>
+

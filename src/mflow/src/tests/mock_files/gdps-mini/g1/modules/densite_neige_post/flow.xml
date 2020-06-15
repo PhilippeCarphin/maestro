@@ -1,0 +1,7 @@
+<MODULE name="densite_neige_post">
+    <SUBMITS sub_name="densite_neige_1h"/>
+    <MODULE name="densite_neige_1h"/>
+    <SUBMITS sub_name="densite_neige_6h"/>
+    <MODULE name="densite_neige_6h"/>
+</MODULE>
+

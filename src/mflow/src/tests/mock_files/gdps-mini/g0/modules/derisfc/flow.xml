@@ -1,0 +1,23 @@
+<MODULE name="derisfc">
+    <SUBMITS sub_name="surface_bufr"/>
+    <SUBMITS sub_name="surface_ascii"/>
+    <SUBMITS sub_name="derivate_sno_bufr"/>
+    <SUBMITS sub_name="derivate_sno_ascii"/>
+    <SUBMITS sub_name="derivate_shef"/>
+    <TASK name="surface_bufr">
+        <SUBMITS sub_name="surface_merge"/>
+    </TASK>
+    <TASK name="derivate_sno_bufr">
+        <SUBMITS sub_name="derivate_sno_merge"/>
+    </TASK>
+    <TASK name="surface_ascii"/>
+    <TASK name="surface_merge">
+        <DEPENDS_ON dep_name="./surface_ascii" status="end" type="node"/>
+    </TASK>
+    <TASK name="derivate_sno_ascii"/>
+    <TASK name="derivate_sno_merge">
+        <DEPENDS_ON dep_name="./derivate_sno_ascii" status="end" type="node"/>
+    </TASK>
+    <TASK name="derivate_shef"/>
+</MODULE>
+

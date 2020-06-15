@@ -1,0 +1,7 @@
+<MODULE name="densite_neige">
+    <SUBMITS sub_name="loop_densite"/>
+    <LOOP name="loop_densite">
+        <SUBMITS sub_name="calc_densite"/>
+        <TASK name="calc_densite"/>
+    </LOOP>
+</MODULE>

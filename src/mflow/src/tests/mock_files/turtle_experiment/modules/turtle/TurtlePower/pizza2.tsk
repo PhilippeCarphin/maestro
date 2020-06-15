@@ -1,0 +1,4 @@
+
+for index in p3index1 p3index2 ; do
+	$SEQ_BIN/maestro -n $SEQ_CONTAINER/pizza3 -s submit ${SEQ_CONTAINER_LOOP_ARGS},pizza3=${index}
+done

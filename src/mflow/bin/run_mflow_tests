@@ -1,0 +1,9 @@
+#!/bin/bash
+
+MFLOW_ROOT=$(dirname $(dirname $(realpath $0)))
+
+$MFLOW_ROOT/bin/assert_mflow_is_setup || exit 1
+
+export MFLOW_LOGGING_CONFIG=test
+
+$MFLOW_ROOT/venv/bin/python3 $MFLOW_ROOT/src/run_tests.py $@

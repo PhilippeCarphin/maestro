@@ -1,0 +1,39 @@
+<!-- This file has been produced with the command
+   resources/make_depend_npass_task.ksh resources/main/assimcycle/forecast/loop_post_gem/container.xml 0 24 672 '' Sortie
+   (we were in directory '/home/erv000/.suites/GDPS' when running the above command)
+   The version used is:
+      70fcbf1447106b9e3f7a221b01b35966779877aa
+-->
+
+<NODE_RESOURCES>
+  <LOOP expression="0:672:24:29" />
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000000" status="end" type="node" local_index="loop_prog=0"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000024" status="end" type="node" local_index="loop_prog=24"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000048" status="end" type="node" local_index="loop_prog=48"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000072" status="end" type="node" local_index="loop_prog=72"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000096" status="end" type="node" local_index="loop_prog=96"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000120" status="end" type="node" local_index="loop_prog=120"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000144" status="end" type="node" local_index="loop_prog=144"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000168" status="end" type="node" local_index="loop_prog=168"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000192" status="end" type="node" local_index="loop_prog=192"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000216" status="end" type="node" local_index="loop_prog=216"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000240" status="end" type="node" local_index="loop_prog=240"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000264" status="end" type="node" local_index="loop_prog=264"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000288" status="end" type="node" local_index="loop_prog=288"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000312" status="end" type="node" local_index="loop_prog=312"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000336" status="end" type="node" local_index="loop_prog=336"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000360" status="end" type="node" local_index="loop_prog=360"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000384" status="end" type="node" local_index="loop_prog=384"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000408" status="end" type="node" local_index="loop_prog=408"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000432" status="end" type="node" local_index="loop_prog=432"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000456" status="end" type="node" local_index="loop_prog=456"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000480" status="end" type="node" local_index="loop_prog=480"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000504" status="end" type="node" local_index="loop_prog=504"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000528" status="end" type="node" local_index="loop_prog=528"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000552" status="end" type="node" local_index="loop_prog=552"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000576" status="end" type="node" local_index="loop_prog=576"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000600" status="end" type="node" local_index="loop_prog=600"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000624" status="end" type="node" local_index="loop_prog=624"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000648" status="end" type="node" local_index="loop_prog=648"/>
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Sortie=S01_0000000672" status="end" type="node" local_index="loop_prog=672"/>
+</NODE_RESOURCES>

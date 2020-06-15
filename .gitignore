@@ -20,6 +20,7 @@ tests/src/config.py
 
 # Python
 !__init__.py
+venv/
 
 # test suite
 tests/mock_files/sample_exp/sequencing

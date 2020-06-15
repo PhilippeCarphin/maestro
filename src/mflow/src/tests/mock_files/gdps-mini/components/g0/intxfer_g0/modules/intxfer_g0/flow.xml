@@ -1,0 +1,13 @@
+<MODULE name="intxfer_g0">
+  <SUBMITS sub_name="get_arcdata_anl"/>
+  <SUBMITS sub_name="get_arcdata_prog"/>
+  <TASK name="get_arcdata_anl">
+    <SUBMITS sub_name="intxfer_anl"/>
+  </TASK>
+  <TASK name="get_arcdata_prog">
+    <SUBMITS sub_name="intxfer_prog"/>
+  </TASK>
+  <MODULE name="intxfer_anl"/>
+  <MODULE name="intxfer_prog"/>
+</MODULE>
+

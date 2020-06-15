@@ -1,0 +1,255 @@
+Queue: prod
+    queue_type = Execution
+    Priority = 160
+    total_jobs = 0
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:0 Exiting:0 Begun
+        :0 
+    acl_user_enable = True
+    acl_users = jam007,smco500,smco501,smco600,smco601
+    from_route_only = True
+    resources_default.preempt_targets = queue=dev
+    default_chunk.Qlist = prod
+    resources_assigned.mem = 0mb
+    resources_assigned.ncpus = 0
+    resources_assigned.nodect = 0
+    kill_delay = 120
+    enabled = True
+    started = True
+
+Queue: prod_xxfer
+    queue_type = Execution
+    total_jobs = 0
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:0 Exiting:0 Begun
+        :0 
+    max_running = 6
+    acl_user_enable = True
+    acl_users = smco500,smco501,smco600,smco601,wcr007
+    resources_max.mem = 4gb
+    resources_max.ncpus = 1
+    resources_default.walltime = 00:30:00
+    default_chunk.Qlist = transfer
+    default_chunk.vntype = fe
+    resources_assigned.mem = 0mb
+    resources_assigned.ncpus = 0
+    resources_assigned.nodect = 0
+    enabled = True
+    started = True
+
+Queue: dev
+    queue_type = Execution
+    Priority = 140
+    max_queuable = 500
+    total_jobs = 465
+    state_count = Transit:0 Queued:51 Held:0 Waiting:0 Running:414 Exiting:0 Be
+        gun:0 
+    from_route_only = True
+    resources_max.walltime = 06:00:00
+    default_chunk.Qlist = dev
+    resources_assigned.mem = 12853668mb
+    resources_assigned.mpiprocs = 371
+    resources_assigned.ncpus = 4335
+    resources_assigned.nodect = 429
+    kill_delay = 120
+    max_user_run = 75
+    enabled = True
+    started = True
+
+Queue: development
+    queue_type = Route
+    total_jobs = 26
+    state_count = Transit:0 Queued:5 Held:21 Waiting:0 Running:0 Exiting:0 Begu
+        n:0 
+    resources_max.walltime = 06:00:00
+    route_destinations = dev
+    enabled = True
+    started = True
+
+Queue: prod_daemon
+    queue_type = Execution
+    Priority = 160
+    total_jobs = 7
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:7 Exiting:0 Begun
+        :0 
+    acl_user_enable = True
+    acl_users = jam007,smco500,smco501,smco600,smco601,smco610,wcr007
+    resources_max.mem = 2gb
+    resources_max.ncpus = 6
+    resources_max.walltime = 2160:00:00
+    default_chunk.Qlist = prod_daemon
+    resources_assigned.mem = 14000mb
+    resources_assigned.ncpus = 17
+    resources_assigned.nodect = 7
+    enabled = True
+    started = True
+
+Queue: production
+    queue_type = Route
+    total_jobs = 0
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:0 Exiting:0 Begun
+        :0 
+    resources_max.walltime = 06:00:00
+    route_destinations = prod
+    enabled = True
+    started = True
+
+Queue: prod_hpnls
+    queue_type = Execution
+    Priority = 160
+    total_jobs = 10
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:10 Exiting:0 Begu
+        n:0 
+    max_running = 20
+    acl_user_enable = True
+    acl_users = smco500,smco501,smco600,smco601
+    from_route_only = True
+    resources_max.mem = 2gb
+    resources_max.ncpus = 1
+    resources_max.walltime = 06:00:00
+    default_chunk.Qlist = archv
+    resources_assigned.mem = 20000mb
+    resources_assigned.ncpus = 10
+    resources_assigned.nodect = 10
+    enabled = True
+    started = True
+
+Queue: archive
+    queue_type = Route
+    total_jobs = 0
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:0 Exiting:0 Begun
+        :0 
+    resources_max.walltime = 06:00:00
+    route_destinations = prod_hpnls,hpnls
+    enabled = True
+    started = True
+
+Queue: hpnls
+    queue_type = Execution
+    Priority = 130
+    total_jobs = 0
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:0 Exiting:0 Begun
+        :0 
+    max_running = 10
+    from_route_only = True
+    resources_max.ncpus = 1
+    resources_max.walltime = 06:00:00
+    default_chunk.Qlist = archv
+    resources_assigned.mem = 0mb
+    resources_assigned.ncpus = 0
+    resources_assigned.nodect = 0
+    max_user_run = 2
+    enabled = True
+    started = True
+
+Queue: project
+    queue_type = Route
+    total_jobs = 0
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:0 Exiting:0 Begun
+        :0 
+    resources_max.walltime = 06:00:00
+    route_destinations = dev
+    enabled = True
+    started = True
+
+Queue: dev_xxfer
+    queue_type = Execution
+    max_queuable = 100
+    total_jobs = 3
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:3 Exiting:0 Begun
+        :0 
+    resources_max.mem = 4gb
+    resources_max.ncpus = 1
+    resources_max.walltime = 01:00:00
+    resources_default.walltime = 00:30:00
+    default_chunk.Qlist = transfer
+    default_chunk.vntype = fe
+    resources_assigned.mem = 6000mb
+    resources_assigned.ncpus = 3
+    resources_assigned.nodect = 3
+    enabled = True
+    started = True
+
+Queue: dev_daemon
+    queue_type = Execution
+    total_jobs = 0
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:0 Exiting:0 Begun
+        :0 
+    resources_max.mem = 2gb
+    resources_max.ncpus = 1
+    resources_max.walltime = 2160:00:00
+    default_chunk.Qlist = dev_daemon
+    enabled = True
+    started = True
+
+Queue: dedicated_bench
+    queue_type = Execution
+    total_jobs = 0
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:0 Exiting:0 Begun
+        :0 
+    acl_user_enable = True
+    acl_users = anp001,crayadm,ibmbench,jam007,jdm536,mib002,wcr007
+    resources_max.walltime = 06:00:00
+    default_chunk.Qlist = bench
+    resources_assigned.mem = 0mb
+    resources_assigned.mpiprocs = 0
+    resources_assigned.ncpus = 0
+    resources_assigned.nodect = 0
+    kill_delay = 120
+    enabled = True
+    started = True
+
+Queue: ibmbench
+    queue_type = Execution
+    total_jobs = 0
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:0 Exiting:0 Begun
+        :0 
+    acl_user_enable = True
+    acl_users = anp001,crayadm,ibmbench,jam007,wcr007
+    resources_max.walltime = 06:00:00
+    default_chunk.Qlist = ibmbench
+    kill_delay = 120
+    enabled = True
+    started = True
+
+Queue: prod_persistent
+    queue_type = Route
+    total_jobs = 0
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:0 Exiting:0 Begun
+        :0 
+    resources_max.walltime = 06:00:00
+    route_destinations = prod_p
+    enabled = True
+    started = True
+
+Queue: prod_p
+    queue_type = Execution
+    Priority = 170
+    total_jobs = 182
+    state_count = Transit:0 Queued:1 Held:0 Waiting:0 Running:181 Exiting:0 Beg
+        un:0 
+    acl_user_enable = True
+    acl_users = jam007,jdm536,mib002,smco500,smco501,smco600,smco601
+    from_route_only = True
+    resources_max.walltime = 06:00:00
+    resources_default.preempt_targets = queue=dev
+    resources_default.res_hostnamesuffix = p01
+    resources_default.res_podtype = compute
+    default_chunk.Qlist = prod_p
+    resources_assigned.mem = 1930000mb
+    resources_assigned.mpiprocs = 0
+    resources_assigned.ncpus = 608
+    resources_assigned.nodect = 181
+    kill_delay = 120
+    enabled = True
+    started = True
+
+Queue: crayadm
+    queue_type = Execution
+    total_jobs = 0
+    state_count = Transit:0 Queued:0 Held:0 Waiting:0 Running:0 Exiting:0 Begun
+        :0 
+    acl_user_enable = True
+    acl_users = anp001,crayadm,jam007,wcr007
+    default_chunk.Qlist = crayadm
+    kill_delay = 120
+    enabled = True
+    started = True

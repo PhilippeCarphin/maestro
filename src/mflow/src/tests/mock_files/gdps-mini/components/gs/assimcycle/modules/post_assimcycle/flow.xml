@@ -1,0 +1,66 @@
+<MODULE name="post_assimcycle">
+  
+  <SUBMITS sub_name="get_arcdata_verif_analysis"/>
+  <TASK  name="get_arcdata_verif_analysis">
+    <SUBMITS sub_name="verif_analysis"/>
+  </TASK>
+  <FAMILY name="verif_analysis">
+    <SUBMITS sub_name="observations_pour_arcad"/>
+    <SUBMITS sub_name="verdict_diag"/>
+    <MODULE  name="observations_pour_arcad"/>
+    <MODULE  name="verdict_diag"/>
+  </FAMILY>
+
+  <SUBMITS sub_name="get_arcdata_prog0hr"/>
+  <TASK  name="get_arcdata_prog0hr">
+    <SUBMITS sub_name="prog0hr"/>
+  </TASK>
+  <FAMILY name="prog0hr">
+    <SUBMITS sub_name="forecast"/>
+    <MODULE name="forecast"/>
+  </FAMILY>
+
+  <SUBMITS sub_name="get_arcdata_prog"/>
+  <TASK  name="get_arcdata_prog">
+    <SUBMITS sub_name="prog"/>
+  </TASK>
+  <FAMILY name="prog">
+    <SUBMITS sub_name="forecast"/>
+    <MODULE  name="forecast"/>
+  </FAMILY>
+
+  <SUBMITS sub_name="get_arcdata_verif_progs"/>
+  <TASK  name="get_arcdata_verif_progs">
+    <SUBMITS sub_name="verif_progs"/>
+  </TASK>
+  <MODULE name="verif_progs">
+    <DEPENDS_ON dep_name="./prog" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./prog0hr" status="end" type="node"/>
+    <SUBMITS sub_name="verifications_pour_arcad"/>
+    <MODULE  name="verifications_pour_arcad"/>
+    <SUBMITS sub_name="extract4emet"/>
+    <TASK name="extract4emet"/>
+    <SUBMITS sub_name="extract4umos"/>
+    <TASK name="extract4umos"/>
+    <SUBMITS sub_name="verdict"/>
+    <TASK name="verdict"/>
+  </MODULE>
+
+  <SUBMITS sub_name="pivot"/>
+  <TASK  name="pivot">
+    <DEPENDS_ON dep_name="./prog0hr" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./prog" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./verif_analysis" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./verif_progs" status="end" type="node"/>
+
+    <SUBMITS sub_name="archive"/>
+    <SUBMITS sub_name="cleanup"/>
+  </TASK>
+
+  <MODULE  name="archive"/>
+
+  <MODULE  name="cleanup">
+    <DEPENDS_ON dep_name="./archive" status="end" type="node"/>
+  </MODULE>
+
+</MODULE>
