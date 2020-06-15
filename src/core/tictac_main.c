@@ -45,7 +45,7 @@ static void printUsage()
 char *seq_exp_home = NULL;
 char * usage = "DESCRIPTION: Date accessor/modifier interface for experiments\n\
 \n\
-USAGE:\N\
+USAGE:\n\
     \n\
     tictac [-s date,-f format] [-e exp] [-d datestamp] [-v]\n\
 \n\
