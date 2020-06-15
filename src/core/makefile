@@ -9,7 +9,7 @@ INCDIR=include
 WERROR_FLAGS=-Werror=implicit-function-declaration -Werror=return-type
 WERROR_1337_FLAGS= -Werror=unused-but-set-variable -Werror=unused-variable -Werror=strict-aliasing=3
 
-CFLAGS = -Wall -I../inc -DREENTRANT -D__DEBUG -DIGNORE_EMPTY_TEXT_NODES -I$(XML_INCLUDE_DIR) -I$(INCDIR)
+CFLAGS = -Wall -I../inc -DREENTRANT -D__DEBUG -DIGNORE_EMPTY_TEXT_NODES -I$(XML_INCLUDE_DIR) -I$(INCDIR) -MMD
 ARFLAGS = -crs
 
 LD_LIBS= -lc -lz -ldl ${XC_DYNAMIC_FLAG} -lpthread -lxml2 -lcrypto 
@@ -58,3 +58,4 @@ vars:
 	@echo "EXECUTABLES = $(EXECUTABLES)"
 	@echo "SRC = $(SRC)"
 
+-include *.d
