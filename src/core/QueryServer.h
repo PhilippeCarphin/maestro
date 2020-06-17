@@ -62,8 +62,6 @@ typedef enum _ServerActions {
    SVR_REGISTER_DEPENDENCY_SSH
 } ServerActions;
 
-extern int MLLServerConnectionFid;
-
 int  Query_L2D2_Server ( int , ServerActions action , const char * , const char *, const char * _seq_exp_home);
 int  OpenConnectionToMLLServer (const char * ,const char *, const char* _seq_exp_home);
 void CloseConnectionWithMLLServer ( int  );
