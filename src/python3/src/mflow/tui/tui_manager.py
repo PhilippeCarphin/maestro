@@ -7,6 +7,7 @@ import logging
 from curses import wrapper
 
 from maestro.experiment import MaestroExperiment
+from maestro.utilities import dashify_datestamp
 from utilities.curses import get_curses_attr_from_string
 from utilities import clamp, get_console_dimensions, pretty, safe_write, run_shell_cmd
 from mflow.utilities import logger, set_log_level, get_mflow_config
@@ -249,9 +250,10 @@ class TuiManager(PopupManager):
         if self.is_edit_mode:
             text="Edit suite mode. Press 'e' to go back to read-only mode."    
         else:
-            text="mflow %s  '%s' on '%s' at %s"%(VERSION,
+            datestamp=dashify_datestamp(self.maestro_experiment.datestamp)
+            text="mflow version '%s' viewing '%s' on '%s' at %s"%(VERSION,
                                                  self.maestro_experiment.name,
-                                                 self.maestro_experiment.datestamp,
+                                                 datestamp,
                                                  clock_time)
 
         width=self.header_window.getmaxyx()[1]-1

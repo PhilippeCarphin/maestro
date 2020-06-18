@@ -17,6 +17,23 @@ def get_day_of_week(datestamp):
     "python monday=0, maestro sunday=0, convert"
     return (python_dow+1)%7
 
+def dashify_datestamp(datestamp):
+    """
+    Given:
+        2020010112
+    returns:
+        2020-01-01-12
+    """
+    
+    result=""
+    while datestamp:
+        a=2 if result else 4
+        if result:
+            result+="-"
+        result+=datestamp[:a]
+        datestamp=datestamp[a:]
+    return result
+
 def get_latest_yyyymmddhh_from_experiment_path(path):
     """
     Try to guess the latest datestamp run for this experiment.
