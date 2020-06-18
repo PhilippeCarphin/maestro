@@ -1,7 +1,7 @@
 import unittest
 
 from maestro import NodeLogParser
-from constants import  NODE_LOG_UTF8_ERROR
+from tests.path import  NODE_LOG_UTF8_ERROR
 
 class TestNodeLogParser(unittest.TestCase):
     

@@ -1,6 +1,6 @@
 import unittest
 
-from constants import TURTLE_ME_PATH
+from tests.path import TURTLE_ME_PATH
 from utilities import get_variable_value_from_file, superstrip
 from maestro import get_latest_yyyymmddhh_from_experiment_path, get_yyyymmddhh, get_day_of_week
 

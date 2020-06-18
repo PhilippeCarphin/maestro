@@ -2,7 +2,7 @@ import unittest
 
 from mflow.tui.text_flow import TextFlow
 from maestro.experiment import MaestroExperiment
-from constants import TURTLE_ME_PATH
+from tests.path import TURTLE_ME_PATH
 from utilities import pretty_kwargs
 from tests.utilities import get_test_config
 from tests.cache import G1_MINI_ME, BIG_ME, TURTLE_ME

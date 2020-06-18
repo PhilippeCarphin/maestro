@@ -2,7 +2,8 @@
 import unittest
 
 from utilities import get_key_value_from_path, get_true_host
-from constants import RESOURCES_HOME1, RESOURCES_HOME2, TURTLE_ME_PATH, DEFAULT_BATCH_RESOURCES
+from tests.path import RESOURCES_HOME1, RESOURCES_HOME2, TURTLE_ME_PATH
+from constants import DEFAULT_BATCH_RESOURCES
 from maestro.experiment import MaestroExperiment
 
 """

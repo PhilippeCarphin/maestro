@@ -21,8 +21,15 @@ from utilities import docopt
 from tests.utilities import run_tests
 
 def main(args):
+    
+    "if no option, test all"
+    test_all=not args["--mflow"] and not args["--heimdall"]
+    
     test_filter=args["--filter"]
-    run_tests(verbose=args["--verbose"],test_filter=test_filter)    
+    run_tests(verbose=args["--verbose"],
+              test_mflow=args["--mflow"] or test_all,
+              test_heimdall=args["--heimdall"] or test_all,              
+              test_filter=test_filter)    
     print("Done.")
 
 if __name__ == "__main__":

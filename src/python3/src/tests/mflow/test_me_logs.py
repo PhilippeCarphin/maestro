@@ -1,7 +1,7 @@
 import unittest
 
 from maestro.experiment import MaestroExperiment
-from constants import TURTLE_ME_PATH, RESOURCES_HOME3
+from tests.path import TURTLE_ME_PATH, RESOURCES_HOME3
 
 """
 Tests for the TestMaestroExperiment class.

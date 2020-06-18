@@ -6,7 +6,7 @@ Tests that use the cache must be smart enough never to modify these instances.
 """
 
 from maestro.experiment import MaestroExperiment
-from constants import G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, BIG_ME_PATH, TURTLE_ME_PATH, SUBMIT_CHAIN_ME_PATH
+from tests.path import G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, BIG_ME_PATH, TURTLE_ME_PATH, SUBMIT_CHAIN_ME_PATH
 
 print("'%s' is building MaestroExperiment cache."%__name__)
 

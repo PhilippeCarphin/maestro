@@ -1,6 +1,6 @@
 import unittest
 import sys
-from constants import MFLOW_TEST_FOLDER, HEIMDALL_TEST_FOLDER
+from tests.path import MFLOW_TEST_FOLDER, HEIMDALL_TEST_FOLDER
 from mflow.utilities import get_mflow_config
 
 def filter_tests_with_whitelist(tests,whitelist):

@@ -6,7 +6,7 @@ from maestro.utilities.xml import get_combined_flow_from_text_list, find_all_flo
  get_submits_from_flow_element, get_flow_children_from_flow_element, get_paths_from_element, \
  get_combined_flow_for_experiment_path, get_flow_branch_from_flow_element, get_node_path_from_flow_element, get_combined_flow_from_paths, \
 has_empty_inner_modules, get_empty_inner_modules, is_empty_module, element_has_node_children , replace_module_name
-from constants import BIG_ME_PATH
+from tests.path import BIG_ME_PATH
 
 XML1="""
 <MODULE name="module1">

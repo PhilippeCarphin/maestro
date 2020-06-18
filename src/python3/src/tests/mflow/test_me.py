@@ -1,7 +1,8 @@
 import unittest
 
 from maestro.experiment import MaestroExperiment
-from constants import BIG_ME_PATH, TURTLE_ME_PATH, JSON_SCHEMAS, NODE_TYPE, RESOURCES_HOME3
+from constants import JSON_SCHEMAS, NODE_TYPE
+from tests.path import BIG_ME_PATH, TURTLE_ME_PATH, RESOURCES_HOME3
 from utilities import assert_valid_json, pretty
 
 """

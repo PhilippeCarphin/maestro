@@ -2,7 +2,7 @@
 import unittest
 
 from utilities import get_qstat_data_from_path
-from constants import QSTAT_OUTPUT1_PATH
+from tests.path import QSTAT_OUTPUT1_PATH
 
 class TestQstat(unittest.TestCase):
     

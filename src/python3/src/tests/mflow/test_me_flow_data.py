@@ -1,9 +1,10 @@
 import unittest
 
 from maestro.experiment import MaestroExperiment
-from constants import  TURTLE_ME_PATH, BIG_ME_PATH, JSON_SCHEMAS, NODE_TYPE
+from constants import JSON_SCHEMAS, NODE_TYPE
+from tests.path import  TURTLE_ME_PATH, BIG_ME_PATH
 from utilities import assert_valid_json, pretty, pretty_kwargs
-from constants.test import NODE_PATHS_G0, NODE_PATHS_G1, NODE_PATHS_COMP_EXP
+from tests.path import NODE_PATHS_G0, NODE_PATHS_G1, NODE_PATHS_COMP_EXP
 from tests.cache import G0_MINI_ME, G1_MINI_ME, BIG_ME
 
 """

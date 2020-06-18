@@ -1,7 +1,8 @@
 import unittest
 
 from maestro.experiment import MaestroExperiment
-from constants import TURTLE_ME_PATH, NODE_STATUS, TURTLE_DATESTAMP1
+from tests.path import TURTLE_ME_PATH, TURTLE_DATESTAMP1
+from constants import NODE_STATUS
 from tests.cache import GV_MINI_ME, TURTLE_ME
 
 """

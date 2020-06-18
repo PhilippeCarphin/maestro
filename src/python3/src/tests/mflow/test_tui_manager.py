@@ -5,7 +5,7 @@ from mflow.tui import TuiManager
 from maestro.experiment import MaestroExperiment
 from utilities import get_console_dimensions
 from mflow.utilities import get_mflow_config
-from constants import TURTLE_ME_PATH, BIG_LOOP_ME_PATH, G1_MINI_ME_PATH
+from tests.path import TURTLE_ME_PATH, BIG_LOOP_ME_PATH, G1_MINI_ME_PATH
 
 """
 Tests for the TuiManager class.
