@@ -43,4 +43,3 @@ def get_true_host():
         return host.strip()
     
     return "unknown-hostname"
-    

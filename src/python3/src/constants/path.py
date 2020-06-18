@@ -1,7 +1,10 @@
 import os
 
 d=os.path.dirname
-MFLOW_ROOT=d(d(d(os.path.realpath(__file__))))+os.sep
+MAESTRO_ROOT=d(d(d(d(d(os.path.realpath(__file__))))))+os.sep
+MFLOW_ROOT=MAESTRO_ROOT+"src/mflow/"
+HEIMDALL_ROOT=MAESTRO_ROOT+"src/heimdall/"
+
 HISTORY_FOLDER=MFLOW_ROOT+"/history/"
 TMP_FOLDER=os.environ["HOME"]+"/tmp/mflow/"
 LOG_FOLDER=os.environ["HOME"]+"/logs/mflow/"

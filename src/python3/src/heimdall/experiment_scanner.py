@@ -1,7 +1,7 @@
 
 from maestro.experiment import MaestroExperiment
 
-class SuiteScanner():
+class ExperimentScanner():
     def __init__(self,maestro_experiment)
     
     if type(maestro_experiment) is str:

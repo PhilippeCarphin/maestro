@@ -19,14 +19,12 @@ Options:
     -h --help   Show this description.
 """
 import os
-from heimdall_utilities.docstring import adjust_docstring
+from heimdall.docstring import adjust_docstring
 __doc__=adjust_docstring(__doc__)
 
 from utilities.docopt import docopt
-from utilities import print_red
-from mflow.utilities import get_mflow_config
 from maestro.experiment import MaestroExperiment
-from suite_scanner import ExperimentScanner
+from heimdall import ExperimentScanner
 
 def main(args):
     

@@ -8,9 +8,9 @@ from curses import wrapper
 
 from maestro.experiment import MaestroExperiment
 from utilities.curses import get_curses_attr_from_string
-from utilities import clamp, get_console_dimensions, pretty, safe_write, run_shell_cmd, get_distance
+from utilities import clamp, get_console_dimensions, pretty, safe_write, run_shell_cmd
 from mflow.utilities import logger, set_log_level, get_mflow_config
-from constants import NAVIGATION_KEYS, TUI_STATE, MFLOW_VERSION, KEYBOARD_NAVIGATION_TYPE, TMP_BASH_WRAPPER_COMMAND_FILE_PREFIX, MINIMUM_CONSOLE_DIMENSIONS, TMP_FOLDER, LOG_FOLDER
+from constants import NAVIGATION_KEYS, TUI_STATE, VERSION, KEYBOARD_NAVIGATION_TYPE, TMP_BASH_WRAPPER_COMMAND_FILE_PREFIX, MINIMUM_CONSOLE_DIMENSIONS, TMP_FOLDER, LOG_FOLDER
 from mflow.tui.text_flow import TextFlow
 from mflow.tui import PopupManager
 from mflow.tui.utilities import get_text_lines_within_width, pad_text_with_spaces
@@ -249,10 +249,10 @@ class TuiManager(PopupManager):
         if self.is_edit_mode:
             text="Edit suite mode. Press 'e' to go back to read-only mode."    
         else:
-            text="mflow %s  '%s' on '%s' at %s"%(MFLOW_VERSION,
-                                         self.maestro_experiment.name,
-                                         self.maestro_experiment.datestamp,
-                                         clock_time)
+            text="mflow %s  '%s' on '%s' at %s"%(VERSION,
+                                                 self.maestro_experiment.name,
+                                                 self.maestro_experiment.datestamp,
+                                                 clock_time)
 
         width=self.header_window.getmaxyx()[1]-1
         text=pad_text_with_spaces(text,width)        

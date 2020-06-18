@@ -1,4 +1,3 @@
-MFLOW_VERSION="1.0"
 
 class TUI_STATE:
     """

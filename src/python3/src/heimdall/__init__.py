@@ -1,1 +1,2 @@
- from heimdall.experiment_scanner import *
+from heimdall.docstring import *
+from heimdall.experiment_scanner import *
