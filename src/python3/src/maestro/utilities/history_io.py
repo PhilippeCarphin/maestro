@@ -5,7 +5,7 @@ from jinja2 import Template
 from datetime import datetime
 
 from utilities.colors import *
-from utilities import safe_write
+from utilities.generic import safe_write
 from constants import TEMPLATE_FOLDER, NODE_STATUS
 
 def print_results(results):

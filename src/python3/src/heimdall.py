@@ -23,7 +23,8 @@ from heimdall_utilities.docstring import adjust_docstring
 __doc__=adjust_docstring(__doc__)
 
 from utilities.docopt import docopt
-from utilities import print_red, get_config
+from utilities import print_red
+from mflow.utilities import get_mflow_config
 from maestro.experiment import MaestroExperiment
 from suite_scanner import ExperimentScanner
 

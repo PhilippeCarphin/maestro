@@ -9,10 +9,10 @@ from copy import deepcopy
 
 import lxml
 from lxml import etree
-from utilities.shell import safe_check_output, safe_check_output_with_status
-from utilities import pprint, pretty, pprint_kwargs, xml_cache
+from utilities.pretty import pretty, pprint_kwargs
+from utilities.xml_cache import xml_cache
 from mflow.utilities import logger
-from constants import TMP_FOLDER, NODE_TYPE, NODE_TYPES, CONTAINER_TAGS
+from constants import NODE_TYPES, CONTAINER_TAGS
 
 "A regex where group(1) is the contents of the 'catchup' attribute."
 CATCHUP_XML_REGEX=re.compile(r"""[ ]+catchup[ ]*=[ ]*["']([^'"]*)["']""")

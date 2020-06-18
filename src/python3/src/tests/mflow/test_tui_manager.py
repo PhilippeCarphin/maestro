@@ -3,9 +3,9 @@ import curses
 
 from mflow.tui import TuiManager
 from maestro.experiment import MaestroExperiment
-from utilities import get_console_dimensions, get_config
+from utilities import get_console_dimensions
+from mflow.utilities import get_mflow_config
 from constants import TURTLE_ME_PATH, BIG_LOOP_ME_PATH, G1_MINI_ME_PATH
-from tests.cache import TURTLE_ME, G1_MINI_ME
 
 """
 Tests for the TuiManager class.
@@ -174,6 +174,6 @@ class TestTuiManager(unittest.TestCase):
         self.assertEqual(result,expected) 
 
 def get_test_config(tree_nav=False):
-    c=get_config()
+    c=get_mflow_config()
     c["KEYBOARD_NAVIGATION"]="tree" if tree_nav else "coordinate"
     return c

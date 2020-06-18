@@ -8,7 +8,8 @@ This abstract class is not meant to be instantiated, only inherited.
 from lxml import etree
 import os.path
 
-from utilities import get_key_value_from_path, logger, superstrip
+from utilities import get_key_value_from_path, superstrip
+from mflow.utilities import logger
 from constants import DEFAULT_BATCH_RESOURCES
 
 class ME_Resources():    

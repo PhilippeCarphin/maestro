@@ -1,7 +1,7 @@
 import unittest
 import sys
-from constants import TESTS_FOLDER
-from mflow.utilities import get_config
+from constants import MFLOW_TEST_FOLDER, HEIMDALL_TEST_FOLDER
+from mflow.utilities import get_mflow_config
 
 def filter_tests_with_whitelist(tests,whitelist):
     """
@@ -21,22 +21,32 @@ def filter_tests_with_whitelist(tests,whitelist):
             
     return results
 
-def run_tests(verbose=False,test_filter=None):
+def run_tests(test_mflow=True,
+              test_heimdall=True,
+              verbose=False,
+              test_filter=None):
     
     if test_filter:
         test_filter="*"+test_filter+"*"
     else:
         test_filter="test*.py"        
-    
-    tests = unittest.TestLoader().discover(TESTS_FOLDER,pattern=test_filter)
-        
+            
     runner = unittest.TextTestRunner(sys.stdout, verbosity=2)
-    runner.run(tests)
+    
+    if test_mflow:
+        print("\nStarting mflow tests.")
+        tests = unittest.TestLoader().discover(MFLOW_TEST_FOLDER,pattern=test_filter)
+        runner.run(tests)
+        
+    if test_heimdall:
+        print("\nStarting heimdall tests.")
+        tests = unittest.TestLoader().discover(HEIMDALL_TEST_FOLDER,pattern=test_filter)
+        runner.run(tests)
 
 
 def get_test_config(**kwargs):
     "easy way to get a full config, with some changes, for testing"
-    config=get_config()
+    config=get_mflow_config()
     for key in kwargs:
         config[key]=kwargs[key]
     return config

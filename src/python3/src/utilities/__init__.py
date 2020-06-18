@@ -16,6 +16,5 @@ from utilities.path import *
 from utilities.pretty import *
 from utilities.qstat import *
 from utilities.shell import *
-from utilities.test import *
 from utilities.timer import *
 from utilities.xml_cache import *

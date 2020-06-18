@@ -12,7 +12,8 @@ from maestro.utilities.datestamp import get_day_of_week
 from constants import NODE_TYPE, SWITCH_TYPE
 from maestro.utilities.xml import get_combined_flow_for_experiment_path, get_node_type_from_element, get_submits_from_flow_element, \
 get_flow_children_from_flow_element, get_module_name_from_flow_xml, get_paths_from_element, get_module_name_for_element
-from utilities import pretty_kwargs, superstrip, pk
+from utilities.pretty import pretty_kwargs, pk
+from utilities.generic import superstrip
 
 class ME_Flow():
 

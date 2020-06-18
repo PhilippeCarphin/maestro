@@ -37,7 +37,8 @@ from mflow.tui.docstring import adjust_docstring
 __doc__=adjust_docstring(__doc__)
 
 from utilities.docopt import docopt
-from utilities import print_red, get_config, logger
+from utilities import print_red
+from mflow.utilities import get_mflow_config
 from mflow.utilities.threading import async_set_qstat_data_in_maestro_experiment
 from mflow.tui import TuiManager
 from maestro.experiment import MaestroExperiment
@@ -58,7 +59,7 @@ def main(args):
     print("Reading experiment files for '%s'"%experiment_path)
     
     try:
-        tui_config=get_config(args["--config"])
+        tui_config=get_mflow_config(args["--config"])
     except:
         print_red("Aborted. Failed to open or parse config file '%s'"%args["--config"])
         traceback.print_exc()

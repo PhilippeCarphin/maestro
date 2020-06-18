@@ -2,10 +2,14 @@
 
 """mflow automated unit tests.
 
+If no option like '--heimdall' or '--mflow' is provided, run all tests.
+
 Usage:
    run_tests.py [options]
 
 Options:
+    --mflow             Run the mflow tests.
+    --heimdall          Run heimdall tests.
     --verbose           More console output.
     --filter=<string>   Only Python script files containing this string will be run. [default: test_]
 
@@ -14,7 +18,7 @@ Options:
 """
 
 from utilities import docopt
-from utilities.test import run_tests
+from tests.utilities import run_tests
 
 def main(args):
     test_filter=args["--filter"]

@@ -6,7 +6,8 @@ This abstract class is not meant to be instantiated, only inherited.
 """
 
 from constants import NODE_TYPE, DEFAULT_BATCH_RESOURCES
-from utilities import pretty, superstrip, get_true_host
+from utilities import pretty, get_true_host
+from utilities.generic import superstrip
 from maestro.utilities.xml import is_container
 
 class ME_NodeData():

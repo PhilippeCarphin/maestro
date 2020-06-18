@@ -14,7 +14,8 @@ from pwd import getpwuid
 
 from maestro.utilities.path import find_exp_home_in_path, get_experiment_name
 from maestro.utilities.sequencer import get_sequencer_command
-from utilities import pretty, clamp
+from utilities.pretty import pretty
+from utilities.generic import clamp
 
 from maestro.experiment.me_flow import ME_Flow
 from maestro.experiment.me_indexes import ME_Indexes

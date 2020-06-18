@@ -1,6 +1,7 @@
 from constants.path import MFLOW_ROOT
 
-TESTS_FOLDER=MFLOW_ROOT+"src/tests/"
+MFLOW_TEST_FOLDER=MFLOW_ROOT+"src/tests/mflow/"
+HEIMDALL_TEST_FOLDER=MFLOW_ROOT+"src/tests/mflow/"
 MOCK_FILES=MFLOW_ROOT+"mock_files/"
 BIG_ME_PATH=MOCK_FILES+"complete_experiment/"
 TURTLE_ME_PATH=MOCK_FILES+"turtle_experiment/"

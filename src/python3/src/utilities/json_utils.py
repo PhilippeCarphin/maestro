@@ -1,4 +1,4 @@
-import json
+
 import jsonschema
 from utilities.pretty import pretty_json
 

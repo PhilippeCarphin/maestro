@@ -7,7 +7,7 @@ import time
 from collections import OrderedDict
 
 from maestro.experiment import MaestroExperiment
-from mflow.utilities import logger, get_config
+from mflow.utilities import logger, get_mflow_config
 from utilities.curses import get_curses_attr_from_status
 from utilities import pretty, is_xy_in_rect
 from constants import NODE_TYPE
@@ -28,7 +28,7 @@ class TextFlow():
         self.tui_id=tui_id
         
         "any missing values in tui config become default"
-        self.tui_config=tui_config if tui_config else get_config()
+        self.tui_config=tui_config if tui_config else get_mflow_config()
         
         """
         string is a list of text items with their coordinates to draw somewhere.
@@ -198,7 +198,7 @@ class TextFlow():
         loop_index_selection=self.get_loop_index_selection(node_path)
         status=self.maestro_experiment.get_node_status(node_path,
                                                                 loop_index_selection=loop_index_selection)
-        attr=get_curses_attr_from_status(status)     
+        attr=get_curses_attr_from_status(status,logger=logger)     
         for chunk in self.status_chunks_for_node_path.get(node_path,[]):
             chunk["curses_attr"]=attr
         

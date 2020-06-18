@@ -2,7 +2,7 @@ import os.path
 from constants import DEFAULT_CONFIG_PATH, KEYBOARD_NAVIGATION_TYPE
 from utilities.generic import clamp
 
-def get_config(path=None,apply_defaults=True):
+def get_mflow_config(path=None,apply_defaults=True):
     """
     Always returns a complete configuration dictionary.
     
@@ -15,7 +15,7 @@ def get_config(path=None,apply_defaults=True):
         path=DEFAULT_CONFIG_PATH
     
     if not os.path.isfile(path):
-        raise ValueError("get_config path is not a file: '%s'"%path)
+        raise ValueError("get_mflow_config path is not a file: '%s'"%path)
     
     with open(path,"r") as f:
         lines=f.readlines()
@@ -38,7 +38,7 @@ def get_config(path=None,apply_defaults=True):
         
     "use defaults for any missing values"
     if apply_defaults:
-        default_config=get_config(DEFAULT_CONFIG_PATH,apply_defaults=False)
+        default_config=get_mflow_config(DEFAULT_CONFIG_PATH,apply_defaults=False)
         for key in default_config:
             if key not in config:
                 config[key]=default_config[key]

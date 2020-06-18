@@ -1,7 +1,7 @@
 import os.path
 from collections import OrderedDict
 
-from utilities import superstrip
+from utilities.generic import superstrip
 from maestro.utilities.loop import get_loop_indexes_from_loop_data, get_loop_composite_data_from_xml
 
 """

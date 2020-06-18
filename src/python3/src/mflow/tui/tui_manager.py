@@ -9,7 +9,7 @@ from curses import wrapper
 from maestro.experiment import MaestroExperiment
 from utilities.curses import get_curses_attr_from_string
 from utilities import clamp, get_console_dimensions, pretty, safe_write, run_shell_cmd, get_distance
-from mflow.utilities import logger, set_log_level, get_config
+from mflow.utilities import logger, set_log_level, get_mflow_config
 from constants import NAVIGATION_KEYS, TUI_STATE, MFLOW_VERSION, KEYBOARD_NAVIGATION_TYPE, TMP_BASH_WRAPPER_COMMAND_FILE_PREFIX, MINIMUM_CONSOLE_DIMENSIONS, TMP_FOLDER, LOG_FOLDER
 from mflow.tui.text_flow import TextFlow
 from mflow.tui import PopupManager
@@ -87,7 +87,7 @@ class TuiManager(PopupManager):
         self.choice_popup={}
         
         "any missing values in tui config become default"
-        self.tui_config=tui_config if tui_config else get_config()
+        self.tui_config=tui_config if tui_config else get_mflow_config()
         
         "append to this list at any time, and an 'okay' popup with this message will appear soon."
         self.messages=[]
@@ -155,9 +155,9 @@ class TuiManager(PopupManager):
         for i in range(0, curses.COLORS):
             curses.init_pair(i + 1, i, -1)
         
-        self.theme_attrs={"edit":get_curses_attr_from_string(self.tui_config.get("EDIT_MODE_COLOR"),is_reversed=True),
-                          "view":get_curses_attr_from_string(self.tui_config.get("VIEW_MODE_COLOR"),is_reversed=True),
-                          "cursor":get_curses_attr_from_string(self.tui_config.get("CURSOR_COLOR"),is_reversed=True)}
+        self.theme_attrs={"edit":get_curses_attr_from_string(self.tui_config.get("EDIT_MODE_COLOR"),is_reversed=True,logger=logger),
+                          "view":get_curses_attr_from_string(self.tui_config.get("VIEW_MODE_COLOR"),is_reversed=True,logger=logger),
+                          "cursor":get_curses_attr_from_string(self.tui_config.get("CURSOR_COLOR"),is_reversed=True,logger=logger)}
         
         self.stdscr.nodelay(True)
         self.stdscr.clear()

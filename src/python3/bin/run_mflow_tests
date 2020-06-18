@@ -6,4 +6,4 @@ $MFLOW_ROOT/bin/assert_python3_is_setup || exit 1
 
 export MAESTRO_PYTHON3_LOGGING_CONFIG=test
 
-$MFLOW_ROOT/venv/bin/python3 $MFLOW_ROOT/src/run_mflow_tests.py $@
+$MFLOW_ROOT/venv/bin/python3 $MFLOW_ROOT/src/run_tests.py --mflow $@
