@@ -48,7 +48,6 @@
 #include "expcatchup.h"
 #include "QueryServer.h"
 #include "SeqUtilServer.h"
-#include "ocmjinfo.h"
 #include "logreader.h" 
 
 #define CONTAINER_FLOOD_LIMIT 10
@@ -2683,24 +2682,9 @@ out:
  */
 #define SEQ_DEP_WAIT 1
 #define SEQ_DEP_GO 0
-int processDepStatus_OCM( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep, const char * _flow );
-int processDepStatus_MAESTRO( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep, const char * _flow );
 int checkTargetedIterations(SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr depNodeDataPtr, SeqDepDataPtr dep, const char *_flow);
 int processWaitingState(SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep, const char *_flow, char *extension, char * statusFile);
 int writeWaitedFile( SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep, const char *extension, const char *_flow, const char *statusFile);
-
-/********************************************************************************
- * Switch function to direct flow through the maestro function or the OCM
- * function.
-********************************************************************************/
-int processDepStatus( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep, const char * _flow )
-{
-   if (strncmp(dep->protocol,"ocm",3) != 0 ) {
-      return processDepStatus_MAESTRO(_nodeDataPtr,dep,_flow);
-   } else {
-      return processDepStatus_OCM(_nodeDataPtr, dep, _flow);
-   }
-}
 
 /********************************************************************************
  * Maestro version of processDepStatus.  Checks if target node exists, checks
@@ -2708,7 +2692,7 @@ int processDepStatus( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep, cons
  * a targeted iteration that is not done, we write ourself into the node's
  * waited_XXX file.
 ********************************************************************************/
-int processDepStatus_MAESTRO( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep,
+int processDepStatus( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep,
                                                                const char * _flow )
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "processDepStatus_MAESTRO() begin\n");
@@ -2835,137 +2819,6 @@ int writeWaitedFile( SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep,
             statusFile);
    }
    return writeStatus;
-}
-
-/********************************************************************************
- * OCM Part of the old processDepStatus.
- *
- * Originally, we had
- * <CHUNK A>
- * if( maestro ){
- *    <CHUNK B>
- * } else {
- *    <CHUNK C>
- * }
- * <CHUNK D>
- *
- * This function is
- *
- * <CHUNK A>
- * <CHUNK C>
- * <CHUNK D>
- *
- * This was done to de-couple the maestro function from this one so that the
- * maestro one could be refactored.
-********************************************************************************/
-int processDepStatus_OCM( const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep, const char * _flow )
-{
-   /* Both */
-   char statusFile[SEQ_MAXFIELD];
-   memset( statusFile, '\0', sizeof statusFile);
-   /* ocm related */
-   char dhour[3];
-   char c[10];
-   char ocm_datestamp[11];
-   char env[128];
-   char job[128];
-   int loop_start, loop_total, loop_trotte;
-   /* check catchup value of the ocm node */
-   memset(dhour,'\0',sizeof(dhour));
-   memset(ocm_datestamp,'\0',sizeof(ocm_datestamp));
-
-   int undoneIteration = 0, isWaiting = 0, depWildcard=0;
-   char *waitingMsg = NULL, *depExtension = NULL, *currentIndexPtr = NULL;
-
-   dep->ext = SeqLoops_indexToExt(dep->index);
-   depWildcard = ( strstr(dep->ext,"+*") != NULL);
-
-   SeqUtil_TRACE(TL_FULL_TRACE, "processDepStatus dep->node_name=%s dep->ext=%s dep->datestamp=%s dep->status=%s dep->exp=%s dep->exp_scope=%d dep->protocol=%s \n", 
-         dep->node_name,dep->ext, dep->datestamp, dep->status, dep->exp, dep->exp_scope , dep->protocol ); 
-
-   if( dep->index == NULL || strlen( dep->index ) == 0 ) {
-      SeqUtil_stringAppend( &depExtension, "" );
-   } else {
-      SeqUtil_stringAppend( &depExtension, "." );
-      SeqUtil_stringAppend( &depExtension, strdup(dep->ext ) ); 
-   }
-
-   /* to be able to use ocm stuff put env var. */
-   snprintf(env,sizeof(env),"CMC_OCMPATH=%s",dep->exp);
-   putenv(env);
-   strncpy(dhour,&(dep->datestamp)[8],2);
-   strncpy(ocm_datestamp,&(dep->datestamp)[0],10);
-   char *Ldpname = (char*) SeqUtil_getPathLeaf( dep->node_name );
-   snprintf(job,sizeof(job),"%s_%s",Ldpname,dhour);
-
-   /* check catchup */
-   struct ocmjinfos *ocmjinfo_res;
-   if (ocmjinfo_res = (struct ocmjinfos *) malloc(sizeof(struct ocmjinfos)) ) {
-      *ocmjinfo_res = ocmjinfo(job);
-      if (ocmjinfo_res->error != 0) {
-         raiseError("ocmjinfo on %s in %s returned an error. Check DEPENDS_ON tag for errors. The targeted job may not exist. \n", dep->node_name, dep->exp);
-      }
-   } else {
-      raiseError("OutOfMemory exception in maestro.processDepStatus()\n");
-   }
-   printOcmjinfo (ocmjinfo_res); /* for debug */
-
-   if (ocmjinfo_res->catchup == 9 ) {
-      nodelogger( _nodeDataPtr->name, "info", _nodeDataPtr->extension, "This node has a dependency on an ocm job that is not scheduled to run (catchup = 9). That dependency was ignored.\n",_nodeDataPtr->datestamp, _nodeDataPtr->expHome);
-      fprintf(stderr,"The dependent job %s is not scheduled to run (catchup = 9), dependency ignored.\"\n",ocmjinfo_res->job); 
-      return (0);
-   }
-
-   /* check if a loop job */
-   if ( strncmp(ocmjinfo_res->loop_reference,"REG",3) != 0) { /* loop job */
-      loop_start=atoi(ocmjinfo_res->loop_start);
-      loop_total=atoi(ocmjinfo_res->loop_total);
-      loop_trotte=loop_start;
-   }
-
-   if ( strncmp(dep->index,"ocmloop",7) == 0 ) {
-      if ( (dep->index)[8] == '*' ) { 
-         while ( loop_trotte <= loop_total ) {
-            sprintf(statusFile,"%s/ocm/workingdir_tmp/%s_%s_%d.%s.%s", dep->exp, Ldpname, dhour, loop_trotte, ocm_datestamp, dep->status );
-            if ( (undoneIteration= ! _isFileExists(statusFile,"maestro.processDepStatus()", _nodeDataPtr->expHome)) ) {
-               snprintf(c,sizeof(c),"%c%c%d",depExtension[0],depExtension[1],loop_trotte);
-               free(depExtension);
-               depExtension=&c;
-               isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, dep->node_name, dep->index, depExtension, dep->datestamp, dep->status, dep->exp, dep->protocol, statusFile, _flow);
-               break; 
-            }
-            loop_trotte++;
-         }
-      } else {
-         sprintf(statusFile,"%s/ocm/workingdir_tmp/%s_%s_%s.%s.%s", dep->exp, Ldpname, dhour, &(dep->index)[8], ocm_datestamp, dep->status ); 
-         if ( ! (undoneIteration= ! _isFileExists(statusFile,"maestro.processDepStatus()", _nodeDataPtr->expHome))) { 
-            return(0); 
-         } else {
-            isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, dep->node_name, dep->index, depExtension, dep->datestamp, dep->status, dep->exp, dep->protocol, statusFile,_flow);
-         }
-      }
-   } else {
-      sprintf(statusFile,"%s/ocm/workingdir_tmp/%s_%s.%s.%s", dep->exp, Ldpname, dhour, ocm_datestamp, dep->status );
-      if ( ! (undoneIteration = ! _isFileExists(statusFile,"maestro.processDepStatus()", _nodeDataPtr->expHome))) { 
-         return(0);
-      } else {
-         isWaiting = writeInterUserNodeWaitedFile( _nodeDataPtr, dep->node_name, dep->index, depExtension, dep->datestamp, dep->status, dep->exp, dep->protocol, statusFile,_flow);
-      }
-   }
-   if( undoneIteration ) {
-      isWaiting = 1;
-      if ( depWildcard ) {
-         waitingMsg = formatWaitingMsg(  dep->exp_scope, dep->exp, dep->node_name, currentIndexPtr, dep->datestamp ); 
-      } else {
-         waitingMsg = formatWaitingMsg(  dep->exp_scope, dep->exp, dep->node_name, depExtension, dep->datestamp ); 
-      }
-      setWaitingState( _nodeDataPtr, waitingMsg, dep->status );
-   }
-
-   free( waitingMsg );
-   free( depExtension);
-
-   return isWaiting;
 }
 
 /**
