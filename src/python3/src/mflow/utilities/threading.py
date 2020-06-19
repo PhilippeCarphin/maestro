@@ -1,7 +1,7 @@
 import threading
 
 from utilities.qstat import get_qstat_data
-from mflow.utilities.simple_logging import logger
+from home_logger import logger
 
 def async_set_qstat_data_in_maestro_experiment(maestro_experiment):
     thread = threading.Thread(target=set_qstat_data_in_maestro_experiment,

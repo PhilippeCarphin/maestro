@@ -3,7 +3,6 @@ from lxml import etree
 from collections import OrderedDict
 
 from utilities import xml_cache
-from mflow.utilities import logger
 from maestro.utilities.xml import is_element
 
 """
@@ -39,8 +38,8 @@ loop_indexes, indexes:
 
 """
 
-def get_loop_indexes_from_expression(expression):
-    composite=get_loop_composite_data_from_expression(expression)
+def get_loop_indexes_from_expression(expression,logger=None):
+    composite=get_loop_composite_data_from_expression(expression,logger=logger)
     indexes=[]
     for loop_data in composite:
         indexes+=get_loop_indexes_from_loop_data(**loop_data)
@@ -61,7 +60,7 @@ def get_loop_indexes_from_loop_data(start,end,step,**kwargs):
     
     return list(range(start,end+1,step))        
 
-def get_loop_composite_data_from_xml(xml):
+def get_loop_composite_data_from_xml(xml,logger=None):
     """
     Given a path to an XML or an lxml element returns a loop_composite_data.
     See the top of this file for data descriptions.
@@ -78,23 +77,26 @@ def get_loop_composite_data_from_xml(xml):
     if type(xml) is str:
         root=xml_cache.get(xml)
         if root is None:
-            logger.error("Failed to get loop data. Bad xml file '%s'"%xml)
+            if logger:
+                logger.error("Failed to get loop data. Bad xml file '%s'"%xml)
             return []
     elif is_element(xml):
         root=xml
     else:
-        logger.error("Failed to get loop data. Not a path to an XML or an lxml element: '%s'"%xml)
+        if logger:
+            logger.error("Failed to get loop data. Not a path to an XML or an lxml element: '%s'"%xml)
         return []
     
     elements=root.xpath("/NODE_RESOURCES/LOOP")
     if not elements:
-        logger.error("Failed to get loop data. No <LOOP> in the xml '%s'"%xml)
+        if logger:
+            logger.error("Failed to get loop data. No <LOOP> in the xml '%s'"%xml)
         return []
     element=elements[0]
     
     expression=element.attrib.get("expression")    
     if expression:
-        return get_loop_composite_data_from_expression(expression)
+        return get_loop_composite_data_from_expression(expression,logger=logger)
     
     try:
         loop_data={"start":int(element.attrib["start"]),
@@ -103,11 +105,12 @@ def get_loop_composite_data_from_xml(xml):
                    "set":int(element.attrib.get("set",1))}
         return [loop_data]
     except (KeyError, ValueError):
-        logger.error("Failed to get loop data. Bad <LOOP> attributes: "+str(element.attrib))
+        if logger:
+            logger.error("Failed to get loop data. Bad <LOOP> attributes: "+str(element.attrib))
     
     return []        
         
-def get_loop_composite_data_from_expression(expression):
+def get_loop_composite_data_from_expression(expression,logger=None):
     """
     Given the expression attribute string in <LOOP>
     returns a loop_composite_data.
@@ -128,7 +131,8 @@ def get_loop_composite_data_from_expression(expression):
                 numbers=[]
                 break
         if len(numbers)!=4:
-            logger.error("skipping bad <LOOP> expression '%s'"%chunk)
+            if logger:
+                logger.error("skipping bad <LOOP> expression '%s'"%chunk)
             continue
         
         loop_data={"start":int(numbers[0]),

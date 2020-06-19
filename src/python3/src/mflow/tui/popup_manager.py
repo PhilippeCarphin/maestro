@@ -6,10 +6,11 @@ import copy
 
 from mflow.tui.text_flow import TextFlow
 from mflow.tui.utilities import pad_text_with_spaces
-from constants import TUI_STATE, TMP_FOLDER
+from constants import TMP_FOLDER
+from mflow.constants import TUI_STATE
 from utilities import safe_check_output, safe_check_output_with_status, \
 run_shell_cmd, is_gzipped, safe_write, pretty
-from mflow.utilities import logger
+from home_logger import logger
 from maestro.utilities.sequencer import get_sequencer_loop_argument, get_sequencer_command
 
 """

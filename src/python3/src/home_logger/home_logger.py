@@ -46,7 +46,7 @@ def set_log_level(level):
 def get_logger():
     folder=os.path.dirname(LOG_FILE)
     safe_check_output("mkdir -p "+folder)    
-    logger = logging.getLogger('mflow-logger')
+    logger = logging.getLogger('maestro-python3-logger')
     config=get_log_config_from_environment()
     
     """

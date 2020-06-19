@@ -71,8 +71,8 @@ def main(args):
                          user_home=args["--home"],
                          node_log_refresh_interval=interval)
     
-    if not me.is_valid():
-        for error in me.validation_errors:
+    if me.has_blocking_errors():
+        for error in me.get_blocking_error_messages():
             print_red(error)
         return
     

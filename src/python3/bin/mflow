@@ -30,5 +30,5 @@ while [[ $FIRST_LOOP == "true" || -f $TMP_BASH_WRAPPER_COMMAND_FILE ]] ; do
         rm -f $TMP_BASH_WRAPPER_COMMAND_FILE
     fi
     
-    $MFLOW_ROOT/venv/bin/python3 $MFLOW_ROOT/src/mflow.py $@ --tui-id=$TUI_ID
+    $MFLOW_ROOT/venv/bin/python3 $MFLOW_ROOT/src/mflow_cli.py $@ --tui-id=$TUI_ID
 done

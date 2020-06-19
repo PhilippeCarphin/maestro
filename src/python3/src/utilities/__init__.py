@@ -7,6 +7,7 @@ There is no project specific code, constants, or strings in any of these files.
 from constants import *
 
 from utilities.colors import *
+from utilities.csv import *
 from utilities.curses import *
 from utilities.docopt import *
 from utilities.json_utils import *

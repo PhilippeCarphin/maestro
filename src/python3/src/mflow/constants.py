@@ -1,3 +1,4 @@
+import curses
 
 class TUI_STATE:
     """
@@ -14,3 +15,12 @@ class TUI_STATE:
 class KEYBOARD_NAVIGATION_TYPE:
     TREE="tree"
     COORDINATE="coordinate"
+
+NAVIGATION_KEYS=set((curses.KEY_UP,
+                 curses.KEY_DOWN,
+                 curses.KEY_LEFT,
+                 curses.KEY_RIGHT,
+                 curses.KEY_PPAGE,
+                 curses.KEY_NPAGE,
+                 curses.KEY_HOME,
+                 curses.KEY_END))

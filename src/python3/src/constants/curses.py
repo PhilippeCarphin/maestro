@@ -5,14 +5,6 @@ from constants.colors import CURSES_COLOR_INDEX
 "The minimum console dimensions where mflow is guaranteed to work. Chosen pretty arbitrarily."
 MINIMUM_CONSOLE_DIMENSIONS=[70,30]
 
-NAVIGATION_KEYS=set((curses.KEY_UP,
-                 curses.KEY_DOWN,
-                 curses.KEY_LEFT,
-                 curses.KEY_RIGHT,
-                 curses.KEY_PPAGE,
-                 curses.KEY_NPAGE,
-                 curses.KEY_HOME,
-                 curses.KEY_END))
 
 STATUS_TO_CURSES_COLOR={NODE_STATUS.ABORT:CURSES_COLOR_INDEX.RED,
                         NODE_STATUS.SUBMIT_FAILURE:CURSES_COLOR_INDEX.RED,

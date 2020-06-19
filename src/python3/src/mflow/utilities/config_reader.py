@@ -1,5 +1,6 @@
 import os.path
-from constants import DEFAULT_CONFIG_PATH, KEYBOARD_NAVIGATION_TYPE
+from mflow.constants import KEYBOARD_NAVIGATION_TYPE
+from constants import DEFAULT_CONFIG_PATH
 from utilities.generic import clamp
 
 def get_mflow_config(path=None,apply_defaults=True):

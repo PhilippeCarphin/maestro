@@ -94,7 +94,7 @@ class ME_Indexes():
         "See loop.py for info on loop_composite_data"
         path=self.path+"/resources/"+node_path+"/container.xml"
         root=self.get_resource_xml(path)
-        return get_loop_composite_data_from_xml(root)
+        return get_loop_composite_data_from_xml(root,logger=logger)
     
     def get_index_map(self,node_path):
         """

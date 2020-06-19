@@ -7,7 +7,8 @@ import time
 from collections import OrderedDict
 
 from maestro.experiment import MaestroExperiment
-from mflow.utilities import logger, get_mflow_config
+from maestro.utilities import get_mflow_config
+from home_logger import logger
 from utilities.curses import get_curses_attr_from_status
 from utilities import pretty, is_xy_in_rect
 from constants import NODE_TYPE

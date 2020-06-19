@@ -12,7 +12,8 @@ import os
 from os import stat
 from pwd import getpwuid
 
-from maestro.utilities.path import find_exp_home_in_path, get_experiment_name
+from heimdall.basic_validation import get_blocking_error
+from maestro.utilities import find_exp_home_in_path, get_experiment_name
 from maestro.utilities.sequencer import get_sequencer_command
 from utilities.pretty import pretty
 from utilities.generic import clamp
@@ -32,7 +33,11 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
                  datestamp=None,
                  node_log_refresh_interval=10,
                  user_home=None):
-                
+        
+        error=get_blocking_error(path)
+        if error:
+            raise ValueError("MaestroExperiment: "+error)
+            
         """
         A list of strings describing any errors in parsing or reading this experiment path.
         """
@@ -65,8 +70,8 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
         else:
             self.find_user_home()
             
-        if not self.basic_experiment_validation():
-            raise ValueError("Experiment validation errors:\n"+"\n".join(self.validation_errors))
+        if self.has_blocking_errors():
+            raise ValueError(self.get_blocking_error_message())
             
         self.inspect_flow()
         
@@ -87,10 +92,13 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
             
     def find_user_home(self):
         "Set home to the home of the owner of the experiment."
-        username=getpwuid(stat(self.path).st_uid).pw_name
-        home_root=os.path.dirname(os.environ["HOME"])
-        self.user_home=home_root+"/"+username+"/"
-    
+        if self.path:
+            username=getpwuid(stat(self.path).st_uid).pw_name
+            home_root=os.path.dirname(os.environ["HOME"])
+            self.user_home=home_root+"/"+username+"/"
+        else:
+            self.user_home=""
+            
     def get_workdir_path(self,node_path):
         if not self.long_datestamp:
             return ""

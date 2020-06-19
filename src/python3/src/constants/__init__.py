@@ -4,5 +4,4 @@ from constants.json import *
 from constants.maestro import *
 from constants.path import *
 from constants.resource import *
-from constants.tui import *
 from constants.version import VERSION
