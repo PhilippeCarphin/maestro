@@ -5,3 +5,4 @@ e1	Missing suite folders	All suites require the folders: ‘listings’, ‘sequ
 e2	No EntryModule	EntryModule link does not exist: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
 e3	Bad EntryModule	EntryModule is not a link: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
 e4	No experiment here	Could not find an experiment for path: '{path}'. A valid experiment folder contains an 'EntryModule' link.	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
+e5	Bad XML	Failed to parse XML: ‘{xml}’	

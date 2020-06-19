@@ -5,7 +5,10 @@ from heimdall.experiment_scanner import ExperimentScanner
 class TestSuiteErrors(unittest.TestCase):
             
     def test_simple(self):
-        for code in ("e1","e2","e3","e4"):
+        """
+        If a folder is called 'e1' we can expect it to produce the 'e1' code.
+        """
+        for code in ("e1","e2","e3","e4","e5"):
             path=HEIMDALL_ME_FOLDER+code
             scanner=ExperimentScanner(path,
                                       blocking_errors_is_exception=False)

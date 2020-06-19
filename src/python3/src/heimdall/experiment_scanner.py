@@ -28,9 +28,9 @@ class ExperimentScanner():
         self.maestro_experiment=MaestroExperiment(path)
         
         self.index_experiment_files()
-    
-    def add_message(self,code,description,url=""):
+        self.scan_xmls()
         
+    def add_message(self,code,description,url=""):        
         label=hmm.get_label(code)        
         if not url:
             url=hmm.get_url(code)
@@ -38,6 +38,13 @@ class ExperimentScanner():
         message={"code":code,"label":label,"description":description,"url":url}
         self.codes.add(code)
         self.messages.append(message)
+        
+    def scan_xmls(self):
+        for path in self.xml_files:
+            if file_cache.etree_parse(path) is None:
+                code="e5"
+                description=hmm.get(code,xml=path)
+                self.add_message(code,description)
         
     def index_experiment_files(self):
         """
@@ -52,6 +59,14 @@ class ExperimentScanner():
         folders=set()        
         resource_files=set()
         flow_files=set()
+        
+        "flow.xml files in modules folder"
+        mpath=self.path+"modules"
+        for folder in file_cache.listdir(mpath):
+            flow=mpath+"flow.xml"
+            if file_cache.isfile(flow):
+                paths.add(flow)
+                flow_files.add(flow)
         
         "find maestro files discovered through flow.xml"
         for node_path in self.maestro_experiment.get_node_datas():

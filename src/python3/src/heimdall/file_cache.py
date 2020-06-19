@@ -10,6 +10,7 @@ same-name functions instead.
 
 import os
 import os.path
+from lxml import etree
 
 def cache(function):
     """
@@ -26,14 +27,32 @@ def cache(function):
     return wrapper
 
 class FileCache():
+    """
+    Some functions do not have cache, for example when
+    they cache key should be realpath and not path.
+    This prevents caching duplicates for two paths that have the same realpath.
+    """
+    
     def __init__(self):
-        pass
-        
+        self.xml_parser=etree.XMLParser()
+    
+    def etree_parse(self,path):
+        """
+        Return the parsed lxml element for the XML at this path.
+        Error returns None.
+        """
+        realpath=self.realpath(path)   
+        return self.etree_parse_from_realpath(realpath)
+    
+    @cache
+    def etree_parse_from_realpath(self,realpath):
+        try:
+            tree=etree.parse(realpath, parser=self.xml_parser)
+            return tree.getroot()
+        except:
+            return None
+    
     def open(self,path):
-        """
-        this function does not use cache decorator, because
-        the cache key is realpath, not path
-        """
         realpath=self.realpath(path)
         return self.open_realpath(realpath)
     
