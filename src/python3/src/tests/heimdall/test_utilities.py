@@ -11,4 +11,4 @@ class TestUtilities(unittest.TestCase):
         result=get_dictionary_list_from_csv(CSV_DICTIONARY)
         self.assertEqual(len(result),2)
         self.assertEqual(result[1]["name"],"george")
-        
+    

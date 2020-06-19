@@ -18,7 +18,8 @@ class TestScanner(unittest.TestCase):
         msg=pretty_kwargs(result=result,expected=expected)
         self.assertEqual(result,expected,msg=msg)
         
-        expected=[p+"modules/main/task1.tsk",
+        expected=[p+"modules/main/123_bad_task_name.tsk",
+                  p+"modules/main/task1.tsk",
                   p+"modules/main/task2.tsk"]
         self.assertEqual(scanner.task_files,expected)
         

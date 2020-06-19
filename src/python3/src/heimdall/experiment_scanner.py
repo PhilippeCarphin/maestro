@@ -1,4 +1,5 @@
 import os.path
+import re
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
@@ -29,6 +30,7 @@ class ExperimentScanner():
         
         self.index_experiment_files()
         self.scan_xmls()
+        self.scan_node_names()
         
     def add_message(self,code,description,url=""):        
         label=hmm.get_label(code)        
@@ -39,10 +41,19 @@ class ExperimentScanner():
         self.codes.add(code)
         self.messages.append(message)
         
+    def scan_node_names(self):
+        code="e6"
+        r=re.compile(r"[a-zA-Z_]+[a-zA-Z0-9_]+")
+        for task_path in self.task_files:
+            task_name=task_path.split("/")[-1]
+            if not r.match(task_name):           
+                description=hmm.get(code,task_name=task_name,task_path=task_path)                
+                self.add_message(code,description)
+        
     def scan_xmls(self):
+        code="e5"
         for path in self.xml_files:
             if file_cache.etree_parse(path) is None:
-                code="e5"
                 description=hmm.get(code,xml=path)
                 self.add_message(code,description)
         
