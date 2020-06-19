@@ -84,6 +84,9 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
         else:
             self.datestamp=""
             self.long_datestamp=""
+            
+    def has_blocking_error(self):
+        return has_blocking_error(self.path)
                         
     def find_user_home(self):
         "Set home to the home of the owner of the experiment."

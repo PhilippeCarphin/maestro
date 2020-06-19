@@ -7,6 +7,7 @@ class TestSuiteErrors(unittest.TestCase):
     def test_simple(self):
         for code in ("e1","e2","e3","e4"):
             path=HEIMDALL_ME_FOLDER+code
-            scanner=ExperimentScanner(path)
+            scanner=ExperimentScanner(path,
+                                      blocking_errors_is_exception=False)
             msg="experiment path: '%s'"%path
             self.assertIn(code,scanner.codes,msg=msg)
