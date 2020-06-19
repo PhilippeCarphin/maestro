@@ -28,4 +28,5 @@ class TestScanner(unittest.TestCase):
         
         expected=[p+"modules/main/flow.xml"]
         self.assertEqual(scanner.flow_files,expected)
+    
 

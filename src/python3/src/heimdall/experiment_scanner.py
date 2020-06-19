@@ -117,11 +117,25 @@ class ExperimentScanner():
             elif path.endswith(".xml"):
                 xml_files.append(path)
         
+        "all full paths to all files to scan"
         self.files=sorted(list(paths))
+        
+        "all folders containing files to scan"
+        self.folders=sorted(list(folders))
+        
+        "all cfg files"
         self.config_files=sorted(config_files)
+        
+        "all flow.xml files"
         self.flow_files=sorted(list(flow_files))
+        
+        "all resource xml files"
         self.resource_files=sorted(list(resource_files))
+        
+        "all tsk files"
         self.task_files=sorted(task_files)
+        
+        "all xml files"
         self.xml_files=sorted(xml_files)
 
 

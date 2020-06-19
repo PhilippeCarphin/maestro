@@ -64,6 +64,10 @@ class FileCache():
         return ""
     
     @cache
+    def is_broken_symlink(self,path):
+        return not os.path.exists(os.readlink(path))
+    
+    @cache
     def listdir(self,path):
         return os.listdir(path)
     

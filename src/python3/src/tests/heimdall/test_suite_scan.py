@@ -1,6 +1,6 @@
 import os.path
 import unittest
-from tests.path import HEIMDALL_ME_FOLDER
+from tests.path import HEIMDALL_ME_FOLDER, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH
 from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
 
@@ -23,3 +23,13 @@ class TestSuiteScan(unittest.TestCase):
                                       blocking_errors_is_exception=False)
             msg="Experiment path: '%s'"%path
             self.assertIn(code,scanner.codes,msg=msg)
+    
+    def test_good_suite(self):
+        "no errors in these suites"
+        
+        paths=[TURTLE_ME_PATH,G0_MINI_ME_PATH,G1_MINI_ME_PATH,GV_MINI_ME_PATH]
+        for path in paths:
+            scanner=ExperimentScanner(path,
+                                      blocking_errors_is_exception=False)
+            msg="Experiment path: '%s'"%path
+            self.assertFalse(scanner.codes,msg=msg)
