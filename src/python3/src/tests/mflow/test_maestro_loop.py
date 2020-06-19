@@ -3,8 +3,8 @@ import unittest
 
 from constants import NODE_STATUS
 from tests.path import TURTLE_ME_PATH
-from maestro.experiment import MaestroExperiment
-from maestro.utilities import get_loop_indexes_from_loop_data, get_loop_composite_data_from_xml, get_loop_indexes_from_expression
+from maestro_experiment import MaestroExperiment
+from utilities.maestro import get_loop_indexes_from_loop_data, get_loop_composite_data_from_xml, get_loop_indexes_from_expression
 from tests.cache import G0_MINI_ME, TURTLE_ME
 
 """

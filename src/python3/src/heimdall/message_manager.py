@@ -17,7 +17,7 @@ class HeimdallMessageManager():
     
     def get_url(self,code):
         data=self._code_to_csv[code]
-        return data["url"]
+        return data.get("url","")
     
     def get(self,code,**kwargs):
         """

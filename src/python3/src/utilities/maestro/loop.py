@@ -3,7 +3,7 @@ from lxml import etree
 from collections import OrderedDict
 
 from utilities import xml_cache
-from maestro.utilities.xml import is_element
+from utilities.maestro.xml import is_element
 
 """
 The functions here read and parse loop XMLs and definitions to build lists of loop indexes.

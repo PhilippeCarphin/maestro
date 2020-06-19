@@ -23,7 +23,7 @@ from heimdall.docstring import adjust_docstring
 __doc__=adjust_docstring(__doc__)
 
 from utilities.docopt import docopt
-from maestro.experiment import MaestroExperiment
+from maestro_experiment import MaestroExperiment
 from heimdall import ExperimentScanner
 
 def main(args):

@@ -12,20 +12,18 @@ import os
 from os import stat
 from pwd import getpwuid
 
-from heimdall.basic_validation import get_blocking_error
-from maestro.utilities import find_exp_home_in_path, get_experiment_name
-from maestro.utilities.sequencer import get_sequencer_command
-from utilities.pretty import pretty
-from utilities.generic import clamp
+from utilities.heimdall import has_blocking_error
+from utilities.maestro import find_exp_home_in_path, get_experiment_name, get_sequencer_command
+from utilities import pretty, clamp
 
-from maestro.experiment.me_flow import ME_Flow
-from maestro.experiment.me_indexes import ME_Indexes
-from maestro.experiment.me_logs import ME_Logs
-from maestro.experiment.me_node_data import ME_NodeData
-from maestro.experiment.me_node_status import ME_NodeStatus
-from maestro.experiment.me_resources import ME_Resources
-from maestro.experiment.me_snapshot import ME_Snapshot
-from maestro.experiment.me_validation import ME_Validation
+from maestro_experiment.me_flow import ME_Flow
+from maestro_experiment.me_indexes import ME_Indexes
+from maestro_experiment.me_logs import ME_Logs
+from maestro_experiment.me_node_data import ME_NodeData
+from maestro_experiment.me_node_status import ME_NodeStatus
+from maestro_experiment.me_resources import ME_Resources
+from maestro_experiment.me_snapshot import ME_Snapshot
+from maestro_experiment.me_validation import ME_Validation
 
 class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus, ME_Resources, ME_Snapshot, ME_Validation):
     def __init__(self,
@@ -34,9 +32,9 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
                  node_log_refresh_interval=10,
                  user_home=None):
         
-        error=get_blocking_error(path)
-        if error:
-            raise ValueError("MaestroExperiment: "+error)
+        path=find_exp_home_in_path(path)
+        if not path or has_blocking_error(path):
+            raise ValueError("MaestroExperiment failed to find an experiment for path: '%s'"%path)
             
         """
         A list of strings describing any errors in parsing or reading this experiment path.
@@ -54,7 +52,7 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
         """
         self.resource_xml_cache={}
         
-        self.path=find_exp_home_in_path(path)        
+        self.path=path
         self.name=get_experiment_name(path)
         
         """
@@ -69,10 +67,7 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
             self.user_home=user_home
         else:
             self.find_user_home()
-            
-        if self.has_blocking_errors():
-            raise ValueError(self.get_blocking_error_message())
-            
+                    
         self.inspect_flow()
         
         """
@@ -89,7 +84,7 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
         else:
             self.datestamp=""
             self.long_datestamp=""
-            
+                        
     def find_user_home(self):
         "Set home to the home of the owner of the experiment."
         if self.path:

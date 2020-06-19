@@ -1,10 +1,10 @@
 import unittest
 import curses
 
-from mflow.tui import TuiManager
-from maestro.experiment import MaestroExperiment
+from mflow import TuiManager
+from maestro_experiment import MaestroExperiment
 from utilities import get_console_dimensions
-from mflow.utilities import get_mflow_config
+from utilities.mflow import get_mflow_config
 from tests.path import TURTLE_ME_PATH, BIG_LOOP_ME_PATH, G1_MINI_ME_PATH
 
 """

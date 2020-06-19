@@ -1,8 +1,9 @@
 import os.path
 from collections import OrderedDict
 
+from home_logger import logger
 from utilities.generic import superstrip
-from maestro.utilities.loop import get_loop_indexes_from_loop_data, get_loop_composite_data_from_xml
+from utilities.maestro.loop import get_loop_indexes_from_loop_data, get_loop_composite_data_from_xml
 
 """
 This code handles code related to nodes with indexes like:

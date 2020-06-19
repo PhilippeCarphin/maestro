@@ -1,19 +1,25 @@
 
-from heimdall.basic_validation import find_blocking_error
-from maestro.experiment import MaestroExperiment
-from heimdall import hmm
+from maestro_experiment import MaestroExperiment
+from heimdall.message_manager import hmm
+from utilities.heimdall import find_blocking_errors
 
 class ExperimentScanner():
     def __init__(self,path):
         
-        self.path=path
+        if not path.endswith("/"):
+            path+="/"
         
+        self.path=path
+        self.maestro_experiment=None        
         self.codes=set()
         self.messages=[]
         
-        code,description=find_blocking_error(path)
-        if description:
+        blocking_errors=find_blocking_errors(path)        
+        for code,kwargs in blocking_errors.items():
+            description=hmm.get(code,**kwargs)
             self.add_message(code,description)
+        if blocking_errors:
+            return
         
         self.maestro_experiment=MaestroExperiment(path)
     

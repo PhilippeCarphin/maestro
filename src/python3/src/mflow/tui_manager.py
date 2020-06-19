@@ -6,17 +6,16 @@ import os.path
 import logging
 from curses import wrapper
 
-from maestro.experiment import MaestroExperiment
-from maestro.utilities import dashify_datestamp
+from utilities.maestro import dashify_datestamp
 from utilities.curses import get_curses_attr_from_string
 from utilities import clamp, get_console_dimensions, pretty, safe_write, run_shell_cmd
-from maestro.utilities import set_log_level, get_mflow_config
-from home_logger import logger
+from utilities.mflow import get_mflow_config
+from home_logger import logger, set_log_level
 from constants import VERSION, TMP_BASH_WRAPPER_COMMAND_FILE_PREFIX, MINIMUM_CONSOLE_DIMENSIONS, TMP_FOLDER, LOG_FOLDER
-from mflow.constants import KEYBOARD_NAVIGATION_TYPE, NAVIGATION_KEYS, TUI_STATE
-from mflow.tui.text_flow import TextFlow
-from mflow.tui import PopupManager
-from mflow.tui.utilities import get_text_lines_within_width, pad_text_with_spaces
+from constants.mflow import KEYBOARD_NAVIGATION_TYPE, NAVIGATION_KEYS, TUI_STATE
+from mflow.text_flow import TextFlow
+from mflow import PopupManager
+from utilities.mflow import get_text_lines_within_width, pad_text_with_spaces
 
 CURSOR_POINTS=((-1,0),(0,1),(1,0),(0,-1))
 
@@ -33,7 +32,7 @@ class TuiManager(PopupManager):
                  verbose=False,
                  tui_id=None):
         
-        assert type(maestro_experiment) is MaestroExperiment
+        assert "MaestroExperiment" in str(type(maestro_experiment))
         self.maestro_experiment=maestro_experiment
         self.last_experiment_refresh_time=time.time()
         self.cursor_start_xy=cursor_start_xy

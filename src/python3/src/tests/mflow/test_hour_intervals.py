@@ -1,6 +1,6 @@
 import unittest
 
-from maestro import get_intervals_from_status_path
+from utilities.maestro import get_intervals_from_status_path
 from tests.path import MOCK_FILES
 
 class TestHourIntervals(unittest.TestCase):

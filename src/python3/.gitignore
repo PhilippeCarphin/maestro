@@ -1,2 +1,8 @@
 debug.sh
 src/debug.py
+
+# swap files
+*~
+*.swp
+*.swo
+csv/.~*

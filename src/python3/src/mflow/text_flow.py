@@ -6,8 +6,7 @@ This class converts a MaestroExperiment into chunks of text with coordinates, fo
 import time
 from collections import OrderedDict
 
-from maestro.experiment import MaestroExperiment
-from maestro.utilities import get_mflow_config
+from utilities.mflow import get_mflow_config
 from home_logger import logger
 from utilities.curses import get_curses_attr_from_status
 from utilities import pretty, is_xy_in_rect
@@ -20,7 +19,7 @@ class TextFlow():
                  debug=False,
                  tui_id=None):
         
-        assert type(maestro_experiment) is MaestroExperiment
+        assert "MaestroExperiment" in str(type(maestro_experiment))
         self.maestro_experiment=maestro_experiment
         self.debug=debug
         

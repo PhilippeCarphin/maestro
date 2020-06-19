@@ -8,7 +8,7 @@ This abstract class is not meant to be instantiated, only inherited.
 import os
 
 from home_logger import logger
-from maestro.utilities.sequencer import environment_has_maestro
+from utilities.maestro.sequencer import environment_has_maestro
 
 class ME_Validation():
     

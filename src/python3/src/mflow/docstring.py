@@ -2,7 +2,7 @@ import os.path
 import os
 
 from constants import DEFAULT_CONFIG_PATH, VERSION
-from maestro.utilities.path import get_exp_home_from_pwd
+from utilities.maestro.path import get_exp_home_from_pwd
 
 def get_default_config_path():
     "If config exists in home, return that, otherwise return project default."

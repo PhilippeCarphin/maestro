@@ -33,16 +33,16 @@ See Also:
 import traceback
 import os.path
 
-from mflow.tui.docstring import adjust_docstring
+from mflow.docstring import adjust_docstring
 __doc__=adjust_docstring(__doc__)
 
 from utilities.docopt import docopt
 from utilities import print_red
-from mflow.utilities import get_mflow_config
-from mflow.utilities.threading import async_set_qstat_data_in_maestro_experiment
-from mflow.tui import TuiManager
-from maestro.experiment import MaestroExperiment
-from maestro.utilities.datestamp import get_latest_yyyymmddhh_from_experiment_path, get_yyyymmddhh
+from utilities.mflow import get_mflow_config
+from utilities.mflow.threading import async_set_qstat_data_in_maestro_experiment
+from mflow import TuiManager
+from maestro_experiment import MaestroExperiment
+from utilities.maestro.datestamp import get_latest_yyyymmddhh_from_experiment_path, get_yyyymmddhh
 
 def main(args):
     
@@ -71,8 +71,8 @@ def main(args):
                          user_home=args["--home"],
                          node_log_refresh_interval=interval)
     
-    if me.has_blocking_errors():
-        for error in me.get_blocking_error_messages():
+    if me.has_blocking_error():
+        for error in me.get_blocking_error():
             print_red(error)
         return
     
