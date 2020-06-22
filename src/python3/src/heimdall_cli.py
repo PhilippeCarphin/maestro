@@ -3,10 +3,6 @@
 """
 Heimdall is a maestro suite scanner. Scan for errors, warnings, recommendations, and installation issues. Version %s.
 
-Config:
-    You can find good defaults for the '--config' option here:
-    %s
-
 Usage:
     heimdall [options]
 
@@ -19,11 +15,10 @@ Options:
     -h --help   Show this description.
 """
 import os
-from heimdall.docstring import adjust_docstring
+from utilities.heimdall import adjust_docstring
 __doc__=adjust_docstring(__doc__)
 
 from utilities.docopt import docopt
-from maestro_experiment import MaestroExperiment
 from heimdall import ExperimentScanner
 
 def main(args):
@@ -31,15 +26,10 @@ def main(args):
     experiment_path=args["--exp"]
     if experiment_path.startswith("~"):
         experiment_path=os.path.expanduser(experiment_path)
-    
-    print("Reading experiment files for '%s'"%experiment_path)
-    
-    me=MaestroExperiment(experiment_path,
-                         user_home=args["--home"])
-    
+        
     print("Scanning maestro experiment.")
     
-    scanner=ExperimentScanner(me)
+    scanner=ExperimentScanner(experiment_path)
     
     scanner.print_report()
 

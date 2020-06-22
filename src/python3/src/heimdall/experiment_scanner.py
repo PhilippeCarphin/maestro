@@ -1,11 +1,13 @@
 import os.path
 import re
+from collections import OrderedDict
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
 from utilities.maestro import is_empty_module
 from utilities.heimdall import find_critical_errors
+from utilities import print_red, print_orange, print_yellow, print_green, print_blue
 from utilities import xml_cache
 
 class ExperimentScanner():
@@ -223,6 +225,23 @@ class ExperimentScanner():
         
         "all xml files"
         self.xml_files=sorted(xml_files)
+    
+    def print_report(self):
+        char_color_functions=OrderedDict([("c",print_red),
+                                          ("e",print_orange),
+                                          ("w",print_yellow),
+                                          ("i",print_green),
+                                          ("b",print_blue)])
+        
+        for c,f in char_color_functions.items():
+            for message in self.messages:
+                code=message["code"]
+                if not code.startswith(c):
+                    continue
+                f(code+": "+message["label"])
+                print(message["description"])
+        
+        print("\nHeimdall found %s items to report for maestro suite:\n    %s"%(len(self.messages,self.path)))
 
 
 
