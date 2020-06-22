@@ -4,10 +4,10 @@ import re
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
-from utilities.heimdall import find_blocking_errors
+from utilities.heimdall import find_critical_errors
 
 class ExperimentScanner():
-    def __init__(self,path,blocking_errors_is_exception=True):
+    def __init__(self,path,critical_error_is_exception=True):
         
         if not path.endswith("/"):
             path+="/"
@@ -17,18 +17,19 @@ class ExperimentScanner():
         self.codes=set()
         self.messages=[]
         
-        blocking_errors=find_blocking_errors(path)        
-        for code,kwargs in blocking_errors.items():
+        critical_errors=find_critical_errors(path)        
+        for code,kwargs in critical_errors.items():
             description=hmm.get(code,**kwargs)
             self.add_message(code,description)
-        if blocking_errors:
-            if blocking_errors_is_exception:
-                raise ValueError("Experiment path:\n'%s'\nhas blocking errors:\n%s"%(path,str(blocking_errors)))
+        if critical_errors:
+            if critical_error_is_exception:
+                raise ValueError("Experiment path:\n'%s'\nhas critical errors:\n%s"%(path,str(critical_errors)))
             return
         
         self.maestro_experiment=MaestroExperiment(path)
         
         self.index_experiment_files()
+        self.scan_required_folders()
         self.scan_xmls()
         self.scan_node_names()
         self.scan_broken_symlinks()
@@ -42,8 +43,20 @@ class ExperimentScanner():
         self.codes.add(code)
         self.messages.append(message)
         
+    def scan_required_folders(self):        
+        required_folders=("listings","sequencing","stats","logs")
+        missing=[]
+        for folder in required_folders:
+            if not file_cache.isdir(self.path+folder):
+                missing.append(folder)
+        if missing:
+            folders_msg=", ".join(missing)
+            code="e1"
+            description=hmm.get(code,folders=folders_msg)
+            self.add_message(code,description)
+        
     def scan_broken_symlinks(self):
-        code="e7"
+        code="e4"
         for path in self.files:
             if not file_cache.islink(path):
                 continue
@@ -53,7 +66,7 @@ class ExperimentScanner():
                 self.add_message(code,description)
         
     def scan_node_names(self):
-        code="e6"
+        code="e3"
         r=re.compile(r"[a-zA-Z_]+[a-zA-Z0-9_]+")
         for task_path in self.task_files:
             task_name=task_path.split("/")[-1]
@@ -62,7 +75,7 @@ class ExperimentScanner():
                 self.add_message(code,description)
         
     def scan_xmls(self):
-        code="e5"
+        code="e2"
         for path in self.xml_files:
             if file_cache.etree_parse(path) is None:
                 description=hmm.get(code,xml=path)

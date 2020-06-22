@@ -12,8 +12,9 @@ from utilities.maestro.datestamp import get_day_of_week
 from constants import NODE_TYPE, SWITCH_TYPE
 from utilities.maestro.xml import get_combined_flow_for_experiment_path, get_node_type_from_element, get_submits_from_flow_element, \
 get_flow_children_from_flow_element, get_module_name_from_flow_xml, get_paths_from_element, get_module_name_for_element
-from utilities.pretty import pretty_kwargs, pk
+from utilities.pretty import pretty_kwargs
 from utilities.generic import superstrip
+from home_logger import logger
 
 class ME_Flow():
 
@@ -59,21 +60,28 @@ class ME_Flow():
     def build_flow_data(self):
         "Build the flow_data for each node using the parsed XML flow files."
         
-        entry_flow=self.path+"EntryModule/flow.xml"        
-        if not os.path.isfile(entry_flow):
-            raise ValueError("Bad experiment path '%s'. MaestroExperiment failed to find EntryModule flow.xml: '%s'"%(self.path,entry_flow))
+        self.root_flow_branch=None
+        self.root_module_name=None
+        self.root_node_path=None
+        self.root_flow=None
+        self.root_node_data=None
+        
+        entry_flow=self.path+"EntryModule/flow.xml"
         self.root_flow_branch=os.path.abspath(entry_flow)
-        self.root_module_name=get_module_name_from_flow_xml(entry_flow)     
+        self.root_module_name=get_module_name_from_flow_xml(entry_flow)
+        
+        if not self.root_module_name:
+            logger.warning("Failed to find root module name in flow.xml: '%s'"%entry_flow)
+            return
+        
         self.root_node_path=self.root_module_name
         self.root_flow=get_combined_flow_for_experiment_path(self.path)
-        """
-        pk(root_flow_branch=self.root_flow_branch,
-           root_module_name=self.root_module_name,
-           root_node_path=self.root_node_path,
-           root_flow=self.root_flow,
-           path=self.path)
-        """
-        "exclude non-elements in document, like comments"
+        
+        if self.root_flow is None:
+            logger.warning("Failed to find root flow element in flow.xml: '%s'"%entry_flow)
+            return
+        
+        "exclude non-elements in document, like comments"            
         children=[child for child in self.root_flow.iter() if type(child) is lxml.etree._Element]
         
         for child in children:

@@ -71,8 +71,8 @@ def main(args):
                          user_home=args["--home"],
                          node_log_refresh_interval=interval)
     
-    if me.has_blocking_error():
-        for error in me.get_blocking_error():
+    if me.has_critical_error():
+        for error in me.get_critical_error():
             print_red(error)
         return
     

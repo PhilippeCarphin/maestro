@@ -15,7 +15,9 @@ class ME_NodeData():
     def get_node_datas(self):
         return [self.get_node_data(node_path) for node_path in self.get_node_paths()]
     
-    def get_node_data(self,node_path):        
+    def get_node_data(self,node_path):
+        if not node_path:
+            return None
         if node_path not in self.node_datas:
             self.node_datas[node_path]=self.calculate_node_data(node_path)
         return self.node_datas[node_path]

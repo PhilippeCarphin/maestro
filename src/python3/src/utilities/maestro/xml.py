@@ -184,6 +184,8 @@ def get_paths_from_element(element):
 def get_module_name_from_flow_xml(path):
     "Given a flow xml, returns the 'name' of the top module element."
     root=xml_cache.get(path)
+    if root is None:
+        return ""
     return root.get("name")
 
 def get_submits_from_flow_element(element):

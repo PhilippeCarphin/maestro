@@ -3,7 +3,7 @@ from tests.path import FILE_INDEX_ME_PATH
 from heimdall.experiment_scanner import ExperimentScanner
 from utilities import pretty_kwargs
 
-class TestScanner(unittest.TestCase):
+class TestFileIndex(unittest.TestCase):
             
     def test_file_index(self):
         self.maxDiff=None
@@ -28,5 +28,8 @@ class TestScanner(unittest.TestCase):
         
         expected=[p+"modules/main/flow.xml"]
         self.assertEqual(scanner.flow_files,expected)
+        
+        expected=p+"modules/strange-file1"
+        self.assertIn(expected,scanner.files)
     
 

@@ -15,12 +15,12 @@ class TestSuiteScan(unittest.TestCase):
             path=HEIMDALL_ME_FOLDER+code
             
             msg="Mock experiment for code '%s' does not exist at path '%s'. All codes must have a test case."%(code,path)
-            if code!="e4":
-                "exclude e4 because that's an error where the folder does not exist"
+            if code!="c3":
+                "exclude c3 because that's an error where the folder does not exist"
                 self.assertTrue(os.path.isdir(path),msg=msg)
             
             scanner=ExperimentScanner(path,
-                                      blocking_errors_is_exception=False)
+                                      critical_error_is_exception=False)
             msg="Experiment path: '%s'"%path
             self.assertIn(code,scanner.codes,msg=msg)
     
@@ -30,6 +30,6 @@ class TestSuiteScan(unittest.TestCase):
         paths=[TURTLE_ME_PATH,G0_MINI_ME_PATH,G1_MINI_ME_PATH,GV_MINI_ME_PATH]
         for path in paths:
             scanner=ExperimentScanner(path,
-                                      blocking_errors_is_exception=False)
+                                      critical_error_is_exception=False)
             msg="Experiment path: '%s'"%path
             self.assertFalse(scanner.codes,msg=msg)

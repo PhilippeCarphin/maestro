@@ -12,7 +12,7 @@ import os
 from os import stat
 from pwd import getpwuid
 
-from utilities.heimdall import has_blocking_error
+from utilities.heimdall import has_critical_error
 from utilities.maestro import find_exp_home_in_path, get_experiment_name, get_sequencer_command
 from utilities import pretty, clamp
 
@@ -33,7 +33,7 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
                  user_home=None):
         
         path=find_exp_home_in_path(path)
-        if not path or has_blocking_error(path):
+        if not path or has_critical_error(path):
             raise ValueError("MaestroExperiment failed to find an experiment for path: '%s'"%path)
             
         """
@@ -85,8 +85,8 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
             self.datestamp=""
             self.long_datestamp=""
             
-    def has_blocking_error(self):
-        return has_blocking_error(self.path)
+    def has_critical_error(self):
+        return has_critical_error(self.path)
                         
     def find_user_home(self):
         "Set home to the home of the owner of the experiment."
