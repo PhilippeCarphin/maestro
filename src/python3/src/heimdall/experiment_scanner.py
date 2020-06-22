@@ -5,6 +5,7 @@ from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
 from utilities.heimdall import find_critical_errors
+from utilities import xml_cache
 
 class ExperimentScanner():
     def __init__(self,path,critical_error_is_exception=True):
@@ -31,6 +32,7 @@ class ExperimentScanner():
         self.index_experiment_files()
         self.scan_required_folders()
         self.scan_xmls()
+        self.scan_scattered_modules()
         self.scan_node_names()
         self.scan_broken_symlinks()
         
@@ -42,6 +44,28 @@ class ExperimentScanner():
         message={"code":code,"label":label,"description":description,"url":url}
         self.codes.add(code)
         self.messages.append(message)
+        
+    def scan_scattered_modules(self):
+        module_elements=[]
+        
+        """
+        Sometimes a folder in modules is a link to another folder in modules
+        This dictionary has all aliases
+        """
+        source_to_target={}
+        
+        non_empty_modules=[]
+        
+        for flow in self.flow_files:
+            module_name=os.path.basename(os.path.dirname(flow))
+            realname=os.path.basename(os.path.realpath(os.path.dirname(flow)))
+            if realname!=module_name:
+                source_to_target[module_name]=realname
+            
+            root=xml_cache.get(flow)
+            module_elements+=xml_cache.get_elements_of_tag(root,"MODULE")
+            
+        
         
     def scan_required_folders(self):        
         required_folders=("listings","sequencing","stats","logs")

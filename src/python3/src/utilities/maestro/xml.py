@@ -11,6 +11,7 @@ import lxml
 from lxml import etree
 from utilities.pretty import pretty, pprint_kwargs
 from utilities.xml import xml_cache
+from utilities.generic import cache
 from home_logger import logger
 from constants import NODE_TYPES, CONTAINER_TAGS
 
@@ -332,6 +333,11 @@ def element_has_node_children(element):
             return True
     return False        
 
+@cache
+def get_module_elements_cached(element):
+    "find all module elements, either this root element, or any elements inside it"
+    return element.xpath("//MODULE")
+
 def get_combined_flow_from_text_list(xml_datas,verbose=False):
     "assume first xml_data is the main flow xml"
     
@@ -363,8 +369,7 @@ def get_combined_flow_from_text_list(xml_datas,verbose=False):
             logger.error("lxml failed to parse text: '%s'"%text[:50])
             continue
         
-        "find all module elements, either this root element, or any elements inside it"
-        module_elements=root.xpath("//MODULE")
+        module_elements=get_module_elements_cached(root)
                 
         "map module_name to module_element"
         for module_element in module_elements:

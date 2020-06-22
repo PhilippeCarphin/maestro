@@ -17,6 +17,20 @@ def get_change_time(path):
         "this may occur because of infinitely nested soft links"
         return "<OSError>"
 
+def cache(function):
+    """
+    later versions of Python have 'functools.cache'
+    """
+    memo = {}
+    def wrapper(*args):
+        if args in memo:
+            return memo[args]
+        else:
+            rv = function(*args)
+            memo[args] = rv
+            return rv
+    return wrapper
+
 def insert_into_dictionary(a,b):
     """
     If a key in dictionary 'b' is not in 'a', insert its key/value into 'a'.

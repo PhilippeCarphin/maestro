@@ -1,10 +1,10 @@
 from lxml import etree
-import copy
+from utilities import cache
 
 """
 This class is a central place to open and parse all XML files, to avoid ever doing it twice.
 
-The returned element should never be modified, unless return_deepcopy is used.
+The returned element should never be modified.
 """
 
 def is_valid_xml(path):
@@ -29,18 +29,16 @@ class XMLCache():
         self.parser=etree.XMLParser(remove_comments=True)
         self.xml_path_to_lxml_root={}
     
-    def get(self,xml_path,return_deepcopy=False):
-        if xml_path not in self.xml_path_to_lxml_root:            
-            root=get_root_from_xml_path(xml_path,parser=self.parser)
-            if root is None:
-                return
-            self.xml_path_to_lxml_root[xml_path]=root
+    @cache
+    def get_elements_of_tag(self,element,tag):
+        """
+        Return a list of all elements in this element (including this element)
+        with this tag, for example 'MODULE'
+        """
+        return element.xpath("//"+tag)
         
-        element=self.xml_path_to_lxml_root[xml_path]
-        
-        if return_deepcopy:
-            element=copy.deepcopy(element)
-            
-        return element
+    @cache
+    def get(self,xml_path,return_deepcopy=False):            
+        return get_root_from_xml_path(xml_path,parser=self.parser)
 
 xml_cache=XMLCache()

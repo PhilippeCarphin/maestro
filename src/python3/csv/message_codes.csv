@@ -10,3 +10,4 @@ e1	Missing suite folders	All suites require the folders: ‘listings’, ‘sequ
 e2	Bad XML	Failed to parse XML: ‘{xml}’	
 e3	Bad task name	Invalid task name ‘{task_name}’ at path '{task_path}’	
 e4	Broken symlink	The symlink ‘{source}’ points to a target ‘{target}’ that does not exist.	
+e5	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML: {flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290

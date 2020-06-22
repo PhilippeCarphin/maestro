@@ -11,20 +11,7 @@ same-name functions instead.
 import os
 import os.path
 from lxml import etree
-
-def cache(function):
-    """
-    later versions of Python have 'functools.cache'
-    """
-    memo = {}
-    def wrapper(*args):
-        if args in memo:
-            return memo[args]
-        else:
-            rv = function(*args)
-            memo[args] = rv
-            return rv
-    return wrapper
+from utilities.generic import cache
 
 class FileCache():
     """
