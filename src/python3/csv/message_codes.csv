@@ -1,12 +1,12 @@
 # This is a tab delimited spreadsheet (TSV) for all Heimdall messages.			
 # The message levels are best practice (b), info (i), warning (w), and error (e)			
 code	label	description	url
-e1	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders
 c1	No EntryModule	EntryModule link does not exist: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
 c2	Bad EntryModule	EntryModule is not a link: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
 c3	No experiment here	Could not find an experiment for path: '{path}'. A valid experiment folder contains an 'EntryModule' link.	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
+c4	No EntryModule flow.xml	The required EntryModule flow.xml file does not exist: ‘{flow_xml}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
+c5	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to parse as XML: ‘{flow_xml}’	
+e1	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders
 e2	Bad XML	Failed to parse XML: ‘{xml}’	
 e3	Bad task name	Invalid task name ‘{task_name}’ at path '{task_path}’	
 e4	Broken symlink	The symlink ‘{source}’ points to a target ‘{target}’ that does not exist.	
-c4	No EntryModule flow.xml	The required EntryModule flow.xml file does not exist: ‘{flow_xml}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
-c5	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to parse as XML: ‘{flow_xml}’	
