@@ -7,27 +7,28 @@ This class is a central place to open and parse all XML files, to avoid ever doi
 The returned element should never be modified.
 """
 
-def is_valid_xml(path):
-    """
-    Returns true if an XML at this path can be parsed as XML.
-    """
-    return get_root_from_xml_path(path) is not None
-
-def get_root_from_xml_path(path,parser=None):
-    if not parser:
-        parser=etree.XMLParser(remove_comments=True)
-        
-    try:
-        tree=etree.parse(path,parser=parser)
-    except:
-        return None
-    
-    return tree.getroot()
 
 class XMLCache():
     def __init__(self):
         self.parser=etree.XMLParser(remove_comments=True)
         self.xml_path_to_lxml_root={}
+    
+    @cache
+    def is_valid_xml(self,path):
+        """
+        Returns true if an XML at this path can be parsed as XML.
+        """
+        return self.get_root_from_xml_path(path) is not None
+    
+    @cache
+    def get_root_from_xml_path(self,path):
+            
+        try:
+            tree=etree.parse(path,parser=self.parser)
+        except:
+            return None
+        
+        return tree.getroot()
     
     @cache
     def get_elements_of_tag(self,element,tag):
@@ -38,7 +39,7 @@ class XMLCache():
         return element.xpath("//"+tag)
         
     @cache
-    def get(self,xml_path,return_deepcopy=False):            
-        return get_root_from_xml_path(xml_path,parser=self.parser)
+    def get(self,xml_path):            
+        return self.get_root_from_xml_path(xml_path)
 
 xml_cache=XMLCache()
