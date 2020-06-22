@@ -11,7 +11,6 @@ The returned element should never be modified.
 class XMLCache():
     def __init__(self):
         self.parser=etree.XMLParser(remove_comments=True)
-        self.xml_path_to_lxml_root={}
     
     @cache
     def is_valid_xml(self,path):

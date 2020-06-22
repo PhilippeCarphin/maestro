@@ -333,7 +333,6 @@ def element_has_node_children(element):
             return True
     return False        
 
-@cache
 def get_module_elements_cached(element):
     "find all module elements, either this root element, or any elements inside it"
     return element.xpath("//MODULE")
@@ -369,7 +368,7 @@ def get_combined_flow_from_text_list(xml_datas,verbose=False):
             logger.error("lxml failed to parse text: '%s'"%text[:50])
             continue
         
-        module_elements=get_module_elements_cached(root)
+        module_elements=xml_cache.get_elements_of_tag(root,"MODULE")
                 
         "map module_name to module_element"
         for module_element in module_elements:

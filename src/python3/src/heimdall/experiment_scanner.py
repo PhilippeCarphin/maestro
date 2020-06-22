@@ -4,6 +4,7 @@ import re
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
+from utilities.maestro import is_empty_module
 from utilities.heimdall import find_critical_errors
 from utilities import xml_cache
 
@@ -46,26 +47,55 @@ class ExperimentScanner():
         self.messages.append(message)
         
     def scan_scattered_modules(self):
-        module_elements=[]
         
         """
-        Sometimes a folder in modules is a link to another folder in modules
-        This dictionary has all aliases
+        This dictionary is necessary because 'modules/module1/flow.xml'
+        may define '<MODULE name=module2>' at its root.      
+        This dictionary has all aliases.
         """
         source_to_target={}
         
-        non_empty_modules=[]
-        
-        for flow in self.flow_files:
-            module_name=os.path.basename(os.path.dirname(flow))
-            realname=os.path.basename(os.path.realpath(os.path.dirname(flow)))
+        not_empty_modules=[]
+        module_element_to_flow_path={}
+                
+        for flow_path in self.flow_files:
+            module_name=os.path.basename(os.path.dirname(flow_path))
+            realname=os.path.basename(os.path.realpath(os.path.dirname(flow_path)))
             if realname!=module_name:
                 source_to_target[module_name]=realname
             
-            root=xml_cache.get(flow)
-            module_elements+=xml_cache.get_elements_of_tag(root,"MODULE")
-            
+            root=xml_cache.get(flow_path)
+            not_empty_modules+=xml_cache.get_elements_of_tag(root,"MODULE")
+            for m in not_empty_modules:
+                module_element_to_flow_path[m]=flow_path
         
+        """
+        key is module realname
+        value is list of flow.xml paths defining this module, if the
+        list length is greater than 1 our module is scatterd
+        """
+        module_declares={}
+        
+        for m in not_empty_modules:
+            module_name=m.attrib.get("name")
+            if not module_name:
+                continue
+            
+            realname=source_to_target.get(module_name,module_name)
+            if realname not in module_declares:
+                module_declares[realname]=[]
+                
+            flow_path=module_element_to_flow_path[m]
+            module_declares[realname].append(flow_path)
+        
+        for module_name,flow_paths in module_declares.items():
+            if len(flow_paths)>1:
+                code="e5"
+                flow_xmls="\n".join(flow_paths)
+                description=hmm.get(code,
+                                    module_name=module_name,
+                                    flow_xmls=flow_xmls)
+                self.add_message(code,description)                
         
     def scan_required_folders(self):        
         required_folders=("listings","sequencing","stats","logs")
