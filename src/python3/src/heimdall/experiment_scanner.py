@@ -120,6 +120,14 @@ class ExperimentScanner():
                 elif prefix=="flow":
                     flow_files.add(path)
                     
+        "also add parent folders of all folders, as long as they are in the experiment"
+        for folder in list(folders):
+            parent=folder
+            while parent.startswith(self.path):
+                if parent!=folder:
+                    folders.add(parent)
+                parent=os.path.dirname(parent)
+                    
         "find maestro files (including broken symlinks) not in flow.xml, but in the same folders"
         for folder in folders:
             if not file_cache.isdir(folder):
@@ -128,7 +136,7 @@ class ExperimentScanner():
                 path=folder+"/"+filename
                 if file_cache.isfile(path) or file_cache.is_broken_symlink(path):
                     paths.add(path)
-                    
+                
         "index tsk cfg xml"
         task_files=[]
         config_files=[]
