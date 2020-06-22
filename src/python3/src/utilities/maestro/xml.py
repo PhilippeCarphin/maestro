@@ -10,7 +10,7 @@ from copy import deepcopy
 import lxml
 from lxml import etree
 from utilities.pretty import pretty, pprint_kwargs
-from utilities.xml_cache import xml_cache
+from utilities.xml import xml_cache
 from home_logger import logger
 from constants import NODE_TYPES, CONTAINER_TAGS
 

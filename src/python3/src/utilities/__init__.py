@@ -18,4 +18,4 @@ from utilities.pretty import *
 from utilities.qstat import *
 from utilities.shell import *
 from utilities.timer import *
-from utilities.xml_cache import *
+from utilities.xml import *

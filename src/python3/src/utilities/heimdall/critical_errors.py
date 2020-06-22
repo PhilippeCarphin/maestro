@@ -1,4 +1,5 @@
 import os.path
+from utilities.xml import is_valid_xml
 
 def has_critical_error(path):
     bool(find_critical_errors(path))
@@ -33,6 +34,9 @@ def find_critical_errors(path):
     entry_flow=entry_module+"/flow.xml"
     if not os.path.isfile(entry_flow):
         errors["c4"]={"flow_xml":entry_flow}
+        
+    if not is_valid_xml(entry_flow):
+        errors["c5"]={"flow_xml":entry_flow}
         
     if os.path.exists(entry_module):
         if not os.path.islink(entry_module):
