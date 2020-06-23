@@ -12,6 +12,8 @@ Options:
     --reinstall           If this version is already installed, uninstall it first.
 "
 
+BASELINE_MAESTRO_DOMAIN="eccc/cmo/isst/maestro/1.6.8"
+
 set -eu
 
 # idiomatic parameter and option handling in sh
@@ -84,7 +86,6 @@ set +x
 
 echo "Installed and published: '$SSM_PACKAGES'"
 
-BASELINE_MAESTRO_DOMAIN="eccc/cmo/isst/maestro/1.5.1-rc22"
 if [[ -n $(command -v python3) ]] ; then
 		./scripts/environment-compare.py $SSM_DOMAIN_PATH $BASELINE_MAESTRO_DOMAIN
 fi
