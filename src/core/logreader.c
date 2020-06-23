@@ -62,7 +62,7 @@ void insert_node(char S, char *node, char *loop, char *stime, char *btime, char 
       len =strlen(ComposedNode);
       
       if ( MyListListNodes.Nodelength == -1 ) {
-           /* first time */
+           
            MyListListNodes.Nodelength=len;
 	   if ( (ptr_lhead=(struct _ListNodes *) malloc(sizeof(struct _ListNodes))) != NULL ) {
 		strcpy(ptr_lhead->PNode.Node,ComposedNode);
@@ -117,8 +117,8 @@ void insert_node(char S, char *node, char *loop, char *stime, char *btime, char 
 	   }
            /* execTime submitDelay */
       } else {
-       /* parcouriri la liste for (  ptr_trotte = ptrHEADLLN; ptr_trotte != NULL ; ptr_trotte = ptr_trotte->next)  {  ptr_preced = ptr_trotte; } */
-       /* go to end of list for ( ptr_LLtrotte = ptrHEADLLN; ptr_LLtrotte != NULL ; ptr_LLtrotte = ptr_LLtrotte->next)  { ptr_LLpreced = ptr_LLtrotte; } */
+       
+       
        /* find node with the same length */
        for ( ptr_LLtrotte = &MyListListNodes; ptr_LLtrotte != NULL ; ptr_LLtrotte = ptr_LLtrotte->next)
        { 
@@ -468,8 +468,8 @@ void print_LListe ( struct _ListListNodes MyListListNodes, FILE *outputFile)
           } 
 	       /* end timing */
    
-	       /*if ( strcmp(ptr_Ltrotte->PNode.loop,"") != 0 ) {*/
-			/* fprintf(stdout,"node:%s is a loop=%s node \n",ptr_Ltrotte->PNode.Node,ptr_Ltrotte->PNode.loop); */
+	       
+			
 			if ( strcmp(MyNodeLoopList.Node,"first") == 0 ) {
 				 strcpy(MyNodeLoopList.Node,ptr_Ltrotte->PNode.TNode);
 				 if ( (ptr_LEXHead=(struct _LoopExt *) malloc(sizeof(struct _LoopExt))) != NULL ) {
@@ -572,10 +572,7 @@ void print_LListe ( struct _ListListNodes MyListListNodes, FILE *outputFile)
 	       }
           for ( ptr_LXHtrotte = ptr_NLHtrotte->ptr_LoopExt; ptr_LXHtrotte != NULL ; ptr_LXHtrotte = ptr_LXHtrotte->next) {
              if ( ptr_LXHtrotte->ignoreNode == 0 ) {
-		         /*sprintf(output_buffer, "%s {exectime %s submitdelay %s submit %s begin %s end %s deltafromstart %s} ",
-			         ptr_LXHtrotte->Lext, ptr_LXHtrotte->exectime, ptr_LXHtrotte->submitdelay, ptr_LXHtrotte->lstime,
-			         ptr_LXHtrotte->lbtime,  ptr_LXHtrotte->letime, ptr_LXHtrotte->deltafromstart);
-               */
+		         
                sprintf(output_buffer, "%s {",ptr_LXHtrotte->Lext);  
                tmp_statstring=strdup(output_buffer); 
                if (  ptr_LXHtrotte->exectime && strlen( ptr_LXHtrotte->exectime ) > 0 ) { 
@@ -1108,7 +1105,7 @@ int charToSeconds (char *_timestamp) {
    return total_seconds;
 }
 
-/*edited from http://www.c4learn.com/c-programming/c-concating-strings-dynamic-allocation */
+
 char *sconcat(char *ptr1,char *ptr2){
    int len1,len2;
    int i,j;
@@ -1143,7 +1140,7 @@ void reset_branch (char *node, char *ext) {
          ptr_Ltrotte = ptr_Ltrotte->next;
          
          if (strcmp(node, tmp_prev_list->PNode.TNode) == 0 && strncmp(ext, tmp_prev_list->PNode.loop, strlen(ext)) == 0) {
-            /*delete_node(tmp_prev_list, ptr_LLtrotte);*/
+            
             tmp_prev_list->PNode.ignoreNode=1;
             SeqUtil_TRACE(TL_FULL_TRACE,"logreader reset branch done on node: %s ext: %s \n",node,ext);
          }
@@ -1151,7 +1148,7 @@ void reset_branch (char *node, char *ext) {
    }
 }
 
-/*not used for now (creates memfault btw, ain't Antoine got time for that), ignoreNode attribute used instead*/
+
 void delete_node(struct _ListNodes *node, struct _ListListNodes *list) {
    struct _ListNodes *todelete=NULL;
    struct _ListNodes *prev=NULL;

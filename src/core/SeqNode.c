@@ -592,7 +592,7 @@ void SeqNode_addSpecificData ( SeqNodeDataPtr node_ptr, const char* name, const 
       count++;
    }
    tmp[count] = '\0';
-   /* SeqUtil_TRACE(TL_FULL_TRACE, "SeqNode.SeqNode_addSpecificData() called name:%s value:%s\n", tmp, value ); */
+   
    SeqNameValues_insertItem( &(node_ptr->data), tmp, value );
    free( tmp );
 }
@@ -735,7 +735,7 @@ void SeqNode_printForEachTargets(FILE *file, SeqNodeDataPtr node_ptr)
 }
 void SeqNode_printNodeSpecifics(FILE *file, SeqNodeDataPtr node_ptr)
 {
-   /*SeqUtil_printOrWrite(filename,"************ Node Specific Data \n"); */
+   
    SeqNameValuesPtr nodeData = node_ptr->data;
    while (nodeData != NULL ) {
       SeqUtil_printOrWrite(file,"node.specific.%s=%s\n", nodeData->name, nodeData->value );
@@ -744,7 +744,7 @@ void SeqNode_printNodeSpecifics(FILE *file, SeqNodeDataPtr node_ptr)
 }
 void SeqNode_printSubmits(FILE *file,SeqNodeDataPtr node_ptr )
 {
-   /*SeqUtil_printOrWrite(filename,"************ Node Submits \n"); */
+   
    LISTNODEPTR submitsPtr = node_ptr->submits;
    while (submitsPtr != NULL) {
       SeqUtil_printOrWrite(file,"node.submit=%s\n", submitsPtr->data);
@@ -753,7 +753,7 @@ void SeqNode_printSubmits(FILE *file,SeqNodeDataPtr node_ptr )
 }
 void SeqNode_printAborts( FILE * file, SeqNodeDataPtr node_ptr)
 {
-   /*SeqUtil_printOrWrite(filename,"************ Node Abort Actions \n"); */
+   
    LISTNODEPTR abortsPtr = node_ptr->abort_actions;
    while (abortsPtr != NULL) {
       SeqUtil_printOrWrite(file,"node.abortaction=%s\n", abortsPtr->data);
@@ -762,11 +762,11 @@ void SeqNode_printAborts( FILE * file, SeqNodeDataPtr node_ptr)
 }
 void SeqNode_printLoops( FILE* file , SeqNodeDataPtr node_ptr)
 {
-   /*SeqUtil_printOrWrite(filename,"************ Containing Loops \n"); */
+   
    SeqLoopsPtr loopsPtr = node_ptr->loops;
    SeqNameValuesPtr nodeData = NULL;
    while (loopsPtr != NULL) {
-      /*SeqUtil_printOrWrite(filename,"************ Loop \n"); */
+      
       SeqUtil_printOrWrite(file,"node.loop_parent.name=%s\n", loopsPtr->loop_name);  
       nodeData = loopsPtr->values;
       while (nodeData != NULL ) {
@@ -778,7 +778,7 @@ void SeqNode_printLoops( FILE* file , SeqNodeDataPtr node_ptr)
 }
 void SeqNode_printSiblings(FILE * file, SeqNodeDataPtr node_ptr )
 {
-   /*SeqUtil_printOrWrite(filename,"************ Node Siblings \n"); */
+   
    LISTNODEPTR siblingsPtr = node_ptr->siblings;
    while (siblingsPtr != NULL) {
       SeqUtil_printOrWrite(file,"node.sibling=%s\n", siblingsPtr->data);
@@ -1048,7 +1048,7 @@ void SeqNode_freeNode ( SeqNodeDataPtr seqNodeDataPtr ) {
       SeqNameValues_deleteWholeList( &(seqNodeDataPtr->switchAnswers)) ;
       SeqNameValues_deleteWholeList( &(seqNodeDataPtr->data ));
       SeqNameValues_deleteWholeList( &(seqNodeDataPtr->loop_args ));
-      /* SeqLoops_deleteWholeList( SeqLoopsPtr* list_head) */
+      
       {
          SeqLoopsPtr current = seqNodeDataPtr->loops;
          for( current = seqNodeDataPtr->loops; current != NULL;){
@@ -1080,10 +1080,10 @@ Inputs:
 void SeqNode_generateConfig (const SeqNodeDataPtr _nodeDataPtr, const char* flow, const char * filename ) {
    char *extName = NULL;
    int stringLength = 0;
-   /* The following three variables are unused, maybe this indicates a mistake */
-   /* int isRerun = 0; */
-   /* char lockFile[SEQ_MAXFIELD]; */
-   /* char pidbuf[100]; */
+   
+   
+   
+   
    char shortdate[11] = {'\0'};
    char *tmpdir = NULL, *loopArgs = NULL, *containerLoopArgs = NULL, *containerLoopExt = NULL, *tmpValue = NULL, *tmp2Value = NULL;
    FILE * tmpFile = NULL; 
@@ -1200,14 +1200,7 @@ void SeqNode_generateConfig (const SeqNodeDataPtr _nodeDataPtr, const char* flow
    SeqUtil_printOrWrite( tmpFile, "export SEQ_SHORT_DATE=%s\n", shortdate); 
 
    /* check for the presence of a "rerun" file to determine rerun status */
-   /* TODO find a way for nodeinfo to figure out whether this access is going through the server or not..., check function pointers else it will return a memfault  
-   memset(lockFile,'\0',sizeof lockFile);
-   sprintf(lockFile,"%s/%s/%s.abort.rerun",_nodeDataPtr->workdir, _nodeDataPtr->datestamp, extName);
-      if ( _access(lockFile, R_OK) == 0 ) {
-	      isRerun = 1;
-      }
-   SeqUtil_printOrWrite( filename, "export SEQ_RERUN=%d\n", isRerun );
-   */
+   
 
    if (tmpFile != NULL) fclose(tmpFile);
    free(tmpdir);

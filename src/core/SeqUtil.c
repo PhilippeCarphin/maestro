@@ -34,14 +34,14 @@
 #include <pwd.h>
 #include <glob.h>
 #include <utime.h> 
-#include <errno.h>        /* errno */
+#include <errno.h>        
 #include "SeqUtil.h"
-#include <time.h>  /*nsleep*/
+#include <time.h>  
 #include "SeqNameValues.h"
 #include "SeqListNode.h"
 #include "l2d2_commun.h"
 
-/* used by normpath function */ 
+ 
 #define ispathsep(ch)   ((ch) == '/' || (ch) == '\\')
 #define iseos(ch)       ((ch) == '\0')
 #define ispathend(ch)   (ispathsep(ch) || iseos(ch)) 
@@ -419,7 +419,7 @@ int globPath_nfs (const char *pattern, int flags, int (*errfunc) (const char *ep
             SeqUtil_TRACE(TL_ERROR, "SeqUtil.globPath_nfs() Glob no found matches \n"); 
             globfree(&glob_p);
             return(0);
-            break;/* not reached */
+            break;
      }
 
      ret=glob_p.gl_pathc;
@@ -460,13 +460,13 @@ LISTNODEPTR globExtList_nfs (const char *pattern, int flags, int (*errfunc) (con
             SeqUtil_TRACE(TL_MEDIUM, "SeqUtil.globExtList_nfs() Glob no found matches \n"); 
             globfree(&glob_p);
             return(0);
-            break;/* not reached */
+            break;
      }
 
      totalfiles=glob_p.gl_pathc;
      for (filecounter=0; filecounter<totalfiles; ++filecounter) {
          /*file return format should be /path/to/files/filename.*.some_state, and * should replace a "+index" where index can be a string or a number */
-         /* TODO NPT ^last... remove from string here? */
+         
          SeqUtil_TRACE(TL_FULL_TRACE, "SeqUtil.globExtList_nfs() iteration found, Target: %s (length=%d); wildcardLocation=%d, wildcardPtr=%s (length %d); \n",glob_p.gl_pathv[filecounter], strlen(glob_p.gl_pathv[filecounter]), wildcardLocation, wildcardPtr, strlen(wildcardPtr)); 
 
          tmpString=strndup(glob_p.gl_pathv[filecounter]+wildcardLocation, strlen(glob_p.gl_pathv[filecounter]) - strlen(pattern) +1); 
@@ -1107,8 +1107,7 @@ int WriteNodeWaitedFile_nfs ( const char* seq_xp_home, const char* nname, const 
 
     SeqUtil_TRACE(TL_FULL_TRACE, "maestro.writeNodeWaitedFile_nfs updating %s\n", filename);
 
-    /* sua   : need to add more logic for duplication and handle more than one entry in the waited file 
-       Rochdi: we added comparaison of xp inode:  /.suites vs /maestro_suites (ie real case) */
+    
     while( fgets(line, SEQ_MAXFIELD, waitingFile) != NULL ) {
            /* clear LloopArgs since args might be empty, meaning it would not match in the sscanf which would leave LloopArgs unchanged */
            memset(LloopArgs,'\0',sizeof(LloopArgs));
@@ -1126,7 +1125,7 @@ int WriteNodeWaitedFile_nfs ( const char* seq_xp_home, const char* nname, const 
 
     if ( !found ) {
              snprintf( tmp_line, sizeof(tmp_line), "exp=%s node=%s datestamp=%s args=%s\n",seq_xp_home, nname, datestamp, loopArgs );
-             /* fprintf( waitingFile,"%s", tmp_line );  */
+             
 	     num = fwrite(tmp_line ,sizeof(char) , strlen(tmp_line) , waitingFile);
 	     if ( num != strlen(tmp_line) )  fprintf(stderr,"writeNodeWaitFile Error: written:%zu out of:%zd \n",num,strlen(tmp_line));
     }
@@ -1134,10 +1133,7 @@ int WriteNodeWaitedFile_nfs ( const char* seq_xp_home, const char* nname, const 
     fclose( waitingFile );
     return(0);
 }
-/**
-*
-*
-*/
+
 int  WriteInterUserDepFile_nfs (const char *filename , const char * DepBuf , const char *ppwdir, const char* maestro_version, 
                                 const char *datestamp, const char *md5sum)
 {
@@ -1168,7 +1164,7 @@ int  WriteInterUserDepFile_nfs (const char *filename , const char * DepBuf , con
      snprintf(DepFileName,sizeof(DepFileName),"%s/.suites/maestrod/dependencies/polling/v%s/%s_%s",ppwdir,maestro_version,datestamp,md5sum);
 
      /* have to check for re-runs */
-     ret=symlink(filename,DepFileName); /* atomic */
+     ret=symlink(filename,DepFileName); 
 
      return(0);
 }
@@ -1224,8 +1220,7 @@ int WriteForEachFile_nfs ( const char* _exp, const char* _node, const char* _dat
 
     SeqUtil_TRACE(TL_FULL_TRACE, "writeForEachFile_nfs updating %s\n", _filename);
 
-    /* sua   : need to add more logic for duplication and handle more than one entry in the waited file 
-       Rochdi: we added comparaison of xp inode:  /.suites vs /maestro_suites (ie real case) */
+    
     while( fgets(line, SEQ_MAXFIELD, waitingFile) != NULL ) {
            n=sscanf(line,"exp=%255s node=%255s datestamp=%24s index_to_add=%127s args=%127s",Lexp,Lnode,Ldatestamp,Lindex, LloopArgs);
            if ( (Linode=get_Inode(Lexp)) < 0 ) {

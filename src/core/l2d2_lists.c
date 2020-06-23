@@ -58,7 +58,7 @@ int insert (dpnode **pointer, char *sxp, char *snode, char *depOnXp, char *depOn
 	     tpointer=*pointer;
              while (tpointer->next != NULL)
              {
-		     /* duplicate ? if ( strcmp(pointer->key,key) == 0 ) return (2); */
+		     
                      tpointer = tpointer -> next;
              }
 	}
@@ -94,7 +94,7 @@ int insert (dpnode **pointer, char *sxp, char *snode, char *depOnXp, char *depOn
 */
 int find (dpnode *pointer, char *key)
 {
-        /* pointer =  pointer -> next; First node is dummy node. */
+        
 
         /* Iterate through the entire linked list and search for the key. */
         while (pointer != NULL)

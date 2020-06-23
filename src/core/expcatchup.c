@@ -33,12 +33,7 @@
 
 
 
-/*****************************************************************************
-* catchup:
-* set or retrieve the experiement's catchup value
-*
-*
-******************************************************************************/
+
 const char* CATCHUP_XML_FILE = "/resources/catchup.xml";
 const char* XML_NODE_NAME = "CATCHUP";
 const char* CATCHUP_QUERY = "/CATCHUP/@value";

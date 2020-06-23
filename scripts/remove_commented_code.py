@@ -46,16 +46,14 @@ def remove_c_commented_code(path):
     block_count=len(re.findall(r,data,re.MULTILINE))
     
     for block_index,match in enumerate(blocks, start=1):
-        
-        print(match.group(0))
-        
+                
         context_min_index=max(0,match.start()-context_size)
         context_max_index=min(match.end()+context_size,len(original_data)-1)
         before_context=original_data[context_min_index:match.start()]
         after_context=original_data[match.end():context_max_index]
         line_number=original_data[:match.start()].count("\n")
         
-        print(path)
+        print("     %s\n"%path)
         print(before_context,end="")
         print_orange(match.group(0),end="")
         print(after_context)

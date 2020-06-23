@@ -78,7 +78,7 @@ int Query_L2D2_Server ( int sock , ServerActions action , const char *buf , cons
            case SVR_UNLOCK:
                             sprintf(buffer,"P %s",buf);
 	                    break;
-           case SVR_WRITE_WNF:/* note format here !!! */
+           case SVR_WRITE_WNF:
                             sprintf(buffer,"W %s",buf);
 	                    break;
            case SVR_LOG_NODE:
@@ -283,7 +283,6 @@ int OpenConnectionToMLLServer (const char * node ,const char *signal , const cha
 
 void CloseConnectionWithMLLServer ( int con ) 
 {
-      /* int ret; */
       int bytes_sent;
       
       if ( (bytes_sent=send_socket(con , "S \0" , 3 , SOCK_TIMEOUT_CLIENT)) <= 0 ) {

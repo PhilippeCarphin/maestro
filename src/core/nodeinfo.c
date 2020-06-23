@@ -238,12 +238,12 @@ int validateDepArgs(SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep,
       for(itr = *depArgs; itr != NULL; itr = itr->nextPtr){
          /*checks for current index keyword*/
          if (strcmp(itr->value,"CURRENT_INDEX")==0) {
-            /* Maybe make a function out of this */
+            
             char *tmpValue = NULL;
             if ((tmpValue = SeqNameValues_getValue(_nodeDataPtr->loop_args, itr->name)) != NULL) {
                SeqNameValues_setValue( depArgs, itr->name, tmpValue);
                free(tmpValue);
-               /* raiseError( "parseDepends(): Error -- CURRENT_INDEX keyword used in a non-loop context, or does not match current loop arguments. \n" ); */
+               
             }
          } else if (strstr(itr->value, "$((") != NULL) {
             const char *tok_name = getVarName(itr->value, "$((","))");
@@ -308,15 +308,7 @@ SeqDepDataPtr xmlDepNode_to_depDataPtr(SeqNodeDataPtr _nodeDataPtr, xmlNodePtr n
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "xmlDepNode_to_depDataPtr() begin\n");
    SeqDepDataPtr dep = SeqDep_newDep();
-   /*
-    * char * depType = xmlGetProp( nodePtr, "type" );
-    * if (strcmp(depType, "node") == 0)
-    *    depType = NodeDependancy;
-    * else if (strcmp(depType, "date") == 0)
-    *    depType = DateDependancy;
-    * else
-    *    depType = NodeDependancy;
-    */
+   
    dep->type = NodeDependancy; /* Since there is only one dependency type */
 
    /*

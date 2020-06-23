@@ -138,7 +138,7 @@ int Flow_parsePath(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr,
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parsePath() begin nodePath=%s\n", _nodePath);
    int retval = FLOW_SUCCESS;
-   int totalCount = SeqUtil_tokenCount( _nodePath, "/" ) - 1;/* count is 0-based */
+   int totalCount = SeqUtil_tokenCount( _nodePath, "/" ) - 1;
    int count = 0;
 
    for_tokens(pathToken, _nodePath, "/", sp){
@@ -446,7 +446,7 @@ char *Flow_findSwitchArg(FlowVisitorPtr fv)
       tok_value = strstr(token_pair,"=");
       *tok_value++ = '\0';
       SeqUtil_TRACE(TL_FULL_TRACE,"tok_name=%s, tok_value=%s\n",tok_name, tok_value);
-      /* getchar(); */
+      
       if(strcmp(tok_name,switchName)==0){
          retval = strdup(tok_value);
          goto out_free;
@@ -507,7 +507,7 @@ int Flow_parseSwitchAttributes(FlowVisitorPtr fv,
 
    if(isLast){
       SeqNode_addSpecificData(_nodeDataPtr, "VALUE", switchValue);
-      /* PHIL: do this outside of the while instead of using isLast */
+      
       _nodeDataPtr->type = Switch;
    } else {
       SeqNode_addSpecificData( _nodeDataPtr, "SWITCH_TYPE", switchType );

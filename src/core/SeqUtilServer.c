@@ -27,7 +27,7 @@
 #include <sys/stat.h>
 #include <unistd.h>
 #include <pwd.h>
-#include <errno.h>        /* errno */
+#include <errno.h>        
 #include "SeqUtil.h"
 #include "QueryServer.h"
 #include "SeqUtilServer.h"
@@ -178,42 +178,7 @@ int WriteNodeWaitedFile_svr ( const char* seq_exp_home, const char* nname, const
 *  write it under proper tree (interdepen/....) 
 *  The routine split the buffer in chunks
 */
-/*
-int WriteInterUserDepFile_svr (const char *filename, const char *DepBuf, const char *ppwdir, const char *maestro_version, 
-                               const char *datestamp, const char *md5sum) 
-{
-    char buffer[2048];
-    char *to_send=NULL;
-    int len,half,reste,status;
-    int total=0, bytes_written=0, bytes_left=0;
 
-    len=strlen(filename)+strlen(DepBuf)+strlen(ppwdir)+strlen(maestro_version)+strlen(datestamp)+strlen(md5sum)+1;
-    half=(int) len/2;
-  
-
-    snprintf(buffer,sizeof(buffer),"fil=%s#dbf=%s#pwd=%s#mve=%s#m5s=%s#dst=%s",filename,DepBuf,ppwdir,maestro_version,md5sum,datestamp);
-    if (to_send=(char *) malloc(half+5)) {
-        snprintf(to_send,half+5,"K 1 %s",buffer);
-    } else {
-        raiseError("OutOfMemory exception in SeqUtilServer.WriteInterUserDepFile_svr()\n");
-    }
-    status = Query_L2D2_Server(MLLServerConnectionFid, SVR_WRITE_USERDFILE, to_send , "", seq_exp_home);  
-    free(to_send);
-
-
-    reste=strlen(&buffer[half]) + 5;
-    if (to_send=(char *) malloc(reste)) {
-        snprintf(to_send,reste,"K 2 %s",&buffer[half]);
-    } else {
-        raiseError("OutOfMemory exception in SeqUtilServer.WriteInterUserDepFile_svr()\n");
-    }
-
-    status = Query_L2D2_Server(MLLServerConnectionFid, SVR_WRITE_USERDFILE, to_send , ""); 
-    free(to_send);
-
-    return(status);
-}
-*/
 
 
 /**
@@ -273,7 +238,7 @@ FILE * fopen_svr ( const char * filename , int sock )
   /* allocate an extra 1 byte for null char */
   if ( (buffer=(char *) malloc( (1+size) * sizeof(char))) == NULL ) {
 	     raiseError("ERROR: OutOfMemory in fopen_svr()\n");
-             return(NULL); /* not reached */
+             return(NULL); 
   }
   
 

@@ -29,7 +29,7 @@
 ********************************************************************************/
 void SeqListNode_insertItem(LISTNODEPTR *list_head, char *data)
 {
-   /*printf("SeqListNode_insertItem() called chaine=%s\n", chaine); */
+   
    LISTNODEPTR new = NULL, current = *list_head;
 
    if ( (new = malloc(sizeof(LISTNODE))) == NULL){

@@ -38,7 +38,7 @@
 ******************************************************************************/
 
 
-static void alarm_handler() { /* nothing */ };
+static void alarm_handler() {  };
 
 static void printUsage()
 {

@@ -47,11 +47,11 @@
 
 extern char * str2md5(const char *, int );
 
-static struct  sockaddr_in server;      /* server socket */
+static struct  sockaddr_in server;      
 static socklen_t sizeserver = sizeof(server);
 static int must_init_signal = 1;
 
-/* GetHostName */
+
 int GetHostName(char *name, size_t len) 
 {
   int junk;
@@ -108,7 +108,7 @@ char *get_Authorization( char *filename , char *username , char **m5sum )
 
      close(fd);
      
-     /* compute md5sum here */
+     
      *m5sum=str2md5(auth_buf,strlen(auth_buf));
 
      return(auth_buf);
@@ -141,7 +141,7 @@ void set_Authorization (unsigned int pid ,char * hostn , char * hip, int port , 
      rt = write(fd, buf, nc);
      rt = close(fd);
      
-     /* compute md5sum here */
+     
      *m5sum=str2md5(buf,strlen(buf));
 }
 
@@ -205,7 +205,7 @@ int get_socket_net()
      /* ignore SIGPIPE signal (i.e. do no abort but return error) */
 
      if (must_init_signal)
-       {  /* DO THIS ONLY ONCE */
+       {  
 	 
 	 signal(SIGPIPE, SIG_IGN); 
 	 must_init_signal = 0;

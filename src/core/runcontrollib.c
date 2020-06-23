@@ -78,7 +78,7 @@ void nodesubmit( const SeqNodeDataPtr node_ptr, const char *datestamp)
    memset(message,'\0',sizeof message);
    cpu = (char *) SeqUtil_cpuCalculate(node_ptr->npex,node_ptr->npey,node_ptr->omp,node_ptr->cpu_multiplier);
 
-   /* containers use TRUE_HOST for execution ... TODO check if immediate or exec or submit modes*/
+   
    if ( node_ptr->type == Task || node_ptr->type == NpassTask ) {
    sprintf(message,"Machine=%s Queue=%s CPU=%s (x%s CPU Multiplier as %s MPIxOMP) Memory=%s Wallclock Limit=%d mpi=%d Submit method:%s soumetArgs=\"%s\"",node_ptr->machine, node_ptr->queue, node_ptr->cpu, node_ptr->cpu_multiplier, cpu, node_ptr->memory, node_ptr->wallclock, node_ptr->mpi, node_ptr->submitOrigin,  node_ptr->soumetArgs);
    } else {
@@ -119,7 +119,7 @@ void nodebegin( const char *_signal, const SeqNodeDataPtr node_ptr, const char *
    
    memset(message,'\0',sizeof message);
    sprintf(message,"host=%s job_ID=%s",hostname,jobID);
-   /* nodelogger(job,"begin",message,_nodeDataPtr->expHome); */
+   
    nodelogger(node_ptr->name,_signal,node_ptr->extension,message,datestamp,node_ptr->expHome);
 }
 /****************************************************************/

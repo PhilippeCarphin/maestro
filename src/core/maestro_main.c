@@ -131,14 +131,13 @@ int main (int argc, char * argv [])
    }
    if (vset == 0) SeqUtil_setTraceEnv();
    if ( gotLoops ) {
-		/*
-      SeqListNode_printList( loopsArgs ); */
+		
       if( SeqLoops_parseArgs( &loopsArgs, loops ) == -1 ) {
          errflg = 1;
          fprintf( stderr, "ERROR: Invalid loop arguments: %s\n", loops );
          exit(1);
       }
-      /* SeqNameValues_printList( loopsArgs ); */
+      
    }
    if (seq_exp_home == NULL){
       seq_exp_home = getenv("SEQ_EXP_HOME");
