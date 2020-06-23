@@ -103,12 +103,4 @@ typedef enum _TypeOfWorker {
       TRANSIENT
 } TypeOfWorker;
 
-static void maestro_l2d2_main_process_server (int fserver);
-static void l2d2server_shutdown (pid_t pid , FILE *fp);
-static void l2d2server_remove (FILE *fp);
-static void l2d2SelectServlet( int sock , TypeOfWorker twrk );
-extern void logZone(int , int , FILE *fp , char * , ...);
-extern char *page_start_dep , *page_end_dep;
-extern char *page_start_blocked , *page_end_blocked;
-
 #endif

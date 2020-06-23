@@ -32,6 +32,7 @@
 #include <pwd.h>
 #include <glob.h>
 #include <time.h>
+#include <utime.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -45,6 +46,7 @@
 #include "SeqLoopsUtil.h"
 #include "SeqNameValues.h"
 #include "SeqUtil.h"
+#include "l2d2_commun.h"
 
 
 extern _l2d2server L2D2;
@@ -381,7 +383,7 @@ int  writeNodeWaitedFile ( const char * string , FILE *mlog )
           snprintf(this_line, sizeof(this_line),"exp=%s node=%s datestamp=%s args=%s\n",this_exp,this_node,this_datestamp,this_loopArgs); 
           /* fprintf( waitingFile,"%s", this_line );  */
           num = fwrite(this_line ,sizeof(char) , strlen(this_line) , waitingFile); 
-	  if ( num != strlen(this_line) )  fprintf(mlog,"writeNodeWaitFile Error: written:%zu out of:%d \n",num,strlen(this_line));
+	  if ( num != strlen(this_line) )  fprintf(mlog,"writeNodeWaitFile Error: written:%zu out of:%ld \n",num,strlen(this_line));
     }
     fclose( waitingFile );
     return(0);

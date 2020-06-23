@@ -570,7 +570,7 @@ void SeqNode_addNumLoop ( SeqNodeDataPtr node_ptr, char* loop_name, char* start,
    free(defFile);
 }
 
-void SeqNode_addSwitch ( SeqNodeDataPtr _nodeDataPtr, const char* switchName, const char* switchType, const const char* returnValue) {
+void SeqNode_addSwitch ( SeqNodeDataPtr _nodeDataPtr, const char* switchName, const char* switchType, const char* returnValue) {
    SeqLoopsPtr loopsPtr = NULL;
    SeqUtil_TRACE(TL_FULL_TRACE, "SeqNode_addSwitch() switchName=%s switchType=%s returnValue=%s\n", switchName, switchType, returnValue);
    loopsPtr = SeqNode_allocateLoopsEntry( _nodeDataPtr );
