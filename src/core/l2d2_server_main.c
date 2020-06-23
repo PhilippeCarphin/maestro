@@ -28,6 +28,7 @@
 #include <errno.h>
 #include <time.h>
 #include <glob.h>
+#include <utime.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/ipc.h>
@@ -45,6 +46,7 @@
 #include "l2d2_Util.h"
 #include "l2d2_server.h"
 #include "l2d2_socket.h"
+#include "l2d2_commun.h"
 
 #define MAX_PROCESS 8                     /* max number of Transient workers */
 #define ETERNAL_WORKER_STIMEOUT   1*60    /* 1 minute */
@@ -59,10 +61,6 @@
 #define FALSE 0
 
 #define MAX_LOCK_TRY 11
-
-/* forward functions & vars declarations */
-extern void logZone(int , int , FILE *fp , char * , ...);
-extern char *page_start_dep , *page_end_dep;
 
 /* globals vars */
 unsigned int pidTken = 0;
