@@ -1,4 +1,4 @@
-#!/data/bowmore/afsisul/apps/bin/tclsh8.5
+
 package require struct::record
 package require tdom
 package require log
@@ -13,7 +13,6 @@ proc FlowXml_parse { xml_file exp_path datestamp parent_flow_node } {
 
 # returns the xml node that matches the switching case
 # if no match, an empty string is returned
-#
 # The out_match_item parameter is treated as an output variable
 # it holds the value of the matched item based on the switch type
 proc FlowXml_getSwitchingItemNode { exp_path datestamp xml_node out_match_item } {
@@ -108,7 +107,7 @@ proc FlowXml_getSwitchingItemNode { exp_path datestamp xml_node out_match_item }
 proc FlowXml_getSubmits { exp_path datestamp flow_node xml_node } {
    set submits [$xml_node selectNodes SUBMITS]
    set flowSubmits ""
-   #puts "FlowXml_getSubmits ${exp_path} ${flow_node}"
+   
    if { [${xml_node} nodeName] == "SWITCH" } {
       # for a switch node, we need to get the matching switch item and continue from there
       set dummy_var ""
@@ -122,7 +121,7 @@ proc FlowXml_getSubmits { exp_path datestamp flow_node xml_node } {
       set flowSubmitName [$submit getAttribute sub_name ""]
       lappend flowSubmits $flowSubmitName
    }
-   #puts "FlowXml_getSubmits ${exp_path} ${flow_node} flowSubmits:${flowSubmits}"
+   
    SharedFlowNode_setGenericAttribute ${exp_path} ${flow_node} ${datestamp} submits ${flowSubmits}
 }
 
@@ -141,7 +140,7 @@ proc FlowXml_getDeps { exp_path datestamp flow_node xml_node } {
       set depUser [$depNode getAttribute user "n/a"]
       set depKey ${depPath}/${depName}
       set depValue "$depHour $depType $depStatus $depSuite $depUser"
-      #set depValues($depKey) $depValue
+      
       lappend depValues $depKey
       lappend depValues $depValue
    }
@@ -169,7 +168,7 @@ proc FlowXml_createNodeFromXml { exp_path datestamp parent_flow_node xml_node } 
    set newFlowDirname $actualFlowParent/$nodeName
    set flowType [string map $FlowNodeTypeMap $xmlNodeName]
 
-   #puts "FlowXml_createNodeFromXml() newFlowDirname:$newFlowDirname"
+   
    SharedFlowNode_createNode ${exp_path} ${newFlowDirname} ${datestamp} ${actualFlowParent} ${flowType}
    if { ${xmlNodeName} == "MODULE" } {
       SharedFlowNode_setGenericAttribute ${exp_path} ${newFlowDirname} ${datestamp} load_time [clock seconds]
@@ -219,7 +218,6 @@ proc FlowXml_createNodeFromXml { exp_path datestamp parent_flow_node xml_node } 
 # and the flow_node record defined by the current application
 # parent_flow_node refers to a FlowNode record instance
 # current_xml_node refers to a tdom node instance
-# 
 proc FlowXml_parseNode { exp_path datestamp parent_flow_node current_xml_node } {
 
    global env
@@ -251,24 +249,12 @@ proc FlowXml_parseNode { exp_path datestamp parent_flow_node current_xml_node } 
       }
       "LOOP" {
          set newParentNode [FlowXml_createNodeFromXml ${exp_path}  ${datestamp} $parent_flow_node $current_xml_node]
-         # NOTE: loop info now retrieved from tsvinfo output...
-         #
-         # set start [$current_xml_node getAttribute start "1"]
-         # set step [$current_xml_node getAttribute step "1"]
-         # set setValue [$current_xml_node getAttribute "set" "1"]
-         # set end [$current_xml_node getAttribute end "1"]
-         # set expression [$current_xml_node getAttribute expression ""]
-         # set type default
-         # if { $setValue != "" } {
-         #    set type loopset
-         # }
-         # SharedFlowNode_setLoopData ${exp_path} ${newParentNode} ${datestamp} ${type} ${start} ${step} ${end} ${setValue} ${expression}
       }
       "SWITCH" {
          set newParentNode [FlowXml_createNodeFromXml ${exp_path}  ${datestamp} ${parent_flow_node} ${current_xml_node}]
 	 if { ${current_xml_node} != "" } {
             set switchType [${current_xml_node} getAttribute type "datestamp_hour"]
-	    # puts "FlowXml_parseNode got SWITCH: newParentNode:${newParentNode} switchType:${switchType}"
+	    
 	    SharedFlowNode_setSwitchingType ${exp_path} ${newParentNode} ${datestamp} ${switchType}
          }
       }
@@ -313,9 +299,9 @@ proc FlowXml_parseNode { exp_path datestamp parent_flow_node current_xml_node } 
 
 proc FlowXml_parseModule { xml_data exp_path datestamp parent_flow_node } {
   ::log::log debug "FlowXml_parseModule exp_path:$exp_path parent_flow_node:$parent_flow_node"
-   # puts "FlowXml_parseModule exp_path:$exp_path parent_flow_node:$parent_flow_node"
+   
    # First you parse the XML, the result is held in token d.
-   set xml_data [string trim $xml_data] ;# v2.6 barfed w/o this
+   set xml_data [string trim $xml_data] ;
    
    set doc [dom parse $xml_data ]
    set rootNode [$doc documentElement]

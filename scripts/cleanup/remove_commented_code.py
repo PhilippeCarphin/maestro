@@ -5,6 +5,7 @@ Strip out all commented code from a target source code file. Interactively, answ
 
 Where <language> can be:
     c
+    tcl
 
 Example of commented code:
 
@@ -27,7 +28,15 @@ import os.path
 from utilities.docopt import docopt
 from utilities.colors import print_orange, print_blue, print_green, print_red
 
-def remove_c_commented_code(path):
+def remove_c_commented_code(path):    
+    r=r"\/\*(\*(?!\/)|[^*])*\*\/"
+    remove_commented_code(path,r)
+
+def remove_tcl_commented_code(path):
+    r=r"[ ]*#.*"
+    remove_commented_code(path,r)
+
+def remove_commented_code(path,r):
     
     print("Reading '%s'"%path)
     
@@ -41,7 +50,6 @@ def remove_c_commented_code(path):
     change_count=0    
     to_remove=[]
     
-    r=r"\/\*(\*(?!\/)|[^*])*\*\/"
     blocks=re.finditer(r,data,re.MULTILINE)
     block_count=len(re.findall(r,data,re.MULTILINE))
     
@@ -53,11 +61,11 @@ def remove_c_commented_code(path):
         after_context=original_data[match.end():context_max_index]
         line_number=original_data[:match.start()].count("\n")
         
-        print("     %s\n"%path)
         print(before_context,end="")
         print_orange(match.group(0),end="")
         print(after_context)
         print_green("Line: %s of %s"%(line_number,len(lines)))
+        print("     %s\n"%path)
         print("Remove comment block %s of %s?"%(block_index,block_count))
         answer=input("[yn]: ")
         if answer=="y":
@@ -81,6 +89,8 @@ def main(args):
 
     if language=="c":
         remove_c_commented_code(path)
+    if language=="tcl":
+        remove_tcl_commented_code(path)
     else:
         raise NotImplemented("Language: '%s'"%language)
     

@@ -1,7 +1,7 @@
-#set auto_path [linsert $auto_path 0 /home/ordenv/ssm-domains/ssm-setup-1.0-ops/xflow_1.0_all/lib]
-#set auto_path [linsert $auto_path 0 [exec pwd]]
-#package require Tk
-#package require tile
+
+
+
+
 package require struct::record
 package require autoscroll
 package require tooltip
@@ -20,7 +20,7 @@ proc xflow_setTkOptions {} {
    option add *selectBackground [SharedData_getColor SELECT_BG]
    catch { option add *troughColor [::tk::Darken [option get . background Scrollbar] 85] }
 
-   # ttk::style configure Xflow.Menu -background cornsilk4
+   
 }
 
 proc xflow_addFileMenu { exp_path datestamp parent } {
@@ -191,7 +191,7 @@ proc xflow_createToolbar { exp_path datestamp parent } {
    set dkfontW  [xflow_getWidgetName ${exp_path} ${datestamp} dkfont_button]
    set colorLegendW [xflow_getWidgetName ${exp_path} ${datestamp} legend_button]
    set closeW [xflow_getWidgetName ${exp_path} ${datestamp} close_button]
-   #set depW [xflow_getWidgetName dep_button]
+   
    set shellW [xflow_getWidgetName ${exp_path} ${datestamp} shell_button]
    set catchupTopW [xflow_getWidgetName ${exp_path} ${datestamp} catchup_toplevel]
    set pluginFrame [xflow_createPluginToolbar ${exp_path} ${datestamp} ${parent}]
@@ -205,14 +205,14 @@ proc xflow_createToolbar { exp_path datestamp parent } {
    image create photo ${parent}.node_kill_img -file ${imageDir}/node_kill.gif
    image create photo ${parent}.catchup_img -file ${imageDir}/catchup.gif
    image create photo ${parent}.find_img -file ${imageDir}/find.png
-   #image create photo ${parent}.node_list_img -file ${imageDir}/node_list.ppm
-   #image create photo ${parent}.node_abort_list_img -file ${imageDir}/node_abort_list.ppm
+   
+   
    image create photo ${parent}.refresh_img -file ${imageDir}/refresh.gif
    image create photo ${parent}.close -file ${imageDir}/cancel.gif
    image create photo ${parent}.color_legend_img -file ${imageDir}/color_legend.gif
    image create photo ${parent}.trash -file ${imageDir}/trash.gif
    image create photo ${parent}.dkfont -file ${imageDir}/font.gif
-   #image create photo ${parent}.ignore_dep_false -file ${imageDir}/dep_off.ppm
+   
    image create photo ${parent}.shell_img -file ${imageDir}/terminal.ppm
 
    button ${msgCenterW} -padx 0 -pady 0 -image ${noNewMsgImage} -command [list MsgCenter_show true] -relief flat
@@ -239,11 +239,11 @@ proc xflow_createToolbar { exp_path datestamp parent } {
    button ${dkfontW} -image ${parent}.dkfont -relief flat -command  [list DkfFont_init ${exp_path} ${datestamp}]
    tooltip::tooltip ${dkfontW}  "Select Font."
 
-   #button ${nodeListW} -image ${parent}.node_list_img  -state disabled -relief flat
-   #tooltip::tooltip ${nodeListW} "Open succesfull node listing dialog -- future feature."
+   
+   
 
-   #button ${nodeAbortListW} -image ${parent}.node_abort_list_img -state disabled -relief flat
-   #tooltip::tooltip ${nodeAbortListW} "Open abort node listing dialog -- future feature."
+   
+   
 
    button ${closeW} -image ${parent}.close -command [list xflow_quit ${exp_path} ${datestamp}] -relief flat
    ::tooltip::tooltip ${closeW} "Close application."
@@ -251,7 +251,7 @@ proc xflow_createToolbar { exp_path datestamp parent } {
    button ${colorLegendW} -image ${parent}.color_legend_img -command [list xflow_showColorLegend ${colorLegendW}] -relief flat
    tooltip::tooltip ${colorLegendW} "Show color legend." 
 
-   #button ${depW} -relief flat -image ${parent}.ignore_dep_false -command [list xflow_changeIgnoreDep ${depW} ${parent}.ignore_dep_true ${parent}.ignore_dep_false] -state disabled
+   
 
    if { [SharedData_getMiscData OVERVIEW_MODE] == "true" } {
       set overviewW [xflow_getWidgetName ${exp_path} ${datestamp} overview_button]
@@ -334,7 +334,7 @@ proc xflow_newDatestampFound { exp_path datestamp } {
 # this function creates the widgets that allows
 # the user to set/query the current datestamp
 proc xflow_addMsgCenterWidget { exp_path datestamp} {
-   # puts "xflow_addMsgCenterWidget $exp_path $datestamp"
+   
    set msgFrame [xflow_getWidgetName ${exp_path} ${datestamp} exp_msg_frame]
    set color    [SharedData_getColor COLOR_MSG_CENTER_MAIN]
   
@@ -416,8 +416,8 @@ proc xflow_addMsgCenterWidget { exp_path datestamp} {
    }
 
    eval grid $label_abortW ${label_eventW} ${label_infoW} ${label_sysinfoW} -sticky w -padx \[list 2 0\] 
-   #set labelW [label ${labelFrame}.info -justify center -text ${tooltipText} ]
-   #pack $labelW -side left -pady 2 -padx 2
+   
+   
    pack $labelFrame -pady 2 -side left
    grid ${msgFrame} -row  0 -column 4 -sticky nsew -padx 2 -pady 0 -ipadx 2
 }
@@ -603,15 +603,13 @@ proc xflow_setSubmitPopup {} {
 
 # this function creates the widgets for the node kill window
 # that is invoked from the xflow toolbar
-#
-#
 proc xflow_nodeKillDisplay { exp_path datestamp parent_w } {
 
    global env
    set shadowColor [SharedData_getColor SHADOW_COLOR]
    set bgColor [SharedData_getColor CANVAS_COLOR]
 
-   ##set fullList [list showAllListings $node $type $canvas $canvas.list]
+   
    if { $parent_w == "" } {
       set parent_w "."
    }
@@ -877,7 +875,7 @@ proc xflow_setDatestampCallback { exp_path datestamp parent_w } {
 
       if { ${previousDatestamp} != "" } {
          set previousRealDatestamp [Utils_getRealDatestampValue ${previousDatestamp}]
-	 # xflow_cleanDatestampVars ${exp_path} ${datestamp}
+	 
       }
 
       if { [SharedData_getMiscData OVERVIEW_MODE] == true } {
@@ -900,7 +898,7 @@ proc xflow_setDatestampCallback { exp_path datestamp parent_w } {
 
       # clean previous datestamp
       xflow_closeExpDatestamp ${exp_path} ${datestamp}
-      # SharedData_removeExpThreadId ${exp_path} ${previousRealDatestamp}
+      
 
       xflow_createWidgets ${exp_path} ${seqDatestamp} ${currentx} ${currenty}
       xflow_displayFlow ${exp_path} ${seqDatestamp} true
@@ -911,7 +909,7 @@ proc xflow_setDatestampCallback { exp_path datestamp parent_w } {
 # this function returns the resource information that needs to be displayed
 # besides the node name. Based on the user preferences View->"Node Display"
 proc xflow_getNodeDisplayPrefText { exp_path datestamp node member } {
-   # puts "xflow_getNodeDisplayPrefText ${exp_path} ${datestamp} ${node} ${member}"
+   
    set text ""
    set displayPref [xflow_getNodeDisplayPref ${exp_path} ${datestamp}]
    set attrName ${displayPref}
@@ -921,7 +919,7 @@ proc xflow_getNodeDisplayPrefText { exp_path datestamp node member } {
       set moduleName "[SharedFlowNode_getGenericAttribute ${exp_path} ${node} ${datestamp} name]"
       set moduleLocalName "[SharedFlowNode_getGenericAttribute ${exp_path} ${node} ${datestamp} local_name]"
       if { ${moduleName} != ${moduleLocalName} } {
-         # puts "xflow_getNodeDisplayPrefText set text (${moduleLocalName})"
+         
          set text "(${moduleLocalName})"
       }
    }
@@ -991,7 +989,7 @@ proc xflow_getNodeDisplayPrefText { exp_path datestamp node member } {
       }
    }
 
-   # puts "xflow_getNodeDisplayPrefText ${exp_path} ${datestamp} ${node} ${member}"
+   
    return $text
 }
 
@@ -1091,7 +1089,7 @@ proc xflow_drawNode { exp_path datestamp canvas node position {first_node false}
       set liney2 [expr [SharedData_getMiscData CANVAS_Y_START] + ${deltaY}]
       ::log::log debug "xflow_drawNode linex2:$linex2 liney2:$liney2"
    } else {
-      # SharedFlowNode_initNodeDatestampDisplay ${exp_path} ${submitter} ${datestamp}
+      
       # use a dashline leading to modules, elsewhere use a solid line
       set lineColor [SharedData_getColor FLOW_SUBMIT_ARROW]
       switch ${nodeType} {
@@ -1133,7 +1131,7 @@ proc xflow_drawNode { exp_path datestamp canvas node position {first_node false}
          }
          SharedFlowNode_setDisplayY  ${exp_path} ${node} ${datestamp} ${nextY}
 
-         #set linex1 [expr $px2 + $boxW/4/3]
+         
          set linex1 [expr $px2 + $boxW/2/${flowScale}/3]
          set linex2 $linex1
          set liney1 [expr $py1 + ($py2 - $py1) / 2 ]
@@ -1200,7 +1198,7 @@ proc xflow_drawNode { exp_path datestamp canvas node position {first_node false}
    switch ${nodeType} {
       "family" {
          ::DrawUtils::drawBoxSansOutline ${exp_path} ${datestamp} $canvas $tx1 $ty1 $text $text $normalTxtFill $outline $normalFill $node $drawshadow $shadowColor
-         # ::FlowNodes::addToFamilyList $node
+         
       }
       "module" {
 	 ::DrawUtils::drawBoxSansOutline ${exp_path} ${datestamp} $canvas $tx1 $ty1 $text $text $normalTxtFill $outline $normalFill $node $drawshadow $shadowColor
@@ -1210,7 +1208,7 @@ proc xflow_drawNode { exp_path datestamp canvas node position {first_node false}
       }
 
       "npass_task" {
-         # ::DrawUtils::drawBox ${exp_path} ${datestamp} $canvas $tx1 $ty1 $text $text $normalTxtFill $outline $normalFill $node $drawshadow $shadowColor
+         
          ::DrawUtils::drawRoundBox ${exp_path} ${datestamp} $canvas $tx1 $ty1 $text $text $normalTxtFill $outline $normalFill $node $drawshadow $shadowColor
          set indexListW [::DrawUtils::getIndexWidgetName ${node} ${canvas}]
          ${indexListW} configure -modifycmd [list xflow_indexedNodeSelectionCallback ${exp_path} ${node} ${datestamp} ${canvas} ${indexListW}]
@@ -1330,7 +1328,6 @@ proc xflow_canvasMouseWheelCallback { canvas units_value units {horizontal false
 #                    modified x is start_x + width of created img
 #                    y is startY
 # else returns startX and startY
-# 
 proc xflow_addSingleReservIndicator { _exp_path _datestamp _node _canvas _startX _startY } {
    global SingleReservImg
    if { [SharedFlowNode_getWorkUnit ${_exp_path} ${_node} ${_datestamp}] == 1 } {
@@ -1444,7 +1441,7 @@ proc xflow_nodeMenu { exp_path datestamp canvas node extension x y } {
          }
       }
 
-      # ${miscMenu} add command -label "New Window" -command [list xflow_newWindowCallback $node $canvas $popMenu]
+      
       ${miscMenu} add command -label "View Workdir" -command [list xflow_launchWorkCallback ${exp_path} ${datestamp} $node $canvas ]
       if { ${nodeType} != "task" } {
          ${submitMenu} add command -label "Submit" -command [list xflow_submitCallback ${exp_path} ${datestamp} $node ${extension} $canvas continue ]
@@ -1532,7 +1529,7 @@ proc xflow_followDependency {  exp_path datestamp node extension } {
    set waitStatusMsg [SharedFlowNode_getMemberStatusMsg ${exp_path} ${node} ${datestamp} ${extension}]
 
    ::log::log debug "xflow_followDependency waitStatusMsg:$waitStatusMsg"
-   # set depExp [exec true_path ${exp_path}]
+   
    set depExp ${exp_path}
    set isOcmDep false
    if { ${waitStatusMsg} != "" } {
@@ -1545,7 +1542,7 @@ proc xflow_followDependency {  exp_path datestamp node extension } {
 	          set isOcmDep true
 	          set depExp [textutil::trimPrefix ${token} exp=]
 	       } else {
-	          # set depExp [exec true_path [::textutil::trimPrefix ${token} exp=]]
+	          
 	          set depExp [::textutil::trimPrefix ${token} exp=]
 	       }
 	    }
@@ -1669,7 +1666,7 @@ proc xflow_addLoopNodeMenu { exp_path datestamp popmenu_w canvas node extension 
    ${submitNoDependMenu} add command -label "Member Submit" \
       -command [list xflow_submitCallback ${exp_path} ${datestamp} $node ${extension} $canvas continue dep_off]
 
-   # ${miscMenu} add command -label "New Window" -command [list xflow_newWindowCallback $node $canvas ${popmenu_w}]
+   
    ${miscMenu} add command -label "View Workdir" -command [list xflow_launchWorkCallback ${exp_path} ${datestamp} $node $canvas ]
    ${statusMenu} add command -label "Loop Begin" -command [list xflow_beginLoopCallback ${exp_path} ${datestamp} $node ${extension} $canvas ]
    ${statusMenu} add command -label "Loop End" -command [list xflow_endLoopCallback ${exp_path} ${datestamp} $node ${extension} $canvas ]
@@ -1751,7 +1748,7 @@ proc xflow_addNptNodeMenu { exp_path datestamp popmenu_w canvas node extension} 
    ${submitNoDependMenu} add command -label "Submit & Stop" -underline 9 \
       -command [list xflow_submitNpassTaskCallback ${exp_path} ${datestamp} $node ${extension} $canvas stop dep_off ]
 
-   # ${miscMenu} add command -label "New Window" -command [list xflow_newWindowCallback $node $canvas ${popmenu_w}]
+   
    ${miscMenu} add command -label "View Workdir" -command [list xflow_launchWorkCallback ${exp_path} ${datestamp} $node $canvas ]
    ${miscMenu} add command -label "Save Workdir" -command [list xflow_saveWorkCallback ${exp_path} ${datestamp} $node $canvas ]
    ${statusMenu} add command -label "Initnode" -command [list xflow_initnodeNpassTaskCallback ${exp_path} ${datestamp} $node ${extension} $canvas ]
@@ -1811,19 +1808,15 @@ proc xflow_getNodeHistoryOptions {} {
 
 # returns the loop arguments as needed by the maestro sequencer binaries
 # like nodeinfo or maestro i.e. "-l gem_loop=3,transfer=001"
-#
 # the "extension" can be passed so that the extension is directly used
 # instead of getting from the flow... this is mainly when the procedure
 # is called from msg center with an abort where the extension is already specified.
-# 
-# 
 # input arguments:
 # extension is "+3+001" from the above example
 # source_w must be reference to flow canvas if "extension" is ""
 # raise_no_index_error if this value is true and the latest iteration is selected
 #                      by the user, the proc will return -1 so that the caller can
 #                      handle the error properly
-# 
 proc xflow_getSeqLoopArgs {  exp_path datestamp node extension source_w {raise_no_index_error false}} {
    ::log::log debug "xflow_getSeqLoopArgs exp_path:$exp_path datestamp:$datestamp node:$node extension:$extension "
 
@@ -1871,7 +1864,7 @@ proc xflow_getSeqLoopArgs {  exp_path datestamp node extension source_w {raise_n
 # By default, the middle mouse on a node shows the history for the last 48 hours.
 # The "Node History" from the Info menu on the node shows only the current datestamp
 proc xflow_historyCallback { exp_path datestamp node extension canvas {history 48} {full_loop 0} } {
-   # ::log::log debug "xflow_historyCallback node:$node extension:$extension canvas:$canvas $full_loop"
+   
    puts "xflow_historyCallback node:$node extension:$extension canvas:$canvas $full_loop"
 
    set seqExec nodehistory
@@ -2336,7 +2329,7 @@ proc xflow_sourceCallback { exp_path datestamp node canvas caller_menu action} {
          set  SEQ_EXP_HOME ${exp_path}
       }
       eval set outputfile [string trim [lindex [split [exec -ignorestderr ksh -c  "nodeinfo -n ${seqNode} -f task -e ${exp_path}"] "="] 1]]
-      #outputfile [string trim [lindex [split [exec -ignorestderr ksh -c  "eval nodeinfo -n ${seqNode} -f task -e ${exp_path}"] "="] 1]]
+      
    } else {
       set outputfile "${SESSION_TMPDIR}/${tempfile}_[clock seconds]"
       set seqCmd "${seqExec} -n ${seqNode}"
@@ -2502,7 +2495,7 @@ proc xflow_fullConfigCallback { exp_path datestamp node canvas caller_menu } {
    set textViewer [SharedData_getMiscData TEXT_VIEWER]
    set defaultConsole [SharedData_getMiscData DEFAULT_CONSOLE]
 
-   #set winTitle "Node Full Config [file tail $node]"
+   
    set winTitle "Node Full Config ${seqNode} - Exp=${exp_path}"
    regsub -all " " ${winTitle} _ tempfile
    regsub -all "/" ${tempfile} _ tempfile
@@ -2529,7 +2522,7 @@ proc xflow_resourceCallback { exp_path datestamp node canvas caller_menu action}
    set textViewer     [SharedData_getMiscData TEXT_VIEWER]
    set defaultConsole [SharedData_getMiscData DEFAULT_CONSOLE]
 
-   # set winTitle "Node Resource [file tail $node]"
+   
    set winTitle "Node Resource ${seqNode} - Exp=${exp_path}"
    regsub -all " " ${winTitle} _ tempfile
    regsub -all "/" ${tempfile} _ tempfile
@@ -2598,7 +2591,6 @@ proc xflow_batchCallback { exp_path datestamp node extension canvas {full_loop 0
 }
 
 # this function submits a node for execution to the maestro sequencer.
-# 
 # - the flow parameter is either "stop" or "continue" and specifies whether the flow should
 # continue or stop executing upon completion of the current node
 # - local_ignore should be set to "dep_off" for local dependencies to be ignored.
@@ -2913,7 +2905,6 @@ proc xflow_listingCallback { exp_path datestamp node extension canvas {full_loop
          set nodeExt ".${nodeExt}"
       }
       # title is used only for default viewer
-      #set winTitle "Node Listing [file tail $node]${nodeExt}.${datestamp}"
       set winTitle "Node Listing ${seqNode}${nodeExt}.${datestamp} - Exp=${exp_path}"
       regsub -all " " ${winTitle} _ tempfile
       regsub -all "/" ${tempfile} _ tempfile
@@ -2935,7 +2926,7 @@ proc xflow_listingCallback { exp_path datestamp node extension canvas {full_loop
 # this means all available listings in different datestamps
 proc xflow_allListingCallback { exp_path datestamp node canvas caller_menu } {
   global env
-   #puts "xflow_allListingCallback $exp_path $node $canvas $caller_menu"
+   
    set shadowColor [SharedData_getColor SHADOW_COLOR]
    set bgColor [SharedData_getColor CANVAS_COLOR]
    set id [clock seconds]
@@ -2954,7 +2945,7 @@ proc xflow_allListingCallback { exp_path datestamp node canvas caller_menu } {
       
       set nodepath  [string range [file dirname ${seqNode}] 1 end]
       
-      ##set fullList [list showAllListings $node $canvas $canvas.list]
+      
       set listingW .listing_${node}
       regsub -all " " ${listingW} _
       regsub -all "/" ${listingW} _
@@ -3394,17 +3385,17 @@ proc xflow_abortListingCallback { exp_path datestamp node extension canvas {full
          set nodeExt ".${nodeExt}"
       }
       # title is used only for default viewer
-      # set winTitle "abort Listing [file tail $node]${nodeExt}.${datestamp}"
+      
       set winTitle "abort Listing [file tail $node]${nodeExt}.${datestamp}"
       regsub -all " " ${winTitle} _ tempfile
       regsub -all "/" ${tempfile} _ tempfile
       set outputfile "${SESSION_TMPDIR}/${tempfile}_[clock seconds]"
 
       set seqCmd "${abortListingExec} -n ${seqNode}${nodeExt} -type abort -d ${datestamp}"
-      #set s1 [exec ${abortListingExec} -n ${seqNode}${nodeExt} -type abort -d ${datestamp}]
-      #if { [string first "listing not available" $s1 1] > 1 } {
-      #   set seqCmd "${abortListingExec} -n ${seqNode}${nodeExt} -type abort"
-      #}
+      
+      
+      
+      
       Sequencer_runCommand ${exp_path} ${datestamp} ${outputfile} ${seqCmd} 1
 
       if { ${listingViewer} == "default" } {
@@ -3447,17 +3438,17 @@ proc xflow_submissionListingCallback { exp_path datestamp node extension canvas 
          set nodeExt ".${nodeExt}"
       }
       # title is used only for default viewer
-      # set winTitle "abort Listing [file tail $node]${nodeExt}.${datestamp}"
+      
       set winTitle "submission Listing [file tail $node]${nodeExt}.${datestamp}"
       regsub -all " " ${winTitle} _ tempfile
       regsub -all "/" ${tempfile} _ tempfile
       set outputfile "${SESSION_TMPDIR}/${tempfile}_[clock seconds]"
 
       set seqCmd "${submissionListingExec} -n ${seqNode}${nodeExt} -type submission -d ${datestamp}"
-      #set s1 [exec ${submissionListingExec} -n ${seqNode}${nodeExt} -type submission -d ${datestamp}]
-      #if { [string first "listing not available" $s1 1] > 1 } {
-      #   set seqCmd "${submissionListingExec} -n ${seqNode}${nodeExt} -type submission"
-      #}
+      
+      
+      
+      
       Sequencer_runCommand ${exp_path} ${datestamp} ${outputfile} ${seqCmd} 1
 
       if { ${listingViewer} == "default" } {
@@ -3479,10 +3470,10 @@ proc xflow_indexedNodeSelectionCallback { exp_path node datestamp canvas combobo
       set member +${member}
    }
 
-   # puts "xflow_indexedNodeSelectionCallback SharedFlowNode_setCurrentExt ${exp_path} ${node} ${datestamp} ${member}"
+   
    SharedFlowNode_setCurrentExt ${exp_path} ${node} ${datestamp} ${member}
 
-   # puts "xflow_indexedNodeSelectionCallback xflow_redrawNodes ${exp_path} ${datestamp} ${node} ${canvas}"
+   
    xflow_redrawNodes ${exp_path} ${datestamp} ${node} ${canvas}
 }
 
@@ -3559,8 +3550,8 @@ proc xflow_redrawAllFlow { exp_path datestamp } {
 proc xflow_refreshFlow { exp_path datestamp  {font false}} {
    global PROGRESS_REPORT_TXT
 
-   #SharedData_readProperties
-   #puts "PATH $exp_path $datestamp"
+   
+   
    set PROGRESS_REPORT_TXT "Refreshing experiment ..."
    set progressW [ProgressDlg .pdrefresh -title "Flow Refresh" -parent [xflow_getToplevel ${exp_path} ${datestamp}]  -textvariable PROGRESS_REPORT_TXT]
    # for some reason, I need to call the update for the progress dlg to appear properly
@@ -3572,7 +3563,7 @@ proc xflow_refreshFlow { exp_path datestamp  {font false}} {
       set LOOP_RESOURCES_DONE_${exp_path}_${datestamp} false
       set NODE_RESOURCE_DONE_${exp_path}_${datestamp} false
       if {$font == "false" } {
-        # SharedFlowNode_clearAllNodes ${exp_path} ${datestamp}
+        
         if { [SharedData_getMiscData OVERVIEW_MODE] == "false" } {
            LogReader_startExpLogReader ${exp_path} ${datestamp} no_overview
         } else {
@@ -3626,7 +3617,6 @@ proc xflow_drawflow { exp_path datestamp canvas {initial_display true} } {
       xflow_resetScrollRegion ${canvas}
    
       if { $initial_display == true } {
-         # $canvas yview moveto 0
          # resize the window depending on size of canvas elements
          xflow_resizeWindow ${exp_path} ${datestamp} ${canvas}
       }
@@ -3704,7 +3694,7 @@ proc xflow_addExpSettingsMenu { exp_path datestamp canvas x y } {
        ${EditMenu}   entryconfigure "Exp Resource" -state disabled
        ${EditMenu}   entryconfigure "Exp Options"  -state disabled      
     } 
-   # $popMenu add separator
+   
 
    tk_popup $popMenu ${x} ${y}
 }
@@ -3775,7 +3765,7 @@ proc xflow_nodeResourceCallback { exp_path datestamp {name1 ""} {name2 ""} {op "
             if { [wm state ${toplevelW}] == "normal" } {
 	       puts "xflow_nodeResourceCallback $exp_path $datestamp  progress bar ..."
                set progressW [ProgressDlg .node_res_pd -parent ${toplevelW} -title "Node Display Preferrences" -textvariable nodeResourceText]
-               # Utils_positionWindow ${progressW}
+               
                set destroyProgressCmd  "destroy ${progressW}"
             }
 
@@ -3830,7 +3820,7 @@ proc xflow_getNodeResources { exp_path node datestamp {is_recursive 0} } {
 
 # at startup fetches all the loop node attributes once only to be able to display
 # the loop parameters
-# NOTE: OBSOLETE PROC...
+
 proc xflow_getAllLoopResourcesCallback { exp_path node datestamp} {
    global LOOP_RESOURCES_DONE_${exp_path}_${datestamp}
    if { ${datestamp} != "" } {
@@ -3843,7 +3833,7 @@ proc xflow_getAllLoopResourcesCallback { exp_path node datestamp} {
 }
 
 # retrieve loop attributes recursively
-# NOTE: OBSOLETE PROC...
+
 proc xflow_getAllLoopResources { exp_path node datestamp } {
    if { [SharedFlowNode_getNodeType ${exp_path} ${node} ${datestamp}] == "loop" } {
       xflow_getLoopResources ${node} ${exp_path} ${datestamp}
@@ -3857,7 +3847,7 @@ proc xflow_getAllLoopResources { exp_path node datestamp } {
 
 # now that the loops attributes are stored in the node resource xml file,
 # this function calls the nodeinfo to retrieve loop attributes.
-# NOTE: OBSOLETE PROC...
+
 proc xflow_getLoopResources { node exp_path datestamp} {
    global env
    ::log::log debug "xflow_getLoopResources node:$node"
@@ -3871,13 +3861,7 @@ proc xflow_getLoopResources { node exp_path datestamp} {
    set seqNode [SharedFlowNode_getSequencerNode ${exp_path} ${node} ${datestamp}]
    
    set outputFile $env(TMPDIR)/nodeinfo_output_[file tail $node]_[clock seconds]
-
-   # retrieve loop attributes by parsing output of nodeinfo node.specific i.e.
-   # node.specific.TYPE=Default
-   # node.specific.START=2
-   # node.specific.END=10
-   # node.specific.STEP=2
-   # node.specific.TYPE=Default
+   
    ::log::log debug "xflow_getLoopResources ${nodeInfoExec} -n ${seqNode} -d ${datestamp} | grep node.specific| sed -e 's:node.specific.::' -e 's:=: :'"
    if [ catch { exec -ignorestderr ksh -c "export SEQ_EXP_HOME=${exp_path};${nodeInfoExec} -n ${seqNode} -d ${datestamp} | grep node.specific| sed -e 's:node.specific.::' -e 's:=: :'  > ${outputFile} 2> /dev/null" } message ] {
       if { [SharedData_getMiscData OVERVIEW_MODE] == true } {
@@ -3911,8 +3895,8 @@ proc xflow_getLoopResources { node exp_path datestamp} {
    foreach { name value } [array get valueList] {
       if { [info exists attrMap(${name})] } {
          set attrName $attrMap(${name})
-         # ${node} configure -${attrName} ${value}
-         # puts "SharedFlowNode_setGenericAttribute ${exp_path} ${node} ${attrName} ${value}"
+         
+         
          SharedFlowNode_setGenericAttribute ${exp_path} ${node} ${datestamp} ${attrName} ${value}
       } else {
          ::log::log debug "xflow_getLoopResources invalid loop attribute token name:$name value:$value"
@@ -4022,7 +4006,7 @@ proc xflow_createFlowCanvas { exp_path datestamp parent } {
       grid columnconfigure ${drawFrame} 0 -weight 1
       grid rowconfigure ${drawFrame} 0 -weight 1
 
-      # grid ${drawFrame} -row 0 -column 0 -sticky nsew
+      
       grid ${drawFrame} -row 0 -column 1 -sticky nsew
    }
    return $canvas
@@ -4079,6 +4063,7 @@ proc xflow_addBgImage { _exp_path _datestamp _canvas _width _height } {
    set addImg true
    # if overview mode and not monitored exp don't add bg
    # if standalone mode and not original exp don't add  bg
+   
    if [ catch {
       if { (${isOverviewMode} == true && [SharedData_getExpGroupDisplay ${_exp_path}] == "") ||
            (${isOverviewMode} == false && (${_exp_path} != $env(SEQ_EXP_HOME))) } {
@@ -4161,7 +4146,7 @@ proc xflow_tileBgImage { exp_path datestamp canvas sourceImage tiledImage _width
          set XFLOW_BG_HEIGHT_${exp_path}_${datestamp} ${usedH}
       }
    }
-   #::log::log debug "xflow_tileBgImage copy new source img exp_path:$exp_path datestamp:$datestamp"
+   
    # copy from source... sourceImage must be of type photo
    $tiledImage copy $sourceImage -to 0 0 ${usedW} ${usedH}
  }
@@ -4278,7 +4263,7 @@ proc xflow_newMessageCallback { exp_path visible_datestamp has_new_msg } {
    global env
    ::log::log debug "xflow_newMessageCallback has_new_msg:$has_new_msg"
    set datestamps [LogReader_getMonitorDatestamps ${exp_path}]
-   # set datestamp [Utils_getRealDatestampValue ${visible_datestamp}]
+   
    foreach datestamp ${datestamps} {
       set msgCenterWidget [xflow_getWidgetName ${exp_path} ${datestamp} msgcenter_button]
       set noNewMsgImage [xflow_getWidgetName ${exp_path} ${datestamp} msg_center_img]
@@ -4321,9 +4306,6 @@ proc xflow_setDatestampVars { exp_path datestamp } {
 
    set NODE_DISPLAY_PREF_${exp_path}_${datestamp} ${NODE_DISPLAY_PREF}
    set FLOW_SCALE_${exp_path}_${datestamp} [SharedData_getMiscData FLOW_SCALE]
-
-   # trace the variable to see if we need to load the resources
-   # trace add variable NODE_DISPLAY_PREF_${exp_path}_${datestamp} write "xflow_nodeResourceCallback ${exp_path} \"${datestamp}\""
 }
 
 proc xflow_cleanDatestampVars { exp_path datestamp } {
@@ -4407,7 +4389,7 @@ proc xflow_createWidgets { exp_path datestamp {topx ""} {topy ""}} {
 
 
    # creates label on the left side of the canvas
-   # set expSideLabelFrame [frame [xflow_getWidgetName ${exp_path} ${datestamp}  exp_side_label_frame]]
+   
    set expSideLabelFrame [labelframe [xflow_getWidgetName ${exp_path} ${datestamp}  exp_side_label_frame]]
    set labelValue ""
    if { [DisplayGrp_getWindowsLabel ${exp_path}] != "" } {
@@ -4543,10 +4525,10 @@ proc xflow_displayFlow { exp_path datestamp {initial_display false} {focus_node 
    xflow_setExpLabel ${exp_path} ${displayName} ${datestamp}
    ::log::log debug "xflow_displayFlow exp_path ${exp_path}"
    set rootNode [SharedData_getExpRootNode ${exp_path} ${datestamp}]
-   # set PROGRESS_REPORT_TXT "Getting loop node resources ..."
-   # xflow_getAllLoopResourcesCallback ${exp_path} ${rootNode} ${datestamp}
+   
+   
    # resource will only be loaded if needed
-   # xflow_nodeResourceCallback ${exp_path} ${datestamp}
+   
 
    puts "xflow_displayFlow()  exp_path:${exp_path} datestamp:${datestamp} xflow_populateDatestamp() "
    xflow_populateDatestamp ${exp_path} ${datestamp} [xflow_getWidgetName ${exp_path} ${datestamp} exp_date_frame]
@@ -4594,7 +4576,7 @@ proc xflow_positionFlowWindow { _toplevel _overview_x _overview_y} {
    set newx [expr ${_overview_x} + ${counter} * 40]
    set newy [expr ${_overview_y} + 200 + ${counter} * 40]
    wm geometry ${_toplevel} +${newx}+${newy}
-   #puts "xflow_positionFlowWindow wm geometry ${_toplevel} +${newx}+${newy}"
+   
 }
 
 proc xflow_toFront { toplevel_w } {
@@ -4959,7 +4941,7 @@ proc xflow_init { {exp_path ""} } {
 
       set DEBUG_TRACE [SharedData_getMiscData DEBUG_TRACE]
       set NODE_DISPLAY_PREF  [SharedData_getMiscData NODE_DISPLAY_PREF]
-      # vwait MSG_CENTER_READY
+      
 
       puts "xflow_init() Utils_logInit..."
       Utils_logInit
@@ -4976,7 +4958,7 @@ proc xflow_init { {exp_path ""} } {
    xflow_setWidgetNames 
    xflow_setErrorMessages
    
-   # xflow_createTmpDir
+   
 
 }
 

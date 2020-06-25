@@ -49,11 +49,6 @@ proc bug_Report {error} {
 
     puts "$error   $errorInfo"
 }
-# -- set the Handler
-#proc bgerror {error} {
-#           bug_Report $error
-#}
-#----------------------------------------------
 
 namespace eval XPManager {
 
@@ -264,7 +259,7 @@ proc XPManager::parseCmdOptions {} {
    namespace inscope :: package require cmdline
    set usage "\[options] \noptions:"
    if [ catch { array set params [::cmdline::getoptions argv $options $usage] } message ] {
-      # puts "ERROR: XPManager::parseCmdOptions "
+
       puts "\n$message"
       exit 1
    }
@@ -339,12 +334,12 @@ proc XPManager::_show_progress { } {
 
 
 proc XPManager::_update_progress { } {
-    #variable _progress
+
     variable _afterid
 
     if { $XPManager::_progress } {
         if { $XPManager::prgindic < 100 } {
-            #incr XPManager::prgindic 5
+
             puts "prgindic -> $XPManager::prgindic _progress-> $XPManager::_progress"
             set _afterid [after 10 XPManager::_update_progress]
         } else {
@@ -398,7 +393,6 @@ proc XPManager::ParseOpParExpDepot {} {
            $prefDparser alias ExpOpsRepository    XPManager::set_prefs_cmd_ExpOpsRepository
            $prefDparser alias ExpParRepository    XPManager::set_prefs_cmd_ExpParRepository
            $prefDparser alias ExpPreOpsRepository XPManager::set_prefs_cmd_ExpPreOpsRepository
-	   # this is temp. 
            $prefDparser alias DefaultModDepot XPManager::set_prefs_cmd_DefaultModDepot
 
            set cmd {
@@ -408,7 +402,7 @@ proc XPManager::ParseOpParExpDepot {} {
                    $prefDparser eval $script
            }
            if {[catch  $cmd err] != 0} {
-		    #Dialogs::show_msgdlg $Dialogs::Dlg_ErrorParseConfigOP  ok warning "" .
+		
 		    puts "Error Parsing file config"
            }
 
@@ -459,7 +453,7 @@ proc sleep {N} {
 
 # -- Prepar widget display language
 Dialogs::setDlg
-#Preferences::Config_table
+
 
 XpOptions::globalOptions
 XpOptions::tablelistOptions
@@ -472,15 +466,15 @@ if { $Preferences::ERROR_PARSING_USER_CONFIG == 1 } {
                      Dialogs::show_msgdlg $Dialogs::Dlg_Error_parsing_user_file  ok warning "" .
 }
 
-#if { $Preferences::ERROR_NOT_RECOGNIZED_PREF == 1 } {
-#                     Dialogs::show_msgdlg $Dialogs::Dlg_NonRecognizedPref  ok warning "" .
-#}
+
+
+
 
 if {[string compare $Preferences::ListUsrTabs "" ] == 0 } {
                      Dialogs::show_msgdlg $Dialogs::Dlg_DefineExpPath  ok warning "" .
 }
 
-# -- depot which  do not existe (ie could be erased by user and left in .maestrorc)
-#if { $Preferences::ERROR_DEPOT_DO_NOT_EXIST == 1 } {
-#                     Dialogs::show_msgdlg $Dialogs::Dlg_DepotNotExist  ok warning "" .
-#}
+
+
+
+

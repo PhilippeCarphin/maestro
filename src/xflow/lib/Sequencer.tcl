@@ -31,7 +31,7 @@ proc Sequencer_runSubmit { exp_path datestamp parent_top command title position 
 
    Sequencer_runCommand ${exp_path} ${datestamp} ${tmpfile} "${command} [join ${args}]" ${run_remote} ${list_item}
    ::log::log notice "${command} [join ${args}]"
-   # Utils_logFileContent notice ${tmpfile}
+   
    switch ${Id} {
         null      { if { ${SUBMIT_POPUP} != false} {
                      TextEditor_createWindow "$title" ${tmpfile} ${position} ${parent_top}
@@ -95,7 +95,7 @@ proc Sequencer_runCommand { exp_path datestamp out_file command run_remote {list
     switch  ${list_item} {
         null    {  if { $remote_host != "" && ${run_remote} > 0} {
                    # Construct the remote command by echoing the command through an ssh pipe.
-                   # set remote_cmd "echo \"${cmd}\" | ssh ${remote_host} ${remote_user} > ${out_file} 2>&1"
+                   
                    set remote_cmd "echo \"${cmd}" | ssh ${remote_host} ${remote_user} > ${out_file}"
                    puts "Running remote command $remote_cmd"
                    catch { eval [exec -ignorestderr ksh -c $remote_cmd] }
@@ -103,7 +103,7 @@ proc Sequencer_runCommand { exp_path datestamp out_file command run_remote {list
                  } else {
                    # Send command on local shell
                    set prefix "$prefix;export SEQ_EXP_HOME=${exp_path}"
-                   # set cmd "${prefix}; echo \"### ${command}\" > ${out_file}; $command >> $out_file 2>&1"
+                   
                    set cmd "${prefix}; echo \"### ${command}\" > ${out_file}; $command >> $out_file"
                    catch { eval [exec -ignorestderr ksh -c $cmd]}
                    ::log::log debug "Sequencer_runCommand ksh -c $cmd"

@@ -30,19 +30,14 @@ namespace import ::struct::record::*
 # The code in this file contains logic to 
 # - parse a module flow.xml
 # - any logic related to management of a node within a module context
-#
 # It should not contain any GUI related logic.
-# 
 # It creates a module tree using the ModuleNode structure.
-#
-#
 #######################################################################
 #######################################################################
 
 # this structure is used to build the
 # module flow only, not used for
 # experiment modules tree.
-#
 # name - name of node (only leaf part)
 # flow_path - value of the full node withouth the record id in front example: /enkf_mod/avg_anal_mod/gem/Transfer 
 # children - contained children (full name).
@@ -55,7 +50,6 @@ namespace import ::struct::record::*
 #           submits={ {submit_node submit_type} {submit_node submit_type}}
 #           ex:
 #           submits={ {node1 default} {node2 user} }
-#
 # submitter - node name (not node record) that submits the current node; 
 #                 This value is empty if the submitter is the parent container, it has a value only if the submitter is a task
 #                 and the value of the submitter is then the name of the task node (not the full node)
@@ -64,7 +58,6 @@ namespace import ::struct::record::*
 #                 be of type container
 #                 The submits & submitter relation allows us to walk down
 #                 a tree as it is shown by the GUI.
-#
 # deps - Stores node internal dependencies coming from module flow.xml
 #        Does not store dependencies from resource.xml file
 #        format is a list of list in the following form -ORDER IS IMPORTANT- {node index local_index valid_dow valid_hour hour exp}
@@ -73,15 +66,12 @@ namespace import ::struct::record::*
 #        { /SHOP/GeneratePngWIS85a "gem_loop=2" "" "" "" "" "" }
 #        { /SHOP/GeneratePngWIS85b "" "" "6" "" "" "" }
 #        { /SHOP/GeneratePngWIS86 "" "" "" "" "" "" }
-#
 # status - i'm using this to know whether a node has just been created by the user
 #          or not; current possible values "normal" | "new"
 # is_work_unit - true means the container is a work_unit, all child nodes will be submitted
 #                as single reservation i.e. supertask
 # switch_mode   - switching_mode for switch nodes "DatestampHour" or "DayOfWeek"
-# 
 # switch_items - for switching node, defines the switching items
-#
 # curselection - for a switch node, this is the current selected switch items
 #                for other nodes, it is used to know if the node belongs to a switching branch
 record define FlowNode {
@@ -166,7 +156,6 @@ proc ModuleFlow_getNodeSwitchModeFromXml { _xmlSwitchMode } {
 
 # reads the experiment modules tree xml file
 # and build the tree in memory using ExpModTreeNode
-#
 # _expPath is path to experiment 
 # _moduleXmlFile is path of module flow.xml file
 # _parentFlowRecord is record of parent node container... empty if first call
@@ -309,7 +298,6 @@ proc ModuleFlow_flowNodeRecord2Xml { _flowNodeRecord _xmlDoc _xmlParentNode _mod
 }
 
 # converts the dependencies of the node to xml
-#
 proc ModuleFlow_dependencies2Xml { _xmlDoc _xmlDomNode _flowNodeRecord } {
    ::log::log debug "ModuleFlow_dependencies2Xml _flowNodeRecord:${_flowNodeRecord}"
 
@@ -449,7 +437,7 @@ proc ModuleFlow_parseXmlNode { _expPath _domNode _parentFlowRecord {_isXmlRootNo
          ExpModTree_addModule ${_expPath} ${flowNode} ${parentModTreeName} ${nodeName}
       }
       "SWITCH" {
-         # ${recordName} configure -switch_mode [ModuleFlow_getNodeSwitchModeFromXml [${_domNode} getAttribute type datestamp_hour]]
+         
          ModuleFlow_parseSwitchingNode ${_expPath} ${recordName} ${_domNode}
       }
    }
@@ -469,7 +457,7 @@ proc ModuleFlow_parseXmlNode { _expPath _domNode _parentFlowRecord {_isXmlRootNo
 # _flowNodeRecord must be record for an instance of a switching node
 # _xmlNode is the xml dom node of the switching record in the flow.xml file
 proc ModuleFlow_parseSwitchingNode { _expPath _flowNodeRecord _xmlNode } {
-   # puts "ModuleFlow_parseSwitchingNode _flowNodeRecord:${_flowNodeRecord}"
+   
    # get the switching mode
    set switchMode [ModuleFlow_getNodeSwitchModeFromXml [${_xmlNode} getAttribute type datestamp_hour]]
    ${_flowNodeRecord} configure -switch_mode ${switchMode}
@@ -483,7 +471,7 @@ proc ModuleFlow_parseSwitchingNode { _expPath _flowNodeRecord _xmlNode } {
          lappend switchItems ${switchItemNodeName}
          set switchItemRecord ${_flowNodeRecord}/${switchItemNodeName}
          FlowNode ${switchItemRecord} -name ${switchItemNodeName} -type SwitchItem -flow_path ${flowNode}/${switchItemNodeName}
-         # puts "ModuleFlow_parseSwitchingNode FlowNode ${switchItemRecord} -name ${switchItemNodeName} -type SwitchItem -flow_path ${flowNode}/${switchItemNodeName}"
+         
 
          # process child nodes
          if { ${flowNode} != "" } {
@@ -498,11 +486,10 @@ proc ModuleFlow_parseSwitchingNode { _expPath _flowNodeRecord _xmlNode } {
       }
    }
    ${_flowNodeRecord} configure -switch_items ${switchItems} -curselection [lindex ${switchItems} 0] 
-   # puts "ModuleFlow_parseSwitchingNode _flowNodeRecord:[${_flowNodeRecord} configure]"
+   
 }
 
 # get the submits relation of an xml node
-#
 proc ModuleFlow_xmlParseSubmits { _flowNodeRecord _xmlNode } {
    set submitNodes [${_xmlNode} selectNodes SUBMITS]
    set flowChildren ""
@@ -529,9 +516,9 @@ proc ModuleFlow_xmlParseDependencies { _flowNodeRecord _xmlNode } {
    # list of attributes supported for dependency
    foreach depXmlNode ${depXmlNodes} {
       set depList {}
-      # set typeValue [${depXmlNode} getAttribute type ""]
+      
       set depNameValue [${depXmlNode} getAttribute dep_name ""]
-      # set statusValue [${depXmlNode} getAttribute status ""]
+      
       set indexValue [${depXmlNode} getAttribute index ""]
       set localIndexValue [${depXmlNode} getAttribute local_index ""]
       set validDowValue [${depXmlNode} getAttribute valid_dow ""]
@@ -550,7 +537,6 @@ proc ModuleFlow_xmlParseDependencies { _flowNodeRecord _xmlNode } {
 # belonging to the node and rereading the xml flow
 # This is required for instance when a user refreshes or exits
 # a modified flow withouth saving...
-#
 proc ModuleFlow_refresh { _expPath _moduleNode } {
    ::log::log debug "ModuleFlow_refresh _expPath:${_expPath} _moduleNode:${_moduleNode}"
    set modNodeRecord [ModuleFlow_getRecordName ${_expPath} ${_moduleNode}]
@@ -820,7 +806,7 @@ proc ModuleFlow_getLayoutNode { _recordName } {
       while { ${count} < ${tokenLength} } {
          set token [lindex ${tokenNames} ${count}]
          set workedNode ${workedNode}/${token}
-         # puts "workedNode:$workedNode"
+         
          if { [${workedNode} cget -type] != "SwitchItem" } {
             # switch items are not visible within the container directories 
             # only exists in the flow.xml
@@ -1033,7 +1019,7 @@ proc ModuleFlow_getNodeRefCount { _flowNodeRecord {_out_match_record_var ""} } {
       global recordList_${_flowNodeRecord}
       set recordList_${_flowNodeRecord} {}
       ModuleFlow_getAllSwitchingRecords ${switchRecord} recordList_${_flowNodeRecord}
-      # puts "set recordList_${_flowNodeRecord} [set recordList_${_flowNodeRecord}]" 
+      
       set recordList [set recordList_${_flowNodeRecord}]
       if { ${recordList} != "" } {
          # compare the list of switch item nodes to see if the current node is used at multiple places
@@ -1060,7 +1046,7 @@ proc ModuleFlow_getNodeRefCount { _flowNodeRecord {_out_match_record_var ""} } {
 # underneath that node for every switching items
 proc ModuleFlow_getAllSwitchingRecords { _flowNodeRecord _outputVar } {
    upvar #0 ${_outputVar} myOutputVar
-   # puts "ModuleFlow_getAllSwitchingRecords _flowNodeRecord:${_flowNodeRecord}"
+   
    lappend myOutputVar ${_flowNodeRecord}
    if { [record exists instance ${_flowNodeRecord}] } {
       if { [${_flowNodeRecord} cget -type] == "SwitchNode" } {
@@ -1143,7 +1129,7 @@ proc ModuleFlow_renameNode { _expPath _flowNodeRecord _newName } {
          }
       } else {
          foreach submitNodeRecord ${submittedNodeRecords} {
-            # ModuleFlow_assignNewContainerDir  ${_expPath} ${moduleNode} ${submitNodeRecord} ${newNodeRecord}
+            
             ModuleFlow_assignNewContainer ${_expPath} ${submitNodeRecord} ${newNodeRecord} ${childPosition} nodeRecordsToDelete
             incr childPosition
          }
@@ -1194,7 +1180,6 @@ proc ModuleFlow_renameNode { _expPath _flowNodeRecord _newName } {
 # - newly given child nodes must be renamed
 # - newly given child nodes must be removed from existing parent container
 # It follows the submit tree of the starting node but does not change the submits relation
-#
 proc ModuleFlow_assignNewContainer { _expPath _flowNodeRecord _newContainerRecord _childPosition _out_delete_list_var } {
    upvar ${_out_delete_list_var} localDeleteListVar
 
@@ -1247,14 +1232,12 @@ proc ModuleFlow_assignNewContainer { _expPath _flowNodeRecord _newContainerRecor
    lappend localDeleteListVar ${_flowNodeRecord}
 }
 
-# 
 # recursively assigns a new container directory in the module directory structure
 # starting from the starting node until
 # it hits the end or until it hits another container node
 # - newly given child nodes must be removed from existing parent container
 #   and moved to the new parent directory
 # It follows the submit tree of the starting node but does not change the submits relation
-#
 proc ModuleFlow_assignNewContainerDir { _expPath _moduleNode _flowNodeRecord _newContainerRecord } {
    ::log::log debug "ModuleFlow_assignNewContainerDir _flowNodeRecord:${_flowNodeRecord} _newContainerRecord:${_newContainerRecord}"
    set flowNode [ModuleFlow_getLayoutNode ${_flowNodeRecord}]
@@ -1293,9 +1276,7 @@ proc ModuleFlow_removeChild { _flowNodeRecord _childNode } {
 
 # searches does the submit path and look for a module node
 # returns the first module found or else returns an empty value
-#
 # _modNodes is a variable that is passed by reference recursively
-#
 proc ModuleFLow_getChildModuleNodes { _flowNodeRecord _modNodes } {
    upvar ${_modNodes} localModNodes
 
@@ -1311,15 +1292,14 @@ proc ModuleFLow_getChildModuleNodes { _flowNodeRecord _modNodes } {
 
 # returns true if the node is the root node of the module
 # returns false otherwise
-# 
 # considered root node if the record has only one slash
 proc ModuleFlow_isExpRootNode { _flowNodeRecord } {
    if { [llength [split ${_flowNodeRecord} /]] == 2 } {
       return true
    }
-   #if { [file dirname ${_flowNodeRecord}] == "ModuleNode_" } {
-   #   return true
-   #}
+   
+   
+   
    return false
 }
 
@@ -1420,13 +1400,10 @@ proc ModuleFlow_getSubmitPosition { _flowNodeRecord } {
 # with real node records
 # for instance if task /f1/t1 submits task /f1/t2
 # the values of submits stored in node /f1/t1 will be /t2 and not /f1/t2
-#
 # _all argument is currently used as determinant for switching nodes. If $_all is false,
 #      then it returns the submit records of the current selection of the switching node.
 #      If $_all is true, it returns the submit records of every switching items.
-#
 # this function will return the record for node /f1/t2
-#
 proc ModuleFlow_getSubmitRecords { _flowNodeRecord {_all false}} {
    set newSubmits {}
    set submits [${_flowNodeRecord} cget -submits]
@@ -1473,7 +1450,7 @@ proc ModuleFlow_addSubmitNode { _flowNodeRecord _submitNodeRecord {_submitType d
    ::log::log debug "ModuleFlow_addSubmitNode _flowNodeRecord:${_flowNodeRecord} _submitNodeRecord:${_submitNodeRecord} _position:${_position}"
    # attach to submitter
    # submits are stored as relative path to the parent container
-# SUA TO BE DONE, this switch logic should be done at the caller maybe... check it out
+
    if { [${_flowNodeRecord} cget -type] == "SwitchNode" } {
       set submitterRecord [ModuleFlow_getCurrentSwitchItemRecord ${_flowNodeRecord}]
    } else {
@@ -1491,7 +1468,7 @@ proc ModuleFlow_addSubmitNode { _flowNodeRecord _submitNodeRecord {_submitType d
 # remove node _submitNodeRecord from the list of nodes submitted by _flowNodeRecord
 # _flowNodeRecord & _submitNodeRecord are FlowNode records
 proc ModuleFlow_removeSubmitNode { _flowNodeRecord _submitNodeRecord } {
-   # ::log::log debug "ModuleFlow_removeSubmitNode _flowNodeRecord:${_flowNodeRecord} _submitNodeRecord:${_submitNodeRecord}"
+   
    if { [${_flowNodeRecord} cget -type] == "SwitchNode" } {
       set submitterRecord [ModuleFlow_getCurrentSwitchItemRecord ${_flowNodeRecord}]
    } else {
@@ -1596,7 +1573,7 @@ proc ModuleFlow_getContainer { _flowNodeRecord } {
 # if submitter is a container, returns ""
 # if submitter is task, returns leaf part of task node
 proc ModuleFlow_searchSubmitter { _submitNodeRecord _flowNodeRecord } {
-   # ::log::log debug "ModuleFlow_searchSubmitter _submitNodeRecord:${_submitNodeRecord} _flowNodeRecord: ${_flowNodeRecord}"
+   
 
    if { ${_submitNodeRecord} == "" } {
          return ""
@@ -1609,7 +1586,6 @@ proc ModuleFlow_searchSubmitter { _submitNodeRecord _flowNodeRecord } {
 
    # search for the node
    set searchSubmitNode [file tail ${_flowNodeRecord}]
-   # set foundIndex [lsearch ${submitsNode} "[${_flowNodeRecord} cget -name] *"]
    set foundIndex [lsearch ${submitsNode} "${searchSubmitNode} *"]
    if { ${foundIndex} != -1 } {
       ::log::log debug "ModuleFlow_searchSubmitter found node _submitNodeRecord:${_submitNodeRecord} _flowNodeRecord: ${_flowNodeRecord}"
@@ -1813,13 +1789,12 @@ proc ModuleFlow_printNode { _domNode } {
    puts "name attribute: [${_domNode} getAttribute name]"
    puts "version_number attribute: [${_domNode} getAttribute version_number "" ]"
    puts "date attribute: [${_domNode} getAttribute date]"
-   #puts "nodeType: [${_domNode} nodeType]"
-   #puts "nodeType: [${_domNode} nodeType]"
+   
+   
 }
 
 # returns true if one of
 # "./" "../" ".../" is found in the given _checkValue
-#
 # returns false otherwise
 
 proc ModuleFlow_hasRelativeSyntax { _checkNode } {
@@ -1843,13 +1818,11 @@ proc ModuleFlow_hasRelativeSyntax { _checkNode } {
 # checks a node that potentially has relative syntaxing
 # and computes the resulting node relative
 # to the _flowNodeRecord
-#
 # relative path syntax:
 # .    : Used to signify the current container.
 # ..   : Used to target the parent container (container of your container).
 # ...  : Used to target the module start. If the current node is a module, ... refers to the
 #        container module and not the current node.
-#
 # returns -1 if syntax validation fails
 proc ModuleFlow_getFromRelativePath { _expPath _flowNodeRecord _checkNode _outErrMsg } {
    ::log::log debug "ModuleFlow_getFromRelativePath $_expPath $_flowNodeRecord $_checkNode"

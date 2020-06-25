@@ -30,15 +30,12 @@ namespace import ::struct::record::*
 # The code in this file contains logic to 
 # parse an experiment modules tree xml file.
 # It creates a module tree using the ExpModTreeNode structure.
-#
-#
 #######################################################################
 #######################################################################
 
 # this structure is used to build the
 # modules tree only, not used for
 # build module or experiment flow.
-#
 record define ExpModTreeNode {
    name
    version
@@ -55,10 +52,8 @@ proc ExpModTree_getReferenceName { _expPath _moduleNode } {
 }
 
 # returns the number of reference instances to a module node record
-#
 # _expPath
 # _moduleNode is full module node name i.e. /enkf_mod/anal_mod/Analysis/gem_mod
-#
 proc ExpModTree_getModInstances { _expPath _moduleNode } {
    ::log::log debug "ExpModTree_getModInstances: _expPath=${_expPath} _moduleNode=${_moduleNode}"
    set count 0
@@ -84,7 +79,6 @@ proc ExpModTree_getModInstances { _expPath _moduleNode } {
 # experiment tree can have multiple module nodes referencing the same module
 # For example, gem_mod can be referenced at from /enkf_mod/anal_mod/Analysis/gem_mod
 # and /enkf_mod/Trials/gem_loop/gem_mod
-#
 # _expPath
 # _moduleNode is full module node name i.e. /enkf_mod/anal_mod/Analysis/gem_mod
 proc ExpModTree_getAbsModInstances { _expPath _moduleNode } {
@@ -113,8 +107,8 @@ proc ExpModTree_addModule { _expPath _moduleNode _parentTreeNodeRecord {_refName
    set moduleName [file tail ${_moduleNode}]
 
    set modTreeNodeRecord [ExpModTree_getRecordName ${_expPath} ${_moduleNode}]
-   #ExpModTreeNode ${flowNodeRecord} -name ${moduleName} -version \
-   #   ${moduleVersion} -date ${moduleDate} -parent ${_parentNode}
+   
+   
 
    if { [record exists instance ${modTreeNodeRecord}] == 0 } {
       ExpModTreeNode ${modTreeNodeRecord}
@@ -236,6 +230,6 @@ proc ExpModTree_printNode { _domNode } {
    puts "name attribute: [${_domNode} getAttribute name]"
    puts "version_number attribute: [${_domNode} getAttribute version_number "" ]"
    puts "date attribute: [${_domNode} getAttribute date]"
-   #puts "nodeType: [${_domNode} nodeType]"
-   #puts "nodeType: [${_domNode} nodeType]"
+   
+   
 }

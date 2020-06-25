@@ -4,12 +4,10 @@ package require Thread
 # The info is mainly stored in two shared structures. It uses tsv shared structures so that
 # the information can be shared between the overview main thread, the msg center main thread and
 # the experiment datestamp thread that monitors the nodelogger log files.
-#
 # The firs data structure SharedFlowNode_${exp_path}_${datestamp}  stores the static information of a flow with respect to
 # a datestamp: the flow information (submits relation, node types, loop data, etc)
 # The second one ${exp_path}_${datestamp}_runtim stores the dynamic information for each node 
 # i.e. current status, begin time, abort time, etc.
-#
 # generic argument:
 # exp_path: full path of the experiment i.e. SEQ_EXP_HOME
 # node: the flow node as seen in xflow i.e. the submit path and not the container path
@@ -29,7 +27,6 @@ proc SharedFlowNode_createNode { exp_path node datestamp submitter type } {
 }
 
 # remove the datestamp completely... This is called to cleanup data for a datestamp that is not viewed anymore
-#
 proc SharedFlowNode_removeDatestamp { exp_path datestamp } {
    ::log::log notice "SharedFlowNode_removeDatestamp ${exp_path} ${datestamp}"
 
@@ -119,7 +116,7 @@ proc SharedFlowNode_addLoop { exp_path node datestamp new_loop } {
 }
 
 proc SharedFlowNode_getLoops { exp_path node datestamp } {
-   # puts "SharedFlowNode_getLoops exp_path:${exp_path} node:${node} datestamp:${datestamp}"
+
    tsv::keylget SharedFlowNode_${exp_path}_${datestamp} ${node} loops
 }
 
@@ -203,7 +200,7 @@ proc SharedFlowNode_searchSubmitNode { exp_path node datestamp submitted_node } 
                }
             } else {
 	       # the node does not exists if we have not parsed the definition of the node yet 
-	       # (the parsing of the submit might have been done though)
+	
 	       ::log::log debug "SharedFlowNode_searchSubmitNode submitted_node:${submitted_node} bypassing childSubmitNode:${childSubmitNode}"
 	    }
          }
@@ -258,13 +255,13 @@ proc SharedFlowNode_findNodes { exp_path node datestamp search_value match_case 
 # returns a list of all extensions belonging to the
 # current loop node
 proc SharedFlowNode_getLoopExtensions { exp_path node datestamp } {
-   # puts SharedFlowNode_getLoopExtensions ${exp_path} ${node} ${datestamp}
+
    set extensions {}
    switch [SharedFlowNode_getGenericAttribute ${exp_path} ${node} ${datestamp} loop_type]] {
       loopset -
       default {
          set seq_node [SharedFlowNode_getSequencerNode $exp_path $node $datestamp]
-         # set tmpExpression [SharedFlowNode_getGenericAttribute ${exp_path} ${node} ${datestamp} expression]
+
          if { [TsvInfo_haskey ${exp_path} $seq_node ${datestamp} loop.expression] } {
             set tmpExpression [TsvInfo_getNodeInfo ${exp_path} ${seq_node} ${datestamp} loop.expression]
             set slowArray [split $tmpExpression ","]
@@ -284,10 +281,10 @@ proc SharedFlowNode_getLoopExtensions { exp_path node datestamp } {
                set firstFlag 0
             }
          } else {
-            # set start [SharedFlowNode_getGenericAttribute ${exp_path} ${node} ${datestamp} start]
-            # set step [SharedFlowNode_getGenericAttribute ${exp_path} ${node} ${datestamp} step]
-            # set setValue [SharedFlowNode_getGenericAttribute ${exp_path} ${node} ${datestamp} setValue]
-            # set end [SharedFlowNode_getGenericAttribute ${exp_path} ${node} ${datestamp} end]
+
+
+
+
             set start [TsvInfo_getNodeInfo ${exp_path} ${seq_node} ${datestamp} loop.start]
             set step [TsvInfo_getNodeInfo ${exp_path} ${seq_node} ${datestamp} loop.step]
             set setValue [TsvInfo_getNodeInfo ${exp_path} ${seq_node} ${datestamp} loop.set]
@@ -353,7 +350,6 @@ proc SharedFlowNode_isFlowModified { exp_path datestamp } {
 
 # loop_args = "outer_Loop=2,inner_Loop=3"
 # returns +2+3 if node exists
-#
 # returns "" on errors
 proc SharedFlowNode_getLoopExtFromLoopArgs { exp_path node datestamp loop_args } {
    if { [SharedFlowNode_isNodeExist ${exp_path} ${node} ${datestamp}] == false } {
@@ -420,32 +416,26 @@ proc SharedFlowNode_getLoopExtFromLoopArgs { exp_path node datestamp loop_args }
 }
 
 ################################################################################################3
-#
 # The part here relates to runtime status for nodes running within a datestamp value
 # The info stored includes whether the node is collapsed or not, the display coordinates,
 # the current status of the node, the time for each status, etc
-#
 ################################################################################################3
 
 # clears all the runtime data and display infos for all nodes
-# NOT USED NOW TO BE CLEANED 
+
 proc SharedFlowNode_clearAllNodes { exp_path datestamp } {
    catch { tsv::unset SharedFlowNode_${exp_path}_${datestamp}_runtime }
 }
 
 # tsv gui_runtime array is used to store display attributes needed by xflow
-#
 # display_infos: this is a list that contains the following for each node
 #    element 0: collapse values: 0=user uncollapsed, 1=user collapsed, 2=default
 #    element 1: is root node flag: 1=node is exp root node
 #    element 2-7: node display coords (3 x,y points) x1 y1 x2 y2 x3 y3
 #    element 8: display Y value
-# 
 # current: for node with iterations, this holds the value of the current iteration selected by the user; it defaults to latest
 # latest:  for node with iterations, this holds the value of the latest iteration that was updated; used to display when user selects latest as iteration
-#
 # ext_max_value: holds the value of the largest iteration (in terms of nof characters) for a node; used to set the field length of the widget
-#
 proc SharedFlowNode_initNodeDatestampDisplay {  exp_path node datestamp } {
    if { [tsv::names SharedFlowNode_${exp_path}_${datestamp}_gui_runtime] == "" || [tsv::keylget  SharedFlowNode_${exp_path}_${datestamp}_gui_runtime ${node}] == ""} {
       tsv::keylset SharedFlowNode_${exp_path}_${datestamp}_gui_runtime ${node} display_infos [list 2 0 0 0 0 0 0 0 40]
@@ -483,7 +473,7 @@ proc SharedFlowNode_initNodeDatestamp { exp_path node datestamp {force false} } 
 
    tsv::keylset SharedFlowNode_${exp_path}_${datestamp}_runtime ${node} statuses {}
 
-   # puts "SharedFlowNode_initNodeDatestamp done" 
+
 }
 
 proc SharedFlowNode_resetAllStatus { exp_path node datestamp {is_recursive 0} } {
@@ -536,13 +526,13 @@ proc SharedFlowNode_getLatestExt { exp_path node datestamp } {
 	 } else {
             if { [ catch { set value [tsv::keylget SharedFlowNode_${exp_path}_${datestamp}_gui_runtime ${node} latest_member] } ] } {
 	       SharedFlowNode_setLatestExt ${exp_path} ${node} ${datestamp} ""
-               # tsv::keylset SharedFlowNode_${exp_path}_${datestamp}_gui_runtime ${node} latest_member "" 
+
             } 
 	 }
       } else {
          if { [ catch { set value [tsv::keylget SharedFlowNode_${exp_path}_${datestamp}_gui_runtime ${node} latest_member] } ] } { 
 	    SharedFlowNode_setLatestExt ${exp_path} ${node} ${datestamp} ""
-            # tsv::keylset SharedFlowNode_${exp_path}_${datestamp}_gui_runtime ${node} latest_member "" 
+
          }
 
       }
@@ -601,7 +591,7 @@ proc SharedFlowNode_getMemberStatusMsg { exp_path node datestamp member } {
       }
       # get the latest member 
       if { $member == "latest" } {
-         # set member [SharedFlowNode_getGenericAttribute ${exp_path} ${node} ${datestamp} latest_member]
+
          set member [SharedFlowNode_getLatestExt ${exp_path} ${node} ${datestamp}]
       }
       catch {
@@ -610,7 +600,7 @@ proc SharedFlowNode_getMemberStatusMsg { exp_path node datestamp member } {
             set values $statuses($member)
          }
       }
-      # set value [lindex ${values} 2]
+
       set value [lindex ${values} 2]
    }
 
@@ -625,16 +615,16 @@ proc SharedFlowNode_getMemberStatusMsg { exp_path node datestamp member } {
 proc SharedFlowNode_getMemberStatus { exp_path node datestamp member } {
    set value "init"
 
-      # puts "tsv::exists SharedFlowNode_${exp_path}_${datestamp}_runtime ${node}? [tsv::exists SharedFlowNode_${exp_path}_${datestamp}_runtime ${node}]"
+
    if { [tsv::exists SharedFlowNode_${exp_path}_${datestamp}_runtime ${node}] == 1 } {
       set values {init}
-      # puts "tsv::keylkeys SharedFlowNode_${exp_path}_${datestamp}_runtime ${node}? [tsv::keylkeys SharedFlowNode_${exp_path}_${datestamp}_runtime ${node}]"
+
       if { $member == "" } {
          set member "null"
       }
       # get the latest member 
       if { $member == "latest" } {
-         # set member [SharedFlowNode_getGenericAttribute ${exp_path} ${node} ${datestamp} latest_member]
+
          set member [SharedFlowNode_getLatestExt ${exp_path} ${node} ${datestamp}]
       }
       catch {
@@ -656,7 +646,7 @@ proc SharedFlowNode_getMemberStatus { exp_path node datestamp member } {
 # orig_status=end or endx, begin or beginx
 proc SharedFlowNode_setMemberStatus { exp_path node datestamp member status orig_status timestamp {status_msg ""} {is_recursive false} } {
    if { [tsv::names SharedFlowNode_${exp_path}_${datestamp}_runtime] == "" || [tsv::keylget  SharedFlowNode_${exp_path}_${datestamp}_runtime ${node}] == ""} {
-      # puts "SharedFlowNode_setMemberStatus SharedFlowNode_initNodeDatestamp"
+
       SharedFlowNode_initNodeDatestamp ${exp_path} ${node} ${datestamp}
    }
 
@@ -707,11 +697,11 @@ proc SharedFlowNode_setMemberStatus { exp_path node datestamp member status orig
                set nofSeparators [expr [llength [split ${member} +]] - 1]
 
                if { ${nofParentLoops} > 1 && [expr ${nofParentLoops} - 1] == ${nofSeparators} } {
-                 #  tsv::keylset SharedFlowNode_${exp_path}_${datestamp}_runtime ${node} latest_member $member
+
 	          SharedFlowNode_setLatestExt ${exp_path} ${node} ${datestamp} ${member}
                }
 	    } else {
-               # tsv::keylset SharedFlowNode_${exp_path}_${datestamp}_runtime ${node} latest_member $member
+
 	       SharedFlowNode_setLatestExt ${exp_path} ${node} ${datestamp} ${member}
 	    }
          }
@@ -756,12 +746,12 @@ proc SharedFlowNode_setStatInfo { exp_path node datestamp member stat_key timest
 	       begin {
 	          # delete any abort or end status
 	          set abortIndexes [ lreverse [lsearch -all ${memberInfoList} abort]]
-	          # puts "node:$node member:$member abortIndexes:$abortIndexes"
+	
 	          foreach deleteIndex ${abortIndexes} {
 	             set memberInfoList [lreplace  ${memberInfoList} ${deleteIndex} [expr ${deleteIndex} +1]]
 	          }
 	          set endIndexes [lreverse [lsearch -all ${memberInfoList} end]]
-	          # puts "node:$node member:$member endIndexes:$endIndexes"
+	
 	          foreach deleteIndex ${endIndexes} {
 	             set memberInfoList [lreplace  ${memberInfoList} ${deleteIndex} [expr ${deleteIndex} +1]]
 	          }
@@ -774,9 +764,9 @@ proc SharedFlowNode_setStatInfo { exp_path node datestamp member stat_key timest
             set memberInfoList [lreplace ${memberInfoList} ${foundIndex} [expr ${foundIndex} + 1] ${stat_key} ${timestamp}]
          }
          set statsinfo($member) ${memberInfoList}
-         # puts "node:$node member:$member memberInfoList:$memberInfoList"
+
    } else {
-      # puts "SharedFlowNode_setStatInfo node:$node member:$member initialising..."
+
       # initialise status
       array set statsinfo {}
       set statsinfo($member) [list ${stat_key} ${timestamp}]
@@ -786,7 +776,7 @@ proc SharedFlowNode_setStatInfo { exp_path node datestamp member stat_key timest
 }
 
 proc SharedFlowNode_getExecTime { exp_path node datestamp member } {
-   # puts "SharedFlowNode_getExecTime exp_path:$exp_path node:$node datestamp:$datestamp member:$member"
+
    if { ${member} == "" } {
       set member null
    }
@@ -818,9 +808,9 @@ proc SharedFlowNode_getExecTime { exp_path node datestamp member } {
 	       set execTime [clock format ${execTimeString} -timezone :UTC -format ${timeDisplayFormat}]
 	    }
 	    # store the calculated time
-	    # lappend memberInfoList exectime ${execTime}
-	    # set statsinfo($member) ${memberInfoList}
-            # tsv::keylset SharedFlowNode_${exp_path}_${datestamp}_stats ${node} stats "[array get statsinfo]"
+	
+	
+
 	 }
       }
    }
@@ -1118,14 +1108,14 @@ proc SharedFlowNode_setNptMemberStatus { exp_path node datestamp member status t
          set latestMember [SharedFlowNode_getGenericAttribute ${exp_path} ${node} ${datestamp} statuses]
 
          if { [string match ${member}+* ${latestMember}] } {
-            # tsv::keylset SharedFlowNode_${exp_path}_${datestamp}_runtime ${node} latest_member ""
+
 	    SharedFlowNode_setLatestExt ${exp_path} ${node} ${datestamp} ""
          }
 
          set baseExt [SharedFlowNode_getExtBasePart ${member}]
 	 set latestMemberKey latest_member_${baseExt}
          if { [SharedFlowNode_isRuntimeKeyExist ${exp_path} ${node} ${datestamp} ${latestMemberKey}] == true }  {
-	    # tsv::keyldel SharedFlowNode_${exp_path}_${datestamp}_gui_runtime ${node} ${latestMemberKey}
+	
             SharedFlowNode_setLatestExt ${exp_path} ${node} ${datestamp} ${member} ${latestMemberKey}
 	 }
 
@@ -1137,11 +1127,11 @@ proc SharedFlowNode_setNptMemberStatus { exp_path node datestamp member status t
             set statuses($member) "${status} ${timestamp} [list ${status_msg}]"
          }
          set baseExt [SharedFlowNode_getExtBasePart ${member}]
-         # tsv::keylset SharedFlowNode_${exp_path}_${datestamp}_gui_runtime ${node} latest_member $member
+
          SharedFlowNode_setLatestExt ${exp_path} ${node} ${datestamp} ${member}
 	 if { ${baseExt} != "" } {
 	    set latestMemberKey latest_member_${baseExt}
-            # tsv::keylset SharedFlowNode_${exp_path}_${datestamp}_gui_runtime ${node} ${latestMemberKey} $member
+
             SharedFlowNode_setLatestExt ${exp_path} ${node} ${datestamp} ${member} ${latestMemberKey}
 	 }
       } elseif { [expr ${nofSeparators} < ${nofParentLoops}] } {
@@ -1155,7 +1145,7 @@ proc SharedFlowNode_setNptMemberStatus { exp_path node datestamp member status t
       } else {
          set statuses($member) "${status} ${timestamp} [list ${status_msg}]"
       }
-      # tsv::keylset SharedFlowNode_${exp_path}_${datestamp}_runtime ${node} latest_member $member
+
       SharedFlowNode_setLatestExt ${exp_path} ${node} ${datestamp} ${member}
    }
    tsv::keylset SharedFlowNode_${exp_path}_${datestamp}_runtime ${node} statuses "[array get statuses]"
@@ -1203,7 +1193,7 @@ proc SharedFlowNode_isCollapsed { exp_path node datestamp } {
 }
 
 proc SharedFlowNode_isParentCollapsed { exp_path node datestamp } {
-   # puts "SharedFlowNode_isParentCollapsed exp:${exp_path} node:${node} datestamp:${datestamp} "
+
    if { [tsv::exists SharedFlowNode_${exp_path}_${datestamp}_runtime ${node}] == 0 } {
       return 0
    }
@@ -1433,7 +1423,7 @@ proc SharedFlowNode_getLoopTooltip { exp_path loop_node datestamp } {
          set seq_node [SharedFlowNode_getSequencerNode $exp_path $loop_node $datestamp]
       if { [TsvInfo_haskey ${exp_path} $seq_node ${datestamp} loop.expression] } {
          set tmpExpression [TsvInfo_getNodeInfo ${exp_path} ${seq_node} ${datestamp} loop.expression]
-         #set tmpExpression [SharedFlowNode_getGenericAttribute ${exp_path} ${loop_node} ${datestamp} expression]
+
          set nodeCount 0
          set defCount 1
          set expArray [split $tmpExpression ",:"]
@@ -1459,10 +1449,10 @@ proc SharedFlowNode_getLoopTooltip { exp_path loop_node datestamp } {
             }
          }
       } else {
-         # set start [SharedFlowNode_getGenericAttribute ${exp_path} ${loop_node} ${datestamp} start]
-         # set step [SharedFlowNode_getGenericAttribute ${exp_path} ${loop_node} ${datestamp} step]
-         # set setValue [SharedFlowNode_getGenericAttribute ${exp_path} ${loop_node} ${datestamp} set]
-         # set end [SharedFlowNode_getGenericAttribute ${exp_path} ${loop_node} ${datestamp} end]
+
+
+
+
          set start [TsvInfo_getNodeInfo ${exp_path} ${seq_node} ${datestamp} loop.start]
          set step [TsvInfo_getNodeInfo ${exp_path} ${seq_node} ${datestamp} loop.step]
          set setValue [TsvInfo_getNodeInfo ${exp_path} ${seq_node} ${datestamp} loop.set]
@@ -1536,10 +1526,9 @@ proc SharedFlowNode_getListingNodeExtension { exp_path current_node datestamp {f
 # sequencer for loop arguments
 # it builds the loop arguments for all loops
 # contained in the node loops attribute
-# 
 # exts sample: +2+4 for outer_loop index +2 and inner loop index +4
 proc SharedFlowNode_getLoopArgs { exp_path node datestamp exts} {
-   # puts "SharedFlowNode_getLoopArgs ${exp_path} ${node} ${datestamp} ${exts}"
+
    set args ""
    set count 0
    set loopList [SharedFlowNode_getLoops ${exp_path} ${node} ${datestamp}]
@@ -1577,7 +1566,7 @@ proc SharedFlowNode_getLoopArgs { exp_path node datestamp exts} {
 # npass_index argument is used when user is provided manual
 # the index value at submission time
 proc SharedFlowNode_getNptArgs { exp_path node datestamp {loop_index ""} {npass_index ""} } {
-   # puts "SharedFlowNode_getNptArgs exp_path:$exp_path node:$node datestamp:$datestamp loop_index:$loop_index npass_index:$npass_index"
+
    set args ""
 
    # parentLoopArgs if not empty already contains -l
@@ -1816,11 +1805,11 @@ proc SharedFlowNode_getSwitchingInfo { exp_path node datestamp } {
       switch ${switchType} {
          datestamp_hour {
 	    set hour [Utils_getHourFromDatestamp ${datestamp}]
-	    # set value "\[dshour-${hour}\]"
+	
 	    set value "\[dshour]"
          }
          day_of_week {
-	    # set value "\[dshour-${hour}\]"
+	
 	    set value "\[dow]"
 	 }
 	 default {
@@ -1859,10 +1848,10 @@ proc SharedFlowNode_printNodeStatus  { exp_path node datestamp} {
       if { ${nodeType} == "npass_task" || ${nodeType} == "loop" } {
          puts "   max_ext_value:[tsv::keylget SharedFlowNode_${exp_path}_${datestamp}_gui_runtime ${node} max_ext_value]"
          puts "   current:[tsv::keylget SharedFlowNode_${exp_path}_${datestamp}_gui_runtime ${node} current]"
-         # puts "   latest:[tsv::keylget SharedFlowNode_${exp_path}_${datestamp}_runtime ${node} latest_member]"
+
       }
       if { [SharedFlowNode_hasLoops ${exp_path} ${node} ${datestamp}] } {
-         # puts "   latest:[tsv::keylget SharedFlowNode_${exp_path}_${datestamp}_runtime ${node} latest_member]"
+
       }
    }
 }

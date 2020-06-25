@@ -68,7 +68,7 @@ proc MaestroConsole_createWidgets {} {
       MaestroConsole_show
    }
 
-   #MiscTkUtils_positionWindow . ${topWidget}
+   
 }
 
 proc MaestroConsole_addToolbar { _topWidget } {
@@ -193,7 +193,7 @@ proc MaestroConsole_show {} {
          }   
       } 
    } else {
-      # MaestroConsole_createWidgets
+      
    }
    raise ${topW}
 }
@@ -230,6 +230,6 @@ proc MaestroConsole_clearStatusMsg { _topWidget } {
 }
 
 proc MestroConsole_closeWindow { _topWidget } {
-   # destroy ${_topWidget}
+   
    wm withdraw ${_topWidget}
 }

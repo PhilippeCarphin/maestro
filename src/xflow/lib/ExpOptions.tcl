@@ -10,7 +10,6 @@ proc ExpOptions_showSupportCallback { _exp_path _datestamp parent_widget } {
 }
 
 # show support info from xml file
-#
 # for now the xml is quite small so I don't
 # bother storing anything in memory...
 # the xml file is simply parse everything the
@@ -19,7 +18,7 @@ proc ExpOptions_showSupport { _exp_path _hour _parent_widget } {
    puts "ExpOptions_showSupport exp_path:${_exp_path} hour:${_hour}"
    package require tablelist
    global env supportData
-   #set optionsFile ${exp_path}/ExpOptions.xml
+   
    set expName [file tail ${_exp_path}]
    set supportData {}
    set parentCode ""
@@ -58,12 +57,12 @@ proc ExpOptions_showSupport { _exp_path _hour _parent_widget } {
 
    ${tableW} columnconfigure 2 -wrap 1 -maxwidth 25
    # search the data for the given hour and highlight it
-   # set selectedRow [${tableW} searchcolumn 0 ${expName}${_hour}]
-   # if { ${selectedRow} != -1 } {
-   #   ${tableW} selection clear active
-   #   ${tableW} selection set ${selectedRow}
-   #   ${tableW} see active
-   # }
+   
+   
+   
+   
+   
+   
 
    # creating scrollbars
    scrollbar ${yscrollW} -command [list ${tableW} yview]
@@ -82,7 +81,7 @@ proc ExpOptions_showSupport { _exp_path _hour _parent_widget } {
    grid ${buttonFrame} -row 2 -column 0 -padx 5 -sticky e
 
    grid columnconfigure ${topW} 0 -weight 1
-   # grid columnconfigure ${topW} 1 -weight 1
+   
 
    grid rowconfigure ${topW} 0 -weight 1
    grid rowconfigure ${topW} 1 -weight 1
@@ -109,10 +108,10 @@ proc ExpOptions_getCheckIdle { _exp_path } {
 # returns list with start_time and end_time as {start_time end_time}
 # returns empty string if timings cannot be read
 proc ExpOptions_getRefTimings { _exp_path _hour } {
-   #set optionsFile ${_exp_path}/ExpOptions.xml
+   
    set foundRefTimings ""
    set refTimings [SharedData_getExpTimings ${_exp_path}]
-   # set hour [Utils_getHourFromDatestamp ${_datestamp}]
+   
    
    set foundIndex [lsearch -exact -index 0 ${refTimings} ${_hour}]
    if { ${foundIndex} != -1 } {

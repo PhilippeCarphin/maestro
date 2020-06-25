@@ -233,13 +233,13 @@ proc Audit::AuditExp { exp1 } {
 
 
       # make a popup menu for the tabs (just add commands)
-      #menu .popup -tearoff 0 -activeborderwidth 0
-      #.popup add separator 
-      #.popup add command -label "Audit This Component Only" -command {Audit::AuditComponent $Audit::AuditWin [$notebook raise]}
+
+
+
 
       # bind right mouse button to the popup menus
-      #$notebook bindtabs <Button-3> [list Audit::apopup .popup $notebook %X %Y]
-      #$notebook compute_size
+
+
 
       $notebook raise [$notebook page 0]
 
@@ -276,9 +276,6 @@ proc Audit::AuditExp { exp1 } {
 
       # -- At startup disable audit button
       $BAudit configure -state disabled
-
-      # -- For now disable exphome
-      #$notebook itemconfigure exphome -state disabled
 }
 
 proc Audit::EnableAuditBut { sentry } {
@@ -424,7 +421,6 @@ proc Audit::AuditComponent {w ki} {
 
 #------------------------------------------------------------------------------
 # CreateTabliste
-#
 # Displays the contents of the directory dir in a tablelist widget.
 #------------------------------------------------------------------------------
 proc Audit::CreateTabliste {dir TabFrame Frame kaka} {
@@ -453,10 +449,8 @@ proc Audit::CreateTabliste {dir TabFrame Frame kaka} {
     scrollbar $vsb -orient vertical   -command [list $TabFrame.tbl yview]
     scrollbar $hsb -orient horizontal -command [list $TabFrame.tbl xview]
 
-    #
     # Create a pop-up menu with one command entry; bind the script
     # associated with its entry to the <Double-1> event, too
-    #
 
     set menu  [menu .menu$kaka -tearoff no]
     $menu add command -label "View diff " -command  [list Audit::ViewDiff $TabFrame.tbl]
@@ -468,12 +462,10 @@ proc Audit::CreateTabliste {dir TabFrame Frame kaka} {
     bind $bodyTag <<Button3>>  [bind TablelistBody <Button-1>]
     bind $bodyTag <<Button3>> +[bind TablelistBody <ButtonRelease-1>]
     bind $bodyTag <<Button3>> +[list Audit::postPopupMenu %X %Y $TabFrame.tbl $kaka]
-    #bind $bodyTag <Double-1>   [list Audit::putContentsOfSelFolder $TabFrame.tbl]
+
     bind $bodyTag <Double-1>   [list Audit::ResolveDoubleClick $TabFrame.tbl]
 
-    #
     # Create  buttons within a frame child of the main widget
-    #
     
     set frm_navigation [frame $Frame.nav -border 2 -relief groove]
     eval variable UpBut_$kaka 
@@ -594,7 +586,6 @@ proc Audit::ViewFile {tbl} {
 
 #------------------------------------------------------------------------------
 # putContents
-#
 # Outputs the contents of the directory dir into the tablelist widget tbl, as
 # child items of the one identified by nodeIdx.
 #------------------------------------------------------------------------------
@@ -612,10 +603,8 @@ proc Audit::putContents {dir tbl nodeIdx} {
 	  set ExpHome "no" 
     }
 
-    #
     # The following check is necessary because this procedure
     # is also invoked by the "Refresh" and "Parent" buttons
-    #
 
 
     if {[string compare $dir ""] != 0 && (![file isdirectory $dir] || ![file readable $dir])} {
@@ -637,12 +626,10 @@ proc Audit::putContents {dir tbl nodeIdx} {
 	     set row [expr {$nodeIdx + 1}]
     }
 
-    #
     # Build a list from the data of the subdirectories and
     # files of the directory dir.  Prepend a "D" or "F" to
     # each entry's name and modification date & time, for
     # sorting purposes (it will be removed by formatString).
-    #
     set itemList {}
     if {[string compare $dir ""] == 0} {
 	foreach volume [file volumes] {
@@ -717,18 +704,14 @@ proc Audit::putContents {dir tbl nodeIdx} {
 	}
     }
 
-    #
     # Sort the above list and insert it into the tablelist widget
     # tbl as list of children of the row identified by nodeIdx
-    #
     set itemList [$tbl applysorting $itemList]
     $tbl insertchildlist $nodeIdx end $itemList
 
-    #
     # Insert an image into the first cell of each newly inserted row
-    #
     foreach item $itemList {
-	#set name [lindex $item end]
+	
 	set name [lindex $item 3]
 	if {[string compare $name ""] == 0} {			;# file
 	    $tbl cellconfigure $row,0 -image $XPManager::img_fileImg
@@ -748,9 +731,7 @@ proc Audit::putContents {dir tbl nodeIdx} {
 	    $tbl cellconfigure $row,0 -image $XPManager::img_clsdFolderImg
 	    $tbl rowattrib $row pathName $name
 
-	    #
 	    # Mark the row as collapsed if the directory is non-empty
-	    #
 	    if {[file readable $name] && [llength [glob -nocomplain -types {d f} -directory $name *]] != 0} {
 		$tbl collapse $row
 	    }
@@ -799,8 +780,8 @@ proc Audit::putContents {dir tbl nodeIdx} {
 	    eval \$Audit::UpBut_$kiko${table} configure -state normal
 
 	    if {[string compare $pdir $dir] == 0 } {
-	           # -- This should never happens
-		   #eval \$Audit::UpBut_$kiko${table} configure -command \[list Audit::SyncUp "" "$tbl"  root\]
+	
+		
 		   puts "in empty"
 	    } else {
 		   eval \$Audit::UpBut_$kiko${table} configure -command \[list Audit::SyncUp "$pdir" "$tbl"  root\]
@@ -909,7 +890,6 @@ proc Audit::Parent  {dir tbl} {
 
 #------------------------------------------------------------------------------
 # formatString
-#
 # Returns the substring obtained from the specified value by removing its first
 # character.
 #------------------------------------------------------------------------------
@@ -919,7 +899,6 @@ proc Audit::formatString val {
 
 #------------------------------------------------------------------------------
 # formatSize
-#
 # Returns an empty string if the specified value is negative and the value
 # itself in user-friendly format otherwise.
 #------------------------------------------------------------------------------
@@ -939,7 +918,6 @@ proc Audit::formatSize val {
 
 #------------------------------------------------------------------------------
 # expandCmd
-#
 # Outputs the contents of the directory whose leaf name is displayed in the
 # first cell of the specified row of the tablelist widget tbl, as child items
 # of the one identified by row, and updates the image displayed in that cell.
@@ -958,7 +936,6 @@ proc Audit::expandCmd {tbl row} {
 
 #------------------------------------------------------------------------------
 # collapseCmd
-#
 # Updates the image displayed in the first cell of the specified row of the
 # tablelist widget tbl.
 #------------------------------------------------------------------------------
@@ -968,7 +945,6 @@ proc Audit::collapseCmd {tbl row} {
 
 #------------------------------------------------------------------------------
 # putContentsOfSelFolder
-#
 # Outputs the contents of the selected folder into the tablelist widget tbl.
 #------------------------------------------------------------------------------
 proc Audit::putContentsOfSelFolder tbl {
@@ -996,11 +972,9 @@ proc Audit::putContentsOfSelFolder tbl {
 
 #------------------------------------------------------------------------------
 # postPopupMenu
-#
 # Posts the pop-up menu .menu at the given screen position.  Before posting
 # the menu, the procedure enables/disables its only entry, depending upon
 # whether the selected item represents a readable directory or not.
-#
 # - Dont Display menu when file exist in one Experiment and not the other
 #------------------------------------------------------------------------------
 proc Audit::postPopupMenu {rootX rootY TabFrame kk} {
@@ -1026,26 +1000,21 @@ proc Audit::postPopupMenu {rootX rootY TabFrame kk} {
 
 #------------------------------------------------------------------------------
 # refreshView
-#
 # Redisplays the contents of the directory dir in the tablelist widget tbl and
 # restores the expanded states of the folders as well as the vertical view.
 #------------------------------------------------------------------------------
 proc Audit::refreshView {dir tbl} {
 
-    #
     # Save the vertical view and get the path names
     # of the folders displayed in the expanded rows
-    #
     set yView [$tbl yview]
     foreach key [$tbl expandedkeys] {
 	set pathName [$tbl rowattrib $key pathName]
 	set expandedFolders($pathName) 1
     }
 
-    #
     # Redisplay the directory's (possibly changed) contents and restore
     # the expanded states of the folders, along with the vertical view
-    #
     Audit::putContents $dir $tbl root
     restoreExpandedStates $tbl root expandedFolders
     $tbl yview moveto [lindex $yView 0]
@@ -1053,7 +1022,6 @@ proc Audit::refreshView {dir tbl} {
 
 #------------------------------------------------------------------------------
 # restoreExpandedStates
-#
 # Expands those children of the parent identified by nodeIdx that display
 # folders whose path names are the names of the elements of the array specified
 # by the last argument.
@@ -1074,7 +1042,6 @@ proc Audit::restoreExpandedStates {tbl nodeIdx expandedFoldersName} {
 
 #------------------------------------------------------------------------------
 # ResolveDoubleClick
-#
 # This routine will do these actions depending on the clicked object:
 # if the object is a directory it will show the content
 # if the object is a file it will show diff (btw the 2 experiment) or

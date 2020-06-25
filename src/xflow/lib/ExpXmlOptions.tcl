@@ -1,6 +1,5 @@
 package require tdom
 # sample ExpOptions.xml file
-#
 #<ExpOptions displayName="HRDPS/West/forecast" shortName="hrdps">
 #   <DatestampInfo daily="false"/>
 #   <ScheduleInfo sched_type="day_of_week" sched_value="0 1 2 3 4 5 6" />
@@ -16,8 +15,6 @@ package require tdom
 #      <SupportInfo executing="Yes" status="Full Support"/>
 #   </Exp>
 # </ExpOptions>
-#
-#
 # idle_threshold : threshold value in minutes after which the application will
 #                        warn if the exp log file is still idle. 
 #                        This is an overwrite at the exp level.
@@ -36,7 +33,7 @@ proc ExpXmlOptions_done { _dom_doc } {
 
 proc ExpXmlOptions_getSupport { _dom_doc _exp_path _exp_name { _exp_hour "" } } {
 
-   # return data
+   
    set results {}
 
    if { ${_exp_name} != "" } {
@@ -117,7 +114,7 @@ proc ExpXmlOptions_getRefTimings { _dom_doc } {
       set expHour [${expNode} getAttribute hour ${expNode}]
       set start [${timingInfoNode} getAttribute ref_start]
       set end [${timingInfoNode} getAttribute ref_end]
-      # puts "ExpXmlOptions_getRefTimings ${expHour} ${start} ${end}"
+      
       lappend results [list ${expHour} ${start} ${end}]
    }
    return ${results}
@@ -255,10 +252,10 @@ proc ExpXmlOptions_getDatestampInfoDaily { _dom_doc _exp_path } {
    if { ${datestampInfoNode} != "" } {
       set value [${datestampInfoNode} getAttribute daily true]
    }
-   # puts "ExpXmlOptions_getDatestampInfoDaily value:$value"
+   
    return ${value}
 }
 
-#global env
-#global env
-#ExpXmlOptions_read $env(SEQ_EXP_HOME)/ExpOptions.xml
+
+
+

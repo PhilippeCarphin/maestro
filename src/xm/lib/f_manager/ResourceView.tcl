@@ -456,7 +456,7 @@ proc ResourceView_createDependsPopMenu { _tableListWidget _x _y } {
    }
    menu ${popMenu} -title "popup"
 
-   # ${popMenu} add separator
+   
    ${popMenu} add command -label  "Add New Entry" -underline 0 -state normal \
       -command [list ResourceView_addNewDepEntry ${_tableListWidget} end] 
 
@@ -560,7 +560,7 @@ proc ResourceView_createDependsWidget { _depFrame _expPath _moduleNode _flowNode
       tablelist::addBWidgetComboBox
    }
 
-   # set defaultAlign center
+   
    set defaultAlign left
    set columns [list 0 Node ${defaultAlign} \
                      0 Index ${defaultAlign} \
@@ -1190,7 +1190,7 @@ proc ResourceView_addEntryMPI { _batchFrame _row {_value ""}} {
    
    set labelW ${_batchFrame}.mpi
    set entryW ${_batchFrame}.mpi_entry
-   # ::tooltip::tooltip  ${entryW} "Check on to enable mpi job."
+   
 
    if { ! [winfo exists ${labelW}] } {
       label ${labelW} -text "Mpi:"

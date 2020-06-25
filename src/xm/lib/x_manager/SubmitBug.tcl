@@ -24,8 +24,8 @@ namespace eval SubmitBug {
           variable URL
 }
 
-# firefox --display=DISPLAY http://bugzilla.cmc.ec.gc.ca/
-# if alreday running : firefox -remote "openURL(www.mozilla.org, new-tab)"
+
+
 
 
 proc SubmitBug::Submit {  } {

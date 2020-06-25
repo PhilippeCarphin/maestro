@@ -43,7 +43,7 @@ proc About::Show {} {
       set subf [$t1 getframe]
 
       
-      #label $subf.bim -text "" -image $XPManager::img_bug 
+
       label $subf.app -text "Application : eXperiment Manager (xm)" -font "ansi 10 "
       label $subf.aut -text "Author      : Rochdi Lahlou, CMOI " -font "ansi 10 "
       label $subf.ver -text "Version     : $XPManager::_version " -font "ansi 10 "
@@ -53,7 +53,7 @@ proc About::Show {} {
       # -- Pack everything
 
       pack $t1 -fill x -pady 2 -padx 2
-      #pack $subf.bim -anchor e
+
       pack $subf.app -anchor w
       pack $subf.aut -anchor w
       pack $subf.ver -anchor w

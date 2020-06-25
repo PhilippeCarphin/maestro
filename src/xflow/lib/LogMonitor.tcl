@@ -19,7 +19,7 @@ proc LogMonitor_getLastCheckFile { _exp_path } {
 # for all display groups from the overview
 proc LogMonitor_checkNewLogFiles {} {
    ::log::log debug "LogMonitor_checkNewLogFiles"
-   # puts "LogMonitor_checkNewLogFiles START:[exec date]"
+   
    # check every 30 secs
    set nextCheckTime 30000
 
@@ -39,13 +39,13 @@ proc LogMonitor_checkNewLogFiles {} {
       puts stderr "ERROR: LogMonitor_checkNewLogFiles() ${message}"
    }
 
-   # puts "LogMonitor_checkNewLogFiles DONE:[exec date]"
+   
    after ${nextCheckTime} [list LogMonitor_checkNewLogFiles]
 }
 
 # check new exp log files for a specific displayGroup
 proc LogMonitor_checkGroupNewLogFiles { displayGroup } {
-   # puts "LogMonitor_checkNewLogFileOneGroup displayGroup:$displayGroup [exec date]"
+   
    set expList [$displayGroup cget -exp_list]
    foreach expPath $expList {
       set checkDir ${expPath}/logs/
@@ -56,8 +56,8 @@ proc LogMonitor_checkGroupNewLogFiles { displayGroup } {
          catch { exec -ignorestderr ls ${checkDir} > /dev/null }
 	 set modifiedFiles ""
 	 if { [ catch {
-            # set modifiedFiles [exec find ${checkDir} -maxdepth 1 -type f -name "*_nodelog" -newerct [clock format ${lastCheckedTime}] -exec basename \{\} \;]
-	    # -newerct not available on 32 bits find version
+            
+	    
             set modifiedFiles [exec  -ignorestderr find ${checkDir} -maxdepth 1 -type f -name "*_nodelog" -newer ${lastCheckedFile} -exec basename \{\} \;]
          } errMsg] } {
 	    ::log::log notice "ERROR: () LogMonitor_checkGroupNewLogFiles $errMsg"
@@ -94,7 +94,7 @@ proc LogMonitor_checkGroupNewLogFiles { displayGroup } {
 
             } else {
                ::log::log notice "ERROR: LogMonitor_checkGroupNewLogFiles():Found invalid log file format: ${expPath} ${modifiedFile}"
-               # puts "LogMonitor_checkNewLogFiles(): Found invalid log file format: ${modifiedFile}"
+               
             }
          }
 
@@ -117,7 +117,7 @@ proc LogMonitor_checkOneExpNewLogFiles { _exp_path } {
 
    set checkDir ${_exp_path}/logs/
    if { [file readable ${checkDir}] } {
-      # puts "LogMonitor_checkNewLogFiles checking ${checkDir}"
+      
       set lastCheckedFile [LogMonitor_getLastCheckFile ${_exp_path}]
       set lastCheckedTime [file mtime ${lastCheckedFile}]
       set newLastChecked [clock seconds]
@@ -167,12 +167,11 @@ proc LogMonitor_addOneExpDatestamp { _exp_path _datestamp } {
 # process log *_nodelog files that have been modified within the _deltaTime window.
 # _deltaTime must be a valid date format that can be used with the "-mmin" option of find
 # returns a list of files {log_file1 log_file2...} if found else returns empty list
-# 
 proc LogMonitor_getDatestamps { _exp_path _deltaTime } {
    set checkDir ${_exp_path}/logs/
    set modifiedFiles {}
    if { [file readable ${checkDir}] } {
-      #puts "LogMonitor_getDatestamps exec find ${checkDir} -maxdepth 1 -type f -name \"*_nodelog\" -newerct ${_deltaTime} -exec basename \{\} \;"
+      
       set modifiedFiles [exec -ignorestderr  find ${checkDir} -maxdepth 1 -name "*\[0-9\]_nodelog" -mmin ${_deltaTime} -exec basename \{\} \; | cut -c 1-14]
    }
    return ${modifiedFiles}
@@ -200,7 +199,7 @@ proc LogMonitor_getDatestampModTime { _exp_path _datestamp } {
 proc LogMonitor_getNewestDatestamp { _exp_path } {
    global env
    set newestFile ""
-   #catch { set newestFile [eval exec ls -t [glob -tails -directory ${_exp_path}/logs *_nodelog] | head -1 | xargs basename | cut -c 1-14 ] }
+   
    catch { set newestFile [eval exec -ignorestderr $env(SEQ_SRC)/xflow/etc/getNewestDatestamp ${_exp_path}] }
    return ${newestFile}
 }

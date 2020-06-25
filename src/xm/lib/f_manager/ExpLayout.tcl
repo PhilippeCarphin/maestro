@@ -62,13 +62,10 @@ proc ExpLayout_getModuleTruepath { _expPath _moduleNode } {
 # something like TMPDIR/maestro_center/715733325_e206
 # It is a place holder for module container changes (deleting adding nodes) and 
 # experiment resources
-# 
 # I'm using a checksum of the expPath so that it doesn't conflict if
 # editing two experiments with the same name but different path
-#
 # The work dir is created whenever a user modifies a module flow
 # It is deleted when the user exists the application
-#
 # _expPath is path to the experiment
 proc ExpLayout_getWorkDir { _expPath } {
 
@@ -110,7 +107,6 @@ proc ExpLayout_clearWorkDir { _expPath } {
 # checks in the $SEQ_EXP_HOME/modules/ directory if the module
 # already exists and returns true if exists
 # returns false otherwise
-#  
 # _expPath is path to the experiment (SEQ_EXP_HOME)
 # _moduleNode is experiment tree of node i.e. /enkf_mod/anal_mod
 proc ExpLayout_isModPathExists { _expPath _moduleNode _refModulePath _useModuleLink } {
@@ -126,7 +122,7 @@ proc ExpLayout_isModPathExists { _expPath _moduleNode _refModulePath _useModuleL
          if { [exec true_path ${modulePath}] != [exec true_path ${_refModulePath}] } {
             ::log::log error "ExpLayout_isModPathExists linkTarget:${linkTarget}"
             MaestroConsole_addMsg "The path ${modulePath} already exists. Link target: [exec true_path ${modulePath}]"
-            # error ModulePathExists
+            
             set isExists true
          }
       }
@@ -138,17 +134,17 @@ proc ExpLayout_isModPathExists { _expPath _moduleNode _refModulePath _useModuleL
             # not a link, validate that directory does not exists
             ::log::log error "ExpLayout_isModPathExists ${modulePath} exists"
             MaestroConsole_addMsg "The path ${modulePath} already exists (symbolic link)."
-            # error ModulePathExists
+            
             set isExists true
          } elseif { ${linkTarget} != "" } {
             MaestroConsole_addMsg "The path ${modulePath} already exists (symbolic link)."
-            # error ModulePathExists
+            
             set isExists true
          } elseif { ${_refModulePath} == "" } {
             # module path exists and reference is null i.e. local module
             # but the module already exists
             MaestroConsole_addMsg "The path ${modulePath} already exists as local module."
-            # error ModulePathExists
+            
             set isExists true
          }
       }
@@ -246,9 +242,9 @@ proc ExpLayout_copyModule { _expPath _moduleNode } {
       file delete ${modulePath}
 
       # then copy the module locally
-      # ::log::log debug "ExpLayout_copyModule rsync -r ${referenceModule}/ ${modulePath}"
+      
       ::log::log debug "ExpLayout_copyModule rsync -r ${moduleTruePath}/ ${modulePath}"
-      #MaestroConsole_addMsg "copy module locally: rsync -r ${referenceModule}/ ${modulePath}"
+      
       MaestroConsole_addMsg "copy module locally: rsync -r ${moduleTruePath}/ ${modulePath}"
       exec rsync -r ${moduleTruePath}/ ${modulePath}
       
@@ -261,7 +257,7 @@ proc ExpLayout_flowBuilder { _expPath } {
    set flowBuilderExec ""
    set expFlowXml ${_expPath}/flow.xml
    if { [file exists ${expFlowXml}] && ! [file writable ${expFlowXml}] } {
-      # MaestroConsole_addErrorMsg "Cannot write ${expFlowXml}."
+      
       error "Cannot write ${expFlowXml}."
    }
    catch { set flowBuilderExec [exec which flowbuilder.py] }

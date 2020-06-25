@@ -24,7 +24,6 @@
 # The code in this file contains logic to build the GUI aspect of an
 # an experiment modules tree. It reads the data from the ExpModTree
 # structure to build the modules tree GUI.
-#
 #######################################################################
 #######################################################################
 package require BWidget 1.9
@@ -58,7 +57,7 @@ proc ExpModTreeView_createWidgets { _expPath _sourceWidget } {
 
    toplevel ${topWidget}
 
-   # MiscTkUtils_InitPosition ${topWidget}
+   
    MiscTkUtils_positionWindow  ${_sourceWidget} ${topWidget}
 
    wm title ${topWidget} "Flow Manager Exp=[file tail ${_expPath}]"
@@ -93,10 +92,10 @@ proc ExpModTreeView_createWidgets { _expPath _sourceWidget } {
 
    # create statusbar
    set statusBar [ExpModTreeView_addStatusBar ${_expPath} ${topWidget}]
-   #set modCanvas [canvas ${topWidget}.mod_tree_canvas]
-   #grid ${modCanvas} -row 0 -column 0 -sticky nsew
+   
+   
 
-   # grid ${fileMenu} -row 0 -column 0 -sticky w
+   
    grid ${topFrame} -row 0 -column 0 -sticky w
    grid ${toolbar} -row 1 -column 0 -sticky w
    grid ${scrolledW} -row 2 -column 0 -sticky nsew
@@ -135,9 +134,9 @@ proc ExpModTreeView_addHelpMenu { _expPath _parentWidget } {
    ${menuW} add checkbutton -label "Debug" -underline 0 -onvalue true -offvalue false -variable ${expChecksum}_DebugOn \
       -command [list ExpModTreeControl_debugChanged ${_expPath}]
 
-   #::log::lvSuppress debug [set ${expChecksum}_DebugOn]
-   #trace add variable ${expChecksum}_DebugOn write {::log::lvSuppress debug [set ${expChecksum}_DebugOn]}
-   #trace add variable ${expChecksum}_DebugOn write [list ExpModTreeControl_debugChanged ${_expPath}]
+   
+   
+   
 
    pack $menuButtonW -side left
    return ${menuButtonW}
@@ -155,8 +154,8 @@ proc ExpModTreeView_addExpToolbar { _expPath _canvas } {
       set flowImage [image create photo ${expToolbar}.flow_image -file ${imageDir}/flow.png]
       set consoleImage [image create photo ${expToolbar}.console_image -file ${imageDir}/console_log.png]
       set quitImage [image create photo ${expToolbar}.quit_image -file ${imageDir}/stop.png]
-      #set refreshImage [image create photo ${expToolbar}.refresh_image -file ${imageDir}/refresh.gif]
-      #set refreshButton [button ${expToolbar}.refresh_button -image ${refreshImage}  -relief flat]
+      
+      
 
       set vcsButton [button ${expToolbar}.cvs_button -image ${vcsImage}  -relief flat \
          -command [list ExpModTreeView_vcsSelected ${_expPath} ${expToolbar}]]
@@ -171,7 +170,7 @@ proc ExpModTreeView_addExpToolbar { _expPath _canvas } {
 
       grid ${vcsButton} ${consoleLogButton} ${quitButton} -padx 2 -sticky w
 
-      #::tooltip::tooltip ${refreshButton} "Refresh module tree."
+      
       ::tooltip::tooltip ${vcsButton} "version control system - gui"
       ::tooltip::tooltip ${consoleLogButton} "Show console log window."
       ::tooltip::tooltip ${quitButton} "Close experiment module tree window."
@@ -193,7 +192,7 @@ proc ExpModTreeView_addExpSettingsImg { _expPath _canvas } {
 
    tooltip::tooltip ${_canvas}  -items ExpSettings "View/edit experiment settings."
 
-   #DrawUtil_drawdashline ${_canvas} 40 40 58 40 none [SharedData_getColor FLOW_SUBMIT_ARROW] off on
+   
    set lineStartX [expr [SharedData_getMiscData CANVAS_X_START] - 20]
    set lineEndX [expr ${lineStartX} + 18]
    DrawUtil_drawline ${_canvas} ${lineStartX} ${iconY} ${lineEndX} ${iconY} none [SharedData_getColor FLOW_SUBMIT_ARROW] off on
@@ -393,7 +392,7 @@ proc ExpModTreeView_drawModuleNode { _expPath _modTreeNodeRecord _position { _is
    set childs [${_modTreeNodeRecord} cget -children]
    set childPosition 0
    foreach child ${childs} {
-      # set childNode ${_modTreeNodeRecord}/${child}
+      
       ExpModTreeView_drawModuleNode ${_expPath} ${child} ${childPosition}
       incr childPosition
    }
@@ -465,8 +464,8 @@ proc ExpModTreeView_getModuleY { _modTreeNodeRecord _position } {
       # the next y is the same as the previous sibling y2
       set parentChilds [${parentTreeNodeRecord} cget -children]
       set previousSibling [lindex ${parentChilds} [expr ${_position} - 1]]
-      #set previousSiblingCoords [ExpModTreeView_getModuleCoord ${previousSibling}]
-      #set nextY [lindex ${previousSiblingCoords} 3]
+      
+      
       set nextY [ExpModTreeView_getBranchMaxY ${previousSibling}]
    }
 

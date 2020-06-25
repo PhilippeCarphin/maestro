@@ -19,7 +19,6 @@
 # */
 
 # remove all defined dependencies for a node within the module's flow.xml file
-#
 proc ModuleFlowXml_removeDependencies {_xmlDoc _moduleNodeRecord _flowNodeRecord } {
    # get the query to access the node within the flow.xml
    set xmlQuery [ ModuleFlowXml_getNodeQuery ${_moduleNodeRecord} ${_flowNodeRecord} ]
@@ -36,7 +35,7 @@ proc ModuleFlowXml_removeDependencies {_xmlDoc _moduleNodeRecord _flowNodeRecord
          # for some reason, I can't delete the object itself...
 	 # when I do so, any "selectNodes" on the same node causes the whole application to crash
 	 # So I only remove the reference from the xml node, the rest is cleaned when the doc is deleted
-         # ${depXmlNode} delete
+
          ${xmlNode} removeChild ${depXmlNode}
       }
    }
@@ -44,12 +43,10 @@ proc ModuleFlowXml_removeDependencies {_xmlDoc _moduleNodeRecord _flowNodeRecord
 }
 
 # adds one dependency entry in the flow.xml file for the specified node
-# 
 # _nameValueList is a name-value list
 # possible values of the keys in the name-value list are dep_name, status, type, index, local_index, exp, hour
 # example:
 # "dep_name /SHOP/GeneratePngWIS86 status end type node"
-#
 proc ModuleFlowXml_addDependency { _xmlDoc _moduleNodeRecord _flowNodeRecord _nameValueList } {
    ::log::log debug "ModuleFlowXml_addDependency _xmlDoc:$_xmlDoc _nameValueList:$_nameValueList"
    puts "ModuleFlowXml_addDependency _xmlDoc:$_xmlDoc _nameValueList:$_nameValueList"
@@ -57,7 +54,7 @@ proc ModuleFlowXml_addDependency { _xmlDoc _moduleNodeRecord _flowNodeRecord _na
    set xmlQuery [ ModuleFlowXml_getNodeQuery ${_moduleNodeRecord} ${_flowNodeRecord} ]
    set xmlRootNode [${_xmlDoc} documentElement]
 
-   # puts "ModuleFlowXml_addDependency XML doc: [${_xmlDoc} asXML]"
+
 
    if { ${xmlQuery} != "" } {
       ::log::log debug "ModuleFlowXml_addDependency xmlQuery:$xmlQuery"
@@ -119,11 +116,9 @@ proc ModuleFlowXml_getDependencies { _xmlNode _xmlDoc _moduleNodeRecord _flowNod
 
 # build the xml query to be used to access the node within
 # the module flow.xml file
-#
 # for a task node named "dummy_task" that sits right under the module,
 # the return value should be something like:
 # /MODULE/TASK\[@name='dummy_task'\]
-#
 proc ModuleFlowXml_getNodeQuery { _moduleNodeRecord _flowNodeRecord } {
    # the query always starts with the MODULE tag
    set query /MODULE

@@ -22,9 +22,9 @@ package require tdom
 
 proc ResourceXml_parseFile { _resourceFile } {
    ::log::log debug "ResourceXml_parseFile _resourceFile: ${_resourceFile}"
-   # MaestroConsole_addMsg "read xml file: ${_resourceFile}"
+   
    if { ! [file readable ${_resourceFile}] } {
-      # MaestroConsole_addErrorMsg "xml file not readable: ${_resourceFile}"
+      
       error "Cannot read ${_resourceFile}!"
       return
    }
@@ -39,8 +39,8 @@ proc ResourceXml_parseFile { _resourceFile } {
 
    set doc [dom parse ${xmlSrc} ]
 
-   # free the dom tree
-   # ${doc} delete
+   
+   
    return ${doc}
 }
 
@@ -126,23 +126,18 @@ proc ResourceXml_saveBatchAttribute { _xmlDoc _attrName _attrValue } {
 # returns the list of node dependencies
 # the list contain entries with the following values in order:
 # dependsNode status index local_index hour valid_dow valid_hour exp 
-#
-#
 # example from shop exp:
 # resource file dependency content:
 #    <DEPENDS_ON dep_name="/SHOP/GeneratePngWIS84" type="node" status="end"/>
 #    <DEPENDS_ON dep_name="/SHOP/GeneratePngWIS85a" type="node" status="end"/>
 #    <DEPENDS_ON dep_name="/SHOP/GeneratePngWIS85b" type="node" status="end"/>
 #    <DEPENDS_ON dep_name="/SHOP/GeneratePngWIS86" type="node" status="end"/>
-#
 # returned value from ResourceXml_getDependencyList:
 #  { $node $index $local_index $hour $valid_dow $valid_hour $exp
-#
 # { /SHOP/GeneratePngWIS84 "" "" "" "" "" ""}
 # { /SHOP/GeneratePngWIS85a "" "" "" "" "" ""}
 # { /SHOP/GeneratePngWIS85b "" "" "" "" "" ""}
 # { /SHOP/GeneratePngWIS86 "" "" "" "" "" ""}
-#
 proc ResourceXml_getDependencyList { _xmlDoc } {
    set rootNode [${_xmlDoc} documentElement]
    set depXmlNodes [${rootNode} selectNodes /NODE_RESOURCES/DEPENDS_ON]
@@ -151,11 +146,6 @@ proc ResourceXml_getDependencyList { _xmlDoc } {
    # set attributeNames [list dep_name status type index local_index hour exp]
    foreach depXmlNode ${depXmlNodes} {
       set depList {}
-      # set attributeNames [${depXmlNode} attributes]
-      # foreach attributeName ${attributeNames} {
-      #   set attributeValue [${depXmlNode} getAttribute ${attributeName}]
-      #   lappend depList ${attributeName} ${attributeValue}
-      # }
       set depNameValue [${depXmlNode} getAttribute dep_name ""]
       set indexValue [${depXmlNode} getAttribute index ""]
       set localIndexValue [${depXmlNode} getAttribute local_index ""]
@@ -167,17 +157,15 @@ proc ResourceXml_getDependencyList { _xmlDoc } {
 
       lappend depsList [list ${depNameValue} ${indexValue} ${localIndexValue} ${hourValue} ${timeDeltaValue} ${validDowValue} ${validHourValue} ${expValue}]
    }
-   # puts "depsList :${depsList}"
+   
    return ${depsList}
 }
 
 # adds one dependency entry in the resource.xml file
-# 
 # _nameValueList is a name-value list
 # possible values of the keys in the name-value list are dep_name, status, type, index, local_index, exp, hour
 # example:
 # "dep_name /SHOP/GeneratePngWIS86 status end type node"
-#
 proc ResourceXml_addDependency { _xmlDoc _nameValueList } {
    set rootNode [${_xmlDoc} documentElement]
    set resourcesXmlNode [${rootNode} selectNodes /NODE_RESOURCES]

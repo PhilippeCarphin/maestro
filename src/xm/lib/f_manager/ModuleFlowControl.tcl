@@ -76,7 +76,7 @@ proc ModuleFlowControl_sourceSelected { _expPath _flowNodeRecord } {
       set sourceFile [ModuleLayout_getNodeSourcePath ${_expPath} ${moduleLayoutNode} ${flowNode} ${nodeType} true]
    } else {
       # get the relative path within the module container
-      #set relativePath [::textutil::trim::trimPrefix ${_flowNodeRecord} ${moduleNodeRecord}]
+      
       set sourceFile [ModuleLayout_getNodeSourcePath ${_expPath} ${moduleLayoutNode} ${flowNode} ${nodeType}]
    }
 
@@ -298,7 +298,7 @@ proc ModuleFlowControl_renameNodeOk { _topWidget _expPath _moduleNode _flowNodeR
          [list ModuleLayout_renameModule ${_expPath} ${flowNode} ${newNodeName} ${useCopy}]
 
       # save flow xml file of referenced node at save time
-      # note: this is temporary... we should remove the name attribute of the module node tag
+      
       # from the module flow.xml
       set newModuleNode [file dirname ${flowNode}]/${newNodeName}
       set moduleFlowXml [ModuleLayout_getFlowXml ${_expPath} ${newModuleNode}]
@@ -610,9 +610,7 @@ proc ModuleFlowControl_clearPostSaveCmd { _expPath _moduleNode } {
 # found in that depot...
 # any directory containing a flow.xml file will be collected
 # as a module
-#
 # returns a list containing the path of each module
-#
 proc ModuleFlowControl_getDepotModules {} {
    set modules {}
    set modDepotConfig [ModuleFlowControl_getModDefaultDepot]
