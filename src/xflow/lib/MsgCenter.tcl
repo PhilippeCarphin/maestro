@@ -15,7 +15,7 @@ proc MsgCenter_setTkOptions {} {
    option add *selectBackground [SharedData_getColor SELECT_BG]
    catch { option add *troughColor [::tk::Darken [option get . background Scrollbar] 85] }
 
-   
+
 }
 
 proc MsgCenter_SetNotebOption {notebookW_} {
@@ -83,7 +83,7 @@ proc MsgCenter_addPrefMenu { parent } {
    
 }
 
-adds a confirmation for message type filtering out
+# adds a confirmation for message type filtering out
 proc MsgCenter_filterCallback { _sourceW _messageType {_name1 ""} {_name2 ""} {_op ""} } {
    set msgTypeToVariableMapping { Abort SHOW_ABORT_TYPE Event SHOW_EVENT_TYPE Info SHOW_INFO_TYPE Sysinfo SHOW_SYSINFO_TYPE }
 
@@ -113,7 +113,7 @@ proc MsgCenter_addHelpMenu { parent } {
    pack $menuButtonW -side right -padx 2 
 }
 
-display is to right of menu as bold text
+# display is to right of menu as bold text
 proc MsgCenter_createLabel { parent } {
    set labelFrame [frame ${parent}.label_frame]
    set labelW [label ${labelFrame}.label -font [xflow_getExpLabelFont] -text [DisplayGrp_getWindowsLabel]]
@@ -190,11 +190,11 @@ proc MsgCenter_submitNodes { table_widget {flow continue}} {
          set expPath          [${table_widget} getcells ${selectedRow},$MsgTableColMap(SuiteColNumber)]
          set visibleDatestamp [${table_widget} getcells ${selectedRow},$MsgTableColMap(DatestampColNumber)]
          set datestamp        [Utils_getRealDatestampValue ${visibleDatestamp}]
-         append to the list in order
+         # append to the list in order
          lappend resultList [list "${expPath}" "${nodeWithouthExt}" "${datestamp}" "${extension}" "${id}"] 
       }
 
-      sort the list to get rid of duplicate entries
+      # sort the list to get rid of duplicate entries
       set resultList [lsort -unique ${resultList}]
       set nofItems   [llength ${resultList}]
       set last_item  false
@@ -213,13 +213,13 @@ proc MsgCenter_submitNodes { table_widget {flow continue}} {
              set last_item true
          }
          set commandArgs "-d ${datestamp} -n ${node} -s submit ${seqLoopArgs} -f ${flow}"
-         
+
 	 Sequencer_runSubmit ${expPath} ${datestamp} [winfo toplevel ${table_widget}] $seqExec ${winTitle} top 1  ${commandArgs} $id ${last_item}
          update idletasks
 
          incr count
       }
-      end while
+
 
       foreach selectedRow ${selections} {
          MsgCenter_addSubmitAction ${table_widget} ${selectedRow} ${flow}
@@ -228,12 +228,12 @@ proc MsgCenter_submitNodes { table_widget {flow continue}} {
 
    } message ]
 
-   any errors, put the cursor back to normal state
+   # any errors, put the cursor back to normal state
    if { ${result} != 0  } {
       set einfo $::errorInfo
       set ecode $::errorCode
       Utils_normalCursor [winfo toplevel ${table_widget}]
-      report the error with original details
+      # report the error with original details
       return -code ${result} \
          -errorcode ${ecode} \
          -errorinfo ${einfo} \
@@ -241,8 +241,8 @@ proc MsgCenter_submitNodes { table_widget {flow continue}} {
    }
 }
 
-adds an image icon next to the given row base on the
-the given action
+# adds an image icon next to the given row base on the
+# the given action
 proc MsgCenter_addSubmitAction { table_widget row action } {
    global SubmitImgIcon SubmitStopImgIcon
    global MsgTableColMap
@@ -269,7 +269,7 @@ proc MsgCenter_createNotebook { table_w_ } {
   ttk::frame ${TNotebook} 
   ttk::notebook ${TNotebook}.nb
 
-  Invoke the widget only if it is currently pressed and enabled:
+  # Invoke the widget only if it is currently pressed and enabled:
   ${TNotebook}.nb add [frame ${TNotebook}.nb.all]     -text "All"     -image $BGAll     -compound left
   ${TNotebook}.nb add [frame ${TNotebook}.nb.abort]   -text "Abort"   -image $BGAbort   -compound left
   ${TNotebook}.nb add [frame ${TNotebook}.nb.event]   -text "Event"   -image $BGEvent   -compound left
@@ -305,7 +305,7 @@ proc MsgCenter_displayMsgTabMenu {table_w_ parent x y X Y} {
   global LOG_ACTIVATION_IDS
   
   set message_type   [lindex [string tolower [$parent tab [$parent index @$x,$y] -text]] 0]
-  
+
 
   set widget ${parent}.message_log_menu
   if { [winfo exists $widget] } {
@@ -313,7 +313,7 @@ proc MsgCenter_displayMsgTabMenu {table_w_ parent x y X Y} {
   }
   menu $widget -tearoff 1
   set activationMenu $widget.active_menu
-  check if the message type is enabled or disabled
+  # check if the message type is enabled or disabled
   set disablePeriods {1 15 30 60 "always"}
   if { ![info exists LOG_ACTIVATION_IDS(${message_type})] } { 
      ${widget} add cascade -label "Deactivate $message_type Signal" -underline 0 \
@@ -487,7 +487,7 @@ proc MsgCenter_createWidgets {} {
       ${tableW} columnconfigure $MsgTableColMap(UnackColNumber) -hide 1
 
       if { [SharedData_getMiscData OVERVIEW_MODE] == "false" } { ${tableW} columnconfigure $MsgTableColMap(SuiteColNumber) -hide 1 }
-      creating scrollbars
+      # creating scrollbars
       scrollbar ${yscrollW} -command [list ${tableW}  yview]
       scrollbar ${xscrollW} -command [list ${tableW}  xview] -orient horizontal
       ::autoscroll::autoscroll ${yscrollW}
@@ -500,8 +500,8 @@ proc MsgCenter_createWidgets {} {
    }
 }
 
-at application startup, we sort the log entries by
-their timestamp values.
+# at application startup, we sort the log entries by
+# their timestamp values.
 proc MsgCenter_initialSort { _tableW } {
    global MsgTableColMap
    ${_tableW} sortbycolumn $MsgTableColMap(TimestampColNumber) -increasing
@@ -519,10 +519,10 @@ proc MsgCenter_getToplevel {} {
    return .msgCenter
 }
 
-sets the color of the table headers.
-When a new messsage comes in,
-we flash the table headers so this function is called
-might be called multiple times
+# sets the color of the table headers.
+# When a new messsage comes in,
+# we flash the table headers so this function is called
+# might be called multiple times
 proc MsgCenter_setHeaderStatus { table_w_ status_ } {
    set alarmBgColor    [SharedData_getColor COLOR_MSG_CENTER_MAIN]
    set normalFgColor   [SharedData_getColor DEFAULT_HEADER_FG]
@@ -535,7 +535,7 @@ proc MsgCenter_setHeaderStatus { table_w_ status_ } {
    } elseif { ${status_} == "alarm_bg" } {
       ${table_w_} configure -labelbg  ${alarmBgColor} -labelfg ${normalFgColor}
    } else {
-      alarm state
+      # alarm state
       if { ${currentBgColor} == ${alarmBgColor} } {
          ${table_w_} configure -labelbg ${alarmAltBgColor}
       } else {
@@ -601,7 +601,7 @@ proc MsgCenter_ModifText  {} {
 
    set topOverview [Overview_getToplevel]
    if { [winfo exists $topOverview] } { 
-      avoid calling this for every message at startup
+      # avoid calling this for every message at startup
       if { [SharedData_getMiscData STARTUP_DONE] == true } {
          Overview_createMsgCenterbar ${topOverview}
       }
@@ -629,8 +629,9 @@ proc MsgCenter_ModifText  {} {
    } 
 }
 
-this function is called when a new message comes in
-
+#
+# this function is called when a new message comes in
+# 
 proc MsgCenter_newMessage { table_w_ datestamp_ timestamp_ type_ node_ msg_ exp_ } {
    global MSG_TABLE MSG_COUNTER MSG_ACTIVE_COUNTER
    global MSG_ACTIVE_TABLE
@@ -641,7 +642,7 @@ proc MsgCenter_newMessage { table_w_ datestamp_ timestamp_ type_ node_ msg_ exp_
    set is_exist [lsearch -glob ${MSG_TABLE} [list ${timestamp_} ${datestamp_} ${type_} "" ${node_} ${msg_} ${exp_} *]]
 
    if { ${is_exist} < 0 } {
-     
+
      ::log::log debug "MsgCenter_newMessage node_:$node_ type_:$type_ msg_:$msg_"
      lappend MSG_TABLE [list ${timestamp_} ${datestamp_} ${type_} "" ${node_} ${msg_} ${exp_} ${isUnack}]
      set MSG_COUNTER   [llength ${MSG_TABLE}]
@@ -658,9 +659,9 @@ proc MsgCenter_newMessage { table_w_ datestamp_ timestamp_ type_ node_ msg_ exp_
              ${notebookW} select ${notebookW}.${type_}
           }
           set MSG_ACTIVE_COUNTER [llength ${MSG_ACTIVE_TABLE}]
-          
+
         }
-        
+        # for sysinfo, we don't flash or beep
         switch ${type_} {
            sysinfo {
 	   }
@@ -687,8 +688,8 @@ proc MsgCenter_getFieldFromLastMessage { field_index } {
    return ${value}
 }
 
-see if we need to send notification to xflow or xflow-overview
-for new messages
+# see if we need to send notification to xflow or xflow-overview
+# for new messages
 proc MsgCenter_sendNotification {} {
    global MSG_ACTIVE_COUNTER MsgTableColMap
    global MSG_TABLE  MSG_COUNTER NB_ACTIVE_ELM
@@ -743,9 +744,9 @@ proc MsgCenter_addActiveMessage { datestamp_ timestamp_ type_ node_ msg_ exp_ is
    if { ${isMsgActive} == "true" && ${isadd_} == "true" }  {
       ::log::log debug "MsgCenter_addActiveMessage adding ${datestamp_} ${timestamp_} ${type_} ${node_} ${msg_} ${exp_}"
       set displayedNodeText [SharedFlowNode_convertToDisplayFormat ${node_}]
-      add 2 spaces between date and time
+      # add 2 spaces between date and time
       set displayedTimestamp [join [split ${timestamp_} .] "  "]
-      show only first 10 digits of datestamp
+      # show only first 10 digits of datestamp
       set displayedDatestamp [Utils_getVisibleDatestampValue ${datestamp_} [SharedData_getMiscData DATESTAMP_VISIBLE_LEN]]
 
       if { ${isExistMsgTable} < 0 } {
@@ -759,14 +760,14 @@ proc MsgCenter_addActiveMessage { datestamp_ timestamp_ type_ node_ msg_ exp_ is
         lappend MSG_ACTIVE_TABLE [list ${displayedTimestamp} ${displayedDatestamp} ${type_} "" ${displayedNodeText} ${msg_} ${exp_} ${isMsgack_}]
       }
    }
-   
+
    return ${isMsgActive}
 }
 
-refresh shown messages based on user message type filters
-this function is called when the user changes the "Message Type" settings
-under the Preferences menunodelogger -n /post_processing_misc/loop_sm_00-120 -s event -m test -d 20141002000000 
-
+# refresh shown messages based on user message type filters
+# this function is called when the user changes the "Message Type" settings
+# under the Preferences menunodelogger -n /post_processing_misc/loop_sm_00-120 -s event -m test -d 20141002000000 
+# 
 proc MsgCenter_refreshActiveMessages { table_w_ { unack_ 0 }} {
    global MSG_TABLE MSG_COUNTER MSG_ALARM_ON LOG_ACTIVATION_IDS
    global BGAll BGAbort BGEvent BGInfo  BGSysinfo
@@ -782,12 +783,12 @@ proc MsgCenter_refreshActiveMessages { table_w_ { unack_ 0 }} {
    }
 
    set currentMsgTab [MsgCenter_getCurrentMessageTab]
-   reset active messages
+   # reset active messages
    MsgCenter_initActiveMessages
    set counter 0
    set normal_color gray55
  
-   reprocess all received messages
+   # reprocess all received messages
    while { ${counter} < ${MSG_COUNTER} } {
       foreach {timestamp datestamp type action node msg exp isMsgack} [lindex ${MSG_TABLE} ${counter}] {break}
       if { ${isMsgack} == "0" && !$NB_ACTIVE_ELM($type)} {
@@ -899,7 +900,7 @@ proc MsgCenter_initActiveMessages {} {
    set MSG_ACTIVE_COUNTER 0
 }
 
-displays table messages according to the acknowledge state
+# displays table messages according to the acknowledge state
 proc MsgCenter_initMessages { table_w_ } {
    global MsgTableColMap 
   
@@ -907,7 +908,7 @@ proc MsgCenter_initMessages { table_w_ } {
    foreach row [${table_w_} searchcolumn $MsgTableColMap(UnackColNumber) 1 -exact -all] {
        ${table_w_} rowconfigure ${row} -fg ${normalFg}
    }
-   look for rows that have unack state
+   # look for rows that have unack state
    set normalFg [SharedData_getColor COLOR_MSG_CENTER_MAIN]
    foreach row [${table_w_} searchcolumn $MsgTableColMap(UnackColNumber) 0 -exact -all] {
       ${table_w_} rowconfigure ${row} -fg ${normalFg}        
@@ -915,15 +916,15 @@ proc MsgCenter_initMessages { table_w_ } {
    MsgCenter_setHeaderStatus ${table_w_} alarm_bg
 }
 
-acknowledge table messages
-if the message_tab is given as argument, it will be used instead of getting the current user selection
-it is mainly used to force clearing of all message types when switching to another flow (different datestamp)
-in xflow standalone mode
+# acknowledge table messages
+# if the message_tab is given as argument, it will be used instead of getting the current user selection
+# it is mainly used to force clearing of all message types when switching to another flow (different datestamp)
+# in xflow standalone mode
 proc MsgCenter_ackMessages { table_w_ {message_tab ""} } {
    global MsgTableColMap
    global MSG_ACTIVE_COUNTER NB_ACTIVE_ELM
 
-   
+
    MsgCenter_stopBell ${table_w_}
 
    if { ${message_tab} == "" } {
@@ -940,7 +941,7 @@ proc MsgCenter_ackMessages { table_w_ {message_tab ""} } {
       ${table_w_} cellconfigure ${row},$MsgTableColMap(UnackColNumber) -text 1
    }
 
-   look for rows that have unack state
+   # look for rows that have unack state
    foreach row [${table_w_} searchcolumn $MsgTableColMap(UnackColNumber) 1 -exact -all] {
      ${table_w_} rowconfigure ${row} -fg ${normalFg}
    }
@@ -949,15 +950,15 @@ proc MsgCenter_ackMessages { table_w_ {message_tab ""} } {
    set isOverviewMode [SharedData_getMiscData OVERVIEW_MODE]
 
    if { ${currentMsgTab} == "all" } {
-      reset all types to acknowledged
+      # reset all types to acknowledged
       foreach msgType "all abort event info sysinfo" {
          set NB_ACTIVE_ELM(${msgType}) 0
       } 
    } else {
-      reset current tab to acknowledged
+      # reset current tab to acknowledged
       set NB_ACTIVE_ELM(${currentMsgTab}) 0
       set allAck true
-      check if everything was acknowledged
+      # check if everything was acknowledged
       foreach msgType "abort event info sysinfo" {
          if { $NB_ACTIVE_ELM(${msgType}) == 1 } {
             set allAck false
@@ -989,9 +990,9 @@ proc MsgCenter_clearAllMessages {} {
    Msgcenter_Init_List ${tableW} all
 }
 
-if the messageTab is given as argument, it will be used instead of getting the current user selection
-it is mainly used to force clearing of all message types when switching to another flow (different datestamp)
-in xflow standalone mode
+# if the messageTab is given as argument, it will be used instead of getting the current user selection
+# it is mainly used to force clearing of all message types when switching to another flow (different datestamp)
+# in xflow standalone mode
 proc Msgcenter_Init_List {table_w_ {message_tab ""} } {
   global MSG_TABLE MSG_COUNTER
   
@@ -1035,15 +1036,15 @@ proc MsgCenter_clearMessages { source_w table_w_ } {
    }
 }
 
-removes msg from the MSG_TABLE when not used anymore...
-datestamp is obsolete from xflow_overview
+# removes msg from the MSG_TABLE when not used anymore...
+# datestamp is obsolete from xflow_overview
 proc MsgCenter_removeMessages { exp datestamp {refresh_msg_center true} } {
    global MSG_TABLE MsgTableColMap MSG_TABLE_CMP
    global MSG_COUNTER
 
    set tableW [MsgCenter_getTableWidget]
    ::log::log notice "MsgCenter_removeMessages for exp:${exp} datestamp:${datestamp}"
-   get exp messages
+   # get exp messages
    set foundIndexes [lsearch -exact -all -index $MsgTableColMap(SuiteColNumber) $MSG_TABLE ${exp}]
    set deleteIndexes {}
    foreach foundIndex ${foundIndexes} {
@@ -1052,18 +1053,18 @@ proc MsgCenter_removeMessages { exp datestamp {refresh_msg_center true} } {
          lappend deleteIndexes ${foundIndex}
       }
    }
-   delete the indexes in reverse order, else it complains about indexes missing
+   # delete the indexes in reverse order, else it complains about indexes missing
    set deleteIndexes [lreverse ${deleteIndexes}]
    foreach deleteIndex ${deleteIndexes} {
       set MSG_TABLE [lreplace ${MSG_TABLE} ${deleteIndex} ${deleteIndex}]
    }
    set MSG_COUNTER [llength ${MSG_TABLE}]
    if { ${refresh_msg_center} == true } {
-      only refresh the message center counts when the refresh_msg_center is true 
-      allows the overview to do only the refresh once when needed and not every time the removeMessages is called
+      # only refresh the message center counts when the refresh_msg_center is true 
+      # allows the overview to do only the refresh once when needed and not every time the removeMessages is called
       MsgCenter_refreshActiveMessages ${tableW} 0
       MsgCenter_ModifText
-      make sure that status of msg center button in overview and/or xflow reflects new messages after remove
+      # make sure that status of msg center button in overview and/or xflow reflects new messages after remove
       MsgCenter_sendNotification
    }
 
@@ -1076,16 +1077,16 @@ proc MsgCengter_processAlarm { table_w_ type_ {repeat_alarm false}} {
    global MSG_ALARM_AFTER_ID MsgTableColMap
    
    set autoMsgDisplay [SharedData_getMiscData AUTO_MSG_DISPLAY]
-   flash
+   # flash
    set raiseAlarm false
 
-   I don't start the alarm counter until the gui is up
+   # I don't start the alarm counter until the gui is up
    if  { [SharedData_getMiscData STARTUP_DONE] == "true" } {
       incr MSG_ALARM_COUNTER
    }
 
    ::log::log debug "MsgCenter_processAlarm MSG_ALARM_COUNTER:${MSG_ALARM_COUNTER} MSG_BELL_TRIGGER:${MSG_BELL_TRIGGER}"
-   only raise alarm if no other alarm already exists
+   # only raise alarm if no other alarm already exists
    if { ${MSG_ALARM_ON} == "true" } {
       if { ${repeat_alarm} == "true" } {
          set raiseAlarm true
@@ -1104,10 +1105,10 @@ proc MsgCengter_processAlarm { table_w_ type_ {repeat_alarm false}} {
          set MSG_ALARM_ID [after 1500 [list MsgCengter_processAlarm ${table_w_} ${type_} true]]
       }
 
-      msg center flood control. When more than 1000 requests are being processed
-      asynchronously, the MsgCenter_show command would go berserk with the display.
-      Setting a delay of 500 ms to show the msg center so that
-      multiple entries will cancel each other within the delay, only the last one will be working
+      # msg center flood control. When more than 1000 requests are being processed
+      # asynchronously, the MsgCenter_show command would go berserk with the display.
+      # Setting a delay of 500 ms to show the msg center so that
+      # multiple entries will cancel each other within the delay, only the last one will be working
       if { [info exists MSG_ALARM_AFTER_ID] } {
          after cancel ${MSG_ALARM_AFTER_ID}
       }
@@ -1157,10 +1158,10 @@ proc MsgCenter_show { {force false} } {
       }
    } else {
       if { [SharedData_getMiscData STARTUP_DONE] == "true" } {
-         force remove and redisplay of msg center
-         Need to do this cause when the msg center is in another virtual
-         desktop, it is the only way for it to redisplay in the
-         current desktop
+         # force remove and redisplay of msg center
+         # Need to do this cause when the msg center is in another virtual
+         # desktop, it is the only way for it to redisplay in the
+         # current desktop
          wm withdraw ${topW}
          wm deiconify ${topW}
         if { [SharedData_getMiscData MSG_CENTER_FOCUS_GRAB] == "true" } {
@@ -1173,7 +1174,7 @@ proc MsgCenter_show { {force false} } {
 }
 
 
-called everytime a new message comes in from experiment threads
+# called everytime a new message comes in from experiment threads
 proc MsgCenter_processNewMessage { datestamp_ timestamp_ type_ node_ msg_ exp_ } {
    global MSG_ALARM_ID MSG_CENTER_MUTEX NB_ACTIVE_ELM
 
@@ -1200,8 +1201,8 @@ proc MsgCenter_processNewMessage { datestamp_ timestamp_ type_ node_ msg_ exp_ }
       ::log::log debug "calling MsgCenterThread_newMessage ${datestamp_} ${timestamp_} ${type_} ${node_} ${msg_} ${exp_}"
       MsgCenter_newMessage [MsgCenter_getTableWidget] ${datestamp_} ${timestamp_} ${type_} ${node_} ${msg_} ${exp_} 
       
-      if the exp is done reading messages, we send a notification out
-      to warn about new messages available in the msg center
+      # if the exp is done reading messages, we send a notification out
+      # to warn about new messages available in the msg center
       if { [SharedData_getMiscData STARTUP_DONE] == true } {
         MsgCenter_sendNotification
       }
@@ -1211,7 +1212,7 @@ proc MsgCenter_processNewMessage { datestamp_ timestamp_ type_ node_ msg_ exp_ }
       ::log::log notice "ERROR in MsgCenter_processNewMessage: ${message}"
       set einfo $::errorInfo
       set ecode $::errorCode
-      report the error with original details
+      # report the error with original details
 
       return -code ${result} \
          -errorcode ${ecode} \
@@ -1220,11 +1221,11 @@ proc MsgCenter_processNewMessage { datestamp_ timestamp_ type_ node_ msg_ exp_ }
    }
 
    catch { thread::mutex unlock ${MSG_CENTER_MUTEX} }
-   ::log::log notice "MsgCenterThread_processNewMessage ${datestamp_} ${timestamp_} ${type_} ${node_} ${msg_} ${exp_} DONE"
+
 }
 
-called by xflow or xflow_overview to let msg center
-that application startup is done
+# called by xflow or xflow_overview to let msg center
+# that application startup is done
 proc MsgCenter_startupDone {} {
    global MSG_COUNTER
    
@@ -1232,7 +1233,7 @@ proc MsgCenter_startupDone {} {
    MsgCenter_ModifText
    MsgCenter_sendNotification
    
-   sort the msg by timestamp ascending order
+   # sort the msg by timestamp ascending order
    MsgCenter_initialSort [MsgCenter_getTableWidget]
 
    set topFrame [MsgCenter_getToplevel].topframe
@@ -1253,12 +1254,12 @@ proc MsgCenter_setTitle { top_w } {
    }
    wm title [winfo toplevel ${top_w}] ${winTitle}
 
-   refresh title every minute
+   # refresh title every minute
    set TimeAfterId [after 60000 [list MsgCenter_setTitle ${top_w}]]
 }
 
 ########################################
-callback procedures
+# callback procedures
 ########################################
 proc MsgCenter_doubleClickCallback { table_widget } {
    global MsgTableColMap
@@ -1266,7 +1267,7 @@ proc MsgCenter_doubleClickCallback { table_widget } {
    ::log::log debug "MsgCenter_doubleClickCallback widget:${table_widget}"
    MsgCenter_stopBell ${table_widget}
    set selectedRow [${table_widget} curselection]
-   retrieve needed information
+   # retrieve needed information
    set node [${table_widget} getcells ${selectedRow},$MsgTableColMap(NodeColNumber)]
    set expPath [${table_widget} getcells ${selectedRow},$MsgTableColMap(SuiteColNumber)]
    set datestamp [${table_widget} getcells ${selectedRow},$MsgTableColMap(DatestampColNumber)]
@@ -1279,26 +1280,26 @@ proc MsgCenter_doubleClickCallback { table_widget } {
 
    Utils_busyCursor ${table_widget}
    set result [ catch {
-      start the suite flow if not started
+      # start the suite flow if not started
       set isOverviewMode [SharedData_getMiscData OVERVIEW_MODE]
       if { ${isOverviewMode} == "true" } {
          Overview_launchExpFlow ${expPath} ${realDatestamp}
       }
 
-      ask the suite to take care of showing the selected node in it's flow
+      # ask the suite to take care of showing the selected node in it's flow
       set convertedNode [SharedFlowNode_convertFromDisplayFormat ${node}]
       xflow_findNode ${expPath} ${realDatestamp} ${convertedNode}
 
       Utils_normalCursor ${table_widget}
    } message ]
 
-   any errors, put the cursor back to normal state
+   # any errors, put the cursor back to normal state
    if { ${result} != 0  } {
 
       set einfo $::errorInfo
       set ecode $::errorCode
       Utils_normalCursor ${table_widget}
-      report the error with original details
+      # report the error with original details
       return -code ${result} \
          -errorcode ${ecode} \
          -errorinfo ${einfo} \
@@ -1313,23 +1314,23 @@ proc MsgCenter_rightClickCallback { table_widget w x y } {
 
    MsgCenter_stopBell ${table_widget}
 
-   convert screen coords to widget coords
+   # convert screen coords to widget coords
    foreach {mytable myx myy} \
     [tablelist::convEventFields ${w} ${x} ${y}] {}
 
-   get the row on which the right was done
+   # get the row on which the right was done
    set nearestCell [${mytable} containingcell ${myx} ${myy}]
    set nearestRow ""
    catch { set nearestRow [lindex [split ${nearestCell} ,] 0] }
 
    if { ${nearestRow} > -1 } {
-      clear and select 
+      # clear and select 
       ${mytable} selection clear top bottom
       ${mytable} select set ${nearestRow}
 
       set selectedRow ${nearestRow}
 
-      retrieve needed information
+      # retrieve needed information
       set node [${table_widget} getcells ${selectedRow},$MsgTableColMap(NodeColNumber)]
       set convertedNode [SharedFlowNode_convertFromDisplayFormat ${node}]
       set nodeWithouthExt [SharedFlowNode_getNodeFromDisplayFormat ${convertedNode}]
@@ -1339,15 +1340,15 @@ proc MsgCenter_rightClickCallback { table_widget w x y } {
       set datestamp [${table_widget} getcells ${selectedRow},$MsgTableColMap(DatestampColNumber)]
       set realDatestamp [Utils_getRealDatestampValue ${datestamp}]
 
-      here I need to check whether the node mapping is still stored in memory
-      if it is not, need to fetch it.
-      The node mapping is cleaned when the run goes out of the overview visibility
-      window
+      # here I need to check whether the node mapping is still stored in memory
+      # if it is not, need to fetch it.
+      # The node mapping is cleaned when the run goes out of the overview visibility
+      # window
       if { [SharedData_isExpNodeMappingExists ${expPath} ${realDatestamp}] == false } {
          ::log::log debug "MsgCenter_rightClickCallback exp_path:${expPath} datestamp:${realDatestamp} loading NODE MAPPING"
          Utils_busyCursor ${table_widget}
          if [ catch {
-	    parse the flow.xml file to get the node mappings
+	    # parse the flow.xml file to get the node mappings
             FlowXml_parse ${expPath}/EntryModule/flow.xml ${expPath} ${realDatestamp} ""
          } message ] {
             set errMsg "Error Parsing flow.xml file ${expPath}:\n$message"
@@ -1356,20 +1357,20 @@ proc MsgCenter_rightClickCallback { table_widget w x y } {
             error ${message}
             return
          }
-         register the mapping data to be collected later on i.e. every hour
+         # register the mapping data to be collected later on i.e. every hour
 	 after 5000 [list OverviewExpStatus_addObsoleteDatestamp ${expPath} ${realDatestamp}]
          Utils_normalCursor ${table_widget}
       }
       set flowNode [SharedData_getExpNodeMapping ${expPath} ${realDatestamp} ${nodeWithouthExt}]
       
-      everything here is to allow the same node menu as xflow to be called from msg center
+      # everything here is to allow the same node menu as xflow to be called from msg center
       set xflowToplevel [xflow_getToplevel ${expPath} ${realDatestamp}]
       if { ! [winfo exists ${xflowToplevel} ] } {
-         dummy window
+         # dummy window
          toplevel ${xflowToplevel}; wm withdraw ${xflowToplevel}
       }
 
-      puts "MsgCenter_rightClickCallback calling xflow_modeMenu..."
+
       xflow_setWidgetNames
 
       set winx [expr [winfo rootx ${w}] + ${x}]
@@ -1378,13 +1379,13 @@ proc MsgCenter_rightClickCallback { table_widget w x y } {
    }
 }
 
-returns current time as argument expected by processNewMessage function
+# returns current time as argument expected by processNewMessage function
 proc MsgCenter_getCurrentTime {} {
    return [clock format [clock seconds] -format "%Y%m%d.%H:%M:%S"]
 }
 
 ########################################
-end callback procedures
+# end callback procedures
 ########################################
 
 proc MsgCenter_init {} {
@@ -1397,8 +1398,8 @@ proc MsgCenter_init {} {
    set DEBUG_TRACE [SharedData_getMiscData DEBUG_TRACE]
    set MSG_BELL_TRIGGER [SharedData_getMiscData MSG_CENTER_BELL_TRIGGER]
 
-   Utils_logInit
-   Utils_createTmpDir
+
+
 
    set List_Xflow {}
    array set NB_ACTIVE_ELM { 
@@ -1409,32 +1410,32 @@ proc MsgCenter_init {} {
          sysinfo 0
    }
 
-   this variable is true when a new message comes in
-   and we need to warn the user about it
+   # this variable is true when a new message comes in
+   # and we need to warn the user about it
    set MSG_ALARM_ON false
 
-   this variable is used to count the number of times we warn the user
-   by flashing the msg center. After a defined number of times
-   we beep
+   # this variable is used to count the number of times we warn the user
+   # by flashing the msg center. After a defined number of times
+   # we beep
    set MSG_ALARM_COUNTER 0
 
-   this variable is a list that is used to store all messages received.
-   each list is {timestamp datestamp status node  msg exp}
-   
-   example for a list of 2 messages:
-   {20120418.07:02:10 20120418000000 abort /reps_mod/Forecasts/gem_loop/prep_pilot+2 \
-   {ABORTED job stopped , job_ID=c2sn2h0.cmc.ec.gc.ca.586135.0} /home/binops/afsi/par/maestro_suites/reps/forecast/er00}
-   {20120418.07:04:00 20120418000000 abort /reps_mod/Forecasts/gem_loop/prep_pilot+2 \
-   {ABORTED job stopped , job_ID=c2sn1h0.cmc.ec.gc.ca.586250.0} /home/binops/afsi/par/maestro_suites/reps/forecast/er00}
+   # this variable is a list that is used to store all messages received.
+   # each list is {timestamp datestamp status node  msg exp}
+   # 
+   # example for a list of 2 messages:
+   # {20120418.07:02:10 20120418000000 abort /reps_mod/Forecasts/gem_loop/prep_pilot+2 \
+   # {ABORTED job stopped , job_ID=c2sn2h0.cmc.ec.gc.ca.586135.0} /home/binops/afsi/par/maestro_suites/reps/forecast/er00}
+   # {20120418.07:04:00 20120418000000 abort /reps_mod/Forecasts/gem_loop/prep_pilot+2 \
+   # {ABORTED job stopped , job_ID=c2sn1h0.cmc.ec.gc.ca.586250.0} /home/binops/afsi/par/maestro_suites/reps/forecast/er00}
    set MSG_TABLE {}
 
-   counter for all received messages
+   # counter for all received messages
    set MSG_COUNTER 0
-   reset active messages, the list of active messages is a bit different than the MSG_TABLE.
-   The active messages can be filtered out by "Message Type"
+   # reset active messages, the list of active messages is a bit different than the MSG_TABLE.
+   # The active messages can be filtered out by "Message Type"
    MsgCenter_initActiveMessages
 
-   get the list of message filters
+   # get the list of message filters
    set SHOW_ABORT_TYPE [SharedData_getMiscData SHOW_ABORT_TYPE]
    set SHOW_INFO_TYPE [SharedData_getMiscData SHOW_INFO_TYPE]
    set SHOW_SYSINFO_TYPE [SharedData_getMiscData SHOW_SYSINFO_TYPE]
@@ -1446,7 +1447,7 @@ proc MsgCenter_init {} {
    set BGInfo    [image create photo -width 16]
    set BGSysinfo [image create photo -width 16]
    Msg_Center_SetImgTab null Initial  null
-   is bell activated?
+   # is bell activated?
    set MSG_CENTER_USE_BELL true
    if { [SharedData_getMiscData USE_BELL] == false } {
       set MSG_CENTER_USE_BELL false
@@ -1463,25 +1464,25 @@ proc MsgCenter_init {} {
          MsgTable 3
       }
 
-      
-      
+
+
 
       MsgCenter_createWidgets
       MsgCenter_close
       
       wm protocol ${topLevelW} WM_DELETE_WINDOW [list MsgCenter_close]
       
-      point the node in its respective flow on double click
+      # point the node in its respective flow on double click
       bind [${tableW} bodytag] <Double-Button-1> [ list MsgCenter_doubleClickCallback ${tableW}]
 
-      active menu on right-click
+      # active menu on right-click
       bind [${tableW} bodytag] <Button-3> [list MsgCenter_rightClickCallback ${tableW} %W %x %y]
       MsgCenter_setTitle ${topLevelW}
 
-      give full space to message table
+      # give full space to message table
       grid columnconfigure ${topLevelW} 0 -weight 1
 
-      give new real estate to the msg table
+      # give new real estate to the msg table
       grid rowconfigure ${topLevelW} $MsgCenterMainGridRowMap(MsgTable) -weight 1
 
       wm minsize ${topLevelW} 800 200
