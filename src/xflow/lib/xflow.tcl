@@ -4648,13 +4648,6 @@ proc out {} {
       pack ${textF} -expand 1 -fill both
       pack ${textW} -expand 1 -fill both
    }
-   
-   proc Console_insertMessage { msg } {
-      set textW .expConsole.textframe.textwidget
-      if { [winfo exists ${textW}] } {
-         ${textW} insert end "${msg}\n"
-      }
-   }
 }
 
 proc xflow_parseCmdOptions {} {

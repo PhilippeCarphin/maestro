@@ -19,19 +19,6 @@ set SEQ_MANAGER_SRC $env(SEQ_MANAGER_SRC)
 # -- get user
 set MUSER [exec id -nu]
 
-# ---------- NOT used for Now -----------------
-# -- Global Code for Error Trapping
-# -- set the proc
-proc bug_Report {error} {
-
-     global errorInfo env argv argv0
-
-     set bugReport $errorInfo
-     set question "Unexpected Error : $error"
-
-    puts "$error   $errorInfo"
-}
-
 namespace eval XPManager {
 
     global SEQ_BIN SEQ_MANAGER_SRC

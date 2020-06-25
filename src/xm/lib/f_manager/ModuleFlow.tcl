@@ -1516,23 +1516,6 @@ proc ModuleFlow_getSubmitType { _flowNodeRecord } {
    return ${submitType}
 }
 
-# returns the submit type of the current flowNodeRecord
-# submit type is either "default" or "user"
-# the submit type is stored in the submitter record "submits" attribute
-proc ModuleFlow_setSubmitType { _flowNodeRecord _submitType } {
-   set submitterRecord [ModuleFlow_getSubmitter ${_flowNodeRecord}]
-   if { ${submitterRecord} != "" } {
-      set submits [${submitterRecord} cget -submits]
-      set foundIndex [lsearch ${submits} "[${_flowNodeRecord} cget -name] *"]
-      if { ${foundIndex} != -1 } {
-         set submitValues [lindex ${submits} ${foundIndex}]
-         lset submitValues 1 ${_submitType}
-         lset submits ${foundIndex} ${submitValues}
-         ${submitter} configure -submits ${submits}
-      }
-   }
-}
-
 proc ModuleFlow_addChildNode { _flowNodeRecord _childNodeRecord { _position end } } {
    # child nodes are stored as relative path to the parent container
    set childrenNodes [${_flowNodeRecord} cget -children]

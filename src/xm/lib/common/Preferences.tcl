@@ -1458,20 +1458,6 @@ proc Preferences::FindAndValidateExpDir { path nbk } {
 	  return 0
 }
 
-
-proc xBtn {w {args {}} } {
-      catch {destroy $w}
-      catch {destroy ${w}_lbl}
-      eval button $w  $args
-      pack propagate $w 0
-      pack [label ${w}_lbl -text [$w cget -text] ] -side right -in $w
-      foreach item [bind Button] {
-        bind ${w}_lbl $item [string map "%W $w" [bind Button $item]]
-      }
-     return $w
-}
-
-
 proc Preferences::Config_table {} {
 
      # Create the font TkDefaultFont if not yet present
