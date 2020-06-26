@@ -1,5 +1,6 @@
 
 import re
+from heimdall.file_cache import file_cache
 
 """
 Regex to capture the entire line that seems to be a call to nodelogger with -s argument.
@@ -8,8 +9,7 @@ Captured group 1 is '-s' argument.
 NODELOGGER_SIGNAL_REGEX=re.compile(r".*nodelogger.*-s[ ]+([^ \n]+).*")
 
 def get_nodelogger_signals_from_task_path(path):
-    with open(path,"r") as f:
-        data=f.read()
+    data=file_cache.open(path)
     return get_nodelogger_signals_from_task_text(data)
 
 def get_nodelogger_signals_from_task_text(text):
