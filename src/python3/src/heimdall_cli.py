@@ -15,11 +15,13 @@ Options:
     -h --help   Show this description.
 """
 import os
+
+from constants import SCANNER_CONTEXTS
+from heimdall import ExperimentScanner
 from utilities.heimdall import adjust_docstring
 __doc__=adjust_docstring(__doc__)
 
 from utilities.docopt import docopt
-from heimdall import ExperimentScanner
 
 def main(args):
     
@@ -27,9 +29,16 @@ def main(args):
     if experiment_path.startswith("~"):
         experiment_path=os.path.expanduser(experiment_path)
         
+    context=args["--context"]
+    if context and context not in SCANNER_CONTEXTS:
+        print("Invalid context '%s'. Context must be one of:\n    %s"%(context,"\n    ".join(SCANNER_CONTEXTS)))
+        return
+        
     print("Scanning maestro experiment.")
     
-    scanner=ExperimentScanner(experiment_path)
+    scanner=ExperimentScanner(experiment_path,
+                              context=context,
+                              critical_error_is_exception=False)
     
     scanner.print_report()
 
