@@ -9,6 +9,6 @@ c5	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to par
 e1	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders
 e2	Bad XML	Failed to parse XML: ‘{xml}’	
 e3	Bad task name	Invalid task name ‘{task_name}’ at path '{task_path}’	
-e4	Broken symlink	The symlink ‘{source}’ points to a target ‘{target}’ that does not exist.	
+e4	Broken symlink	Soft links were found with targets that do not exist:\n{broken_links}	
 e5	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML:\n{flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290
 e6	Bad nodelogger signal	The executable ‘nodelogger’ was given a bad signal ‘{bad_signal}’ for its ‘-s’ argument. Line {line_number} in: ‘{task_path}’	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger

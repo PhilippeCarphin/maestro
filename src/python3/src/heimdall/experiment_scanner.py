@@ -133,13 +133,11 @@ class ExperimentScanner():
         
     def scan_broken_symlinks(self):
         code="e4"
-        for path in self.files:
-            if not file_cache.islink(path):
-                continue
-            if file_cache.is_broken_symlink(path):
-                target=file_cache.readlink(path)
-                description=hmm.get(code,source=path,target=target)
-                self.add_message(code,description)
+        broken=[path for path in self.files if file_cache.is_broken_symlink(path)]
+        if broken:
+            broken_links="\n".join(broken)
+            description=hmm.get(code,broken_links=broken_links)
+            self.add_message(code,description)
         
     def scan_node_names(self):
         code="e3"
