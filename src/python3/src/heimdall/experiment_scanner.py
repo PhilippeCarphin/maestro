@@ -2,18 +2,21 @@ import os.path
 import re
 from collections import OrderedDict
 
-from constants import NODELOGGER_SIGNALS
+from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, MAESTRO_ROOT
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
 from utilities.maestro import is_empty_module
-from utilities.heimdall import find_critical_errors, get_nodelogger_signals_from_task_path
+from utilities.heimdall import find_critical_errors, get_nodelogger_signals_from_task_path, guess_scanner_context_from_path
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
 from utilities import xml_cache
 
 class ExperimentScanner():
-    def __init__(self,path,critical_error_is_exception=True):
+    def __init__(self,
+                 path,
+                 context=None,
+                 critical_error_is_exception=True):
         
         if not path.endswith("/"):
             path+="/"
@@ -35,6 +38,11 @@ class ExperimentScanner():
         self.maestro_experiment=MaestroExperiment(path)
         
         self.index_experiment_files()
+        
+        if not context:
+            context=guess_scanner_context_from_path(self.path)
+        self.context=context
+        
         self.scan_required_folders()
         self.scan_xmls()
         self.scan_scattered_modules()

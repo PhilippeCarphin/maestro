@@ -2,9 +2,12 @@
 from tests.path import CSV_DICTIONARY
 
 import unittest
+import os.path
 
+from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH
+from constants import SCANNER_CONTEXT, MAESTRO_ROOT
 from utilities import get_dictionary_list_from_csv
-from utilities.heimdall import get_nodelogger_signals_from_task_text
+from utilities.heimdall import get_nodelogger_signals_from_task_text, guess_scanner_context_from_path
 
 class TestUtilities(unittest.TestCase):
             
@@ -33,4 +36,26 @@ class TestUtilities(unittest.TestCase):
         signals=[r["signal"] for r in results]
         expected=["infox","abort"]
         self.assertEqual(signals,expected)
+        
+    def test_context_guess(self):
+        paths={CONTEXT_GUESS_HOMES+"smco500/.suites/zdps":SCANNER_CONTEXT.OPERATIONAL,
+               CONTEXT_GUESS_HOMES+"smco502/.suites/zdps":SCANNER_CONTEXT.OPERATIONAL,
+               CONTEXT_GUESS_HOMES+"smco502/maestro_suites/zdps":SCANNER_CONTEXT.OPERATIONAL,
+               CONTEXT_GUESS_HOMES+"smco502/.suites/preop_zdps":SCANNER_CONTEXT.PREOPERATIONAL,
+               CONTEXT_GUESS_HOMES+"smco501/.suites/zdps":SCANNER_CONTEXT.PARALLEL,
+               CONTEXT_GUESS_HOMES+"smco500/maestro_suites/zdps":SCANNER_CONTEXT.OPERATIONAL,
+               G0_MINI_ME_PATH:SCANNER_CONTEXT.TEST}
+        
+        for path,expected in paths.items():
+            msg="\npath = '%s'"%path
+            self.assertTrue(os.path.exists(path),msg=msg)
+            result=guess_scanner_context_from_path(path)
+            self.assertEqual(result,expected,msg=msg)
+        
+        
+        
+        
+        
+        
+        
         
