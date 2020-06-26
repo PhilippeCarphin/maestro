@@ -38,5 +38,6 @@ QSTAT_OUTPUT1_PATH=MOCK_FILES+"qstat-output1"
 
 TURTLE_DATESTAMP1="2020040100"
 
-HEIMDALL_ME_FOLDER=MOCK_FILES+"heimdall/"
+SUITES_WITH_CODES=MOCK_FILES+"heimdall/suites_with_codes/"
+SUITES_WITHOUT_CODES=MOCK_FILES+"heimdall/suites_without_codes/"
 CSV_DICTIONARY=MOCK_FILES+"csv_dictionary.csv"

@@ -1,14 +1,17 @@
-# This is a tab delimited spreadsheet (TSV) for all Heimdall messages.			
-# The message levels are best practice (b), info (i), warning (w), error (e), and critical (c).			
-code	label	description	url
-c1	No EntryModule	EntryModule link does not exist: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
-c2	Bad EntryModule	EntryModule is not a link: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
-c3	No experiment here	Could not find an experiment for path: '{path}'. A valid experiment folder contains an 'EntryModule' link.	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
-c4	No EntryModule flow.xml	The required EntryModule flow.xml file does not exist: ‘{flow_xml}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
-c5	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to parse as XML: ‘{flow_xml}’	
-e1	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders
-e2	Bad XML	Failed to parse XML: ‘{xml}’	
-e3	Bad task name	Invalid task name ‘{task_name}’ at path '{task_path}’	
-e4	Broken symlink	Soft links were found with targets that do not exist:\n{broken_links}	
-e5	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML:\n{flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290
-e6	Bad nodelogger signal	The executable ‘nodelogger’ was given a bad signal ‘{bad_signal}’ for its ‘-s’ argument. Line {line_number} in: ‘{task_path}’	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger
+# This is a tab delimited spreadsheet (TSV) for all Heimdall messages.				
+# The message levels are best practice (b), info (i), warning (w), error (e), and critical (c).				
+code	label	description	url	notes
+c1	No EntryModule	EntryModule link does not exist: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
+c2	Bad EntryModule	EntryModule is not a link: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
+c3	No experiment here	Could not find an experiment for path: '{path}'. A valid experiment folder contains an 'EntryModule' link.	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
+c4	No EntryModule flow.xml	The required EntryModule flow.xml file does not exist: ‘{flow_xml}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
+c5	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to parse as XML: ‘{flow_xml}’		
+e1	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders	
+e2	Bad XML	Failed to parse XML: ‘{xml}’		
+e3	Bad task name	Invalid task name ‘{task_name}’ at path '{task_path}’		
+e4	Broken symlink	Soft links were found with targets that do not exist:\n{broken_links}		
+e5	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML:\n{flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290	
+e6	Bad nodelogger signal	The executable ‘nodelogger’ was given a bad signal ‘{bad_signal}’ for its ‘-s’ argument. Line {line_number} in: ‘{task_path}’	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
+e7	Missing required resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. This is required for the ‘{context}’ context.		
+w1	Missing resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
+w2	Missing loop resource file	The loop ‘{node_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		

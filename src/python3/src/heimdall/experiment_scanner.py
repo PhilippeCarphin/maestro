@@ -2,7 +2,7 @@ import os.path
 import re
 from collections import OrderedDict
 
-from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, MAESTRO_ROOT
+from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, MAESTRO_ROOT, NODE_TYPE
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
@@ -44,6 +44,7 @@ class ExperimentScanner():
         self.context=context
         
         self.scan_required_folders()
+        self.scan_required_files()
         self.scan_xmls()
         self.scan_scattered_modules()
         self.scan_all_task_content()
@@ -58,6 +59,39 @@ class ExperimentScanner():
         message={"code":code,"label":label,"description":description,"url":url}
         self.codes.add(code)
         self.messages.append(message)
+        
+    def scan_required_files(self):
+        
+        is_op=self.context in (SCANNER_CONTEXT.OPERATIONAL,
+                                    SCANNER_CONTEXT.PREOPERATIONAL)
+        
+        for node_path,node_data in self.maestro_experiment.node_datas.items():
+            node_type=node_data["type"]
+            resource_path=node_data["resource_path"]
+            task_path=node_data["task_path"]
+            
+            if file_cache.exists(resource_path):
+                continue
+            
+            if node_type==NODE_TYPE.TASK:
+                kwargs={"task_path":task_path,
+                        "resource_path":resource_path}
+                
+                if is_op:
+                    code="e7"
+                    kwargs["context"]=self.context
+                else:
+                    code="w1"
+                
+                description=hmm.get(code,**kwargs)
+                self.add_message(code,description)
+                
+            elif node_type==NODE_TYPE.LOOP:
+                code="w2"
+                description=hmm.get(code,
+                                    node_path=node_path,
+                                    resource_path=resource_path)
+                self.add_message(code,description)
         
     def scan_all_task_content(self):        
         for task_path in self.task_files:
@@ -74,7 +108,7 @@ class ExperimentScanner():
                                     bad_signal=result["signal"],
                                     line_number=result["line_number"],
                                     task_path=task_path)
-                self.add_message(code,description)       
+                self.add_message(code,description)
         
     def scan_scattered_modules(self):
         

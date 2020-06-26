@@ -1,36 +1,70 @@
 import os.path
 import unittest
-from tests.path import HEIMDALL_ME_FOLDER, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH
+
+from constants import SCANNER_CONTEXT
+from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH
 from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
 
 class TestSuiteScan(unittest.TestCase):
             
-    def test_heimdall_mock_experiments(self):
+    def test_suites_with_codes(self):
         """
-        All codes in the heimdall message manager should have a corresponding
-        experiment in mock files that produces that code.
+        Test all experiments in 'suites_with_codes' folder.
+        
+        For example, 'suites_with_codes/e7' experiment has 'e7' code
         """
+                
         for code in hmm.codes:
-            path=HEIMDALL_ME_FOLDER+code
+            path=SUITES_WITH_CODES+code
             
             msg="Mock experiment for code '%s' does not exist at path '%s'. All codes must have a test case."%(code,path)
             if code!="c3":
-                "exclude c3 because that's an error where the folder does not exist"
+                "exclude c3 because that's the error - the folder does not exist"
                 self.assertTrue(os.path.isdir(path),msg=msg)
+                
+            context=None
+            if code in ["e7"]:
+                context=SCANNER_CONTEXT.OPERATIONAL
             
             scanner=ExperimentScanner(path,
+                                      context=context,
                                       critical_error_is_exception=False)
             msg="Experiment path: '%s'"%path
             self.assertIn(code,scanner.codes,msg=msg)
-    
+            
+    def test_suites_without_codes(self):
+        """
+        Test all experiments in 'suites_without_codes' folder.
+        
+        Tor example, 'suites_without_codes/e7' experiment does not have 'e7' code
+        """
+        
+        unused_folders=[p for p in os.listdir(SUITES_WITHOUT_CODES) if os.path.isdir(p)]
+        
+        for code in hmm.codes:
+            path=SUITES_WITHOUT_CODES+code
+            if not os.path.isdir(path):
+                continue
+            
+            if path in unused_folders:
+                unused_folders.remove(path)
+                
+                msg="Experiment path: '%s'"%path
+                scanner=ExperimentScanner(path,
+                                          critical_error_is_exception=False)
+                self.assertNotIn(code,scanner.codes,msg=msg)
+            
     def test_good_suite(self):
         """
-        all good suites do not have any extra issues
+        All good suites do not have any codes, 
         unless they are on the expected list
         """
         
         paths=[TURTLE_ME_PATH,G0_MINI_ME_PATH,G1_MINI_ME_PATH,GV_MINI_ME_PATH]
+        
+        "since the good suites are minimal, never look for these codes"
+        ignore_codes=["w1", "w2"]
         
         """
         key is experiment path
@@ -44,5 +78,11 @@ class TestSuiteScan(unittest.TestCase):
                                       critical_error_is_exception=False)
             msg="Experiment path: '%s'"%path
             
+            "never look for codes we want to ignore"
+            result=scanner.codes
+            for code in ignore_codes:
+                if code in result:
+                    result.remove(code)
+            
             expected=expected_errors.get(path,set())
-            self.assertEqual(scanner.codes,expected,msg=msg)
+            self.assertEqual(result,expected,msg=msg)
