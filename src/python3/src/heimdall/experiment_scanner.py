@@ -57,7 +57,6 @@ class ExperimentScanner():
         """
         source_to_target={}
         
-        not_empty_modules=[]
         module_element_to_flow_path={}
                 
         for flow_path in self.flow_files:
@@ -67,9 +66,11 @@ class ExperimentScanner():
                 source_to_target[module_name]=realname
             
             root=xml_cache.get(flow_path)
-            not_empty_modules+=xml_cache.get_elements_of_tag(root,"MODULE")
-            for m in not_empty_modules:
+            modules=xml_cache.get_elements_of_tag(root,"MODULE")
+            for m in modules:
                 module_element_to_flow_path[m]=flow_path
+        
+        not_empty_modules=[m for m in module_element_to_flow_path if not is_empty_module(m)]
         
         """
         key is module realname
@@ -86,9 +87,8 @@ class ExperimentScanner():
             realname=source_to_target.get(module_name,module_name)
             if realname not in module_declares:
                 module_declares[realname]=[]
-                
             flow_path=module_element_to_flow_path[m]
-            module_declares[realname].append(flow_path)
+            module_declares[realname].append(flow_path)    
         
         for module_name,flow_paths in module_declares.items():
             if len(flow_paths)>1:
@@ -241,7 +241,7 @@ class ExperimentScanner():
                 f(code+": "+message["label"])
                 print(message["description"])
         
-        print("\nHeimdall found %s items to report for maestro suite:\n    %s"%(len(self.messages,self.path)))
+        print("\nHeimdall found %s items to report for maestro suite:\n    %s"%(len(self.messages),self.path))
 
 
 

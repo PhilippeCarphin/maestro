@@ -76,4 +76,11 @@ def pretty_xml(xml):
     
 def pretty_json(j):
     "Return a pretty JSON string."
+    
+    "convert keys to str, in case they cannot be sorted like lxml elements"
+    if type(j) is dict:
+        for key in list(j.keys()):
+            value=j.pop(key)
+            j[str(key)]=value
+            
     return json.dumps(j,indent=4,sort_keys=True,default=lambda o: str(o))

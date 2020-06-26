@@ -25,11 +25,24 @@ class TestSuiteScan(unittest.TestCase):
             self.assertIn(code,scanner.codes,msg=msg)
     
     def test_good_suite(self):
-        "no errors in these suites"
+        """
+        all good suites do not have any extra issues
+        unless they are on the expected list
+        """
         
         paths=[TURTLE_ME_PATH,G0_MINI_ME_PATH,G1_MINI_ME_PATH,GV_MINI_ME_PATH]
+        
+        """
+        key is experiment path
+        value is list of codes that we allow because it exists in the real suite
+        """
+        expected_errors={G1_MINI_ME_PATH:["e5"]}
+        expected_errors={key:set(value) for key,value in expected_errors.items()}
+        
         for path in paths:
             scanner=ExperimentScanner(path,
                                       critical_error_is_exception=False)
             msg="Experiment path: '%s'"%path
-            self.assertFalse(scanner.codes,msg=msg)
+            
+            expected=expected_errors.get(path,set())
+            self.assertEqual(scanner.codes,expected,msg=msg)

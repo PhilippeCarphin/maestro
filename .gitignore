@@ -4,6 +4,9 @@ build.cfg
 _*
 *~
 
+# Debug scripts
+src/python3/mflow-debug.sh
+
 # Generated files
 *.ssm
 *.log

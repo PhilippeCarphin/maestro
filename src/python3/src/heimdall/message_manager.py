@@ -35,6 +35,8 @@ class HeimdallMessageManager():
         
         description=data.get("description","")
         
+        description=description.replace("\\n","\n")
+        
         for key in kwargs:
             if "{"+key+"}" not in description:
                 raise ValueError("code '%s' was given an extra string format key not found in message CSV: '%s'"%(code,key))
