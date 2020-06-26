@@ -11,7 +11,7 @@ same-name functions instead.
 import os
 import os.path
 from lxml import etree
-from utilities.generic import cache
+from utilities.generic import cache, strip_comments_from_text
 
 class FileCache():
     """
@@ -38,7 +38,15 @@ class FileCache():
             return tree.getroot()
         except:
             return None
-    
+        
+    @cache
+    def open_without_comments(self,path):
+        """
+        Return the text content of this file, minus any lines that are
+        comments, like '#' in bash.
+        """
+        return strip_comments_from_text(self.open(path))
+        
     def open(self,path):
         realpath=self.realpath(path)
         return self.open_realpath(realpath)

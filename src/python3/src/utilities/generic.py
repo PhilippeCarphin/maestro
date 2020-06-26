@@ -31,6 +31,15 @@ def cache(function):
             return rv
     return wrapper
 
+def strip_comments_from_text(text):
+    """
+    Return the text content of this string, minus any lines that are
+    comments, like '#' in bash.
+    """
+    lines=text.split("\n")    
+    lines=[i for i in lines if not i.strip().startswith("#")]
+    return "\n".join(lines)
+
 def insert_into_dictionary(a,b):
     """
     If a key in dictionary 'b' is not in 'a', insert its key/value into 'a'.

@@ -45,6 +45,7 @@ class ExperimentScanner():
         
         self.scan_required_folders()
         self.scan_required_files()
+        self.scan_file_content()
         self.scan_xmls()
         self.scan_scattered_modules()
         self.scan_all_task_content()
@@ -59,6 +60,30 @@ class ExperimentScanner():
         message={"code":code,"label":label,"description":description,"url":url}
         self.codes.add(code)
         self.messages.append(message)
+        
+    def scan_file_content(self):
+        
+        "files where we may find invalid paths"
+        path_files=self.task_files+self.config_files
+        deprecated_path_substrings=["/site1/ops/",
+                                    "/site2/ops/",
+                                    "/space/hall1/sitestore/",
+                                    "/space/hall2/sitestore/"]
+        
+        for path in path_files:
+            content=file_cache.open_without_comments(path)
+            bad=[]
+            for substring in deprecated_path_substrings:
+                if substring in content:
+                    bad.append(substring)
+            if not bad:
+                continue
+            
+            code="w3"
+            description=hmm.get(code,
+                                bad_file=path,
+                                paths="\n".join(bad))
+            self.add_message(code,description)
         
     def scan_required_files(self):
         

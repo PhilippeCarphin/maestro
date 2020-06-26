@@ -15,3 +15,4 @@ e6	Bad nodelogger signal	The executable ‘nodelogger’ was given a bad signal 
 e7	Missing required resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. This is required for the ‘{context}’ context.		
 w1	Missing resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
 w2	Missing loop resource file	The loop ‘{node_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
+w3	Deprecated paths	The file ‘{bad_file}’ contains references to deprecated filesystem paths:\n{paths}		
