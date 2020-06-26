@@ -2,11 +2,13 @@ import os.path
 import re
 from collections import OrderedDict
 
+from constants import NODELOGGER_SIGNALS
+
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
 from utilities.maestro import is_empty_module
-from utilities.heimdall import find_critical_errors
+from utilities.heimdall import find_critical_errors, get_nodelogger_signals_from_task_path
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
 from utilities import xml_cache
 
@@ -36,6 +38,7 @@ class ExperimentScanner():
         self.scan_required_folders()
         self.scan_xmls()
         self.scan_scattered_modules()
+        self.scan_all_task_content()
         self.scan_node_names()
         self.scan_broken_symlinks()
         
@@ -47,6 +50,23 @@ class ExperimentScanner():
         message={"code":code,"label":label,"description":description,"url":url}
         self.codes.add(code)
         self.messages.append(message)
+        
+    def scan_all_task_content(self):        
+        for task_path in self.task_files:
+            self.scan_task(task_path)
+            
+    def scan_task(self,task_path):
+        
+        "find invalid nodelogger signals"
+        results=get_nodelogger_signals_from_task_path(task_path)
+        for result in results:
+            if result["signal"] not in NODELOGGER_SIGNALS:
+                code="e6"
+                description=hmm.get(code,
+                                    bad_signal=result["signal"],
+                                    line_number=result["line_number"],
+                                    task_path=task_path)
+                self.add_message(code,description)       
         
     def scan_scattered_modules(self):
         

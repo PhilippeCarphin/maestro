@@ -4,3 +4,11 @@ class MESSAGE_LEVEL():
     INFO="info"
     WARNING="warning"
     ERROR="error"
+
+NODELOGGER_SIGNALS=["abort",
+                    "begin",
+                    "end",
+                    "info",
+                    "infox",
+                    "init",
+                    "submit"]
