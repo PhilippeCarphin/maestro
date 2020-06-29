@@ -8,7 +8,7 @@ HEIMDALL_MESSAGE_CSV=HEIMDALL_ROOT+"csv/message_codes.csv"
 
 HISTORY_FOLDER=MFLOW_ROOT+"/history/"
 TMP_FOLDER=os.environ["HOME"]+"/tmp/mflow/"
-LOG_FOLDER=os.environ["HOME"]+"/logs/mflow/"
+LOG_FOLDER=os.environ["HOME"]+"/logs/"
 BIN_FOLDER=MFLOW_ROOT+"/bin/"
 DEFAULT_CONFIG_PATH=MFLOW_ROOT+"/config/default"
 TEMPLATE_FOLDER=MFLOW_ROOT+"templates/"

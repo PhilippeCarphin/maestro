@@ -124,7 +124,7 @@ class TuiManager(PopupManager):
     def cleanup_old_tui_files(self):
         "Delete old files in tmp and mflow logs"
         max_age_days=7
-        a="find %s -mtime +%s -delete"
+        a="find %s -type f -mtime +%s -delete"
         for folder in (TMP_FOLDER, LOG_FOLDER):
             cmd=a%(folder,max_age_days)
             run_shell_cmd(cmd)

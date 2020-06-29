@@ -12,7 +12,7 @@ import os
 from os import stat
 from pwd import getpwuid
 
-from utilities.heimdall import has_critical_error
+from utilities.heimdall.critical_errors import has_critical_error
 from utilities.maestro import find_exp_home_in_path, get_experiment_name, get_sequencer_command
 from utilities import pretty, clamp
 
