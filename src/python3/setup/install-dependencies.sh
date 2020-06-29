@@ -10,7 +10,7 @@ if [ ! -d $VENV ] ; then
     virtualenv -p python3 $VENV || python3 -m venv $VENV
 fi
 $VENV/bin/pip3 install --upgrade pip
-$VENV/bin/pip3 install -r $MAESTRO_ROOT/src/mflow/setup/requirements.txt
+$VENV/bin/pip3 install -r $MAESTRO_ROOT/src/python3/setup/requirements.txt
 
 echo "
 
