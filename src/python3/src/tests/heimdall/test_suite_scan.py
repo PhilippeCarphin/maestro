@@ -42,6 +42,9 @@ class TestSuiteScan(unittest.TestCase):
         
         unused_folders=[p for p in os.listdir(SUITES_WITHOUT_CODES) if os.path.isdir(p)]
         
+        "pretty sure w3 is not failing when it should, see the commented hall1 line"
+        self.assertTrue(0)
+        
         for code in hmm.codes:
             path=SUITES_WITHOUT_CODES+code
             if not os.path.isdir(path):
