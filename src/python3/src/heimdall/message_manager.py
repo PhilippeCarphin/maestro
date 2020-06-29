@@ -4,8 +4,9 @@ from utilities import get_dictionary_list_from_csv
 from constants.path import HEIMDALL_MESSAGE_CSV
 
 class HeimdallMessageManager():
-    def __init__(self):        
-        csv_list=get_dictionary_list_from_csv(HEIMDALL_MESSAGE_CSV)   
+    def __init__(self):
+        
+        csv_list=get_dictionary_list_from_csv(HEIMDALL_MESSAGE_CSV)
         self._code_to_csv={item["code"]:item for item in csv_list}
         self.codes=sorted([item["code"] for item in csv_list])
         

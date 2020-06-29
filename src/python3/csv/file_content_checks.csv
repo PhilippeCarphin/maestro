@@ -1,0 +1,7 @@
+# This is a tab delimited spreadsheet (TSV) for all codes associate to file content.			
+# The ‘filetypes’ is a comma delimited list of what file types to search: all, tsk, cfg, xml, resource_xml			
+# If ‘substring’ is found in a file, or the regex matches its content, heimdall produces the scanner code.			
+# Anything more complicated probably deserves its own Python function.			
+code	filetypes	substring	regex_string
+w3	tsk,cfg		/site[12]/ops/
+w4	tsk,cfg		/space/hall[12]/sitestore/

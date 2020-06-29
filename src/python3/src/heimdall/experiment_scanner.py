@@ -2,7 +2,7 @@ import os.path
 import re
 from collections import OrderedDict
 
-from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, MAESTRO_ROOT, NODE_TYPE
+from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
@@ -12,7 +12,7 @@ from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
-from utilities import xml_cache
+from utilities import xml_cache, get_dictionary_list_from_csv
 
 class ExperimentScanner():
     def __init__(self,
@@ -27,7 +27,7 @@ class ExperimentScanner():
         self.maestro_experiment=None        
         self.codes=set()
         self.messages=[]
-        
+                
         critical_errors=find_critical_errors(path)        
         for code,kwargs in critical_errors.items():
             description=hmm.get(code,**kwargs)
@@ -47,7 +47,7 @@ class ExperimentScanner():
         
         self.scan_required_folders()
         self.scan_required_files()
-        self.scan_file_content()
+        self.scan_all_file_content()
         self.scan_xmls()
         self.scan_scattered_modules()
         self.scan_all_task_content()
@@ -63,29 +63,92 @@ class ExperimentScanner():
         self.codes.add(code)
         self.messages.append(message)
         
-    def scan_file_content(self):
+    def parse_file_content_checks_csv(self):
+        """
+        Sanity check the file content CSV and make the dictionaries more convenient to use.
+        They are transformed into:
+            {
+               "code":"w7",
+               "filetypes":["tsk","cfg"],
+               "substring":"",
+               "regex_string":"",
+               "regex":<re.compile-result>,
+               "description_suffix":""
+            }
+        """
+        path=HEIMDALL_CONTENT_CHECKS_CSV
         
-        "files where we may find invalid paths"
-        path_files=self.task_files+self.config_files
-        deprecated_path_substrings=["/site1/ops/",
-                                    "/site2/ops/",
-                                    "/space/hall1/sitestore/",
-                                    "/space/hall2/sitestore/"]
+        "filetype must be one of these"
+        valid_filetypes=["tsk","cfg","xml","resource_xml"]
         
-        for path in path_files:
-            content=file_cache.open_without_comments(path)
-            bad=[]
-            for substring in deprecated_path_substrings:
-                if substring in content:
-                    bad.append(substring)
-            if not bad:
-                continue
+        "list of check data, each row of CSV is a check data"
+        self.file_content_checks=get_dictionary_list_from_csv(path)
+        
+        "key is filetype, value is list of check_data that apply to it"
+        self.filetype_to_check_datas={filetype:[] for filetype in valid_filetypes}
+        
+        for check_data in self.file_content_checks:
+            if check_data["regex_string"]:
+                try:
+                    check_data["regex"]=re.compile(check_data["regex_string"])
+                except re.error:
+                    raise ValueError("Bad regex string '%s' in file content CSV: '%s'"%(check_data["regex string"],path))
             
-            code="w3"
-            description=hmm.get(code,
-                                bad_file=path,
-                                paths="\n".join(bad))
-            self.add_message(code,description)
+            if not check_data["regex_string"] and not check_data["substring"]:
+                raise ValueError("All columns in file content CSV require either substring or regex string: '%s'"%path)
+            
+            filetypes=[i.strip() for i in check_data["filetypes"].split(",")]
+            if "all" in filetypes:
+                filetypes=valid_filetypes
+            invalid=[i for i in filetypes if i not in valid_filetypes]
+            if not filetypes or invalid:
+                raise ValueError("Bad filetype arguments '%s' in file content CSV: '%s'"%(str(invalid),path))
+            check_data["filetypes"]=filetypes
+            
+            for filetype in filetypes:
+                self.filetype_to_check_datas[filetype].append(check_data)
+                
+    def scan_all_file_content(self):
+        """
+        Use the file content CSV to scan for substrings and regexes in file contents.
+        """        
+        self.parse_file_content_checks_csv()
+        
+        for path in self.files:
+            self.scan_file_content(path)
+            
+    def scan_file_content(self,path):
+        rpath=self.maestro_experiment.path+"resources/"
+        filetype=None
+        for extension in ("tsk","cfg","xml"):
+            if path.endswith("."+extension):
+                filetype=extension
+                break
+        if path.startswith(rpath) and path.endswith(".xml"):
+            filetype="resource_xml"
+        
+        if not filetype:
+            "files of unknown type are not content scanned"
+            return
+        
+        content=file_cache.open_without_comments(path)        
+        for check_data in self.filetype_to_check_datas[filetype]:
+            
+            found_substring=bool(check_data["substring"]) and check_data["substring"] in content
+            found_regex=check_data.get("regex") and bool(check_data.get("regex").search(content))
+                        
+            "describe what was found"
+            search="search"
+            if found_regex:
+                search="regex '%s'"%check_data["regex_string"]
+            if found_substring:
+                search="substring '%s'"%check_data["substring"]
+                
+            if found_substring or found_regex:
+                description=hmm.get(check_data["code"],
+                                    search=search,
+                                    file_path=path)
+                self.add_message(check_data["code"],description)
         
     def scan_required_files(self):
         

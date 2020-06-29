@@ -17,6 +17,8 @@ class TestUtilities(unittest.TestCase):
         self.assertEqual(len(result),2)
         self.assertEqual(result[1]["name"],"george")
         
+        self.assertIn("noise",result[0])
+        
     def test_nodelogger_signals(self):
         
         task_text="""${destination}/${ENVAR_output_banco_name}.postalt.${outputfile}

@@ -5,6 +5,7 @@ MAESTRO_ROOT=d(d(d(d(d(os.path.realpath(__file__))))))+os.sep
 MFLOW_ROOT=MAESTRO_ROOT+"src/python3/"
 HEIMDALL_ROOT=MAESTRO_ROOT+"src/python3/"
 HEIMDALL_MESSAGE_CSV=HEIMDALL_ROOT+"csv/message_codes.csv"
+HEIMDALL_CONTENT_CHECKS_CSV=HEIMDALL_ROOT+"csv/file_content_checks.csv"
 
 HISTORY_FOLDER=MFLOW_ROOT+"/history/"
 TMP_FOLDER=os.environ["HOME"]+"/tmp/mflow/"
