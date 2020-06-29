@@ -17,3 +17,5 @@ w1	Missing resource file	The task ‘{task_path}’ has no resource file at ‘{
 w2	Missing loop resource file	The loop ‘{node_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
 w3	Deprecated site1/site2	The paths site1 and site2 are no longer available after the upgrades in early 2020. The {search} was found in file: ‘{file_path}’		
 w4	Deprecated hall1/hall2	The paths hall1 and hall2 are no longer available after the upgrades in early 2020. The {search} was found in file: ‘{file_path}’		
+w5	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable and cannot be installed operationally. Links:\n{bad_links}		
+i1	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable and cannot be installed operationally. Links:\n{bad_links}		

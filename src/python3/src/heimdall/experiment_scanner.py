@@ -12,7 +12,7 @@ from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
-from utilities import xml_cache, get_dictionary_list_from_csv
+from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path
 
 class ExperimentScanner():
     def __init__(self,
@@ -49,10 +49,15 @@ class ExperimentScanner():
         self.scan_required_files()
         self.scan_all_file_content()
         self.scan_xmls()
+        self.scan_home_soft_links()
         self.scan_scattered_modules()
         self.scan_all_task_content()
         self.scan_node_names()
         self.scan_broken_symlinks()
+        
+    def is_context_operational(self):
+        return self.context in (SCANNER_CONTEXT.OPERATIONAL,
+                                    SCANNER_CONTEXT.PREOPERATIONAL)
         
     def add_message(self,code,description,url=""):        
         label=hmm.get_label(code)        
@@ -108,6 +113,26 @@ class ExperimentScanner():
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
                 
+    def scan_home_soft_links(self):
+        """
+        Find core maestro files with a realpath outside the user home containing this project.
+        """
+        
+        home_root=guess_user_home_from_path(self.path)
+        bad_links=[]
+        for path in self.files:
+            realpath=file_cache.realpath(path)
+            if not realpath.startswith(home_root):
+                bad_links.append(path)
+        
+        if bad_links:
+            is_op=self.is_context_operational()
+            code="w5" if is_op else "i1"
+            description=hmm.get(code,
+                                real_home=home_root,
+                                bad_links=bad_links)
+            self.add_message(code,description)
+                
     def scan_all_file_content(self):
         """
         Use the file content CSV to scan for substrings and regexes in file contents.
@@ -131,7 +156,7 @@ class ExperimentScanner():
             "files of unknown type are not content scanned"
             return
         
-        content=file_cache.open_without_comments(path)        
+        content=file_cache.open_without_comments(path)    
         for check_data in self.filetype_to_check_datas[filetype]:
             
             found_substring=bool(check_data["substring"]) and check_data["substring"] in content
@@ -152,8 +177,7 @@ class ExperimentScanner():
         
     def scan_required_files(self):
         
-        is_op=self.context in (SCANNER_CONTEXT.OPERATIONAL,
-                                    SCANNER_CONTEXT.PREOPERATIONAL)
+        is_op=self.is_context_operational()
         
         for node_path,node_data in self.maestro_experiment.node_datas.items():
             node_type=node_data["type"]

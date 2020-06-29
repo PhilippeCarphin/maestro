@@ -83,3 +83,105 @@ def get_matching_paths_recursively(rootdir, extension="", verbose=0,
                         
             yield path
     return
+
+def guess_user_home_from_path(path):
+    """
+    Given a path like:
+        /fs/abc/home/sts271/folder1/folder
+    makes a best guess to return the home root:
+        /fs/abc/home/sts271
+        
+    use files/folders typically in home, like '.ssh'
+    """
+    
+    items1="""bin
+logs
+maestro_suites
+ovbin
+public_html
+rarcdirectives
+tmp
+xflow.suites.xml
+xflow_preop.suites.xml
+.Xauthority
+.Xdefaults
+.ade.cfg
+.bash_history
+.cache
+.conda
+.config
+.emacs.d
+.gitconfig
+.gnupg
+.gossip
+.hcron
+.jobctl
+.kde
+.local
+.maestrorc
+.mozilla
+.ord_soumet.d
+.profile
+.profile.d
+.ssh
+.sshj
+.suites
+.vim
+.viminfo
+.vimrc""".split("\n")
+
+    items2="""rarcdirectives
+xflow.suites.xml
+xflow_preop.suites.xml
+.Xauthority
+.Xdefaults
+.bash_history
+.cache
+.config
+.hcron
+.kde
+.local
+.maestrorc
+.mozilla
+.profile
+.profile.d
+.ssh
+.vim
+.viminfo
+.vimrc""".split("\n")
+
+    items1=[i for i in items1 if i not in items2]
+    
+    best_path=""
+    best_score=0
+    
+    while path and path != "/":
+        score=0
+        
+        if not os.path.exists(path):
+            path=os.path.dirname(path)
+            continue
+        
+        files_here=set(os.listdir(path))
+        for item in items1:
+            if item in files_here:
+                score+=1
+        for item in items2:
+            if item in files_here:
+                score+=3
+        
+        "this allows the test suite guess to override the actual user's home"
+        for item in files_here:
+            if item=="unittest-file-for-python-function-guess_user_home_from_path":
+                score+=1000
+            
+        if score>=best_score:
+            best_path=path
+            best_score=score
+        
+        path=os.path.dirname(path)
+    
+    return best_path+"/"
+
+
+

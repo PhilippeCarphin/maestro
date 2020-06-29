@@ -1,14 +1,16 @@
 
 from tests.path import CSV_DICTIONARY
 
+import os
 import unittest
 import os.path
 
-from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH
+from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES
 from constants import SCANNER_CONTEXT, MAESTRO_ROOT
 from utilities import get_dictionary_list_from_csv
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text
+from utilities import guess_user_home_from_path
 
 class TestUtilities(unittest.TestCase):
             
@@ -18,6 +20,17 @@ class TestUtilities(unittest.TestCase):
         self.assertEqual(result[1]["name"],"george")
         
         self.assertIn("noise",result[0])
+        
+    def test_guess_user_home_from_path(self):
+        path=MOCK_FILES+"/heimdall/homes/smco500/maestro_suites/preop_zdps/"
+        expected=MOCK_FILES+"/heimdall/homes/smco500/"
+        result=guess_user_home_from_path(path)
+        self.assertEqual(result,expected)
+        
+        path=os.environ["HOME"]+"/this-folder-does-not-exist-probably/123/"
+        expected=os.environ["HOME"]+"/"
+        result=guess_user_home_from_path(path)
+        self.assertEqual(result,expected)
         
     def test_nodelogger_signals(self):
         
