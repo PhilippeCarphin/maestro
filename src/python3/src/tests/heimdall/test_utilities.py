@@ -7,7 +7,8 @@ import os.path
 from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH
 from constants import SCANNER_CONTEXT, MAESTRO_ROOT
 from utilities import get_dictionary_list_from_csv
-from utilities.heimdall import get_nodelogger_signals_from_task_text, guess_scanner_context_from_path
+from utilities.heimdall.context import guess_scanner_context_from_path
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text
 
 class TestUtilities(unittest.TestCase):
             

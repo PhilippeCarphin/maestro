@@ -8,7 +8,9 @@ from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
 from utilities.maestro import is_empty_module
-from utilities.heimdall import find_critical_errors, get_nodelogger_signals_from_task_path, guess_scanner_context_from_path
+from utilities.heimdall.critical_errors import find_critical_errors
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path
+from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
 from utilities import xml_cache
 
