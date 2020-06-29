@@ -40,18 +40,15 @@ class TestSuiteScan(unittest.TestCase):
         Tor example, 'suites_without_codes/e7' experiment does not have 'e7' code
         """
         
-        unused_folders=[p for p in os.listdir(SUITES_WITHOUT_CODES) if os.path.isdir(p)]
-        
-        "pretty sure w3 is not failing when it should, see the commented hall1 line"
-        self.assertTrue(0)
+        unused_folders=[p for p in os.listdir(SUITES_WITHOUT_CODES) if os.path.isdir(SUITES_WITHOUT_CODES+p)]
         
         for code in hmm.codes:
             path=SUITES_WITHOUT_CODES+code
             if not os.path.isdir(path):
                 continue
             
-            if path in unused_folders:
-                unused_folders.remove(path)
+            if code in unused_folders:
+                unused_folders.remove(code)
                 
                 msg="Experiment path: '%s'"%path
                 scanner=ExperimentScanner(path,
