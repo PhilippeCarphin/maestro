@@ -91,8 +91,10 @@ def guess_user_home_from_path(path):
     makes a best guess to return the home root:
         /fs/abc/home/sts271
         
-    use files/folders typically in home, like '.ssh'
+    use realpath, and files/folders typically in home, like '.ssh'
     """
+    
+    path=os.path.realpath(path)+"/"
     
     items1="""bin
 logs
@@ -170,11 +172,14 @@ xflow_preop.suites.xml
             if item in files_here:
                 score+=3
         
-        "this allows the test suite guess to override the actual user's home"
+        """
+        You can override the real user's home with a test suite folder,
+        if you place a file with this name in that folder.
+        """
         for item in files_here:
-            if item=="unittest-file-for-python-function-guess_user_home_from_path":
+            if item=="unittest-home-override":
                 score+=1000
-            
+                
         if score>=best_score:
             best_path=path
             best_score=score

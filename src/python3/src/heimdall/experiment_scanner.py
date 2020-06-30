@@ -120,11 +120,12 @@ class ExperimentScanner():
         
         home_root=guess_user_home_from_path(self.path)
         bad_links=[]
+        
         for path in self.files:
             realpath=file_cache.realpath(path)
             if not realpath.startswith(home_root):
                 bad_links.append(path)
-        
+                
         if bad_links:
             is_op=self.is_context_operational()
             code="w5" if is_op else "i1"

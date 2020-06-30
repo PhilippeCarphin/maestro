@@ -1,0 +1,1 @@
+For unit tests, we don't want to detect the real user's home. We want to (sometimes) use a home in the test folder. Place this file in test folders to make it a "home" for tests.

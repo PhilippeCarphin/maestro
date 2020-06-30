@@ -22,14 +22,18 @@ class TestSuiteScan(unittest.TestCase):
             if code!="c3":
                 "exclude c3 because that's the error - the folder does not exist"
                 self.assertTrue(os.path.isdir(path),msg=msg)
-                
+            
+            "override the context, if necessary"
             context=None
             if code in ["e7"]:
                 context=SCANNER_CONTEXT.OPERATIONAL
+            if code in ["i1"]:
+                context=SCANNER_CONTEXT.DEVELOPMENT
             
             scanner=ExperimentScanner(path,
                                       context=context,
                                       critical_error_is_exception=False)
+            
             msg="Experiment path: '%s'"%path
             self.assertIn(code,scanner.codes,msg=msg)
             
