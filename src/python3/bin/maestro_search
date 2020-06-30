@@ -4,6 +4,6 @@ PROJECT_ROOT=$(dirname $(dirname $(realpath $0)))
 
 $PROJECT_ROOT/bin/assert_python3_is_setup || exit 1
 
-export MAESTRO_PYTHON3_LOGGING_CONFIG=find_node_paths
+export MAESTRO_PYTHON3_LOGGING_CONFIG=search
 
 $PROJECT_ROOT/venv/bin/python3 $PROJECT_ROOT/src/maestro_search_cli.py $@ 
