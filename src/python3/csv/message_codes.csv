@@ -13,11 +13,13 @@ e4	Broken symlink	Soft links were found with targets that do not exist:\n{broken
 e5	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML:\n{flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290	
 e6	Bad nodelogger signal	The executable ‘nodelogger’ was given a bad signal ‘{bad_signal}’ for its ‘-s’ argument. Line {line_number} in: ‘{task_path}’	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
 e7	Missing required resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. This is required for the ‘{context}’ context.		
+e8	Missing curly brackets in resource xml	Variables in resource XMLs must use curly brackets like ‘${{ABC}}’ not ‘$ABC’. The {search} was found in file: ‘{file_path}’		
+e9	Unbalanced curly brackets in resource xml	Found an uneven number of curly brackets ‘{attribute_value}’ in a resource file: ‘{file_path}’		
+i1	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable and cannot be installed operationally. Links:\n{bad_links}		
 w1	Missing resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
 w2	Missing loop resource file	The loop ‘{node_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
 w3	Deprecated site1/site2	The paths site1 and site2 are no longer available after the upgrades in early 2020. The {search} was found in file: ‘{file_path}’		
 w4	Deprecated hall1/hall2	The paths hall1 and hall2 are no longer available after the upgrades in early 2020. The {search} was found in file: ‘{file_path}’		
 w5	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable and cannot be installed operationally. Links:\n{bad_links}		
-i1	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable and cannot be installed operationally. Links:\n{bad_links}		
-e8	Missing curly brackets in resource xml	Variables in resource XMLs must use curly brackets like ‘${{ABC}}’ not ‘$ABC’. The {search} was found in file: ‘{file_path}’		
-e9	Unbalanced curly brackets in resource xml	Found an uneven number of curly brackets ‘{attribute_value}’ in a resource file: ‘{file_path}’		
+e10	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a fragile way to configure an experiment.		
+w6	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a fragile way to configure an experiment.		

@@ -11,6 +11,7 @@ from utilities import get_dictionary_list_from_csv
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text
 from utilities import guess_user_home_from_path
+from utilities.maestro import get_weird_assignments_from_config_path
 
 class TestUtilities(unittest.TestCase):
             
@@ -20,6 +21,17 @@ class TestUtilities(unittest.TestCase):
         self.assertEqual(result[1]["name"],"george")
         
         self.assertIn("noise",result[0])
+    
+    def test_get_weird_assignments_from_config(self):     
+        path=MOCK_FILES+"weird-config-semi-xml.cfg"
+        result=get_weird_assignments_from_config_path(path)
+        expected={"input":{"anl_archives":"${__archives__}"},
+                  "executables":{"editfst":"editfst",
+                                 "r.read_link":"r.read_link",
+                                 "copy":"${ASSIMCYCLE_TRANSFER_COMMAND}"},
+                  "output":{"anlalt_nosfc":"${ASSIMCYCLE_getalt_output}/${ASSIMCYCLE_DATE}_000_nosfc"}
+                  }
+        self.assertEqual(result,expected)
         
     def test_guess_user_home_from_path(self):
         

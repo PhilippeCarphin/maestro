@@ -7,7 +7,7 @@ from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_C
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
-from utilities.maestro import is_empty_module
+from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text
 from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path
 from utilities.heimdall.context import guess_scanner_context_from_path
@@ -50,6 +50,7 @@ class ExperimentScanner():
         self.scan_all_file_content()
         self.scan_xmls()
         self.scan_resource_files()
+        self.scan_config_files()
         self.scan_home_soft_links()
         self.scan_scattered_modules()
         self.scan_all_task_content()
@@ -113,6 +114,21 @@ class ExperimentScanner():
             
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+                
+    def scan_config_files(self):
+        "scan the content of config files (see scan_file_content for CSV content scan)"
+        
+        code="e10" if self.is_context_operational() else "w6"
+        for path in self.config_files:
+            content=file_cache.open(path)
+            data=get_weird_assignments_from_config_text(content)
+            for section,d in data.items():
+                for key,value in d.items():
+                    if value.startswith("/"):
+                        description=hmm.get(code,
+                                            config_path=path,
+                                            bad_path=value)
+                        self.add_message(code,description)
                 
     def scan_resource_files(self):
         "scan the content of resource files (see scan_file_content for CSV content scan)"
