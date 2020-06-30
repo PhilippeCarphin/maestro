@@ -32,13 +32,14 @@ class LogConfigTui(LogConfig):
     LOG_FOLDER_COMPONENT="mflow"
     WRITE_TO_STDOUT=False
     
-"logging configs when running mflow or tui"
+"logging configs when running heimdall"
 class LogConfigHeimdall(LogConfig):
     LOG_FOLDER_COMPONENT="heimdall"
 
-"logging configs when running mflow or tui"
+"logging configs when running search utility"
 class LogConfigSearch(LogConfig):
     LOG_FOLDER_COMPONENT="search"
+    LEVEL=logging.CRITICAL+100
 
 def get_log_config_from_environment():    
     status=os.environ.get("MAESTRO_PYTHON3_LOGGING_CONFIG","").lower()

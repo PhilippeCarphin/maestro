@@ -18,9 +18,11 @@ import os
 __doc__=__doc__.replace("$PWD",os.environ["PWD"])
 import re
 import sys
+import logging
 
 from maestro_experiment import MaestroExperiment
 
+from home_logger import set_log_level
 from utilities.docopt import docopt
 
 def node_path_search(path,substring,regex_string,verbose=False):
@@ -64,6 +66,9 @@ def main(args):
         if not substring and not regex_string:
             print("Aborted. Node path search requires '--substring' or '--regex'.")
             sys.exit(1)
+
+        if verbose:
+            set_log_level(logging.DEBUG)
         
         node_path_search(experiment_path,
                          substring,
