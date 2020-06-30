@@ -10,7 +10,10 @@ class HeimdallMessageManager():
         self._code_to_csv={item["code"]:item for item in csv_list}
         self.codes=sorted([item["code"] for item in csv_list])
         
-        self._token_regex=re.compile(r"{[a-zA-Z_]+}")
+        """
+        finds all strings like '{ABC}' but not '{{ABC}}'
+        """
+        self._token_regex=re.compile(r"(?<!{){[a-zA-Z_]+}(?!})")
         
     def get_label(self,code):
         data=self._code_to_csv[code]
@@ -34,9 +37,9 @@ class HeimdallMessageManager():
         if not data:
             raise ValueError("code '%s' does not exist in Heimdall messages."%code)
         
-        description=data.get("description","")
-        
+        description=data.get("description","")        
         description=description.replace("\\n","\n")
+        tokens=self._token_regex.findall(description)
         
         for key in kwargs:
             if "{"+key+"}" not in description:
@@ -44,9 +47,9 @@ class HeimdallMessageManager():
                 
         message=description.format(**kwargs)
         
-        matches=self._token_regex.findall(message)
-        if matches:
-            raise ValueError("Unused keyword arguments in Heimdall message for code '%s': "%(code,str(matches)))
+        unused_tokens=[t for t in tokens if t in message]
+        if unused_tokens:
+            raise ValueError("Unused keyword arguments in Heimdall message for code '%s': %s"%(code,str(unused_tokens)))
         
         return message
 

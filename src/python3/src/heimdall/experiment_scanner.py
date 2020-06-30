@@ -136,7 +136,7 @@ class ExperimentScanner():
                 
     def scan_all_file_content(self):
         """
-        Use the file content CSV to scan for substrings and regexes in file contents.
+        See scan_file_content
         """        
         self.parse_file_content_checks_csv()
         
@@ -144,6 +144,12 @@ class ExperimentScanner():
             self.scan_file_content(path)
             
     def scan_file_content(self,path):
+        """
+        Use the file content CSV to scan for substrings and regexes in file content.
+        
+        This function only does generic content scans using the CSV, nothing specific
+        to one code.
+        """        
         rpath=self.maestro_experiment.path+"resources/"
         filetype=None
         for extension in ("tsk","cfg","xml"):
