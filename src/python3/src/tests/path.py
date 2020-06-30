@@ -1,8 +1,13 @@
+import os
 from constants.path import MFLOW_ROOT
 
 MFLOW_TEST_FOLDER=MFLOW_ROOT+"src/tests/mflow/"
 HEIMDALL_TEST_FOLDER=MFLOW_ROOT+"src/tests/heimdall/"
 MOCK_FILES=MFLOW_ROOT+"mock_files/"
+
+TMP_FOLDER=MFLOW_ROOT+"tmp/"
+os.makedirs(TMP_FOLDER,exist_ok=True)
+
 BIG_ME_PATH=MOCK_FILES+"complete_experiment/"
 TURTLE_ME_PATH=MOCK_FILES+"turtle_experiment/"
 BIG_LOOP_ME_PATH=MOCK_FILES+"big_loop_experiment/"

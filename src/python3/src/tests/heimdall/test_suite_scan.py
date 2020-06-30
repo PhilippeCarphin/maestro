@@ -5,6 +5,7 @@ from constants import SCANNER_CONTEXT
 from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH
 from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
+from tests.temp_file_builder import setup_b1_experiment
 
 class TestSuiteScan(unittest.TestCase):
             
@@ -14,6 +15,8 @@ class TestSuiteScan(unittest.TestCase):
         
         For example, 'suites_with_codes/e7' experiment has 'e7' code
         """
+        
+        setup_b1_experiment()
                 
         for code in hmm.codes:
             path=SUITES_WITH_CODES+code

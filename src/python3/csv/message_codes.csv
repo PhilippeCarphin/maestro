@@ -21,5 +21,7 @@ w2	Missing loop resource file	The loop ‘{node_path}’ has no resource file at
 w3	Deprecated site1/site2	The paths site1 and site2 are no longer available after the upgrades in early 2020. The {search} was found in file: ‘{file_path}’		
 w4	Deprecated hall1/hall2	The paths hall1 and hall2 are no longer available after the upgrades in early 2020. The {search} was found in file: ‘{file_path}’		
 w5	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable and cannot be installed operationally. Links:\n{bad_links}		
-e10	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a fragile way to configure an experiment.		
-w6	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a fragile way to configure an experiment.		
+e10	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a less portable and more fragile way to configure an experiment.		
+w6	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a less portable and more fragile way to configure an experiment.		
+e11	Dependency experiment does not exist	The ‘exp’ attribute ‘{exp_value}’ in the resources file ‘{resource_path}’ is not a path to a folder that exists.		
+b1	Hard coded dependency path	The ‘exp’ attribute ‘{exp_value}’ in the resources file ‘{resource_path}’ is hard coded. This is less portable and more fragile. Consider using a variable instead.		

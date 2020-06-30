@@ -141,15 +141,35 @@ class ExperimentScanner():
         attribute_regex=re.compile(r"""[a-zA-Z_]+[ ]*=[ ]*["']([^'"]+)["']""")
         
         for path in self.resource_files:
+            
+            "unbalanced parentheses"
+            code="e9"
             content=file_cache.open(path)
             for match in attribute_regex.finditer(content):
                 attribute_value=match.group(1)
-                if attribute_value.count("{") != attribute_value.count("}"):
-                    code="e9"
+                if attribute_value.count("{") != attribute_value.count("}"):                    
                     description=hmm.get(code,
                                         attribute_value=attribute_value,
                                         file_path=path)
                     self.add_message(code,description)
+            
+            "hard coded dependency experiment path"
+            etree=file_cache.etree_parse(path)
+            elements=etree.xpath("//DEPENDS_ON")
+            for d_element in elements:
+                exp=d_element.get("exp")
+                if exp and exp.startswith("/"):
+                    
+                    if file_cache.isdir(exp):
+                        code="b1"
+                    else:
+                        code="e11"
+                    
+                    description=hmm.get(code,
+                                        exp_value=exp,
+                                        resource_path=path)
+                    self.add_message(code,description)
+                
                 
     def scan_home_soft_links(self):
         """
