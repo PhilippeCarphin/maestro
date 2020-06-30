@@ -5,4 +5,4 @@
 code	filetypes	substring	regex_string
 w3	tsk,cfg		/site[12]/ops/
 w4	tsk,cfg		/space/hall[12]/sitestore/
-w6	resource_xml		[a-zA-Z]+=['"]\$[a-zA-Z_]+.['"]
+e8	resource_xml		[a-zA-Z]+=['"]\$[a-zA-Z_]+.['"]

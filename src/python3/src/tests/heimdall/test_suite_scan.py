@@ -18,9 +18,10 @@ class TestSuiteScan(unittest.TestCase):
         for code in hmm.codes:
             path=SUITES_WITH_CODES+code
             
-            msg="Mock experiment for code '%s' does not exist at path '%s'. All codes must have a test case."%(code,path)
+            "check that the test folder exists"
             if code!="c3":
-                "exclude c3 because that's the error - the folder does not exist"
+                "exclude c3 because that's the error we expect - the folder does not exist"
+                msg="Mock experiment for code '%s' does not exist at path '%s'. All codes must have a test case."%(code,path)
                 self.assertTrue(os.path.isdir(path),msg=msg)
             
             "override the context, if necessary"

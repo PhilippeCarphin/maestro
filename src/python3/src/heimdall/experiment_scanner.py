@@ -49,6 +49,7 @@ class ExperimentScanner():
         self.scan_required_files()
         self.scan_all_file_content()
         self.scan_xmls()
+        self.scan_resource_files()
         self.scan_home_soft_links()
         self.scan_scattered_modules()
         self.scan_all_task_content()
@@ -112,6 +113,27 @@ class ExperimentScanner():
             
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+                
+    def scan_resource_files(self):
+        "scan the content of resource files (see scan_file_content for CSV content scan)"
+        
+        """
+        this regex matches strings like:
+            machine="${FRONTEND}"
+        where group 1 is the value between double quotes.
+        """
+        attribute_regex=re.compile(r"""[a-zA-Z_]+[ ]*=[ ]*["']([^'"]+)["']""")
+        
+        for path in self.resource_files:
+            content=file_cache.open(path)
+            for match in attribute_regex.finditer(content):
+                attribute_value=match.group(1)
+                if attribute_value.count("{") != attribute_value.count("}"):
+                    code="e9"
+                    description=hmm.get(code,
+                                        attribute_value=attribute_value,
+                                        file_path=path)
+                    self.add_message(code,description)
                 
     def scan_home_soft_links(self):
         """
@@ -331,9 +353,10 @@ class ExperimentScanner():
         folders=set()        
         resource_files=set()
         flow_files=set()
+        rpath=self.path+"resources/"
+        mpath=self.path+"modules/"
         
         "flow.xml files in modules folder"
-        mpath=self.path+"modules"
         for folder in file_cache.listdir(mpath):
             flow=mpath+"flow.xml"
             if file_cache.isfile(flow):
@@ -364,7 +387,7 @@ class ExperimentScanner():
                 if parent!=folder:
                     folders.add(parent)
                 parent=os.path.dirname(parent)
-                    
+                
         "find maestro files (including broken symlinks) not in flow.xml, but in the same folders"
         for folder in folders:
             if not file_cache.isdir(folder):
@@ -373,6 +396,10 @@ class ExperimentScanner():
                 path=folder+"/"+filename
                 if file_cache.isfile(path) or file_cache.is_broken_symlink(path):
                     paths.add(path)
+                    
+                    "also add resource XMLs that were not discovered by using the flow"
+                    if path.startswith(rpath) and path.endswith(".xml"):
+                        resource_files.add(path)
                 
         "index tsk cfg xml"
         task_files=[]

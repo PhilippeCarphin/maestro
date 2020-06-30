@@ -19,4 +19,5 @@ w3	Deprecated site1/site2	The paths site1 and site2 are no longer available afte
 w4	Deprecated hall1/hall2	The paths hall1 and hall2 are no longer available after the upgrades in early 2020. The {search} was found in file: ‘{file_path}’		
 w5	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable and cannot be installed operationally. Links:\n{bad_links}		
 i1	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable and cannot be installed operationally. Links:\n{bad_links}		
-w6	Missing curly brackets in resource xml	Variables in resource XMLs must use curly brackets like ‘${{ABC}}’ not ‘$ABC’. The {search} was found in file: ‘{file_path}’		
+e8	Missing curly brackets in resource xml	Variables in resource XMLs must use curly brackets like ‘${{ABC}}’ not ‘$ABC’. The {search} was found in file: ‘{file_path}’		
+e9	Unbalanced curly brackets in resource xml	Found an uneven number of curly brackets ‘{attribute_value}’ in a resource file: ‘{file_path}’		

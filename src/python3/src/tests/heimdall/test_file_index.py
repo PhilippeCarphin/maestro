@@ -12,6 +12,7 @@ class TestFileIndex(unittest.TestCase):
         scanner=ExperimentScanner(p)
         
         expected=[p+"modules/main/flow.xml",
+                  p+"resources/main/not-in-flow.xml",
                   p+"resources/main/task1.xml",
                   p+"resources/main/task2.xml"]
         result=scanner.xml_files
@@ -31,5 +32,12 @@ class TestFileIndex(unittest.TestCase):
         
         expected=p+"modules/strange-file1"
         self.assertIn(expected,scanner.files)
+        
+        expected=[p+"resources/main/not-in-flow.xml",
+                  p+"resources/main/task1.xml",
+                  p+"resources/main/task2.xml"]
+        result=scanner.resource_files
+        msg=pretty_kwargs(result=result,expected=expected)
+        self.assertEqual(scanner.resource_files,expected,msg=msg)
     
 
