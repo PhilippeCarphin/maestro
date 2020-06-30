@@ -42,7 +42,7 @@
 
 /* size of socket buffers in KiloBytes */
 #define SOCK_BUF_SIZE 10
-#define SOCK_TIMEOUT_CLIENT 20
+#define SOCK_TIMEOUT_CLIENT 65
 
 /* prototype */
 int GetHostName (char *, size_t );
