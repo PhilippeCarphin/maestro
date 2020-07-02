@@ -58,6 +58,7 @@ if [[ $REINSTALL = "true" ]]; then
 	rm -rf $SSM_DOMAIN_PATH/*${ORDENV_PLAT}*
 	SSM_PACKAGES=""
 	for platform in $PLATFORMS ; do
+		SSM_PACKAGE=ssm/maestro_${VERSION}_${platform}.ssm
 		if [[ -f $SSM_PACKAGE ]]; then
 			ssm unpublish -p maestro_${VERSION}_${platform} -d $SSM_DOMAIN_PATH
 			ssm uninstall -p maestro_${VERSION}_${platform} -d $SSM_DOMAIN_PATH

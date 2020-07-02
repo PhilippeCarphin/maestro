@@ -1,22 +1,5 @@
 /* l2d2_admin.c - Server administrative tool, part of the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -74,8 +57,7 @@ dpnode *PRT_listdep=NULL;
 
 
 char typeofFile(mode_t mode);
-static void alarm_handler() { /* nothing */ }
-/* static int globerr(const char *path, int eerrno); */
+static void alarm_handler() {  }
 
 /* 
  * Prints usage information for this program to STREAM (typically
@@ -91,10 +73,10 @@ void print_usage (FILE* stream , int exit_code)
 
 char linkname[1024];
 ssize_t r;
-/* struct _depParameters *depXp=NULL; */
+
 char filename[256];
 
-/* int madmin (int argc, char* argv[]) */
+
 int main (int argc, char* argv[])
 {
   int i,next_option,answer,ret,status=0;
@@ -348,7 +330,7 @@ int main (int argc, char* argv[])
       case LIST_DEPENDENCIES:
            switch (Doption) 
 	   {
-	       /* add datestamp !! */
+	       
 	       case DEP_ALL: /* insert list_ptr, DEPENDER xp, depender node, dependee xp name, dependee node, depender date, dependee date, depender loop args, dependee loop ars, file, link */
 			    for ( LP=getDependencyFiles(depdir,"all",fp,"depender"); LP != NULL ; LP=LP->next ) {
 	                          fprintf(stdout,"node:%s depend_on_exp:%s node:%s loop_args:%s key:%s \n",LP->snode,LP->depOnXp, LP->depOnNode, LP->depOnLargs, LP->key);
@@ -359,14 +341,14 @@ int main (int argc, char* argv[])
 	       case DEP_EXP:
 			   for ( LP=getDependencyFiles(depdir,xp,fp,"depender"); LP != NULL ; LP=LP->next ){
 	                          fprintf(stdout,"node=%s depend_on_exp=%s node:%s loop_args:%s key:%s\n",LP->snode, LP->depOnXp, LP->depOnNode, LP->depOnLargs, LP->key);
-	                          /* fprintf(stdout,"link=%s\n",LP->link); fprintf(stdout,"wfile=%s\n",LP->waitfile); */
+	                          
 			   }
 			   free_list ( PRT_listdep );
 			   break;
 	       case DEP_KEY:
 			   for ( LP= getDependencyFiles(depdir,xp,fp,"depender"); LP != NULL ; LP=LP->next ) {
 	                          fprintf(stdout,"node=%s depend_on_exp=%s node=%s loop_args:%s key:%s\n",LP->snode, LP->depOnXp, LP->depOnNode, LP->depOnLargs, LP->key);
-	                          /* fprintf(stdout,"link=%s\n",LP->link); fprintf(stdout,"wfile=%s\n",LP->waitfile); */
+	                          
 			   }
 			   free_list ( PRT_listdep );
 			   break;
@@ -413,7 +395,7 @@ int main (int argc, char* argv[])
 				  
 				  get_time(Time,1);
 				  if ( (buf2=(char *) malloc (512*sizeof(char)) ) != NULL ) {
-				             /* fprintf(stdout,"len=%d\n",strlen(buf2)); give 6 !!!! */
+				             
 				             sprintf(buf2,"Inter-user dependency deleted (madmin) at:%s, will init node",Time);
                                   } else {
 				             fprintf(stderr,"Could not malloc in remove dep\n");

@@ -252,7 +252,6 @@ proc Utils_validateRealDatestamp { _datestamp } {
 # datestampVisibleLen: length of visible datestamp
 # what:                if what = scan, returns scan format as needed by "clock scan"
 #                      if what = display, returns format as seen by user i.e. yyyymmdd
-#
 proc Utils_getDatestampFormat { datestampVisibleLen what } {
    set value ""
    set defaultScanFormat "%Y%m%d%H"
@@ -368,7 +367,6 @@ proc Utils_setDebugOff {} {
 # if needed. It uses the shared variable
 # APP_LOG_FILE. The variable is shared among all
 # threads i.e. overview, msg center and exp threads
-#
 # Only levels notice and higher are currently logged.
 # By default debug level is off and even in on mode,
 # it goes to standard out and not log file.
@@ -397,9 +395,9 @@ proc Utils_logInit {} {
       ::log::lvSuppress warning 0
       ::log::lvSuppress notice 0
 
-      # ::log::lvCmd notice Utils_logMessage 
-      # ::log::lvCmd warning Utils_logMessage 
-      # ::log::lvCmd error Utils_logMessage 
+      
+      
+      
       ::log::lvCmd notice FileLogger_log 
       ::log::lvCmd warning FileLogger_log 
       ::log::lvCmd error FileLogger_log 
@@ -464,7 +462,7 @@ proc Utils_createPluginToolbar { parent parentToolbar pluginEnv } {
    # plugin is child of main toolbar frame
    if { [SharedData_getMiscData OVERVIEW_MODE] == false || 
         ( [SharedData_getMiscData OVERVIEW_MODE] == true && ${parent} == "xflow" ) } {
-      # if xflow standalone true || overview launching exp flow
+      
       set toolbarW ${parentToolbar}.plugintoolbar
    } else {
       # overview plugin

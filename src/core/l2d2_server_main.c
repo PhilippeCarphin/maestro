@@ -1,22 +1,5 @@
 /* l2d2_server.c - Server code of the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 #define _REENTRANT
 #include <stdlib.h>
@@ -306,21 +289,17 @@ void DependencyManager (_l2d2server l2d2 ) {
 						    
 						    /* do an initnode */
                                                     memset(cmd,'\0',sizeof(cmd));
-					            /* snprintf(cmd,sizeof(cmd),"exec >/users/dor/afsi/rol/tmp/l2d2server/log/v1.4.0/cmd_listing_init 2>&1; %s; export SEQ_EXP_HOME=%s; export SEQ_DATE=%s; maestro -s initnode -n %s %s",l2d2.mshortcut, depXp->xpd_sname, depXp->xpd_sxpdate, depXp->xpd_snode, largs);*/
-					            /* snprintf(cmd,sizeof(cmd),"exec >/dev/null 2>&1;%s; export SEQ_EXP_HOME=%s; export SEQ_DATE=%s; maestro -s initnode -n %s %s",l2d2.mshortcut, depXp->xpd_sname, depXp->xpd_sxpdate, depXp->xpd_snode, largs); */
+					            
+					            
 					            snprintf(cmd,sizeof(cmd),"%s; export SEQ_EXP_HOME=%s; export SEQ_DATE=%s; maestro -s initnode -n %s %s",l2d2.mshortcut, depXp->xpd_sname, depXp->xpd_sxpdate, depXp->xpd_snode, largs);
 					            ret=system(cmd);
 
-					            /* Notify user by email : See if we need to add it 	    
-                                                    memset(buf,'\0',sizeof(buf));
-                                                    snprintf(buf,sizeof(buf),"Dependency on Experiment:%s and Node:%s",depXp->xpd_sname,depXp->xpd_name);
-			                            ret=sendmail(l2d2.emailTO,l2d2.emailTO,l2d2.emailCC,"Dependency Removed",&buf[0],dmlg);
-						    */
+					            
 						    continue;
 					} else if ( access(depXp->xpd_lock,R_OK) == 0 ) {
                                               get_time(Time,4); 
 					      pleaf=(char *) getPathLeaf(depXp->xpd_snode);
-					      /* where to put listing: xp/listings/server_host/datestamp/node_container/node_name_and_loop */
+					      
                                               memset(listings,'\0',sizeof(listings));
 					      snprintf(listings,sizeof(listings),"%s/listings/%s%s",depXp->xpd_sname, l2d2.host, depXp->xpd_container);
 					      if ( access(listings,R_OK) != 0 )  ret=r_mkdir(listings,1,dmlg);
@@ -547,14 +526,7 @@ static void l2d2SelectServlet( int listen_sd , TypeOfWorker tworker)
           fclose(fp);
   }
  
-  /*
-  === This could be used in future ====
-  register SIGALRM signal for session control with each client,though it will need sig suspend 
-  ssa.sa_handler = recv_handler;
-  ssa.sa_flags = 0;
-  sigemptyset(&ssa.sa_mask);
-  if ( sigaction(SIGALRM,&ssa,NULL) == -1 ) fprintf(mlog,"Error registring signal in SelectServlet \n");
-  */
+  
 
   FD_ZERO(&master_set);
   max_sd = listen_sd;
@@ -609,7 +581,7 @@ static void l2d2SelectServlet( int listen_sd , TypeOfWorker tworker)
 	            fclose(mlog);
                     snprintf(buf,sizeof(buf),"%s/meworker_%.8s_%d",L2D2.logdir,Stime,getpid());
 	            if ( (mlog=fopen(buf,"w+")) == NULL ) {
-	                      fprintf(stderr,"Worker: Could not open mlog stream\n"); /* doesn't go anywhere */
+	                      fprintf(stderr,"Worker: Could not open mlog stream\n"); 
 	            } else {
 	                setvbuf(mlog, NULL, _IONBF, 0);
                     }
@@ -773,7 +745,7 @@ static void l2d2SelectServlet( int listen_sd , TypeOfWorker tworker)
                                          if ( ret != 8 ) {
 	                                         send_reply(i,1);
                                                  if ( mlog != NULL ) fprintf (mlog,"Got wrong number of parameters at LOGIN, number=%d instead of 8 buff=>%s<\n",ret,buff);
-	                                         /* close(i);same comment as for the S case below */
+	                                         
 			                         ret=shutdown(i,SHUT_WR);
 					         ceiling--;
                                                  snprintf(l2d2client[i].Open_str,sizeof(l2d2client[i].Open_str),"Session Refused with Host:%s AT:%s Exp=%s Node=%s Signal=%s ... Wrong number of arguments ",hostname , Stime, expName, node, signal);
@@ -782,7 +754,7 @@ static void l2d2SelectServlet( int listen_sd , TypeOfWorker tworker)
 						 snprintf(l2d2client[i].Open_str,sizeof(l2d2client[i].Open_str),"OpenConHost:%s At:%s Xp=%s Node=%s Signal=%s NumCon=%d ",hostname, Stime, expName, node ,signal, ceiling);
                                          } else {
 	                                         send_reply(i,1);
-	                                         /* close(i);same comment as for the S case below */
+	                                         
 			                         ret=shutdown(i,SHUT_WR);
 						 ceiling--;
                                                  snprintf(l2d2client[i].Open_str,sizeof(l2d2client[i].Open_str),"Session Refused with Host:%s AT:%s Exp=%s Node=%s Signal=%s pid_svr=%u pid_sent=%u m5_client=%s ",hostname , Stime, expName, node, signal, pidTken, pidSent, m5);
@@ -950,7 +922,7 @@ static void l2d2SelectServlet( int listen_sd , TypeOfWorker tworker)
 					     }
 					} 
 
-			                /* send_reply(i,0); */
+			                
 	                                snprintf(buf,sizeof(buf),"0 Server is Alive on host=%s version=%s, Dependency Manager ok, Eworker ok \0",L2D2.host, L2D2.mversion);
 					ret=write(i,buf,strlen(buf));
 			                break;
@@ -993,7 +965,7 @@ static void l2d2SelectServlet( int listen_sd , TypeOfWorker tworker)
 		     ceiling--;
                }
             } /* End of existing connection is readable */
-         } /* End of if (FD_ISSET(i, &working_set)) */
+         } 
       } /* End of loop through selectable descriptors */
    } while (end_server == FALSE);
 
@@ -1115,7 +1087,7 @@ static void maestro_l2d2_main_process_server (int fserver)
                  if ( (ChildPids[ProcessCount] = fork()) == 0 ) { 
 		      fclose(smlog);
                       l2d2SelectServlet( fserver , TRANSIENT );
-		      exit(0); /* never reached */
+		      exit(0); 
                  } else if ( ChildPids[ProcessCount] > 0 ) {        
 	              fprintf(smlog,"One worker generated with pid=%u at:%s Actual ProcessCount=%d\n",ChildPids[ProcessCount],Time,ProcessCount);
                       ProcessCount++;
@@ -1152,7 +1124,7 @@ static void maestro_l2d2_main_process_server (int fserver)
                          if ( (pid_eworker = fork()) == 0 ) { 
 		                    fclose(smlog);
                                     l2d2SelectServlet( fserver , ETERNAL );
-		                    exit(0); /* never reached */
+		                    exit(0); 
                          } else if ( pid_eworker > 0 ) {      
                                     fprintf(smlog,"Main server: creating a Eworker pid=%d at:%s\n", pid_eworker, Time);
 			            ew_regenerated++;
@@ -1185,7 +1157,7 @@ static void maestro_l2d2_main_process_server (int fserver)
                                close(fserver);
 		               fclose(smlog);
                                DependencyManager (L2D2) ;
-                               exit(0); /* never reached ! */
+                               exit(0); 
                         } else if ( L2D2.depProcPid > 0 ) {
 	                       /* in parent do nothing */
 			       dm_regenerated++;
@@ -1314,17 +1286,11 @@ static void maestro_l2d2_main_process_server (int fserver)
 		 }
 	}
         
-	/* check to see if # of Transient worker alive file is consistent with ProcessCount variable 
-	   This glitch could happen sometime 
-	snprintf(filename,sizeof(filename),"%s/TRW_*",L2D2.tmpdir);
-	g_lres = glob(filename, GLOB_NOSORT , NULL, &g_LogFiles);
-        if (  g_lres == 0 && g_LogFiles.gl_pathc != ProcessCount ) {
-	}
-	*/
+	
 
         
 
-	sleep(5);  /* yield */              
+	sleep(5);                
   }
 
 }
@@ -1380,7 +1346,7 @@ int main ( int argc , char * argv[] )
   if ( access(buf,R_OK) != 0 ) {
          if ( (status=r_mkdir(buf ,1,stderr))  != 0 ) { 
                 fprintf(stderr, "maestro_server(),Could not create dependencies directory:%s\n",buf);
-		/* what to do next? */
+		
 	 }
 	 
   }
@@ -1404,7 +1370,7 @@ int main ( int argc , char * argv[] )
       exit(1);
   }
 
-  /* Parse config file. In which directory should this file reside ? */
+  
   snprintf(buf,sizeof(buf),"%s/.suites/mconfig.xml",passwdEnt->pw_dir);
   ret = ParseXmlConfigFile(buf, &L2D2 );
 
@@ -1488,7 +1454,7 @@ int main ( int argc , char * argv[] )
          /*  this is a child */
          close(fserver);
          DependencyManager (L2D2) ;
-         exit(0); /* never reached ! */
+         exit(0); 
   } else if ( L2D2.depProcPid < 0 ) { 
          fprintf(stderr,"forking a Dependency Manager failed");
 	 exit(1);
@@ -1507,7 +1473,7 @@ int main ( int argc , char * argv[] )
   if ( listen(fserver, 3000) < 0 ) {
          fprintf(stderr, "maestro_server(), Could not listen on port:fserver \n");
          kill(L2D2.depProcPid,9); /* should kill the DMP */
-         exit(1);  /* not reachable ??? */
+         exit(1);  
 
   }
 
@@ -1544,7 +1510,7 @@ static void l2d2server_shutdown(pid_t pid , FILE *fp)
     snprintf(buf,sizeof(buf),"%s/END_TASK_LOCK",L2D2.tmpdir);
     ret=unlink(buf);
 
-    /* TRW_* ??? */
+    
 
     ret=rmdir(L2D2.tmpdir);
     ret == 0 ?  fprintf(fp,"tmp directory removed ... \n") : fprintf(fp,"tmp directory not removed ... \n") ;

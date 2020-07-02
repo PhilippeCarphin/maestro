@@ -1,22 +1,5 @@
 /* l2d2_Util.c - Utility functions for server code of the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 
 #include <stdio.h>
@@ -239,7 +222,7 @@ int globPath (char *pattern, int flags, int (*errfunc) (const char *epath, int e
 	case GLOB_NOMATCH:
                      globfree(&glob_p);
 		     return(0);
-		     break;/* not reached */
+		     break;
     }
 
     ret=glob_p.gl_pathc;
@@ -291,11 +274,7 @@ int NodeLogr (char *nodeLogerBuffer , int pid, FILE *mlog)
 	     return (1);
      }
      
-     /* test existence of Exp. and datestamp  
-     if ( access(firsin,R_OK) != 0 ) {
-             fprintf(mlog,"NodeLogr: Experiment:%s do not exists\n",firsin);
-     }
-     */
+     
 
      strcat(logBuffer,"\n");
      if ((NodeLogfile = open(firsin, O_WRONLY|O_APPEND|O_CREAT, 00666)) != -1 ) {
@@ -381,7 +360,7 @@ int  writeNodeWaitedFile ( const char * string , FILE *mlog )
      
     if ( !found ) {
           snprintf(this_line, sizeof(this_line),"exp=%s node=%s datestamp=%s args=%s\n",this_exp,this_node,this_datestamp,this_loopArgs); 
-          /* fprintf( waitingFile,"%s", this_line );  */
+          
           num = fwrite(this_line ,sizeof(char) , strlen(this_line) , waitingFile); 
 	  if ( num != strlen(this_line) )  fprintf(mlog,"writeNodeWaitFile Error: written:%zu out of:%ld \n",num,strlen(this_line));
     }
@@ -611,7 +590,7 @@ int ParseXmlConfigFile(char *filename ,  _l2d2server *pl2d2 )
 	       sprintf(pl2d2->emailCC,"");
 	       pl2d2->maxNumOfProcess=4;
 	       pl2d2->maxClientPerProcess=50;
-	       pl2d2->pollfreq=30;       /* sec */
+	       pl2d2->pollfreq=30; /* sec */
 	       pl2d2->dependencyTimeOut=24; /* hours */
                pl2d2->dzone=0;
                fprintf(stderr,"Setting Defaults for maxNumOfProcess:%d maxClientPerProcess:%d\n",pl2d2->maxNumOfProcess,pl2d2->maxClientPerProcess);
@@ -1280,7 +1259,7 @@ int sendmail(const char *to, const char *from, const char *cc , const char *subj
             pclose(mailpipe);
             retval = 0;
      } else {
-             /* freopen(stderr, "w+", stderr); */
+             
               fprintf(mlog,"Failed to invoke sendmail\n"); 
      }
 
@@ -1322,7 +1301,7 @@ dpnode *getDependencyFiles(char *DDep, char *xp ,FILE *fp, const char *deptype)
                         /* use inode */
 			if ( strcmp(deptype,"depender") == 0 ) {
                             /*This xp is the depender,  check on which xp this experiment depend  */
-			    /* insert list_ptr, depender xp, depender node, dependee xp name, dependee node, depender date, dependee date, depender loop args, dependee loop ars, file, link */
+			    
                             if ( strcmp(xp,"all") == 0 ) {
                                      ret=insert(&PRT_listdep, xp, depXp->xpd_snode, depXp->xpd_name, depXp->xpd_node, depXp->xpd_sxpdate, depXp->xpd_xpdate, depXp->xpd_slargs, depXp->xpd_largs, depXp->xpd_key, *p, linkname);
                             } else {
@@ -1333,7 +1312,7 @@ dpnode *getDependencyFiles(char *DDep, char *xp ,FILE *fp, const char *deptype)
                             }
 			} else {
                             /* This xp is the dependee, check which experiment depends on this xp */
-			    /* insert list_ptr, dependee xp, depender node, dependee xp name, dependee node, depender date, dependee date, depender loop args, dependee loop ars, file, link */
+			    
                             this_inode=get_Inode(depXp->xpd_name);
                             if ( this_inode == Inode  ) { 
                                       ret=insert(&PRT_listdep, xp, depXp->xpd_snode, depXp->xpd_name, depXp->xpd_node, depXp->xpd_sxpdate, depXp->xpd_xpdate, depXp->xpd_slargs, depXp->xpd_largs, depXp->xpd_key, *p, linkname);
@@ -1350,7 +1329,7 @@ dpnode *getDependencyFiles(char *DDep, char *xp ,FILE *fp, const char *deptype)
 int globerr(const char *path, int eerrno)
 {
     fprintf(stderr, "%s: %s\n", path, strerror(eerrno));
-    return 0; /* let glob() keep going */
+    return 0; 
 }
 /*
 l2d2_Util_isNodeXState 

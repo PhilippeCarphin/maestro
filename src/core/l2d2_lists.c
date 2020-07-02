@@ -1,22 +1,5 @@
 /* l2d2_lists.c - List utility functions for server code of the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 #include <stdio.h>
 #include <string.h>
@@ -58,7 +41,7 @@ int insert (dpnode **pointer, char *sxp, char *snode, char *depOnXp, char *depOn
 	     tpointer=*pointer;
              while (tpointer->next != NULL)
              {
-		     /* duplicate ? if ( strcmp(pointer->key,key) == 0 ) return (2); */
+		     
                      tpointer = tpointer -> next;
              }
 	}
@@ -94,7 +77,7 @@ int insert (dpnode **pointer, char *sxp, char *snode, char *depOnXp, char *depOn
 */
 int find (dpnode *pointer, char *key)
 {
-        /* pointer =  pointer -> next; First node is dummy node. */
+        
 
         /* Iterate through the entire linked list and search for the key. */
         while (pointer != NULL)

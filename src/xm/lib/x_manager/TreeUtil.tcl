@@ -1,22 +1,4 @@
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
+
 
 
  package require log
@@ -30,8 +12,6 @@
 
 #---------------------------------------------------
 # -- tk_pop for Experiments & non Experiment nodes
-#
-#
 #---------------------------------------------------
 proc TreeUtil::_treepopup {frm tree node} {
    variable data
@@ -58,9 +38,9 @@ proc TreeUtil::_treepopup {frm tree node} {
 	
         # -- Enable/Disable View Git & Downlad Git if no .git at this Level
         if {[TreeUtil::CheckGit $tree $node] == 0 } {
-	       #$frm.stpopup  entryconfigure 5 -state normal
-	       #$frm.stpopup  entryconfigure 6 -state normal
-	       # -- Disable for now
+	
+	
+	
 	       $frm.stpopup  entryconfigure 5 -state disabled
 	       $frm.stpopup  entryconfigure 6 -state disabled
         } else {
@@ -85,9 +65,6 @@ proc TreeUtil::_treepopup {frm tree node} {
 }
 
 #---------------------------------------------------
-#
-#
-#
 #---------------------------------------------------
 proc TreeUtil::_lblpopup { frm } {
         tk_popup $frm.lbpopup [winfo pointerx [focus]] [winfo pointery [focus]]
@@ -95,8 +72,6 @@ proc TreeUtil::_lblpopup { frm } {
 
 #---------------------------------------------------
 # Pop Up menu for non experiments & root nodes
-#
-#
 #---------------------------------------------------
 proc TreeUtil::MpopNode {frm tree} {
 
@@ -127,8 +102,6 @@ proc TreeUtil::MpopNode {frm tree} {
 
 #---------------------------------------------------
 # Pop Up menu for Root Node
-#
-#
 #---------------------------------------------------
 # -- Root Node
 proc TreeUtil::MpopRNode {frm tree} {
@@ -147,8 +120,6 @@ proc TreeUtil::MpopRNode {frm tree} {
 }
 #---------------------------------------------------
 # Pop Up menu for Xp Nodes
-#
-#
 #---------------------------------------------------
 proc TreeUtil::MpopXPNode {frm tree} {
     variable data
@@ -204,9 +175,6 @@ proc TreeUtil::DeleteExp { tree } {
      }
 }
 #---------------------------------------------------
-#
-#
-#
 #---------------------------------------------------
 # -- Create Exp at Root level
 proc TreeUtil::NewXpRootLevel { tree nbk } {
@@ -217,8 +185,6 @@ proc TreeUtil::NewXpRootLevel { tree nbk } {
 
 #---------------------------------------------------
 # NOT USED!
-#
-#
 #---------------------------------------------------
 proc TreeUtil::TLcreate { frm lbl panel tree } {
 
@@ -235,9 +201,6 @@ proc TreeUtil::TLcreate { frm lbl panel tree } {
 }
 
 #---------------------------------------------------
-#
-#
-#
 #---------------------------------------------------
 proc TreeUtil::ExpandNode { tree } {
 
@@ -245,7 +208,7 @@ proc TreeUtil::ExpandNode { tree } {
     set ilyla [ $tree exists "$node"]
    
     if { $ilyla != 0 } { 
-           # -- Is this guy an Exp ?, we dont Explode an Exp
+
            set data [$tree itemcget $node -data]
     
            if {[string compare $data ""] == 0 || [string compare $data "root"] == 0 } {
@@ -259,8 +222,6 @@ proc TreeUtil::ExpandNode { tree } {
 
 #---------------------------------------------------
 # Exec gitk on a root node
-#
-#
 #---------------------------------------------------
 proc TreeUtil::RunGit { frm tree } {
 
@@ -280,8 +241,6 @@ proc TreeUtil::RunGit { frm tree } {
 
 #---------------------------------------------------
 # Download git repository
-#
-#
 #---------------------------------------------------
 proc TreeUtil::DownloadGit { frm tree } { 
            Dialogs::show_msgdlg "Comming Soon"  ok info "" .
@@ -289,8 +248,6 @@ proc TreeUtil::DownloadGit { frm tree } {
 
 #---------------------------------------------------
 # Check if a git repository exist
-#
-#
 #---------------------------------------------------
 proc TreeUtil::CheckGit { tree node } {
    
@@ -313,8 +270,6 @@ proc TreeUtil::CheckGit { tree node } {
 
 #---------------------------------------------------
 # check if a node is writable
-#
-#
 #---------------------------------------------------
 proc TreeUtil::WritableNode { tree node } {
     
@@ -335,8 +290,6 @@ proc TreeUtil::WritableNode { tree node } {
 
 #---------------------------------------------------
 # not used !
-#
-#
 #---------------------------------------------------
 # -- this proc is not used
 proc TreeUtil::BrowseNodeNotUsed { tree } {
@@ -345,7 +298,7 @@ proc TreeUtil::BrowseNodeNotUsed { tree } {
     set ilyla [ $tree exists "$node"]
     
     if { $ilyla != 0 } { 
-           # -- Is this guy an Exp ?, we dont Browse an Exp.
+
            set data [$tree itemcget $node -data]
            if { [string compare $data ""] == 0 } {
                    set path [XTree::getPath $tree $node]
@@ -358,9 +311,6 @@ proc TreeUtil::BrowseNodeNotUsed { tree } {
 }
 
 #---------------------------------------------------
-#
-#
-#
 #---------------------------------------------------
 # -- Just launch dolphin on that Node
 proc TreeUtil::BrowseNode { tree } {
@@ -369,7 +319,7 @@ proc TreeUtil::BrowseNode { tree } {
     set ilyla [ $tree exists "$node"]
     
     if { $ilyla != 0 } { 
-           # -- Is this guy an Exp ?, we dont Browse an Exp.
+
            set data [$tree itemcget $node -data]
            if { [string compare $data ""] == 0 } {
                    set path [XTree::getPath $tree $node]
@@ -384,8 +334,6 @@ proc TreeUtil::BrowseNode { tree } {
 }
 #---------------------------------------------------
 # Not used !
-#
-#
 #---------------------------------------------------
 # -- this proc is not used
 proc TreeUtil::ShowNodeContent { nodepath } {
@@ -421,7 +369,7 @@ proc TreeUtil::ShowNodeContent { nodepath } {
         scrollbar $vsb -orient vertical   -command [list $frm.tbl yview]
 	scrollbar $hsb -orient horizontal -command [list $frm.tbl xview]
 
-        # -- ok butt
+
 	set bfrm [frame $ListNode.bframe -border 2 -relief flat]
 	set Bok [button $bfrm.bok -text "Ok" -font TkTextFont -image $XPManager::img_Ok -command "destroy $ListNode"]
 
@@ -445,9 +393,6 @@ proc TreeUtil::ShowNodeContent { nodepath } {
 
 
 #---------------------------------------------------
-#
-#
-#
 #---------------------------------------------------
 proc TreeUtil::ListContent1 { tbl nodep nodeidx } {
 
@@ -483,9 +428,6 @@ proc TreeUtil::ListContent1 { tbl nodep nodeidx } {
 
 
 #---------------------------------------------------
-#
-#
-#
 #---------------------------------------------------
 proc TreeUtil::Refresh_Exp { frmt } {
        
@@ -516,8 +458,6 @@ proc TreeUtil::Refresh_Exp { frmt } {
 }
 #---------------------------------------------------
 #  NOT USED
-#
-#
 #---------------------------------------------------
 proc TreeUtil::GetRootPath { path } {
 
@@ -582,9 +522,6 @@ proc TreeUtil::GetRootPath { path } {
     return ""
 }
 #---------------------------------------------------
-#
-#
-#
 #---------------------------------------------------
 proc TreeUtil::FindExpInode {listExp} {
       # -- find inod of exp
