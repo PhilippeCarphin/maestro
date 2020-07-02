@@ -425,8 +425,6 @@ int writeInterUserDepFile (const char * tbuffer, FILE *mlog)
 	       return(1);
      }
 
-     /* in case of ocm dep. and depending on a loop the file exist already
-      * from last iteration */
      if ((fp=fopen(filename,"w")) == NULL) {
                fprintf(mlog,"maestro server cannot write to interUser dependency file:%s\n",filename );
 	       return(1);

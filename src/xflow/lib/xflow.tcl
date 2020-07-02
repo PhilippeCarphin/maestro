@@ -1531,27 +1531,20 @@ proc xflow_followDependency {  exp_path datestamp node extension } {
    ::log::log debug "xflow_followDependency waitStatusMsg:$waitStatusMsg"
    
    set depExp ${exp_path}
-   set isOcmDep false
    if { ${waitStatusMsg} != "" } {
       # parse wait msg looking for exp=, node=, index=, datestamp=
       foreach token ${waitStatusMsg} {
          switch -glob ${token} {
 	    exp=* {
 	       ::log::log debug "xflow_followDependency got exp: $token"
-	       if { [string match */.ocm/* ${token}] } {
-	          set isOcmDep true
-	          set depExp [textutil::trimPrefix ${token} exp=]
-	       } else {
-	          
-	          set depExp [::textutil::trimPrefix ${token} exp=]
-	       }
+	       set depExp [::textutil::trimPrefix ${token} exp=]
 	    }
 	    node=* {
 	       ::log::log debug "xflow_followDependency got node: $token"
 	       # if an iteration is used, it would be part of the node
 	       # i.e. /CMC-GRIB/Global/SGPD_GDPS/Switch_GRIB/Loop_Hours+12+18
 	       set depNode [::textutil::trimPrefix ${token} node=]
-	       if { [string index ${depNode} 0] != "/" && ${isOcmDep} == false } {
+	       if { [string index ${depNode} 0] != "/" } {
 	          set depNode /${depNode}
 	       }
 	    }
@@ -1563,41 +1556,26 @@ proc xflow_followDependency {  exp_path datestamp node extension } {
       }
 
       set xflowToplevel [xflow_getToplevel ${depExp} ${depDatestamp}] 
-      if { ${isOcmDep} == false } {
-         # start the suite flow if not started
-         set isOverviewMode [SharedData_getMiscData OVERVIEW_MODE]
 
-         if { [ winfo exists ${xflowToplevel} ] == 0 || [winfo viewable ${xflowToplevel}] == false } {
-	    if { [SharedData_getExpDisplayName ${depExp}] == "" } {
+      # start the suite flow if not started
+      set isOverviewMode [SharedData_getMiscData OVERVIEW_MODE]
+
+      if { [ winfo exists ${xflowToplevel} ] == 0 || [winfo viewable ${xflowToplevel}] == false } {
+         if { [SharedData_getExpDisplayName ${depExp}] == "" } {
 	       # read exp options if new exp
                ExpOptions_read ${depExp}
-	    }
-            if { ${isOverviewMode} == true } {
-               Overview_launchExpFlow ${depExp} ${depDatestamp}
-            } elseif { ${depExp} != ${exp_path} } {
-               # standalone xflow mode with dependencies on an external maestro suite
-               xflow_newDatestampFound ${depExp} ${depDatestamp}
-            }
 	 }
-
-         # ask the suite to take care of showing the selected node in it's flow
-	 ::log::log debug "xflow_followDependency calling xflow_findNode ${depExp} ${depDatestamp} ${depNode}"
-         xflow_findNode ${depExp} ${depDatestamp} ${depNode}
-      } else {
-         # ocm dependencies... send a dialog with dependency info
-         set topW ${depExp}_${depDatestamp}
-         set topW [regsub -all {[\.]} ${topW} _]
-         set topW .dep_dialog_${topW}
-
-         set dialogText "OCM Dependency\n\nSuite: ${depExp}\n\nJob: ${depNode}\n\nDatestamp: ${depDatestamp}"
-         set dlg [Dialog ${topW} -parent ${xflowToplevel} -modal none \
-                 -separator 1 -title "OCM Dependency Dialog" -default 0 -cancel 1]
-         $dlg add -name Ok -text Ok -command [list destroy ${topW}]
-         set msg [message [$dlg getframe].msg -aspect 300 -text ${dialogText} -justify left -anchor c -font [xflow_getWarningFont]]
-         pack $msg -fill both -expand yes -padx 50 -pady 50 
-
-         $dlg draw
+         if { ${isOverviewMode} == true } {
+            Overview_launchExpFlow ${depExp} ${depDatestamp}
+         } elseif { ${depExp} != ${exp_path} } {
+            # standalone xflow mode with dependencies on an external maestro suite
+            xflow_newDatestampFound ${depExp} ${depDatestamp}
+         }
       }
+
+      # ask the suite to take care of showing the selected node in it's flow
+      ::log::log debug "xflow_followDependency calling xflow_findNode ${depExp} ${depDatestamp} ${depNode}"
+      xflow_findNode ${depExp} ${depDatestamp} ${depNode}
    }
 }
 
