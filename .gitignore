@@ -17,6 +17,7 @@ src/python3/mflow-debug.sh
 /man/.offline_man_backup
 .ssm.d/control*
 tests/src/config.py
+/src/python3/tmp
 
 # git
 *.orig

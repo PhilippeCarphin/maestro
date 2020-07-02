@@ -1,8 +1,10 @@
  
 import os
 import os.path
+import subprocess
 
 from utilities.colors import print_green
+from utilities.shell import safe_check_output_with_status
 
 def list_files_recursively(path):
     """
@@ -24,6 +26,39 @@ def list_files_recursively(path):
     process = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.DEVNULL)
     output, error = process.communicate()
     return output.strip().decode("utf8").split("\n")
+
+def get_links_source_and_target(path):
+    """
+    Searches this path recursively for all symlinks, returning a list of 
+    dictionaries, with all symlinks and their unresolved targets:
+        
+        {
+        "source":"/home/abc123/projects/tmp",
+        "target":"../tmp"
+        }
+        
+    This can be used to audit relative/absolute links.
+    """
+    
+    cmd="find %s -type l"%path
+    output,status=safe_check_output_with_status(cmd)
+    if status!=0:
+        return []
+    
+    results=[]
+    for source in output.split("\n"):
+        cmd="ls -l "+source
+        output,status=safe_check_output_with_status(cmd)
+        output=output.strip()
+        a=" -> "
+        if status!=0 or a not in output:
+            continue
+        target=output.split(a)[-1]
+        result={"source":source.strip(),
+                "target":target.strip()}
+        results.append(result)
+    
+    return results
 
 def get_matching_paths_recursively(rootdir, extension="", verbose=0,
                                    path_blacklist=None, path_whitelist=None,follow_links=True,
