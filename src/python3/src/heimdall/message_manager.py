@@ -6,15 +6,32 @@ from constants.path import HEIMDALL_MESSAGE_CSV
 class HeimdallMessageManager():
     def __init__(self):
         
-        csv_list=get_dictionary_list_from_csv(HEIMDALL_MESSAGE_CSV)
-        self._code_to_csv={item["code"]:item for item in csv_list}
-        self.codes=sorted([item["code"] for item in csv_list])
+        self.parse_message_codes_csv()
         
         """
         finds all strings like '{ABC}' but not '{{ABC}}'
         """
         self._token_regex=re.compile(r"(?<!{){[a-zA-Z_]+}(?!})")
+    
+    def parse_message_codes_csv(self):
         
+        path=HEIMDALL_MESSAGE_CSV
+        csv_list=get_dictionary_list_from_csv(path)
+        self._code_to_csv={item["code"]:item for item in csv_list}
+        self.codes=sorted([item["code"] for item in csv_list])
+        
+        "check for duplicate codes"
+        duplicates=[c for c in self.codes if self.codes.count(c)>1]
+        if duplicates:
+            raise ValueError("Message code CSV '%s' has duplicate code entries: %s"%(path,", ".join(duplicates)))
+        
+        "check for invalid code format"
+        regex_string="[cewib][0-9]+"
+        r=re.compile(regex_string)
+        bad_codes=[c for c in self.codes if not r.match(c)]
+        if bad_codes:
+            raise ValueError("Message code CSV '%s' has bad code entries: %s\nCodes must match regex:\n   %s"%(path,", ".join(bad_codes),regex_string))
+    
     def get_label(self,code):
         data=self._code_to_csv[code]
         return data["label"]

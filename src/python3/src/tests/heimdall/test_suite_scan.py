@@ -7,7 +7,7 @@ from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
 from tests.temp_file_builder import setup_b1_experiment
 
-class TestSuiteScan(unittest.TestCase):
+class TestSuiteScan(unittest.TestCase):        
             
     def test_suites_with_codes(self):
         """
