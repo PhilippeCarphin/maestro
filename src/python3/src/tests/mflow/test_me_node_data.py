@@ -71,20 +71,23 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
         result=me.get_node_data(node_path)
         assert_valid_json(result,JSON_SCHEMAS.NODE)
         
-        expected={"catchup":4,
+        expected={"catchup":2,
                   "flow_children_node_paths":[],
                   "config_path":me.path+"modules/cutoff/cutoff.cfg",
                   "loop_indexes_available":[],
                   "flow_branch":"main/pre_assimcycle/get_arcdata_cutoff/cutoff/submit_families/cutoff",
                   "flow_path":me.path+"modules/cutoff/flow.xml",
-                  "machine":"g1-mini-default-machine",
+                  "machine":"eccc-ppp4",
+                  "memory":"2G",
                   "module_name":"cutoff",
                   "name":"cutoff",
                   "path":node_path,
+                  "queue":"production",
                   "resource_path":me.path+"resources/main/pre_assimcycle/cutoff/cutoff.xml",
                   "submits_children_node_paths":[],
                   "task_path":me.path+"modules/cutoff/cutoff.tsk",
-                  "type":NODE_TYPE.NPASS_TASK}
+                  "type":NODE_TYPE.NPASS_TASK,
+                  "wallclock":10}
         insert_default_batch_data(expected)
         
         msg=pretty_objects(expected=expected,result=result)

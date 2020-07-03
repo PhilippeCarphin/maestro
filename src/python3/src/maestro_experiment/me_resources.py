@@ -63,7 +63,7 @@ class ME_Resources():
             name=match.group(1)
             value=self.get_resource_value_from_key(name)                    
             if value:
-                text.replace(match.group(0),value)
+                text=text.replace(match.group(0),value)
             else:
                 undefined.append(name)
         
@@ -84,10 +84,11 @@ class ME_Resources():
         
         for element in root.iter():
             for key in element.attrib:                
-                a=element.attrib[key]
-                element.attrib[key],b=self.interpret_variables(a)
-                undefined+=b
-                        
+                before=element.attrib[key]
+                after,new_undefined=self.interpret_variables(before)
+                element.attrib[key]=after
+                undefined+=new_undefined
+        
         return undefined
 
     def get_batch_data_from_xml(self,path):
