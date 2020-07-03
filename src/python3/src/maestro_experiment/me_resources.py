@@ -6,7 +6,7 @@ This abstract class is not meant to be instantiated, only inherited.
 """
 
 import re
-from lxml import etree
+from utilities.xml import xml_cache
 import os.path
 
 from utilities import get_key_value_from_path, superstrip
@@ -22,30 +22,27 @@ CURLY_VARIABLE_REGEX=re.compile(r"\${([a-zA-Z0-9_]+)}")
 
 class ME_Resources():    
 
-    def get_resource_xml(self,path):
+    def get_interpreted_resource_lxml_element(self,path):
         """
-        Parses the XML at path, and returns the lxml element where
-        variables like ${FRONTEND} has been replaced with their resource variable value.
+        Given a path to a resource XML file, returns an lxml element whose
+        attributes like:
+            machine="${ABC}"
+        have been interpreted from the other resource files.
         """
         
-        if path not in self.resource_xml_cache:                    
+        if path not in self.interpreted_resource_lxml_cache:                    
             if not os.path.isfile(path):
                 return None
             
-            try:
-                tree=etree.parse(path, parser=etree.XMLParser(remove_comments=True))
-            except etree.XMLSyntaxError:
-                logger.error("lxml failed to parse resource XML: '%s'"%path)
-                return None
-            root=tree.getroot()
+            root=xml_cache.get(path)
             
             undefined=self.insert_resources_into_xml(root)
             if undefined:
                 self.undefined_resource_variables[path]=undefined
             
-            self.resource_xml_cache[path]=root
+            self.interpreted_resource_lxml_cache[path]=root
             
-        return self.resource_xml_cache[path]
+        return self.interpreted_resource_lxml_cache[path]
     
     def interpret_variables(self,text):
         """
@@ -79,7 +76,7 @@ class ME_Resources():
         with:
             machine='eccc-ppp4'
             
-        Returns a list of variables that were used but don't seem to be 
+        Returns a list of variables that were present but don't seem to be 
         defined in the project.
         """
         
@@ -92,23 +89,14 @@ class ME_Resources():
                 undefined+=b
                         
         return undefined
-    
-    def get_interpreted_resource_lxml_element(self,path):
-        """
-        everything, including loops, should use this to grab the etree
-        instead of interpreting piecemeal
-        
-        all attributes should be interpreted the same way
-        """
-        assert 0
 
     def get_batch_data_from_xml(self,path):
         """
         Given a resources XML path, returns a batch resource dictionary
         with keys like 'cpu' and 'wallclock'.
         """
-        self.get_interpreted_resource_lxml_element(path)
-        root=self.get_resource_xml(path)
+        
+        root=self.get_interpreted_resource_lxml_element(path)
         
         if root is None:
             return {}

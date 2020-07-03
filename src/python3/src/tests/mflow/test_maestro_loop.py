@@ -26,7 +26,7 @@ class TestMaestroLoop(unittest.TestCase):
         there is no "step" so we assume it is 1.
         """
         path=TURTLE_ME_PATH+"resources/turtle/TurtlePower/container.xml"
-        xml=TURTLE_ME.get_resource_xml(path)
+        xml=TURTLE_ME.get_interpreted_resource_lxml_element(path)
         result=get_loop_composite_data_from_xml(xml)
         expected=[{"start":0,"set":1,"end":1,"step":1}]
         self.assertEqual(result,expected)

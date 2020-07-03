@@ -53,10 +53,10 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
         self.undefined_resource_variables={}
         
         """
-        key is path to xml file, value is the lxml element for its resource XML, with 
-        all resource variables like ${FRONTEND} replaced with their resource value.
+        key is path to a resource XML file
+        value is the lxml element, where its attributes like machine=${ABC} are interpreted.
         """
-        self.resource_xml_cache={}
+        self.interpreted_resource_lxml_cache={}
         
         self.path=path
         self.name=get_experiment_name(path)
