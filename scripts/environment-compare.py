@@ -8,6 +8,8 @@ Usage:
     environment-compare.py <ssm-domain1> [<ssm-domain2>] [options]
 
 Options:
+    --no-color             Do not print colors, useful for capturing the output into files.
+    --no-colour            See '--no-color'.
     --loader1=<command>    Use this command to load the package for domain1, like 'ssmuse-sh -d' or 'r.load.dot' [default: ssmuse-sh -d]
     --loader2=<command>    Use this command to load the package for domain2, like 'ssmuse-sh -d' or 'r.load.dot' [default: ssmuse-sh -d]
 
@@ -15,7 +17,7 @@ Options:
 """
 
 from utilities.docopt import docopt
-from utilities.colors import *
+from utilities.colors import print_yellow, print_green
 from utilities.generic import safe_check_output
 import os, sys, subprocess
 
@@ -60,6 +62,12 @@ def main(args):
     domain2=args["<ssm-domain2>"]
     loader1=args["--loader1"]
     loader2=args["--loader2"]
+
+    if args["--no-color"] or args["--no-colour"]:
+        global print_yellow
+        global print_green
+        print_yellow=print
+        print_green=print
 
     cmd1=". %s %s ; env ; compgen -c"%(loader1,domain1)
     cmd2=". %s %s ; env ; compgen -c"%(loader2,domain2)
