@@ -1,0 +1,6 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" cpu="3" memory="12G" wallclock="15" catchup="3"/>
+  <DEPENDS_ON dep_name="/main/assimcycle/forecast/loop_post_gem/post_gem" status="end" type="node" index="post_gem=0" />
+  <ABORT_ACTION name="rerun"/>
+</NODE_RESOURCES>
+

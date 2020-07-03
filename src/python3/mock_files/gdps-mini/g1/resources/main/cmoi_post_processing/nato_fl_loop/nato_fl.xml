@@ -1,0 +1,5 @@
+<NODE_RESOURCES>
+    <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_fl_loop=$((x))"   index="loop_prog=$((x))" status="end" type="node"/>
+    <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" cpu="1" memory="4G" wallclock="10" catchup="5"/>
+</NODE_RESOURCES>
+

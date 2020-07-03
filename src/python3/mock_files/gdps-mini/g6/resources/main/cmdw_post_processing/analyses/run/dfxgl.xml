@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="4G" mpi="0" wallclock="5" catchup="4" cpu="1" soumet_args="-tmpfs ${TMPFSSIZE}" queue="${FRONTEND_DEFAULT_Q}"/>
+  <DEPENDS_ON dep_name="/main/surface_analysis/anl_ice" status="end" type="node" exp="${CMDW_FULL_G6_EXP}"/>
+</NODE_RESOURCES>

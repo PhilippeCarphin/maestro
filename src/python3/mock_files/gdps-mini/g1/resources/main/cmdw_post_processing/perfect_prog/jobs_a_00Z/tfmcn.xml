@@ -1,0 +1,7 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="1G" mpi="0" wallclock="10" catchup="4" cpu="1" queue="${FRONTEND_XFER_Q}"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/jobs_a_00Z/anefu" local_index="jobs_a_00Z=00" index="jobs_a_00Z=00" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/jobs_a_00Z/ft35a" local_index="jobs_a_00Z=00" index="jobs_a_00Z=00" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/jobs_a_00Z/ft710" local_index="jobs_a_00Z=00" index="jobs_a_00Z=00" status="end" type="node"/>
+</NODE_RESOURCES> 
+

@@ -1,0 +1,6 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+  <BATCH catchup="4" machine="${FRONTEND}" memory="4G" queue="${FRONTEND_DEFAULT_Q}" wallclock="45"/>
+  <LOOP end="${ave_end}" set="${ave_set}" start="${ave_start}" step="${ave_inc}" />
+  <DEPENDS_ON dep_name="/main/assimcycle/forecast_coupled/post_nemo" exp="${FORECAST_EXP}" status="end" type="node"/>
+</NODE_RESOURCES>
+

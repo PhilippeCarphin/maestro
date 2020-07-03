@@ -1,0 +1,27 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="1G" mpi="0" wallclock="10" catchup="6" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=144" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=132" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=120" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=108" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=96" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=84" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=72" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=66" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=60" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=54" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=48" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+ 
+
+  <!-- RDPS -->
+  <DEPENDS_ON dep_name="/main/intxfer_r1/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=48" status="end" type="node"  exp="${CMDW_TRANSFER_R1_EXP}" />
+  <DEPENDS_ON dep_name="/main/intxfer_r1/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=42" status="end" type="node"  exp="${CMDW_TRANSFER_R1_EXP}" />
+  <DEPENDS_ON dep_name="/main/intxfer_r1/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=36" status="end" type="node"  exp="${CMDW_TRANSFER_R1_EXP}" />
+  <DEPENDS_ON dep_name="/main/intxfer_r1/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=30" status="end" type="node"  exp="${CMDW_TRANSFER_R1_EXP}" />
+  <DEPENDS_ON dep_name="/main/intxfer_r1/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=24" status="end" type="node"  exp="${CMDW_TRANSFER_R1_EXP}" />
+  <DEPENDS_ON dep_name="/main/intxfer_r1/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=18" status="end" type="node"  exp="${CMDW_TRANSFER_R1_EXP}" />
+  <DEPENDS_ON dep_name="/main/intxfer_r1/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=12" status="end" type="node"  exp="${CMDW_TRANSFER_R1_EXP}" />
+  <DEPENDS_ON dep_name="/main/intxfer_r1/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=6"  status="end" type="node"  exp="${CMDW_TRANSFER_R1_EXP}" />
+  <DEPENDS_ON dep_name="/main/intxfer_r1/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=0"  status="end" type="node"  exp="${CMDW_TRANSFER_R1_EXP}" />
+   
+</NODE_RESOURCES>

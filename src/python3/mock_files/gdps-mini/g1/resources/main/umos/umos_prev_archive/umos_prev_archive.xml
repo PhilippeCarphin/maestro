@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+    <BATCH catchup="4" machine="${FRONTEND}" memory="256M" queue="${FRONTEND_DEFAULT_Q}" wallclock="10"/>
+    <DEPENDS_ON dep_name="/main/umos/loop_umos_prev" status="end" type="node"/>
+    <DEPENDS_ON dep_name="/main/umos/umos_csv_prev" status="end" type="node"/>
+</NODE_RESOURCES>

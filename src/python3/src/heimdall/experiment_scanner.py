@@ -140,6 +140,16 @@ class ExperimentScanner():
         """
         attribute_regex=re.compile(r"""[a-zA-Z_]+[ ]*=[ ]*["']([^'"]+)["']""")
         
+        "undefined variables"
+        d=self.maestro_experiment.undefined_resource_variables
+        if d:
+            for path,variables in d.items():
+                code="e12"
+                description=hmm.get(code,
+                                    resource_path=path,
+                                    variable_names=str(variables))
+                self.add_message(code,description)
+        
         for path in self.resource_files:
             
             "unbalanced parentheses"
@@ -153,10 +163,12 @@ class ExperimentScanner():
                                         file_path=path)
                     self.add_message(code,description)
             
-            "hard coded dependency experiment path"
+            "dependency codes"
             etree=file_cache.etree_parse(path)
             elements=etree.xpath("//DEPENDS_ON")
             for d_element in elements:
+                
+                "hard coded dependency experiment path"
                 exp=d_element.get("exp")
                 if exp and exp.startswith("/"):
                     
@@ -168,8 +180,7 @@ class ExperimentScanner():
                     description=hmm.get(code,
                                         exp_value=exp,
                                         resource_path=path)
-                    self.add_message(code,description)
-                
+                    self.add_message(code,description)                
                 
     def scan_home_soft_links(self):
         """

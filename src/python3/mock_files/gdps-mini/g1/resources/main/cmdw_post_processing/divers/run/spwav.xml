@@ -1,0 +1,12 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="2G" mpi="0" wallclock="10" catchup="6" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=144" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=120" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=96" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=72" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=48" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=24" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=0" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+</NODE_RESOURCES>

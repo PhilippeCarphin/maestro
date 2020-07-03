@@ -1,0 +1,6 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+ <BATCH machine="${FRONTEND}" memory="3G" queue="${FRONTEND_DEFAULT_Q}" wallclock="30"/> 
+ <DEPENDS_ON dep_name="/main/cmoi_post_processing/SGPD/Switch_GRIB/Loop_Hours" index="Switch_GRIB=00" local_index="Switch_GRIB=00" status="end" type="node"/>
+ <DEPENDS_ON dep_name="/main/cmoi_post_processing/SGPD/Switch_GRIB/Loop_Hours" index="Switch_GRIB=12" local_index="Switch_GRIB=12" status="end" type="node"/>
+
+</NODE_RESOURCES>

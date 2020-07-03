@@ -1,0 +1,4 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+  <BATCH catchup="2" machine="${FRONTEND}" memory="1G" queue="${FRONTEND_DEFAULT_Q}" wallclock="10"/>
+  <!-- <DEPENDS_ON dep_name="/main/surface_analysis/cutoff" exp="${SFC_REFERENCE_EXP}" status="end" type="node"/> -->
+</NODE_RESOURCES>

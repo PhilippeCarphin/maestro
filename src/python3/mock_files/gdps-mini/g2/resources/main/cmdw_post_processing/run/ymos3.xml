@@ -1,0 +1,5 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="${CMDW_MEMORY_DEFAULT}" mpi="0" wallclock="${CMDW_WALLCLOCK_DEFAULT}" catchup="4" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/observations/synop" status="end" type="node" exp="${CMDW_POST_PROC_R1_EXP}"/>
+</NODE_RESOURCES>

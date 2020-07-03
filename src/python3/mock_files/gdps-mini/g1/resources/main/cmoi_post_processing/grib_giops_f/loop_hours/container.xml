@@ -1,0 +1,5 @@
+<NODE_RESOURCES>
+    <LOOP expression="3:48:3:10,48:120:6:10,120:240:12:10"/>
+    <DEPENDS_ON dep_name="/main/cmde_post_processing/postproc_user" exp="${CMOI_G1_XFER_EXP}" status="end" type="node"/>
+</NODE_RESOURCES>
+

@@ -47,6 +47,12 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
         self.resource_cache={}
         
         """
+        key is path to a resource XML file, value is a list of variables used there
+        which are not defined in the project.
+        """
+        self.undefined_resource_variables={}
+        
+        """
         key is path to xml file, value is the lxml element for its resource XML, with 
         all resource variables like ${FRONTEND} replaced with their resource value.
         """
@@ -84,6 +90,12 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
         else:
             self.datestamp=""
             self.long_datestamp=""
+            
+        """
+        Build all node datas for the first time, which also builds indexes
+        like resource file parsing results.
+        """
+        self.get_node_datas()
             
     def has_critical_error(self):
         return has_critical_error(self.path)

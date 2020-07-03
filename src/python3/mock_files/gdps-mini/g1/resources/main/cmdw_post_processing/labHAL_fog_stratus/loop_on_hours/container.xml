@@ -1,0 +1,4 @@
+ <NODE_RESOURCES>
+    <BATCH machine="${FRONTEND}" catchup="3"/>
+    <LOOP start="12" end="144" step="12" set="12" />
+ </NODE_RESOURCES>

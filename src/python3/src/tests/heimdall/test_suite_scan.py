@@ -91,6 +91,6 @@ class TestSuiteScan(unittest.TestCase):
             for code in ignore_codes:
                 if code in result:
                     result.remove(code)
-            
+                    
             expected=expected_errors.get(path,set())
             self.assertEqual(result,expected,msg=msg)

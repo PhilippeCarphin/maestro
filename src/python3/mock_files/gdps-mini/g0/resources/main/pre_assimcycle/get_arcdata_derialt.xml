@@ -1,0 +1,5 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" wallclock="10" catchup="2" cpu="1"/>
+  <!-- <DEPENDS_ON dep_name="/main/pre_assimcycle/cutoff"  status="end" type="node" exp="${PRE_ASSIM_CUTOFF_EXP}"/> -->
+  <ABORT_ACTION name="rerun"/>
+</NODE_RESOURCES>

@@ -3,6 +3,7 @@ import unittest
 
 from utilities import get_key_value_from_path, get_true_host
 from tests.path import RESOURCES_HOME1, RESOURCES_HOME2, TURTLE_ME_PATH
+from tests.cache import STRANGE_RESOURCES_ME
 from constants import DEFAULT_BATCH_RESOURCES
 from maestro_experiment import MaestroExperiment
 
@@ -75,7 +76,24 @@ class TestMaestroResources(unittest.TestCase):
         result=me.get_latest_success_log(node_path)
         self.assertTrue(result.endswith("@"+machine))
         
+    def test_undefined_resource_variables(self):
+        me=STRANGE_RESOURCES_ME
+        xml_path=me.path+"resources/module1/task1.xml"
+        self.assertIn(xml_path,me.undefined_resource_variables)
+        result=me.undefined_resource_variables[xml_path]
+        self.assertEqual(len(result),1,msg="result = "+str(result))
+        self.assertEqual(result[0],"NOT_DEFINED")
         
+    def test_resource_variable_insert(self):
+        """
+        Sometimes we see multiple inserts like:
+            machine="${ABC}x${ABC}"
+        """
+        
+        me=STRANGE_RESOURCES_ME
+        xml_path=me.path+"resources/module1/task1.xml"
+        data=me.get_batch_data_from_xml(xml_path)
+        self.assertEqual(data.get("machine"),"123x123",msg="\ndata = "+str(data))
         
         
         

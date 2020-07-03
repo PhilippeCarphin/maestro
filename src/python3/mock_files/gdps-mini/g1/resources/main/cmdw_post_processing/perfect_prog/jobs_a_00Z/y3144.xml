@@ -1,0 +1,21 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="1G" mpi="0" wallclock="10" catchup="4" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/ym372" status="end" type="node"/>
+  <!-- RP fxcn5 mais aucun input ne semble relie au fxcn5, ignore pourquoi doit etre fait apres -->
+  <!--MVE: A verifier: la raison de la dependance sur fxcn5 pourrait etre de ne pas modifier le fichier ms3h144 avant que pppcl ne roule...-->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/fxcn5" status="end" type="node"/>
+
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=144" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=138" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=132" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=126" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=120" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=114" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=108" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=102" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=96" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=90" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=84" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=78" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+
+</NODE_RESOURCES>

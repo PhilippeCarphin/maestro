@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="1G" wallclock="20" catchup="5" cpu="1" />
+  <DEPENDS_ON dep_name="/gdps_verif/DAILY_ERR/gdps_anl_final_g1_daily_errors" status="end" type="node" />
+</NODE_RESOURCES>

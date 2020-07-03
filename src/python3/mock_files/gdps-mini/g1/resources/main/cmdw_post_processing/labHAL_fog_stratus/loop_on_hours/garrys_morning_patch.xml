@@ -1,0 +1,14 @@
+<NODE_RESOURCES>
+ <BATCH catchup="4" cpu="1" machine="${FRONTEND}" mpi="0" queue="${FRONTEND_DEFAULT_Q}" memory="${CMDW_MEMORY_DEFAULT}" wallclock="${CMDW_WALLCLOCK_DEFAULT}" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/labHAL_fog_stratus/loop_on_hours/garrys_morning_patch" local_index="loop_on_hours=24" index="loop_on_hours=12" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/labHAL_fog_stratus/loop_on_hours/garrys_morning_patch" local_index="loop_on_hours=36" index="loop_on_hours=24" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/labHAL_fog_stratus/loop_on_hours/garrys_morning_patch" local_index="loop_on_hours=48" index="loop_on_hours=36" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/labHAL_fog_stratus/loop_on_hours/garrys_morning_patch" local_index="loop_on_hours=60" index="loop_on_hours=48" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/labHAL_fog_stratus/loop_on_hours/garrys_morning_patch" local_index="loop_on_hours=72" index="loop_on_hours=60" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/labHAL_fog_stratus/loop_on_hours/garrys_morning_patch" local_index="loop_on_hours=84" index="loop_on_hours=72" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/labHAL_fog_stratus/loop_on_hours/garrys_morning_patch" local_index="loop_on_hours=96" index="loop_on_hours=84" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/labHAL_fog_stratus/loop_on_hours/garrys_morning_patch" local_index="loop_on_hours=108" index="loop_on_hours=96" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/labHAL_fog_stratus/loop_on_hours/garrys_morning_patch" local_index="loop_on_hours=120" index="loop_on_hours=108" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/labHAL_fog_stratus/loop_on_hours/garrys_morning_patch" local_index="loop_on_hours=132" index="loop_on_hours=120" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/labHAL_fog_stratus/loop_on_hours/garrys_morning_patch" local_index="loop_on_hours=144" index="loop_on_hours=132" status="end" type="node" />
+</NODE_RESOURCES>

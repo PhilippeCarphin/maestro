@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+  <BATCH catchup="2" cpu="1" machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" wallclock="10"/>
+  <DEPENDS_ON dep_name="/main/pre_assimcycle/derisfc" status="end" type="node" exp="${ASSIM_DERISFC_EXP}"/>
+  <DEPENDS_ON dep_name="/main/assimcycle/anlsfc" status="end" type="node" exp="${ASSIM_SFC_EXP}" hour="-6"/>
+  <ABORT_ACTION name="rerun"/>
+</NODE_RESOURCES>

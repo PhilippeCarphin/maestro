@@ -1,0 +1,42 @@
+# Machine definitions
+FRONTEND=eccc-ppp4
+SEQ_DEFAULT_MACHINE=eccc-ppp4
+BACKEND=daley
+
+BACKEND_XFER_Q=xfer
+FRONTEND_XFER_Q=xfer
+BACKEND_DEFAULT_Q=production
+FRONTEND_DEFAULT_Q=production
+
+# Transfer server FRONTEND/BACKEND
+DBASE_SERVER=eccc-ppp1
+
+SEQ_JOBNAME_PREFIX=g3
+
+SURFACE_CUTOFF_EXP=/home/smco500/maestro_suites/gdps_20191231/g3
+SURFACE_DERISFC_EXP=/home/smco500/maestro_suites/gdps_20191231/g3
+
+# for experiment dependencies
+FORECAST_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+
+# reference experiment used when:
+#   cutoff is not run
+#   validation is done
+SFC_REFERENCE_EXP=/home/smco500/maestro_suites/gdps_20191231/g3
+
+#-------------------
+# CMDW post-processing
+#-------------------
+# for experiment dependencies
+CMDW_FULL_R1_EXP=/home/smco500/maestro_suites/rdps_20191231/r1
+CMDW_FULL_G2_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+CMDW_FULL_G0_EXP=/home/smco500/maestro_suites/gdps_20191231/g0
+
+# This is the part of the G3 that is external to cmdw post-processing
+CMDW_FULL_G3_EXP=/home/smco500/maestro_suites/gdps_20191231/g3
+
+CMDW_MEMORY_DEFAULT=500M
+CMDW_WALLCLOCK_DEFAULT=5
+
+# fasttmp
+TMPFSSIZE=3000

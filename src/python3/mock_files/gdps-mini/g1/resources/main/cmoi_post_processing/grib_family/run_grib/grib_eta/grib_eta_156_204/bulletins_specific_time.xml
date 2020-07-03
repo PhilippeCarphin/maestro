@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_XFER_Q}" memory="4G" wallclock="5" catchup="4" cpu="1" />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=$((x))" local_index="run_grib=00,grib_eta_156_204=$((x))" status="end" type="node"/>
+</NODE_RESOURCES>

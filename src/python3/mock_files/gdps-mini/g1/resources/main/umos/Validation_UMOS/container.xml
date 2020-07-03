@@ -1,0 +1,14 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+  <BATCH catchup="9"/>
+
+<!-- temporaire car la suite de dependance n'est pas installee sur le ppp
+  <DEPENDS_ON dep_name="/main/umos" status="end" type="node" exp="${UMOS_WARMSTART_DEP_EXP}" />
+-->
+
+  <DEPENDS_ON dep_name="./loop_umos_prev" status="end" type="node"/>
+  <DEPENDS_ON dep_name="./umos_qc" status="end" type="node"/>
+  <DEPENDS_ON dep_name="./umos_fxcn50_transfert" status="end" type="node"/>
+  <DEPENDS_ON dep_name="./loop_umos_sscp" status="end" type="node"/>
+  <DEPENDS_ON dep_name="./umos_verifications" status="end" type="node"/>
+</NODE_RESOURCES>

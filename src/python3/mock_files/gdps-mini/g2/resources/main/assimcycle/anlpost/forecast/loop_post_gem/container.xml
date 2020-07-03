@@ -1,0 +1,11 @@
+<!-- This file has been produced with the command
+   resources/make_depend_npass_task.ksh resources/main/assimcycle/anlpost/forecast/loop_post_gem/container.xml 0 1 0
+   (we were in directory '/home/erv000/.suites/GDPS' when running the above command)
+   The version used is:
+      5c556106ac944660ed1a1a4e1df2d9dc6e10c7d5
+-->
+
+<NODE_RESOURCES>
+  <LOOP expression="0:0:1:1" />
+  <DEPENDS_ON dep_name="./gem/Sortie" index="Transfer=S01_0000000000" status="end" type="node" local_index="loop_prog=0"/>
+</NODE_RESOURCES>

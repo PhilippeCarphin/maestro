@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="4G" mpi="0" wallclock="5" catchup="4" cpu="1" soumet_args="-tmpfs ${TMPFSSIZE}" queue="${FRONTEND_DEFAULT_Q}"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/pps72" status="end" type="node" exp="${CMDW_POST_PROC_G1_EXP}" hour="-6"/>
+</NODE_RESOURCES>

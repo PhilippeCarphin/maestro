@@ -100,13 +100,6 @@ class ME_NodeData():
         
         batch_data=self.get_batch_data_from_xml(resource_path)
         
-        "replace values like '${FRONTEND}' with the resource value for FRONTEND"
-        for key,item in batch_data.items():
-            if type(item) is str and item.startswith("$"):
-                name=superstrip(item,"${}")
-                value=self.get_resource_value_from_key(name)
-                batch_data[key]=value
-        
         """
         insert resource data into node_data
         for each key, use defaults if not in resource data

@@ -24,10 +24,3 @@ class TestHeimdallMessageManager(unittest.TestCase):
         description=hmm._code_to_csv["e1"]["description"]
         expected=description.format(folders=str(folders))
         self.assertEqual(expected,result)
-    
-    def test_csv_codes(self):
-        """
-        No duplicate message codes in CSV, letter prefix is valid.
-        """
-        
-        

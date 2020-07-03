@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+    <BATCH machine="${FRONTEND}" catchup="4"/>
+</NODE_RESOURCES>
+

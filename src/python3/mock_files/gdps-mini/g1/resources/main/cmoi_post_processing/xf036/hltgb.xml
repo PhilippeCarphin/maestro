@@ -1,0 +1,14 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="1G" wallclock="15" catchup="6" cpu="1"  />
+  <DEPENDS_ON exp="${CMOI_G1_CMDW_PP_EXP}" dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/loop_on_hours" index="loop_on_hours=36" status="end" type="node" />
+  <DEPENDS_ON exp="${CMOI_G1_CMDW_PP_EXP}" dep_name="/main/cmdw_post_processing/temps_violent_ete/calculs/loop_on_hours" index="loop_on_hours=36" status="end" type="node" />
+  <DEPENDS_ON exp="${CMOI_G1_CMDW_PP_EXP}" dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" index="loop_on_hours=36" status="end" type="node" />
+  <DEPENDS_ON exp="${CMOI_G1_CMDW_PP_EXP}" dep_name="/main/cmdw_post_processing/aviation/cartes/aviation_atlantique_nord/loop_aviation_atlantique_nord/ti" index="loop_aviation_atlantique_nord=36" status="end" type="node" />
+  <DEPENDS_ON exp="${CMOI_G1_CMDW_PP_EXP}" dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" index="loop_on_hours=30" status="end" type="node" />
+  <DEPENDS_ON exp="${CMOI_G1_CMDW_PP_EXP}" dep_name="/main/cmdw_post_processing/aviation/cartes/aviation_atlantique_nord/loop_aviation_atlantique_nord/ti" index="loop_aviation_atlantique_nord=30" status="end" type="node" />
+  <DEPENDS_ON exp="${CMOI_G1_CMDW_PP_EXP}" dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" index="loop_on_hours=24" status="end" type="node" />
+  <DEPENDS_ON exp="${CMOI_G1_CMDW_PP_EXP}" dep_name="/main/cmdw_post_processing/aviation/cartes/aviation_atlantique_nord/loop_aviation_atlantique_nord/ti" index="loop_aviation_atlantique_nord=24" status="end" type="node" />
+
+  <DEPENDS_ON exp="${CMOI_R1_EXP}" dep_name="/main/cmdw_post_processing/aviation" status="end" type="node" />
+
+</NODE_RESOURCES>
