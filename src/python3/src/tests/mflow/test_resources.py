@@ -1,7 +1,7 @@
 
 import unittest
 
-from utilities import get_key_value_from_path, get_true_host
+from utilities import get_key_value_from_path, get_key_values_from_path, get_true_host
 from tests.path import RESOURCES_HOME1, RESOURCES_HOME2, TURTLE_ME_PATH
 from tests.cache import STRANGE_RESOURCES_ME
 from constants import DEFAULT_BATCH_RESOURCES
@@ -25,6 +25,10 @@ class TestMaestroResources(unittest.TestCase):
         result=get_key_value_from_path("FRONTEND",path)
         expected="frontend-def-res-home1"
         self.assertEqual(result,expected)
+        
+        result=get_key_values_from_path(path)
+        expected="frontend-def-res-home1"
+        self.assertEqual(result["FRONTEND"],expected)
     
     def test_me_get_resource_value(self):
         me=MaestroExperiment(TURTLE_ME_PATH,user_home=RESOURCES_HOME1)

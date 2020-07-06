@@ -85,6 +85,7 @@ class TestSuiteScan(unittest.TestCase):
             scanner=ExperimentScanner(path,
                                       critical_error_is_exception=False)
             msg="Experiment path: '%s'"%path
+            msg+="\n\n"+scanner.get_report_text()
             
             "never look for codes we want to ignore"
             result=scanner.codes

@@ -1,6 +1,7 @@
 import os.path
 import re
 from collections import OrderedDict
+import Levenshtein
 
 from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV
 
@@ -140,10 +141,11 @@ class ExperimentScanner():
         where group 1 is the value between double quotes.
         """
         attribute_regex=re.compile(r"""[a-zA-Z_]+[ ]*=[ ]*["']([^'"]+)["']""")
+        me=self.maestro_experiment
         
         "undefined variables"
-        d=self.maestro_experiment.undefined_resource_variables
-        if d:
+        d=me.undefined_resource_variables
+        if d:            
             for path,variables in d.items():
                 code="e12"
                 description=hmm.get(code,
@@ -151,8 +153,30 @@ class ExperimentScanner():
                                     variable_names=str(variables))
                 self.add_message(code,description)
         
-        for path in self.resource_files:
-            
+        "resources.def variable name typo"
+        standard_resource_defines=["FRONTEND",
+                                 "BACKEND",
+                                 "FRONTEND_DEFAULT_Q",
+                                 "FRONTEND_XFER_Q",
+                                 "FRONTEND_DAEMON_Q",
+                                 "BACKEND_DEFAULT_Q",
+                                 "BACKEND_XFER_Q"]
+        
+        for name in standard_resource_defines:
+            for path,declares in me.path_to_resource_declares.items():
+                if name in declares:
+                    continue
+                for maybe_typo in declares:
+                    d=Levenshtein.distance(name,maybe_typo)
+                    if d==1:
+                        code="w9"
+                        description=hmm.get(code,
+                                            maybe_typo=maybe_typo,
+                                            expected=name)
+                        self.add_message(code,description)
+    
+    
+        for path in self.resource_files:            
             "unbalanced parentheses"
             code="e9"
             content=file_cache.open(path)
@@ -539,7 +563,14 @@ class ExperimentScanner():
         "all xml files"
         self.xml_files=sorted(xml_files)
     
-    def print_report(self):
+    def get_report_text(self):
+        lines=[]
+        for m in self.messages:
+            line="%s: %s\n%s"%(m["code"],m["label"],m["description"])
+            lines.append(line)
+        return "\n\n".join(lines)
+    
+    def print_report(self,use_colors=True):
         char_color_functions=OrderedDict([("c",print_red),
                                           ("e",print_orange),
                                           ("w",print_yellow),

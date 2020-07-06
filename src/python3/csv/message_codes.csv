@@ -31,3 +31,4 @@ b3	SupportInfo has no URL	The SupportInfo attribute in the XML ‘{xml_path}’ 
 b4	SupportInfo missing standard substring	The SupportInfo attribute in the XML ‘{xml_path}’ should start with a value like ‘Full Support’. Recommended start strings: {substrings}		
 w7	No support status in operational experiment	There is no SupportInfo attribute in the XML ‘{xml_path}’ or the XML does not exist. This is required for operational experiments.		
 w8	Multiple support statuses	The XML ‘{xml_path}’ has more than one SupportInfo element.		
+w9	Resource variable typo	The resource variable ‘{maybe_typo}’ is defined but the standard variable name ‘{expected}’ is not. Did you mean that instead?	https://wiki.cmc.ec.gc.ca/wiki/User:Lims/projects/tech_transfer_improvements#Using_standard_variables_for_machine_and_queue_definitions	

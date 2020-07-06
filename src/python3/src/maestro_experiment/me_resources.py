@@ -9,7 +9,7 @@ import re
 from utilities.xml import xml_cache
 import os.path
 
-from utilities import get_key_value_from_path, superstrip
+from utilities import get_key_values_from_path, superstrip
 from home_logger import logger
 from constants import DEFAULT_BATCH_RESOURCES
 
@@ -130,9 +130,16 @@ class ME_Resources():
                self.path+"resources/resources.def",
                self.user_home+".suites/default_resources.def"]
         for path in paths:
-            value=get_key_value_from_path(key,path)
-            if value:
-                return value
+            if path not in self.path_to_resource_declares:
+                self.path_to_resource_declares[path]=get_key_values_from_path(path)
+            data=self.path_to_resource_declares[path]
+            
+            "update resource cache"
+            for k in data:
+                self.resource_cache[k]=data[k]
+            
+            if data.get(key):
+                return data.get(key)
             
         "did not find variable anywhere"
         value=""

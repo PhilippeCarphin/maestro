@@ -48,6 +48,13 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
         self.resource_cache={}
         
         """
+        key is path to a resoure file like resources.def
+        value is the declare dictionary, like:
+            {"FRONTEND":"eccc-ppp1"}
+        """
+        self.path_to_resource_declares={}
+        
+        """
         key is path to a resource XML file, value is a list of variables used there
         which are not defined in the project.
         """
