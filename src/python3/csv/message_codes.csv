@@ -10,6 +10,7 @@ c5	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to par
 e1	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders	
 e10	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a less portable and more fragile way to configure an experiment.		
 e11	Dependency experiment does not exist	The ‘exp’ attribute ‘{exp_value}’ in the resources file ‘{resource_path}’ is not a path to a folder that exists.		
+e12	Undefined resource XML variables	The resource XML ‘{resource_path}’ uses variables that are not defined in any resource files like ‘resources/resources.def’. Variables: {variable_names}		
 e2	Bad XML	Failed to parse XML: ‘{xml}’		
 e3	Bad task name	Invalid task name ‘{task_name}’ at path '{task_path}’		
 e4	Broken symlink	Soft links were found with targets that do not exist:\n{broken_links}		
@@ -25,4 +26,8 @@ w3	Deprecated site1/site2	The paths site1 and site2 are no longer available afte
 w4	Deprecated hall1/hall2	The paths hall1 and hall2 are no longer available after the upgrades in early 2020. The {search} was found in file: ‘{file_path}’		
 w5	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable and cannot be installed operationally. Links:\n{bad_links}		
 w6	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a less portable and more fragile way to configure an experiment.		
-e12	Undefined resource XML variables	The resource XML ‘{resource_path}’ uses variables that are not defined in any resource files like ‘resources/resources.def’. Variables: {variable_names}		
+b2	SupportInfo is too long	The SupportInfo attribute in the XML ‘{xml_path}’ is ‘{char_count}’ but it should be shorter. The recommended maximum is {max_chars}. characters.		
+b3	SupportInfo has no URL	The SupportInfo attribute in the XML ‘{xml_path}’ should contain a URL. This is the recommended way to provide detailed support status info and troubleshooting steps.		
+b4	SupportInfo missing standard substring	The SupportInfo attribute in the XML ‘{xml_path}’ should start with a value like ‘Full Support’. Recommended start strings: {substrings}		
+w7	No support status in operational experiment	There is no SupportInfo attribute in the XML ‘{xml_path}’ or the XML does not exist. This is required for operational experiments.		
+w8	Multiple support statuses	The XML ‘{xml_path}’ has more than one SupportInfo element.		

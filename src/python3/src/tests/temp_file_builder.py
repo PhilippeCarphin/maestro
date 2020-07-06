@@ -22,7 +22,7 @@ def setup_b1_experiment():
     target=TMP_FOLDER+"b1"
     
     run_shell_cmd("rm -rf "+target)
-    run_shell_cmd("cp -r %s %s"%(source,target))
+    run_shell_cmd("cp -R %s %s"%(source,target))
     
     "OS may need a moment for shell command to occur"
     time.sleep(0.1)

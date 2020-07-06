@@ -48,6 +48,7 @@ class ExperimentScanner():
         self.scan_required_folders()
         self.scan_required_files()
         self.scan_all_file_content()
+        self.scan_exp_options()
         self.scan_xmls()
         self.scan_resource_files()
         self.scan_config_files()
@@ -379,6 +380,63 @@ class ExperimentScanner():
             if not r.match(task_name):           
                 description=hmm.get(code,task_name=task_name,task_path=task_path)
                 self.add_message(code,description)
+    
+    def scan_exp_options(self):
+        xml_path=self.maestro_experiment.path+"ExpOptions.xml"
+        support_status=self.maestro_experiment.get_support_status()
+        url_regex=re.compile(r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)")                                     
+                             
+        "multiple support info elements"
+        root=file_cache.etree_parse(xml_path)
+        if root is not None:
+            support_infos=root.xpath("//SupportInfo")
+            if len(support_infos)>1:
+                code="w8"
+                description=hmm.get(code,
+                                    xml_path=xml_path)
+                self.add_message(code,description)
+                             
+        if support_status:
+            
+            "max length"
+            max_chars=50
+            if len(support_status)>max_chars:
+                code="b2"
+                description=hmm.get(code,
+                                    xml_path=xml_path,
+                                    char_count=len(support_status),
+                                    max_chars=max_chars)
+                self.add_message(code,description)
+            
+            "has url"
+            if not url_regex.search(support_status):
+                code="b3"
+                description=hmm.get(code,
+                                    xml_path=xml_path)
+                self.add_message(code,description)
+            
+            "reasonable start string like 'full support' "
+            found_substring=False
+            stripped_status=re.sub("[ -_]+","",support_status.lower())
+            substrings=["Full","Daytime","Business","Office","None"]
+            for substring in substrings:
+                if stripped_status.startswith(substring.lower()):
+                    found_substring=True
+                    break
+            if not found_substring:
+                code="b4"
+                description=hmm.get(code,
+                                    xml_path=xml_path,
+                                    substrings=str(substrings))
+                self.add_message(code,description)
+                
+        "no support status in op"
+        is_op=self.is_context_operational()
+        if not support_status and is_op:
+            code="w7"
+            description=hmm.get(code,
+                                xml_path=xml_path)
+            self.add_message(code,description)                
         
     def scan_xmls(self):
         code="e2"

@@ -15,6 +15,7 @@ from pwd import getpwuid
 from utilities.heimdall.critical_errors import has_critical_error
 from utilities.maestro import find_exp_home_in_path, get_experiment_name, get_sequencer_command
 from utilities import pretty, clamp
+from utilities.xml import xml_cache
 
 from maestro_experiment.me_flow import ME_Flow
 from maestro_experiment.me_indexes import ME_Indexes
@@ -96,6 +97,22 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
         like resource file parsing results.
         """
         self.get_node_datas()
+        
+    def get_support_status(self):
+        """
+        Open ExpOptions.xml and return the status attribute in <SupportInfo>
+        """
+        xml_path=self.path+"ExpOptions.xml"
+        root=xml_cache.get(xml_path)
+        if root is None:
+            return ""
+        
+        support_infos=root.xpath("//SupportInfo")
+        if not support_infos:
+            return ""
+        
+        support_info=support_infos[0]
+        return support_info.attrib.get("status","")
             
     def has_critical_error(self):
         return has_critical_error(self.path)
