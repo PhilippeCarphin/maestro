@@ -8,6 +8,32 @@ def get_qstat_data_from_path(path):
     with open(path,"r") as f:
         return get_qstat_data_from_text(f.read())
 
+def get_qstat_queues(cmd_output_override=""):
+    """
+    Returns a list of all queues according to qstat.
+    Use the cmd output override to skip running the qstat
+    cmd and parse that text instead.
+    
+    Example output for 'jobctl-qstat -Q' :
+Queue              Max   Tot Ena Str   Que   Run   Hld   Wat   Trn   Ext Type
+---------------- ----- ----- --- --- ----- ----- ----- ----- ----- ----- ----
+prod                 0     0 yes yes     0     0     0     0     0     0 Exec
+prod_xxfer           6     0 yes yes     0     0     0     0     0     0 Exec
+    """
+    
+    output=cmd_output_override.strip()
+    if not output:
+        cmd="jobctl-qstat -Q"
+        output,status=safe_check_output_with_status(cmd)
+        if status!=0:
+            return []
+        
+    output=output.split("----")[-1]
+    queues=[]
+    for line in output.strip().split("\n"):
+        queues.append(line.split(" ")[0])
+    return sorted(queues)
+
 def get_qstat_data_from_text(text):
     """
     Returns a dictionary of parsing the content from command:

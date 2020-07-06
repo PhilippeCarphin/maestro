@@ -7,6 +7,29 @@ from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
 from tests.temp_file_builder import setup_b1_experiment
 
+QSTAT_QUEUE_OUTPUT="""
+Queue              Max   Tot Ena Str   Que   Run   Hld   Wat   Trn   Ext Type
+---------------- ----- ----- --- --- ----- ----- ----- ----- ----- ----- ----
+prod                 0     0 yes yes     0     0     0     0     0     0 Exec
+prod_xxfer           6     0 yes yes     0     0     0     0     0     0 Exec
+prod_daemon          0     5 yes yes     0     5     0     0     0     0 Exec
+production           0     0 yes yes     0     0     0     0     0     0 Rout
+prod_hpnls          20    10 yes yes     0    10     0     0     0     0 Exec
+archive              0     0 yes yes     0     0     0     0     0     0 Rout
+hpnls               10     0 yes yes     0     0     0     0     0     0 Exec
+project              0     0 yes yes     0     0     0     0     0     0 Rout
+dev_xxfer            4     0 yes yes     0     0     0     0     0     0 Exec
+dev_daemon           0     1 yes yes     0     1     0     0     0     0 Exec
+development          0     0 yes yes     0     0     0     0     0     0 Rout
+dedicated_bench      0     0 yes yes     0     0     0     0     0     0 Exec
+dev                  0   166 yes yes     0   166     0     0     0     0 Exec
+ibmbench             0     0 yes yes     0     0     0     0     0     0 Exec
+crayadm              0     0 yes yes     0     0     0     0     0     0 Exec
+prod_persistent      0     0 yes yes     0     0     0     0     0     0 Rout
+prod_p               0   236 yes yes     1   235     0     0     0     0 Exec
+xfer               0   236 yes yes     1   235     0     0     0     0 Exec
+"""
+
 class TestSuiteScan(unittest.TestCase):        
             
     def test_suites_with_codes(self):
@@ -36,7 +59,8 @@ class TestSuiteScan(unittest.TestCase):
             
             scanner=ExperimentScanner(path,
                                       context=context,
-                                      critical_error_is_exception=False)
+                                      critical_error_is_exception=False,
+                                      debug_qstat_queue_override=QSTAT_QUEUE_OUTPUT)
             
             msg="Experiment path: '%s'"%path
             self.assertIn(code,scanner.codes,msg=msg)
@@ -60,7 +84,8 @@ class TestSuiteScan(unittest.TestCase):
                 
                 msg="Experiment path: '%s'"%path
                 scanner=ExperimentScanner(path,
-                                          critical_error_is_exception=False)
+                                          critical_error_is_exception=False,
+                                          debug_qstat_queue_override=QSTAT_QUEUE_OUTPUT)
                 self.assertNotIn(code,scanner.codes,msg=msg)
             
     def test_good_suite(self):
@@ -83,7 +108,8 @@ class TestSuiteScan(unittest.TestCase):
         
         for path in paths:
             scanner=ExperimentScanner(path,
-                                      critical_error_is_exception=False)
+                                      critical_error_is_exception=False,
+                                      debug_qstat_queue_override=QSTAT_QUEUE_OUTPUT)
             msg="Experiment path: '%s'"%path
             msg+="\n\n"+scanner.get_report_text()
             

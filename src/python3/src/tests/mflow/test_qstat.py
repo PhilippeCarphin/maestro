@@ -1,7 +1,7 @@
 
 import unittest
 
-from utilities import get_qstat_data_from_path
+from utilities import get_qstat_data_from_path, get_qstat_queues
 from tests.path import QSTAT_OUTPUT1_PATH
 
 class TestQstat(unittest.TestCase):
@@ -27,6 +27,16 @@ class TestQstat(unittest.TestCase):
         
         result=data["development"]["acl_users"]
         self.assertEqual(result,[])
+        
+    def test_qstat_queues(self):
+        output="""
+Queue              Max   Tot Ena Str   Que   Run   Hld   Wat   Trn   Ext Type
+---------------- ----- ----- --- --- ----- ----- ----- ----- ----- ----- ----
+prod                 0     0 yes yes     0     0     0     0     0     0 Exec
+prod_xxfer           6     0 yes yes     0     0     0     0     0     0 Exec"""
+        result=get_qstat_queues(output)
+        expected=["prod","prod_xxfer"]
+        self.assertEqual(result,expected)
     
     
     

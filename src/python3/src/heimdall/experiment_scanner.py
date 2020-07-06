@@ -14,12 +14,14 @@ from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path
+from utilities.qstat import get_qstat_queues
 
 class ExperimentScanner():
     def __init__(self,
                  path,
                  context=None,
-                 critical_error_is_exception=True):
+                 critical_error_is_exception=True,
+                 debug_qstat_queue_override=""):
         
         if not path.endswith("/"):
             path+="/"
@@ -28,6 +30,12 @@ class ExperimentScanner():
         self.maestro_experiment=None        
         self.codes=set()
         self.messages=[]
+        
+        """
+        Instead of running the qstat shell command, use this output instead.
+        Useful for debugging/tests.
+        """
+        self.debug_qstat_queue_override=debug_qstat_queue_override
                 
         critical_errors=find_critical_errors(path)        
         for code,kwargs in critical_errors.items():
@@ -52,6 +60,7 @@ class ExperimentScanner():
         self.scan_exp_options()
         self.scan_xmls()
         self.scan_resource_files()
+        self.scan_resource_queue_definitions()
         self.scan_config_files()
         self.scan_home_soft_links()
         self.scan_scattered_modules()
@@ -116,7 +125,29 @@ class ExperimentScanner():
             
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
-                
+    
+    def scan_resource_queue_definitions(self):
+        """
+        If qstat queue "123" does not exist, finds cases like:
+            FRONTEND_DEFAULT_Q=123
+        """
+        
+        queues=get_qstat_queues(cmd_output_override=self.debug_qstat_queue_override)
+        names=["FRONTEND_DEFAULT_Q",
+               "FRONTEND_XFER_Q",
+               "FRONTEND_DAEMON_Q",
+               "BACKEND_DEFAULT_Q",
+               "BACKEND_XFER_Q"]
+        for name in names:
+            value=self.maestro_experiment.get_resource_value_from_key(name)
+            if value and value not in queues:
+                code="w10"
+                description=hmm.get(code,
+                                    value=value,
+                                    name=name,
+                                    queues=str(queues))
+                self.add_message(code,description)
+        
     def scan_config_files(self):
         "scan the content of config files (see scan_file_content for CSV content scan)"
         
