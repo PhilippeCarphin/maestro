@@ -1,6 +1,7 @@
 import os.path
 
 from constants.maestro import NODE_STATUS
+from utilities import reverse_readlines
 
 class NodeLogParser():
     def __init__(self,path,refresh_interval=10):
@@ -9,6 +10,23 @@ class NodeLogParser():
         self.path=path
         self.latest_parse_mtime=-1
         self.refresh_interval=refresh_interval
+        
+        """
+        A encoding like 'utf-8' which has successfully parsed this log at least once.
+        """
+        self.successful_encoding=""
+        
+        """
+        The lowest line in the node log that we have parsed, 
+        updated as the last line in the file each time it is opened.
+        """
+        self.lowest_parsed_line=""
+        
+        """
+        key is node path
+        value is the lowest line in this log declaring its status
+        """
+        self.node_path_to_latest_line={}
         
         "key is node_path, value is MSGTYPE in newest/lowest line with that node_path"
         self.latest_status_in_log={}
@@ -26,7 +44,7 @@ class NodeLogParser():
         first_refresh=self.latest_parse_mtime==-1
         if first_refresh or self.latest_parse_mtime+self.refresh_interval<mtime:
             self.latest_parse_mtime=mtime
-            self.parse_node_log()
+            self.parse_node_log(encoding=self.successful_encoding)
         
     def get_status(self,node_path):
         """
@@ -37,7 +55,7 @@ class NodeLogParser():
         self.refresh_if_necessary()        
         return self.latest_status_in_log.get(node_path)
     
-    def parse_node_log(self):
+    def parse_node_log(self,encoding=""):
         
         self.node_log_aborts=set()
                
@@ -45,24 +63,43 @@ class NodeLogParser():
             return
         
         """
-        utf-8 encoding usually works, but sometimes a fallback
-        is needed to prevent decode errors.
+        If this is the first read, we don't know what a successful encoding is yet.
+        So rerun this function with different encoding attempts, saving
+        the first successful encoding.
+        
+        utf-8 encoding usually works, but sometimes a fallback is needed.
         """
-        encodings=("utf-8","ISO-8859-1")
-        self.lines=[]
-        for encoding in encodings:
-            try:
-                with open(self.path,"r",encoding=encoding) as f:
-                    self.lines=f.readlines()
+        if not encoding:
+            encodings=("utf-8","ISO-8859-1")
+            reverse_lines_iter=None
+            for encoding in encodings:
+                try:
+                    self.parse_node_log(encoding=encoding)
+                    self.successful_encoding=encoding
+                    return
+                except UnicodeDecodeError:
+                    pass
+            raise UnicodeDecodeError("Unable to decode '%s' with encodings: %s"%(self.path,str(encodings)))
+        
+        reverse_lines_iter=reverse_readlines(self.path,
+                                             encoding=encoding)
+        if not reverse_lines_iter:
+            return
+        
+        """
+        Get a list of all lines at the end of the file which we have
+        not seen before.
+        """
+        lines_to_parse=[]
+        for line in reverse_lines_iter:
+            if self.lowest_parsed_line==line:
                 break
-            except:
-                pass
-        
-        "key is node_path, value is newest/latest line"
-        latest_lines={}
-        
+            lines_to_parse.append(line)
+        lines_to_parse=list(reversed(lines_to_parse))
+        self.lowest_parsed_line=lines_to_parse[-1]
+                
         "find the newest/latest lines for each node_path"
-        for line in self.lines:
+        for line in lines_to_parse:
             
             node_path=get_value_from_node_log_line(line,"SEQNODE")
             if not node_path:
@@ -75,10 +112,10 @@ class NodeLogParser():
             if node_path.startswith("/"):
                 node_path=node_path[1:]
                 
-            latest_lines[node_path]=line
+            self.node_path_to_latest_line[node_path]=line
         
         "parse the latest lines"
-        for node_path,line in latest_lines.items():
+        for node_path,line in self.node_path_to_latest_line.items():
                 
             status=""            
             message=get_value_from_node_log_line(line,"SEQMSG")
