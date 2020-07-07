@@ -807,18 +807,30 @@ class ExperimentScanner():
             lines.append(line)
         return "\n\n".join(lines)
     
-    def print_report(self,use_colors=True):
+    def print_report(self,
+                     use_colors=True,
+                     level="b"):
         char_color_functions=OrderedDict([("c",print_red),
                                           ("e",print_orange),
                                           ("w",print_yellow),
                                           ("i",print_green),
                                           ("b",print_blue)])
         
+        levels="cewib"
+        if level not in levels:
+            raise ValueError("Bad level '%s', but be one of '%s'"%(level,levels))
+            
         for c,f in char_color_functions.items():
             for message in self.messages:
                 code=message["code"]
+                
                 if not code.startswith(c):
                     continue
+                
+                "do not print levels lower priority than the desired level"
+                if levels.index(code[0]) > levels.index(level):
+                    continue
+                
                 f(code+": "+message["label"])
                 print(message["description"])
         
