@@ -37,3 +37,4 @@ w11	Experiment not in overview XML	The experiment seems to have the ‘{context}
 w12	Experiment in unexpected overview XML	The experiment seems to have the ‘{context}’ context but it was found in the {exp_count} experiments in the ‘{xml_context}’ context overview XML: {xml_path}		
 e13	Dissemination state does not match context	The experiment seems to have the ‘{context}’ context but variables in ‘{cfg_path}’ do not match what is expected: {unexpected}		
 w13	Misplaced dissemination variables	The variables {variables} belong only in ‘experiment.cfg’ files but were found in: ‘{cfg_path}’		
+b5	Deprecated files and folders	These files or folders are deprecated and should be deleted: {deprecated}		

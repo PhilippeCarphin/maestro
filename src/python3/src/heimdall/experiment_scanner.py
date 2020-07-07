@@ -73,6 +73,7 @@ class ExperimentScanner():
         self.scan_all_file_content()
         self.scan_exp_options()
         self.scan_xmls()
+        self.scan_deprecated_files_folders()
         self.scan_resource_files()
         self.scan_resource_queue_definitions()
         self.scan_overview_xmls()
@@ -140,6 +141,25 @@ class ExperimentScanner():
             
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+                
+    def scan_deprecated_files_folders(self):
+        old=["hub/hare",
+             "hub/brooks",
+             "hub/eccc-ppp1",
+             "hub/eccc-ppp2",
+             "ExpDate",
+             "ExpTimings",
+             "flow.xml"]
+        paths=[self.path+a for a in old]
+        code="b5"
+        deprecated=[path for path in paths if file_cache.exists(path)]
+        if deprecated:
+            msg="\n".join(deprecated)
+            if len(deprecated)>1:
+                msg="\n"+msg
+            description=hmm.get(code,
+                                deprecated=msg)
+            self.add_message(code,description)
     
     def scan_overview_xmls(self):
         """
