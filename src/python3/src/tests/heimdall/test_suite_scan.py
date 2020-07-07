@@ -2,10 +2,10 @@ import os.path
 import unittest
 
 from constants import SCANNER_CONTEXT
-from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, OPERATIONAL_HOME, PARALLEL_HOME
+from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, OPERATIONAL_HOME, PARALLEL_HOME, TMP_FOLDER
 from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
-from tests.temp_file_builder import setup_b1_experiment, setup_not_w11_home
+from tests.temp_file_builder import setup_b1_experiment, setup_tmp_smco501_home
 
 QSTAT_QUEUE_OUTPUT="""
 Queue              Max   Tot Ena Str   Que   Run   Hld   Wat   Trn   Ext Type
@@ -40,7 +40,7 @@ class TestSuiteScan(unittest.TestCase):
         """
         
         setup_b1_experiment()
-        setup_not_w11_home()
+        setup_tmp_smco501_home()
                         
         for code in hmm.codes:
             path=SUITES_WITH_CODES+code
@@ -53,15 +53,20 @@ class TestSuiteScan(unittest.TestCase):
             
             "override the context, if necessary"
             context=None
-            if code in ["e7","e10","w7","w11"]:
+            if code in ["e7","e10","w7","w11","w12"]:
                 context=SCANNER_CONTEXT.OPERATIONAL
             if code in ["i1"]:
                 context=SCANNER_CONTEXT.DEVELOPMENT
+                
+            "override op/par homes, if necessary"
+            parallel_home=PARALLEL_HOME
+            if code == "w12":
+                parallel_home=TMP_FOLDER+"smco501"
             
             scanner=ExperimentScanner(path,
                                       context=context,
                                       operational_home=OPERATIONAL_HOME,
-                                      parallel_home=PARALLEL_HOME,
+                                      parallel_home=parallel_home,
                                       critical_error_is_exception=False,
                                       debug_qstat_queue_override=QSTAT_QUEUE_OUTPUT)
             

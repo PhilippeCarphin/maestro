@@ -14,9 +14,11 @@ from utilities.xml import xml_cache
 
 from tests.path import MOCK_FILES, TMP_FOLDER
 
-def setup_not_w11_home():
+def setup_tmp_smco501_home():
     """
-    Returns a path to a 501-like home that does not produce the w11 code.
+    Returns a path to a 501-like home that:
+        does not produce w11
+        does produce w12
     """
     
     source=MOCK_FILES+"heimdall/homes/smco501"
@@ -30,11 +32,12 @@ def setup_not_w11_home():
     
     root=xml_cache.get(xml_path)
     
-    "this is the dynamic value to insert, which changes depending on who runs the test suite where"
-    exp=MOCK_FILES+"heimdall/suites_without_codes/w11"
     
-    element=root.xpath("//Exp")[0]
-    element.text=exp
+    exp=MOCK_FILES+"heimdall/suites_without_codes/w11"    
+    root.xpath("//Exp")[0].text=exp
+    
+    exp=MOCK_FILES+"heimdall/suites_with_codes/w12"
+    root.xpath("//Exp")[1].text=exp
         
     with open(xml_path,"w") as f:
         data=etree.tostring(root).decode("utf8")

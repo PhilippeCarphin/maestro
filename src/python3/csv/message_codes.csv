@@ -34,3 +34,4 @@ w8	Multiple support statuses	The XML ‘{xml_path}’ has more than one SupportI
 w9	Resource variable typo	The resource variable ‘{maybe_typo}’ is defined but the standard variable name ‘{expected}’ is not. Did you mean that instead?	https://wiki.cmc.ec.gc.ca/wiki/User:Lims/projects/tech_transfer_improvements#Using_standard_variables_for_machine_and_queue_definitions	
 w10	Bad queue value for resource variable	The value ‘{value}’ for the resource variable ‘{name}’ is not a queue available in qstat. Queues: {queues}		
 w11	Experiment not in overview XML	The experiment seems to have the ‘{context}’ context but it was not found in the {exp_count} experiments in the overview XML: {xml_path}		
+w12	Experiment in unexpected overview XML	The experiment seems to have the ‘{context}’ context but it was found in the {exp_count} experiments in the ‘{xml_context}’ context overview XML: {xml_path}		

@@ -143,40 +143,52 @@ class ExperimentScanner():
     
     def scan_overview_xmls(self):
         """
-        Scan if this experiment is found in the appropriate overview XML.
+        Scan if this experiment is found in the correct or unexpected overview XMLs.
         """
         
         if not self.operational_home or not self.parallel_home:
             return
         
-        if self.context == SCANNER_CONTEXT.OPERATIONAL:
-            xml_path=self.operational_home+"/xflow.suites.xml"
-        elif self.context == SCANNER_CONTEXT.PREOPERATIONAL:
-            xml_path=self.operational_home+"/xflow_preop.suites.xml"
-        elif self.context == SCANNER_CONTEXT.PARALLEL:
-            xml_path=self.parallel_home+"/xflow.suites.xml"
-        else:
+        context_to_path={SCANNER_CONTEXT.OPERATIONAL:self.operational_home+"/xflow.suites.xml",
+                         SCANNER_CONTEXT.PREOPERATIONAL:self.operational_home+"/xflow_preop.suites.xml",
+                         SCANNER_CONTEXT.PARALLEL:self.parallel_home+"/xflow.suites.xml"}
+        
+        if self.context not in context_to_path:
             return
         
-        root=file_cache.etree_parse(xml_path)
+        realpath=file_cache.realpath(self.path)
         
-        if root is None:
-            """
-            while it is a serious problem that the overview XML did not parse,
-            it is not a problem belonging to the suite.            
-            """
-            return
+        for context,xml_path in context_to_path.items():
+            
+            root=file_cache.etree_parse(xml_path)
+            
+            if root is None:
+                """
+                while it is a serious problem that the overview XML did not parse,
+                it is not a problem belonging to the suite.            
+                """
+                return
+            
+            experiments=[file_cache.realpath(e.text) for e in root.xpath("//Exp")]
+            should_be_in_xml=self.context==context
+            
+            if should_be_in_xml and realpath not in experiments:
+                code="w11"
+                description=hmm.get(code,
+                                    context=self.context,
+                                    exp_count=len(experiments),
+                                    xml_path=xml_path)
+                self.add_message(code,description)
+                
+            if not should_be_in_xml and realpath in experiments:
+                code="w12"
+                description=hmm.get(code,
+                                    context=self.context,
+                                    exp_count=len(experiments),
+                                    xml_path=xml_path,
+                                    xml_context=context)
+                self.add_message(code,description)    
         
-        experiments=[file_cache.realpath(e.text) for e in root.xpath("//Exp")]
-        expected=file_cache.realpath(self.path)
-        if expected not in experiments:
-            code="w11"
-            description=hmm.get(code,
-                                context=self.context,
-                                exp_count=len(experiments),
-                                xml_path=xml_path)
-            self.add_message(code,description)
-    
     def scan_resource_queue_definitions(self):
         """
         If qstat queue "123" does not exist, finds cases like:
