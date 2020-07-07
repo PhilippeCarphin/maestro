@@ -6,7 +6,8 @@ the tests.
 
 These functions prepare those files.
 """
-import time
+import shutil
+import os
 from lxml import etree
 from utilities.shell import run_shell_cmd
 from utilities.xml import xml_cache
@@ -21,12 +22,10 @@ def setup_b1_experiment():
     source=MOCK_FILES+"heimdall/suites_with_codes/e5"
     target=TMP_FOLDER+"b1"
     
-    run_shell_cmd("rm -rf "+target)
-    run_shell_cmd("cp -R %s %s"%(source,target))
-    
-    "OS may need a moment for shell command to occur"
-    time.sleep(0.1)
-    
+    if os.path.exists(target):
+        shutil.rmtree(target)
+    shutil.copytree(source,target,symlinks=True)
+        
     xml_path=target+"/resources/module1/module2/task1.xml"
     
     root=xml_cache.get(xml_path)
@@ -40,5 +39,5 @@ def setup_b1_experiment():
     with open(xml_path,"w") as f:
         data=etree.tostring(root).decode("utf8")
         f.write(data)
-    
+        
     return target
