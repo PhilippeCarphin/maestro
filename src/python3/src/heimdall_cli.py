@@ -18,7 +18,7 @@ import os
 
 from constants import SCANNER_CONTEXTS
 from heimdall import ExperimentScanner
-from utilities.heimdall import adjust_docstring
+from utilities.heimdall.docstring import adjust_docstring
 __doc__=adjust_docstring(__doc__)
 
 from utilities.docopt import docopt
