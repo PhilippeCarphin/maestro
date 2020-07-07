@@ -3,17 +3,17 @@ import re
 from collections import OrderedDict
 import Levenshtein
 
-from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES
+from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
 from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text
 from utilities.heimdall.critical_errors import find_critical_errors
-from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
-from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path
+from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target
 from utilities.qstat import get_qstat_queues
 
 class ExperimentScanner():
@@ -73,6 +73,7 @@ class ExperimentScanner():
         self.scan_all_file_content()
         self.scan_exp_options()
         self.scan_xmls()
+        self.scan_hub()
         self.scan_deprecated_files_folders()
         self.scan_resource_files()
         self.scan_resource_queue_definitions()
@@ -141,6 +142,64 @@ class ExperimentScanner():
             
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+                
+    def scan_hub(self):
+        "scan links and targets of hub folder"
+        
+        hub_items=[self.path+"hub/"+filename for filename in file_cache.listdir(self.path+"hub")]
+        
+        "items in hub that are not links to folders"
+        if self.context in (SCANNER_CONTEXT.OPERATIONAL,
+                            SCANNER_CONTEXT.PREOPERATIONAL,
+                            SCANNER_CONTEXT.PARALLEL):
+            bad=[]
+            for path in hub_items:
+                if not file_cache.islink(path) or not file_cache.isdir(path):
+                    bad.append(path)
+            if bad:
+                code="e14"
+                msg="\n".join(bad)
+                if len(bad)>1:
+                    msg="\n"+msg
+                description=hmm.get(code,
+                                    context=self.context,
+                                    bad=msg)
+                self.add_message(code,description)
+        
+        """
+        dissimilar targets
+        for example eccc-ppp3 and eccc-ppp4 should have nearly identical targets
+        """
+        max_levenshtein_distance=3
+        hub=self.path+"hub/"
+        source_and_target=get_links_source_and_target(hub)
+        sources=[a["source"] for a in source_and_target]
+        source_to_target={a["source"]:a["target"] for a in source_and_target}
+        "find pairs like eccc-ppp3 and eccc-ppp4"
+        lev_data=get_levenshtein_pairs(sources)
+        pairs=lev_data["pairs"]
+        "find pairs like banting and daley"
+        for item1,item2 in HUB_PAIRS:
+            path1=hub+item1
+            path2=hub+item2
+            if file_cache.exists(path1) and file_cache.exists(path2):
+                pairs.append([path1,path2])
+        
+        for item1,item2 in pairs:
+            target1=source_to_target[item1]
+            target2=source_to_target[item2]
+            target_d=Levenshtein.distance(target1,target2)
+            if target_d > max_levenshtein_distance:
+                folder1=os.path.basename(target1)
+                folder2=os.path.basename(target2)
+                code="w14"
+                description=hmm.get(code,
+                                    folder1=folder1,
+                                    folder2=folder2,
+                                    target1=target1,
+                                    target2=target2)
+                self.add_message(code,description)
+            
                 
     def scan_deprecated_files_folders(self):
         old=["hub/hare",

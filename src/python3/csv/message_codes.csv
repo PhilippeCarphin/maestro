@@ -38,3 +38,5 @@ w12	Experiment in unexpected overview XML	The experiment seems to have the ‘{c
 e13	Dissemination state does not match context	The experiment seems to have the ‘{context}’ context but variables in ‘{cfg_path}’ do not match what is expected: {unexpected}		
 w13	Misplaced dissemination variables	The variables {variables} belong only in ‘experiment.cfg’ files but were found in: ‘{cfg_path}’		
 b5	Deprecated files and folders	These files or folders are deprecated and should be deleted: {deprecated}		
+e14	Non-links in hub	Experiments with the ‘{context}’ context can only have soft link folders in their ‘hub’ folder. Bad: {bad}		
+w14	Hub pairs have dissimilar targets	The hub folder links ‘{folder1}’ and ‘{folder2}’ are expected to have similar targets. Instead they are very different:\n{target1}\n{target2}		

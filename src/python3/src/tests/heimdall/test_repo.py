@@ -24,7 +24,9 @@ class TestRepo(unittest.TestCase):
         If target/source starts with this, allow it.
         """
         allowed_targets=["/does/not/exist",
-                         "/dev/null"]
+                         "/dev/null",
+                         "/this/does/not/exist",
+                         "/this/does/not/exist/and/is/different"]
         allowed_sources=[MAESTRO_ROOT+"src/python3/mock_files/heimdall/file_index/modules/main/do-not-follow-this-link",
                          MAESTRO_ROOT+"venv"]
         

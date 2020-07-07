@@ -9,8 +9,8 @@ from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES
 from constants import SCANNER_CONTEXT
 from utilities import get_dictionary_list_from_csv
 from utilities.heimdall.context import guess_scanner_context_from_path
-from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text
-from utilities import guess_user_home_from_path
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs
+from utilities import guess_user_home_from_path, pretty
 from utilities.maestro import get_weird_assignments_from_config_path
 
 class TestUtilities(unittest.TestCase):
@@ -89,6 +89,15 @@ class TestUtilities(unittest.TestCase):
             self.assertTrue(os.path.exists(path),msg=msg)
             result=guess_scanner_context_from_path(path)
             self.assertEqual(result,expected,msg=msg)
+            
+    def test_get_levenshtein_pairs(self):
+        items=["cat","ppp1","ppp2"]
+        result=get_levenshtein_pairs(items)
+        expected={"pairs":[["ppp1","ppp2"]],
+                  "no_match":["cat"],
+                  "matches":["ppp1","ppp2"]}
+        msg="\nexpected = \n"+pretty(expected)+"\nresult = \n"+pretty(result)
+        self.assertEqual(result,expected,msg=msg)
         
         
         

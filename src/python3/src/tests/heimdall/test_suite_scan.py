@@ -53,7 +53,7 @@ class TestSuiteScan(unittest.TestCase):
             
             "override the context, if necessary"
             context=None
-            if code in ["e7","e10","w7","w11","w12"]:
+            if code in ["e7","e10","w7","w11","w12","e14"]:
                 context=SCANNER_CONTEXT.OPERATIONAL
             if code in ["i1"]:
                 context=SCANNER_CONTEXT.DEVELOPMENT
