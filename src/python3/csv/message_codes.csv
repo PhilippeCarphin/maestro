@@ -40,3 +40,4 @@ w13	Misplaced dissemination variables	The variables {variables} belong only in �
 b5	Deprecated files and folders	These files or folders are deprecated and should be deleted: {deprecated}		
 e14	Non-links in hub	Experiments with the ‘{context}’ context can only have soft link folders in their ‘hub’ folder. Bad: {bad}		
 w14	Hub pairs have dissimilar targets	The hub folder links ‘{folder1}’ and ‘{folder2}’ are expected to have similar targets. Instead they are very different:\n{target1}\n{target2}		
+i2	Module name and path differ	The module folder ‘{folder_name}’ differs from the module name ‘{attribute_name}’ in the flow XML ‘{xml_path}’. This can help organize a project, but it may also be confusing.		

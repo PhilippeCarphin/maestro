@@ -105,7 +105,7 @@ class TestSuiteScan(unittest.TestCase):
         paths=[TURTLE_ME_PATH,G0_MINI_ME_PATH,G1_MINI_ME_PATH,GV_MINI_ME_PATH]
         
         "since the good suites are minimal, never look for these codes"
-        ignore_codes=["w1", "w2"]
+        ignore_codes=["w1", "w2", "i2"]
         
         """
         key is experiment path

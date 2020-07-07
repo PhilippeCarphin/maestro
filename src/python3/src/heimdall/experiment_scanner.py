@@ -80,7 +80,7 @@ class ExperimentScanner():
         self.scan_overview_xmls()
         self.scan_config_files()
         self.scan_home_soft_links()
-        self.scan_scattered_modules()
+        self.scan_modules()
         self.scan_all_task_content()
         self.scan_node_names()
         self.scan_broken_symlinks()
@@ -536,16 +536,24 @@ class ExperimentScanner():
                                     task_path=task_path)
                 self.add_message(code,description)
         
-    def scan_scattered_modules(self):
+    def scan_modules(self):
+        """
+        Scan the module folders, paths, and content in flow.xml files.
+        """
         
         """
         This dictionary is necessary because 'modules/module1/flow.xml'
         may define '<MODULE name=module2>' at its root.      
         This dictionary has all aliases.
+        
+        Key is module name, value is real name.
         """
         source_to_target={}
         
         module_element_to_flow_path={}
+        
+        "key is MODULE element at root of a flow, value is flow xml path"
+        root_module_to_flow_path={}
                 
         for flow_path in self.flow_files:
             module_name=os.path.basename(os.path.dirname(flow_path))
@@ -556,7 +564,9 @@ class ExperimentScanner():
             root=xml_cache.get(flow_path)
             modules=xml_cache.get_elements_of_tag(root,"MODULE")
             for m in modules:
-                module_element_to_flow_path[m]=flow_path
+                module_element_to_flow_path[m]=flow_path 
+            if modules:
+                root_module_to_flow_path[modules[0]]=flow_path
         
         not_empty_modules=[m for m in module_element_to_flow_path if not is_empty_module(m)]
         
@@ -585,7 +595,23 @@ class ExperimentScanner():
                 description=hmm.get(code,
                                     module_name=module_name,
                                     flow_xmls=flow_xmls)
-                self.add_message(code,description)                
+                self.add_message(code,description)
+        
+        """
+        find cases where the root element in modules/module1/flow.xml 
+        defined module2, not module1
+        """
+        for element,path in root_module_to_flow_path.items():
+            attribute_name=element.attrib.get("name")
+            folder_name=os.path.basename(os.path.dirname(path))
+            if attribute_name != folder_name:
+                code="i2"
+                description=hmm.get(code,
+                                    folder_name=folder_name,
+                                    xml_path=path,
+                                    attribute_name=attribute_name)
+                self.add_message(code,description)
+                
         
     def scan_required_folders(self):        
         required_folders=("listings","sequencing","stats","logs")
