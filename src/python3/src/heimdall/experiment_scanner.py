@@ -3,7 +3,7 @@ import re
 from collections import OrderedDict
 import Levenshtein
 
-from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV
+from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
@@ -212,20 +212,58 @@ class ExperimentScanner():
                 self.add_message(code,description)
         
     def scan_config_files(self):
-        "scan the content of config files (see scan_file_content for CSV content scan)"
-        
-        code="e10" if self.is_context_operational() else "w6"
         for path in self.config_files:
-            content=file_cache.open(path)
-            data=get_weird_assignments_from_config_text(content)
-            for section,d in data.items():
-                for key,value in d.items():
-                    if value.startswith("/"):
-                        description=hmm.get(code,
-                                            config_path=path,
-                                            bad_path=value)
-                        self.add_message(code,description)
-                
+            self.scan_config_file(path)
+    
+    def scan_config_file(self,path):
+        "scan the content of config files (see scan_file_content for CSV content scan)"        
+        
+        key_values=file_cache.get_key_values_from_path(path)
+        expected_config=EXPECTED_CONFIG_STATES.get(self.context,{})
+        
+        "find hard coded paths in pseudo-xml cfg variables"
+        code="e10" if self.is_context_operational() else "w6"
+        content=file_cache.open(path)
+        data=get_weird_assignments_from_config_text(content)
+        for section,d in data.items():
+            for key,value in d.items():
+                if value.startswith("/"):
+                    description=hmm.get(code,
+                                        config_path=path,
+                                        bad_path=value)
+                    self.add_message(code,description)
+        
+        "variables that should only be in experiment.cfg"
+        if not path.endswith("experiment.cfg"):
+            only_in_exp_config=["DISSEM_STATE","PREOP_STATE"]
+            unexpected=[key for key in only_in_exp_config if key in key_values]
+            if unexpected:
+                code="w13"
+                variables=", ".join(unexpected)
+                description=hmm.get(code,
+                                    cfg_path=path,
+                                    variables=variables)
+                self.add_message(code,description)
+            
+        "bad variable values"        
+        for key,expected_value in expected_config.items():
+            if key in key_values:
+                value=key_values[key]
+                if value != expected_value:
+                    line="%s is '%s' not '%s'"%(key,value,expected_value)
+                    unexpected.append(line)
+        if unexpected:
+            msg="\n".join(unexpected)
+            if len(unexpected)>1:
+                msg="\n"+msg
+            code="e13"
+            description=hmm.get(code,
+                                context=self.context,
+                                cfg_path=path,
+                                unexpected=msg)
+            self.add_message(code,description)
+            
+            
     def scan_resource_files(self):
         "scan the content of resource files (see scan_file_content for CSV content scan)"
         

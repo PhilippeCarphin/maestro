@@ -24,3 +24,10 @@ SCANNER_CONTEXTS=[SCANNER_CONTEXT.OPERATIONAL,
                 SCANNER_CONTEXT.PARALLEL,
                 SCANNER_CONTEXT.DEVELOPMENT,
                 SCANNER_CONTEXT.TEST]
+
+EXPECTED_CONFIG_STATES={SCANNER_CONTEXT.OPERATIONAL:{"DISSEM_STATE":"ON",
+                                              "PREOP_STATE":"OFF"},
+                 SCANNER_CONTEXT.PREOPERATIONAL:{"DISSEM_STATE":"ON",
+                                                 "PREOP_STATE":"ON"},
+                 SCANNER_CONTEXT.PARALLEL:{"DISSEM_STATE":"ODD",
+                                           "PREOP_STATE":"OFF"}}

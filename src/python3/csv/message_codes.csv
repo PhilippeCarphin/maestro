@@ -35,3 +35,5 @@ w9	Resource variable typo	The resource variable ‘{maybe_typo}’ is defined bu
 w10	Bad queue value for resource variable	The value ‘{value}’ for the resource variable ‘{name}’ is not a queue available in qstat. Queues: {queues}		
 w11	Experiment not in overview XML	The experiment seems to have the ‘{context}’ context but it was not found in the {exp_count} experiments in the overview XML: {xml_path}		
 w12	Experiment in unexpected overview XML	The experiment seems to have the ‘{context}’ context but it was found in the {exp_count} experiments in the ‘{xml_context}’ context overview XML: {xml_path}		
+e13	Dissemination state does not match context	The experiment seems to have the ‘{context}’ context but variables in ‘{cfg_path}’ do not match what is expected: {unexpected}		
+w13	Misplaced dissemination variables	The variables {variables} belong only in ‘experiment.cfg’ files but were found in: ‘{cfg_path}’		

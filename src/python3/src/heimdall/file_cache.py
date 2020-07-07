@@ -11,12 +11,12 @@ same-name functions instead.
 import os
 import os.path
 from lxml import etree
-from utilities.generic import cache, strip_comments_from_text
+from utilities.generic import cache, strip_comments_from_text, get_key_values_from_path
 
 class FileCache():
     """
     Some functions do not have cache, for example when
-    they cache key should be realpath and not path.
+    the cache key should be realpath and not path.
     This prevents caching duplicates for two paths that have the same realpath.
     """
     
@@ -30,6 +30,14 @@ class FileCache():
         """
         realpath=self.realpath(path)   
         return self.etree_parse_from_realpath(realpath)
+
+    @cache
+    def get_key_values_from_realpath(self,realpath):
+        return get_key_values_from_path(realpath)
+    
+    def get_key_values_from_path(self,path):
+        realpath=self.realpath(path)
+        return self.get_key_values_from_realpath(realpath)
     
     @cache
     def etree_parse_from_realpath(self,realpath):

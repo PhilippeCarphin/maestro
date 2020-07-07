@@ -57,27 +57,43 @@ def get_distance(x1,x2,y1,y2):
     y=abs(y1-y2)
     return (x**2+y**2)**0.5
 
-def get_key_values_from_path(path):
-    """
-    Given a path to a file with bash-like variable declares:
-        ABC=123
-        DEF=456
-    returns:
-        {"ABC":"123",
-         "DEF":"456"}
-    """
+
+def get_key_values_from_path(path,include_export_lines=True):
+
     if not os.path.isfile(path):
         return {}
     with open(path,"r") as f:
-        lines=f.readlines()
+        text=f.read()
+    
+    return get_key_values_from_text(text,include_export_lines)
+    
+def get_key_values_from_text(text,include_export_lines=True):
+    """
+    Given text with bash-like variable declares:
+        ABC=123
+        export DEF=456
+    returns:
+        {"ABC":"123",
+         "DEF":"456"}
+        
+    Ignore export lines if include_export_lines is false.
+    """
+    
+    lines=text.split("\n")
     
     "select only var declare lines"
-    var_regex=re.compile("[a-zA-Z]+[a-zA-Z0-9_]*[ ]*=")
+    if include_export_lines:
+        var_regex=re.compile("(export )?[a-zA-Z]+[a-zA-Z0-9_]*[ ]*=")
+    else:
+        var_regex=re.compile("[a-zA-Z]+[a-zA-Z0-9_]*[ ]*=")
+        
     lines=[line.strip() for line in lines if var_regex.search(line)]
     
     data={}
     for line in lines:
         name=line.split("=")[0]
+        if include_export_lines and name.startswith("export "):
+            name=name[7:]
         value=line[line.index("=")+1:]
         data[name.strip()]=value.strip()
     return data
