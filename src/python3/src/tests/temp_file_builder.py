@@ -14,6 +14,34 @@ from utilities.xml import xml_cache
 
 from tests.path import MOCK_FILES, TMP_FOLDER
 
+def setup_not_w11_home():
+    """
+    Returns a path to a 501-like home that does not produce the w11 code.
+    """
+    
+    source=MOCK_FILES+"heimdall/homes/smco501"
+    target=TMP_FOLDER+"smco501"
+    
+    if os.path.exists(target):
+        shutil.rmtree(target)
+    shutil.copytree(source,target,symlinks=True)
+        
+    xml_path=target+"/xflow.suites.xml"
+    
+    root=xml_cache.get(xml_path)
+    
+    "this is the dynamic value to insert, which changes depending on who runs the test suite where"
+    exp=MOCK_FILES+"heimdall/suites_without_codes/w11"
+    
+    element=root.xpath("//Exp")[0]
+    element.text=exp
+        
+    with open(xml_path,"w") as f:
+        data=etree.tostring(root).decode("utf8")
+        f.write(data)
+        
+    return target
+
 def setup_b1_experiment():
     """
     Returns a path to an experiment that produces the b1 code.

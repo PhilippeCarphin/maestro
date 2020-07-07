@@ -10,6 +10,8 @@ Options:
     --context=<context>          Heimdall will guess the context like operational, preoperational, or parallel. Or you can override the guess with this option.
     --exp=<experiment-path>      The path to a maestro experiment. By default, look in $PWD. [default: %s]
     --home=<folder>              The home folder used to lookup files like '~/.suites/overrides.def'. By default, use the home of the owner of the maestro experiment.
+    --op-home=<path>             Path to the home of the operational user. [default: /home/smco500]
+    --par-home=<path>            Path to the home of the parallel user. [default: /home/smco501]
     
     --verbose                    Enable verbose debug logging in the "$HOME/logs/mflow" files.
     -h --help   Show this description.
@@ -38,6 +40,8 @@ def main(args):
     
     scanner=ExperimentScanner(experiment_path,
                               context=context,
+                              operational_home=args["--op-home"],
+                              parallel_home=args["--par-home"],
                               critical_error_is_exception=False)
     
     scanner.print_report()

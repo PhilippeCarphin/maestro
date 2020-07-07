@@ -20,6 +20,8 @@ class ExperimentScanner():
     def __init__(self,
                  path,
                  context=None,
+                 operational_home=None,
+                 parallel_home=None,
                  critical_error_is_exception=True,
                  debug_qstat_queue_override=""):
         
@@ -27,9 +29,21 @@ class ExperimentScanner():
             path+="/"
         
         self.path=path
-        self.maestro_experiment=None        
+        self.maestro_experiment=None
         self.codes=set()
         self.messages=[]
+        
+        """
+        Some scans like suite in the overview XML requires knowing the op/par home.
+        Some scans may not care, so only throw a "does not exist" error
+        if string has a value.
+        """
+        if operational_home and not os.path.exists(operational_home):
+            raise ValueError("Home path for operational user does not exist: '%s'"%operational_home)
+        if parallel_home and not os.path.exists(parallel_home):
+            raise ValueError("Home path for parallel user does not exist: '%s'"%parallel_home)
+        self.operational_home=operational_home
+        self.parallel_home=parallel_home
         
         """
         Instead of running the qstat shell command, use this output instead.
@@ -61,6 +75,7 @@ class ExperimentScanner():
         self.scan_xmls()
         self.scan_resource_files()
         self.scan_resource_queue_definitions()
+        self.scan_overview_xmls()
         self.scan_config_files()
         self.scan_home_soft_links()
         self.scan_scattered_modules()
@@ -125,6 +140,42 @@ class ExperimentScanner():
             
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+    
+    def scan_overview_xmls(self):
+        """
+        Scan if this experiment is found in the appropriate overview XML.
+        """
+        
+        if not self.operational_home or not self.parallel_home:
+            return
+        
+        if self.context == SCANNER_CONTEXT.OPERATIONAL:
+            xml_path=self.operational_home+"/xflow.suites.xml"
+        elif self.context == SCANNER_CONTEXT.PREOPERATIONAL:
+            xml_path=self.operational_home+"/xflow_preop.suites.xml"
+        elif self.context == SCANNER_CONTEXT.PARALLEL:
+            xml_path=self.parallel_home+"/xflow.suites.xml"
+        else:
+            return
+        
+        root=file_cache.etree_parse(xml_path)
+        
+        if root is None:
+            """
+            while it is a serious problem that the overview XML did not parse,
+            it is not a problem belonging to the suite.            
+            """
+            return
+        
+        experiments=[file_cache.realpath(e.text) for e in root.xpath("//Exp")]
+        expected=file_cache.realpath(self.path)
+        if expected not in experiments:
+            code="w11"
+            description=hmm.get(code,
+                                context=self.context,
+                                exp_count=len(experiments),
+                                xml_path=xml_path)
+            self.add_message(code,description)
     
     def scan_resource_queue_definitions(self):
         """
