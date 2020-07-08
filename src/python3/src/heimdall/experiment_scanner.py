@@ -866,6 +866,7 @@ class ExperimentScanner():
     
     def print_report(self,
                      use_colors=True,
+                     max_repeat=0,
                      level="b"):
         char_color_functions=OrderedDict([("c",print_red),
                                           ("e",print_orange),
@@ -876,7 +877,13 @@ class ExperimentScanner():
         levels="cewib"
         if level not in levels:
             raise ValueError("Bad level '%s', but be one of '%s'"%(level,levels))
-            
+        
+        "keep track of how many times we've shown each code"
+        code_count={code:0 for code in self.codes}
+        
+        "key is first char of a code, value is how many we didn't show"
+        hidden_code_counts_by_char={c:0 for c in levels}
+        
         for c,f in char_color_functions.items():
             for message in self.messages:
                 code=message["code"]
@@ -888,8 +895,22 @@ class ExperimentScanner():
                 if levels.index(code[0]) > levels.index(level):
                     continue
                 
+                code_count[code]+=1
+                if max_repeat and code_count[code]>max_repeat:
+                    "already shown enough of this code, do not show"
+                    hidden_code_counts_by_char[code[0]]+=1
+                    continue
+                
                 f(code+": "+message["label"])
                 print(message["description"])
+        
+        if max(hidden_code_counts_by_char.values()):
+            msg="\nSkipped showing %s repeated codes: "%sum(hidden_code_counts_by_char.values())
+            for c in levels:
+                count=hidden_code_counts_by_char[c]
+                if count:
+                    msg+="%s from code '%s', "%(count,c)
+            print(msg[:-2])
         
         print("\nHeimdall found %s items to report for maestro suite:\n    %s"%(len(self.messages),self.path))
 
