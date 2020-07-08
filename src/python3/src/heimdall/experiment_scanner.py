@@ -15,7 +15,7 @@ from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target
-from utilities.qstat import get_qstat_queues
+from utilities.qstat import get_qstat_data_from_text, get_qstat_data
 
 class ExperimentScanner():
     def __init__(self,
@@ -24,7 +24,7 @@ class ExperimentScanner():
                  operational_home=None,
                  parallel_home=None,
                  critical_error_is_exception=True,
-                 debug_qstat_queue_override=""):
+                 debug_qstat_output_override=""):
         
         if not path.endswith("/"):
             path+="/"
@@ -50,7 +50,10 @@ class ExperimentScanner():
         Instead of running the qstat shell command, use this output instead.
         Useful for debugging/tests.
         """
-        self.debug_qstat_queue_override=debug_qstat_queue_override
+        if debug_qstat_output_override:
+            self.qstat_data=get_qstat_data_from_text(debug_qstat_output_override)
+        else:
+            self.qstat_data=get_qstat_data(timeout=3)
                 
         critical_errors=find_critical_errors(path)        
         for code,kwargs in critical_errors.items():
@@ -326,7 +329,17 @@ class ExperimentScanner():
             FRONTEND_DEFAULT_Q=123
         """
         
-        queues=get_qstat_queues(cmd_output_override=self.debug_qstat_queue_override)
+        if not self.qstat_data:
+            return
+        
+        queues=sorted(list(self.qstat_data.keys()))
+        
+        """
+        These queues do not show up in jobctl-qstat but
+        they are still acceptable.
+        """
+        aliases=["xfer"]
+        
         names=["FRONTEND_DEFAULT_Q",
                "FRONTEND_XFER_Q",
                "FRONTEND_DAEMON_Q",
@@ -335,7 +348,7 @@ class ExperimentScanner():
         for name in names:
             value=self.maestro_experiment.get_resource_value_from_key(name)
             if value and value not in queues:
-                code="w10"
+                code="b8" if value in aliases else "w10"
                 description=hmm.get(code,
                                     value=value,
                                     name=name,

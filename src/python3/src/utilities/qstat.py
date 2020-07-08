@@ -1,5 +1,6 @@
 import os.path
 
+from utilities import clamp
 from utilities.shell import safe_check_output_with_status
 
 def get_qstat_data_from_path(path):
@@ -7,32 +8,6 @@ def get_qstat_data_from_path(path):
         return {}
     with open(path,"r") as f:
         return get_qstat_data_from_text(f.read())
-
-def get_qstat_queues(cmd_output_override=""):
-    """
-    Returns a list of all queues according to qstat.
-    Use the cmd output override to skip running the qstat
-    cmd and parse that text instead.
-    
-    Example output for 'jobctl-qstat -Q' :
-Queue              Max   Tot Ena Str   Que   Run   Hld   Wat   Trn   Ext Type
----------------- ----- ----- --- --- ----- ----- ----- ----- ----- ----- ----
-prod                 0     0 yes yes     0     0     0     0     0     0 Exec
-prod_xxfer           6     0 yes yes     0     0     0     0     0     0 Exec
-    """
-    
-    output=cmd_output_override.strip()
-    if not output:
-        cmd="jobctl-qstat -Q"
-        output,status=safe_check_output_with_status(cmd)
-        if status!=0:
-            return []
-        
-    output=output.split("----")[-1]
-    queues=[]
-    for line in output.strip().split("\n"):
-        queues.append(line.split(" ")[0])
-    return sorted(queues)
 
 def get_qstat_data_from_text(text):
     """
@@ -77,9 +52,18 @@ def get_qstat_data_from_text(text):
     
     return data
 
-def get_qstat_data(logger=None):
+def get_qstat_data(logger=None,timeout=0):
+    """
+    Run a full qstat command and return a dictionary with its parsed data.
+    If non-zero, timeout is how long in seconds until giving up.
+    """
 
     cmd="jobctl-qstat -Q -f"
+    
+    if timeout and type(timeout) is int:
+        timeout=clamp(timeout,1,60)
+        cmd="timeout %s %s"%(timeout,cmd)
+        
     output,status=safe_check_output_with_status(cmd)
     
     if status!=0:

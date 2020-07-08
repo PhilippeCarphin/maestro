@@ -44,3 +44,4 @@ i2	Module name and path differ	The module folder ‘{folder_name}’ differs fro
 b6	Non-maestro files in maestro folders	The maestro folder ‘{folder}’ should only contain maestro files like tsk, cfg, xml. These files were found: {filenames}		
 i3	Text editor swap files	Text editor swap files were found, for example for vim or emacs. If your editor is closed, you may want to recover or delete these: {swaps}		
 b7	Comments in config file	The pseudo-xml section (containing input, executables, and output) of the config file ‘{file_path}’ contains commented lines starting with “##”. The search is for {search}. These seem to be configuration lines and not comments, and should be removed.		
+b8	Hidden queue alias used	The value ‘{value}’ for the resource variable ‘{name}’ is a hidden queue alias not easily visible in qstat. Consider using one of these queues instead: {queues}		
