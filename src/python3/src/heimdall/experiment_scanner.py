@@ -12,7 +12,7 @@ from utilities.maestro import is_empty_module, get_weird_assignments_from_config
 from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs
 from utilities.heimdall.context import guess_scanner_context_from_path
-from utilities.heimdall.path import get_ancestor_folders
+from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target
 from utilities.qstat import get_qstat_queues
@@ -146,8 +146,22 @@ class ExperimentScanner():
                 self.filetype_to_check_datas[filetype].append(check_data)
     
     def scan_extra_files(self):
-        "random files should not be adjacent to any maestro files like tsk, cfg, resource xml"
+        """
+        Find extra files that probably don't believe in the project.
+        """
         
+        "text editor swap files"
+        swaps=[path for path in self.files if is_editor_swapfile(path)]
+        if swaps:
+            code="i3"
+            filenames="\n".join(swaps)
+            if len(swaps)>1:
+                filenames="\n"+filenames
+            description=hmm.get(code,
+                                swaps=filenames)
+            self.add_message(code,description)            
+        
+        "Random files should not be adjacent to any maestro files like tsk, cfg, resource xml"        
         maestro_files=self.task_files+self.config_files+self.resource_files+self.flow_files
         maestro_files=sorted(list(set(maestro_files)))
         explored=set()
@@ -780,8 +794,9 @@ class ExperimentScanner():
                     flow_files.add(path)
         
         "also add parent folders of all folders, as long as they are in the experiment"
-        folders.update(get_ancestor_folders(folder,self.path))
-                
+        for folder in list(folders):
+            folders.update(get_ancestor_folders(folder,self.path))
+            
         "find maestro files (including broken symlinks) not in flow.xml, but in the same folders"
         for folder in folders:
             if not file_cache.isdir(folder):

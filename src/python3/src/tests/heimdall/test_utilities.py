@@ -10,6 +10,7 @@ from constants import SCANNER_CONTEXT
 from utilities import get_dictionary_list_from_csv
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs
+from utilities.heimdall.path import is_editor_swapfile
 from utilities import guess_user_home_from_path, pretty
 from utilities.maestro import get_weird_assignments_from_config_path
 
@@ -32,6 +33,23 @@ class TestUtilities(unittest.TestCase):
                   "output":{"anlalt_nosfc":"${ASSIMCYCLE_getalt_output}/${ASSIMCYCLE_DATE}_000_nosfc"}
                   }
         self.assertEqual(result,expected)
+        
+    def test_is_editor_swapfile(self):
+        swapfiles=["/folder1/.file1.swp",
+                   "/folder1/.file1.swo",
+                   "/folder1/#file1#",
+                   "/folder1/.#file1"]
+        
+        for path in swapfiles:
+            self.assertTrue(is_editor_swapfile(path),msg="path = '%s'"%path)
+        
+        not_swapfiles=["/folder1/.file.swf",
+                       "/folder1/.file.swp.txt",
+                       "/folder1/file.swp",
+                       "/folder1/#file1#.txt"]
+                       
+        for path in not_swapfiles:
+            self.assertFalse(is_editor_swapfile(path),msg="path = '%s'"%path)
         
     def test_guess_user_home_from_path(self):
         

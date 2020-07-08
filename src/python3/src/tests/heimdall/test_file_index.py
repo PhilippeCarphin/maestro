@@ -11,6 +11,7 @@ class TestFileIndex(unittest.TestCase):
         p=FILE_INDEX_ME_PATH
         scanner=ExperimentScanner(p)
         
+        "xml"
         expected=[p+"modules/main/flow.xml",
                   p+"resources/main/not-in-flow.xml",
                   p+"resources/main/task1.xml",
@@ -19,19 +20,24 @@ class TestFileIndex(unittest.TestCase):
         msg=pretty_kwargs(result=result,expected=expected)
         self.assertEqual(result,expected,msg=msg)
         
+        "tsk"
         expected=[p+"modules/main/123_bad_task_name.tsk",
                   p+"modules/main/task1.tsk",
                   p+"modules/main/task2.tsk"]
         self.assertEqual(scanner.task_files,expected)
         
+        "cfg"
         expected=[p+"modules/main/task1.cfg"]
         self.assertEqual(scanner.config_files,expected)
         
+        "flow"
         expected=[p+"modules/main/flow.xml"]
         self.assertEqual(scanner.flow_files,expected)
         
-        expected=p+"modules/strange-file1"
-        self.assertIn(expected,scanner.files)
+        paths=[p+"modules/strange-file1",
+               p+"resources/.vim-swap-file.swp"]
+        for expected in paths:
+            self.assertIn(expected,scanner.files)
         
         expected=[p+"resources/main/not-in-flow.xml",
                   p+"resources/main/task1.xml",
