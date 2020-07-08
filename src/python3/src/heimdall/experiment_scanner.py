@@ -147,7 +147,7 @@ class ExperimentScanner():
     
     def scan_extra_files(self):
         """
-        Find extra files that probably don't believe in the project.
+        Find extra files that probably don't belong in the project.
         """
         
         "text editor swap files"
