@@ -7,8 +7,9 @@ Usage:
     heimdall [options]
 
 Options:
-    --context=<context>          Heimdall will guess the context like operational, preoperational, or parallel. Or you can override the guess with this option.
     --exp=<experiment-path>      The path to a maestro experiment. By default, look in $PWD. [default: %s]
+    --context=<context>          Heimdall will guess the context like operational, preoperational, or parallel. Or you can override the guess with this option.    
+    --level=<level>              Only show messages at this level or above. There is critical, error, warning, info, and best-practice. You can also just use the first letter as an argument. [default: best-practice]    
     --home=<folder>              The home folder used to lookup files like '~/.suites/overrides.def'. By default, use the home of the owner of the maestro experiment.
     --op-home=<path>             Path to the home of the operational user. [default: /home/smco500]
     --par-home=<path>            Path to the home of the parallel user. [default: /home/smco501]
@@ -44,7 +45,13 @@ def main(args):
                               parallel_home=args["--par-home"],
                               critical_error_is_exception=False)
     
-    scanner.print_report()
+    level=args["--level"].lower()
+    if not level or level[0] not in "cewib":
+        print("Bad --level option. See -h for more info.")
+        return
+    level=level[0]
+    
+    scanner.print_report(level=level)
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="1.0")

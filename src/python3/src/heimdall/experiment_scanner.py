@@ -3,17 +3,18 @@ import re
 from collections import OrderedDict
 import Levenshtein
 
-from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES
+from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
 from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text
 from utilities.heimdall.critical_errors import find_critical_errors
-from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs
 from utilities.heimdall.context import guess_scanner_context_from_path
+from utilities.heimdall.path import get_ancestor_folders
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
-from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path
+from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target
 from utilities.qstat import get_qstat_queues
 
 class ExperimentScanner():
@@ -70,16 +71,18 @@ class ExperimentScanner():
         
         self.scan_required_folders()
         self.scan_required_files()
+        self.scan_extra_files()
         self.scan_all_file_content()
         self.scan_exp_options()
         self.scan_xmls()
+        self.scan_hub()
         self.scan_deprecated_files_folders()
         self.scan_resource_files()
         self.scan_resource_queue_definitions()
         self.scan_overview_xmls()
         self.scan_config_files()
         self.scan_home_soft_links()
-        self.scan_scattered_modules()
+        self.scan_modules()
         self.scan_all_task_content()
         self.scan_node_names()
         self.scan_broken_symlinks()
@@ -141,6 +144,95 @@ class ExperimentScanner():
             
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+    
+    def scan_extra_files(self):
+        "random files should not be adjacent to any maestro files like tsk, cfg, resource xml"
+        
+        maestro_files=self.task_files+self.config_files+self.resource_files+self.flow_files
+        maestro_files=sorted(list(set(maestro_files)))
+        explored=set()
+        
+        for path in maestro_files:
+            
+            folder=os.path.dirname(path)
+            if folder in explored:
+                continue
+            explored.add(folder)
+            
+            extra=[]
+            for basename in file_cache.listdir(folder):
+                path=folder+"/"+basename
+                if file_cache.isfile(path) and path not in maestro_files:
+                    extra.append(path)
+            
+            if extra:
+                code="b6"
+                filenames="\n".join(extra)
+                if len(extra)>1:
+                    filenames="\n"+filenames
+                description=hmm.get(code,
+                                    folder=folder,
+                                    filenames=filenames)
+                self.add_message(code,description)
+                
+        
+    def scan_hub(self):
+        "scan links and targets of hub folder"
+        
+        hub_items=[self.path+"hub/"+filename for filename in file_cache.listdir(self.path+"hub")]
+        
+        "items in hub that are not links to folders"
+        if self.context in (SCANNER_CONTEXT.OPERATIONAL,
+                            SCANNER_CONTEXT.PREOPERATIONAL,
+                            SCANNER_CONTEXT.PARALLEL):
+            bad=[]
+            for path in hub_items:
+                if not file_cache.islink(path) or not file_cache.isdir(path):
+                    bad.append(path)
+            if bad:
+                code="e14"
+                msg="\n".join(bad)
+                if len(bad)>1:
+                    msg="\n"+msg
+                description=hmm.get(code,
+                                    context=self.context,
+                                    bad=msg)
+                self.add_message(code,description)
+        
+        """
+        dissimilar targets
+        for example eccc-ppp3 and eccc-ppp4 should have nearly identical targets
+        """
+        max_levenshtein_distance=3
+        hub=self.path+"hub/"
+        source_and_target=get_links_source_and_target(hub)
+        sources=[a["source"] for a in source_and_target]
+        source_to_target={a["source"]:a["target"] for a in source_and_target}
+        "find pairs like eccc-ppp3 and eccc-ppp4"
+        lev_data=get_levenshtein_pairs(sources)
+        pairs=lev_data["pairs"]
+        "find pairs like banting and daley"
+        for item1,item2 in HUB_PAIRS:
+            path1=hub+item1
+            path2=hub+item2
+            if file_cache.exists(path1) and file_cache.exists(path2):
+                pairs.append([path1,path2])
+        
+        for item1,item2 in pairs:
+            target1=source_to_target[item1]
+            target2=source_to_target[item2]
+            target_d=Levenshtein.distance(target1,target2)
+            if target_d > max_levenshtein_distance:
+                folder1=os.path.basename(target1)
+                folder2=os.path.basename(target2)
+                code="w14"
+                description=hmm.get(code,
+                                    folder1=folder1,
+                                    folder2=folder2,
+                                    target1=target1,
+                                    target2=target2)
+                self.add_message(code,description)
+            
                 
     def scan_deprecated_files_folders(self):
         old=["hub/hare",
@@ -477,16 +569,24 @@ class ExperimentScanner():
                                     task_path=task_path)
                 self.add_message(code,description)
         
-    def scan_scattered_modules(self):
+    def scan_modules(self):
+        """
+        Scan the module folders, paths, and content in flow.xml files.
+        """
         
         """
         This dictionary is necessary because 'modules/module1/flow.xml'
         may define '<MODULE name=module2>' at its root.      
         This dictionary has all aliases.
+        
+        Key is module name, value is real name.
         """
         source_to_target={}
         
         module_element_to_flow_path={}
+        
+        "key is MODULE element at root of a flow, value is flow xml path"
+        root_module_to_flow_path={}
                 
         for flow_path in self.flow_files:
             module_name=os.path.basename(os.path.dirname(flow_path))
@@ -497,7 +597,9 @@ class ExperimentScanner():
             root=xml_cache.get(flow_path)
             modules=xml_cache.get_elements_of_tag(root,"MODULE")
             for m in modules:
-                module_element_to_flow_path[m]=flow_path
+                module_element_to_flow_path[m]=flow_path 
+            if modules:
+                root_module_to_flow_path[modules[0]]=flow_path
         
         not_empty_modules=[m for m in module_element_to_flow_path if not is_empty_module(m)]
         
@@ -526,7 +628,23 @@ class ExperimentScanner():
                 description=hmm.get(code,
                                     module_name=module_name,
                                     flow_xmls=flow_xmls)
-                self.add_message(code,description)                
+                self.add_message(code,description)
+        
+        """
+        find cases where the root element in modules/module1/flow.xml 
+        defined module2, not module1
+        """
+        for element,path in root_module_to_flow_path.items():
+            attribute_name=element.attrib.get("name")
+            folder_name=os.path.basename(os.path.dirname(path))
+            if attribute_name != folder_name:
+                code="i2"
+                description=hmm.get(code,
+                                    folder_name=folder_name,
+                                    xml_path=path,
+                                    attribute_name=attribute_name)
+                self.add_message(code,description)
+                
         
     def scan_required_folders(self):        
         required_folders=("listings","sequencing","stats","logs")
@@ -660,14 +778,9 @@ class ExperimentScanner():
                     resource_files.add(path)
                 elif prefix=="flow":
                     flow_files.add(path)
-                    
+        
         "also add parent folders of all folders, as long as they are in the experiment"
-        for folder in list(folders):
-            parent=folder
-            while parent.startswith(self.path):
-                if parent!=folder:
-                    folders.add(parent)
-                parent=os.path.dirname(parent)
+        folders.update(get_ancestor_folders(folder,self.path))
                 
         "find maestro files (including broken symlinks) not in flow.xml, but in the same folders"
         for folder in folders:
@@ -694,26 +807,30 @@ class ExperimentScanner():
             elif path.endswith(".xml"):
                 xml_files.append(path)
         
+        def sls(items):
+            "sls is short for sorted, list, set"
+            return sorted(list(set(items)))
+        
         "all full paths to all files to scan"
-        self.files=sorted(list(paths))
+        self.files=sls(paths)
         
         "all folders containing files to scan"
-        self.folders=sorted(list(folders))
+        self.folders=sls(folders)
         
         "all cfg files"
-        self.config_files=sorted(config_files)
+        self.config_files=sls(config_files)
         
         "all flow.xml files"
-        self.flow_files=sorted(list(flow_files))
+        self.flow_files=sls(flow_files)
         
         "all resource xml files"
-        self.resource_files=sorted(list(resource_files))
+        self.resource_files=sls(resource_files)
         
         "all tsk files"
-        self.task_files=sorted(task_files)
+        self.task_files=sls(task_files)
         
         "all xml files"
-        self.xml_files=sorted(xml_files)
+        self.xml_files=sls(xml_files)
     
     def get_report_text(self):
         lines=[]
@@ -722,18 +839,30 @@ class ExperimentScanner():
             lines.append(line)
         return "\n\n".join(lines)
     
-    def print_report(self,use_colors=True):
+    def print_report(self,
+                     use_colors=True,
+                     level="b"):
         char_color_functions=OrderedDict([("c",print_red),
                                           ("e",print_orange),
                                           ("w",print_yellow),
                                           ("i",print_green),
                                           ("b",print_blue)])
         
+        levels="cewib"
+        if level not in levels:
+            raise ValueError("Bad level '%s', but be one of '%s'"%(level,levels))
+            
         for c,f in char_color_functions.items():
             for message in self.messages:
                 code=message["code"]
+                
                 if not code.startswith(c):
                     continue
+                
+                "do not print levels lower priority than the desired level"
+                if levels.index(code[0]) > levels.index(level):
+                    continue
+                
                 f(code+": "+message["label"])
                 print(message["description"])
         

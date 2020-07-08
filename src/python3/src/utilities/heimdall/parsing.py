@@ -1,4 +1,5 @@
 
+import Levenshtein
 import re
 from heimdall.file_cache import file_cache
 
@@ -35,3 +36,59 @@ def get_nodelogger_signals_from_task_text(text):
         results.append(result)
        
     return results
+
+def get_levenshtein_pairs(items,max_distance=1):
+    """
+    Given a list:
+        ["eccc-ppp1","eccc-ppp2","turtle"]
+    returns:
+        {"pairs":(("eccc-ppp1","eccc-ppp2")),
+         "no_match":("turtle"),
+         "matches":("eccc-ppp1","eccc-ppp2")}
+    based on closest Levenshtein distances to pair up strings.
+    
+    In cases like "a1" "a2" "a3" all are placed in "no_match"
+    """
+    
+    items=sorted(list(set(items)))
+    used=[]
+    pairs=[]
+    
+    for item1 in items:
+        best_score=-1
+        best_item=""
+        for item2 in items:
+            if item1==item2:
+                continue
+            
+            if item2 in used:
+                continue
+            
+            d=Levenshtein.distance(item1,item2)
+            if d<best_score or best_score==-1:
+                best_score=d
+                best_item=item2
+            
+        if best_item and best_score<=max_distance:
+            used.append(item1)
+            used.append(item2)
+            pairs.append([item1,item2])
+    
+    no_match=[item for item in items if item not in used]
+    return {"no_match":no_match,
+            "pairs":pairs,
+            "matches":used}
+
+
+
+
+
+
+
+
+
+
+
+
+
+            

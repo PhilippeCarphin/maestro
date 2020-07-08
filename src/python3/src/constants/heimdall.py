@@ -31,3 +31,9 @@ EXPECTED_CONFIG_STATES={SCANNER_CONTEXT.OPERATIONAL:{"DISSEM_STATE":"ON",
                                                  "PREOP_STATE":"ON"},
                  SCANNER_CONTEXT.PARALLEL:{"DISSEM_STATE":"ODD",
                                            "PREOP_STATE":"OFF"}}
+
+"""
+These pairs in $EXPERIMENT/hub should have nearly identical targets.
+"""
+HUB_PAIRS=[["banting","daley"],
+           ["hare","brooks"]]

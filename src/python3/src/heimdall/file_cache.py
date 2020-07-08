@@ -76,7 +76,9 @@ class FileCache():
     
     @cache
     def listdir(self,path):
-        return os.listdir(path)
+        if self.isdir(path):
+            return os.listdir(path)
+        return []
     
     @cache
     def isfile(self,path):

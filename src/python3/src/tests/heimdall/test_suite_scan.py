@@ -53,7 +53,7 @@ class TestSuiteScan(unittest.TestCase):
             
             "override the context, if necessary"
             context=None
-            if code in ["e7","e10","w7","w11","w12"]:
+            if code in ["e7","e10","w7","w11","w12","e14"]:
                 context=SCANNER_CONTEXT.OPERATIONAL
             if code in ["i1"]:
                 context=SCANNER_CONTEXT.DEVELOPMENT
@@ -105,13 +105,14 @@ class TestSuiteScan(unittest.TestCase):
         paths=[TURTLE_ME_PATH,G0_MINI_ME_PATH,G1_MINI_ME_PATH,GV_MINI_ME_PATH]
         
         "since the good suites are minimal, never look for these codes"
-        ignore_codes=["w1", "w2"]
+        ignore_codes=["w1", "w2", "i2"]
         
         """
         key is experiment path
         value is list of codes that we allow because it exists in the real suite
         """
-        expected_errors={G1_MINI_ME_PATH:["e5"]}
+        expected_errors={G0_MINI_ME_PATH:["b6"],
+                         G1_MINI_ME_PATH:["b6","e5"]}
         expected_errors={key:set(value) for key,value in expected_errors.items()}
         
         for path in paths:
