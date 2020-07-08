@@ -111,7 +111,8 @@ class TestSuiteScan(unittest.TestCase):
         key is experiment path
         value is list of codes that we allow because it exists in the real suite
         """
-        expected_errors={G1_MINI_ME_PATH:["e5"]}
+        expected_errors={G0_MINI_ME_PATH:["b6"],
+                         G1_MINI_ME_PATH:["b6","e5"]}
         expected_errors={key:set(value) for key,value in expected_errors.items()}
         
         for path in paths:

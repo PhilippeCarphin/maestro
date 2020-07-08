@@ -12,6 +12,7 @@ from utilities.maestro import is_empty_module, get_weird_assignments_from_config
 from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs
 from utilities.heimdall.context import guess_scanner_context_from_path
+from utilities.heimdall.path import get_ancestor_folders
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target
 from utilities.qstat import get_qstat_queues
@@ -70,6 +71,7 @@ class ExperimentScanner():
         
         self.scan_required_folders()
         self.scan_required_files()
+        self.scan_extra_files()
         self.scan_all_file_content()
         self.scan_exp_options()
         self.scan_xmls()
@@ -142,7 +144,38 @@ class ExperimentScanner():
             
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+    
+    def scan_extra_files(self):
+        "random files should not be adjacent to any maestro files like tsk, cfg, resource xml"
+        
+        maestro_files=self.task_files+self.config_files+self.resource_files+self.flow_files
+        maestro_files=sorted(list(set(maestro_files)))
+        explored=set()
+        
+        for path in maestro_files:
+            
+            folder=os.path.dirname(path)
+            if folder in explored:
+                continue
+            explored.add(folder)
+            
+            extra=[]
+            for basename in file_cache.listdir(folder):
+                path=folder+"/"+basename
+                if file_cache.isfile(path) and path not in maestro_files:
+                    extra.append(path)
+            
+            if extra:
+                code="b6"
+                filenames="\n".join(extra)
+                if len(extra)>1:
+                    filenames="\n"+filenames
+                description=hmm.get(code,
+                                    folder=folder,
+                                    filenames=filenames)
+                self.add_message(code,description)
                 
+        
     def scan_hub(self):
         "scan links and targets of hub folder"
         
@@ -745,14 +778,9 @@ class ExperimentScanner():
                     resource_files.add(path)
                 elif prefix=="flow":
                     flow_files.add(path)
-                    
+        
         "also add parent folders of all folders, as long as they are in the experiment"
-        for folder in list(folders):
-            parent=folder
-            while parent.startswith(self.path):
-                if parent!=folder:
-                    folders.add(parent)
-                parent=os.path.dirname(parent)
+        folders.update(get_ancestor_folders(folder,self.path))
                 
         "find maestro files (including broken symlinks) not in flow.xml, but in the same folders"
         for folder in folders:
@@ -779,26 +807,30 @@ class ExperimentScanner():
             elif path.endswith(".xml"):
                 xml_files.append(path)
         
+        def sls(items):
+            "sls is short for sorted, list, set"
+            return sorted(list(set(items)))
+        
         "all full paths to all files to scan"
-        self.files=sorted(list(paths))
+        self.files=sls(paths)
         
         "all folders containing files to scan"
-        self.folders=sorted(list(folders))
+        self.folders=sls(folders)
         
         "all cfg files"
-        self.config_files=sorted(config_files)
+        self.config_files=sls(config_files)
         
         "all flow.xml files"
-        self.flow_files=sorted(list(flow_files))
+        self.flow_files=sls(flow_files)
         
         "all resource xml files"
-        self.resource_files=sorted(list(resource_files))
+        self.resource_files=sls(resource_files)
         
         "all tsk files"
-        self.task_files=sorted(task_files)
+        self.task_files=sls(task_files)
         
         "all xml files"
-        self.xml_files=sorted(xml_files)
+        self.xml_files=sls(xml_files)
     
     def get_report_text(self):
         lines=[]
