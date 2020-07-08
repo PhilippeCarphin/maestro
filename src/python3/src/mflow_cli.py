@@ -28,6 +28,7 @@ Options:
 
 See Also:
     https://gitlab.science.gc.ca/CMOI/maestro
+    https://gitlab.science.gc.ca/CMOI/maestro/issues?label_name%5B%5D=component%3Amflow
 """
 
 import traceback
