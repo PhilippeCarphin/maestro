@@ -29,6 +29,9 @@ from utilities.docopt import docopt
 from utilities import clamp
 
 def main(args):
+    """
+    Parse and validate the commandline options before proceeding to run the scan.
+    """
     
     experiment_path=args["--exp"]
     if experiment_path.startswith("~"):
