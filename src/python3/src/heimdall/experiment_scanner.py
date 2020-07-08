@@ -8,14 +8,15 @@ from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_C
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
+from home_logger import logger
 from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text
 from utilities.heimdall.critical_errors import find_critical_errors
-from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target
-from utilities.qstat import get_qstat_data_from_text, get_qstat_data
+from utilities.qstat import get_qstat_data_from_text, get_qstat_data, get_resource_limits_from_qstat_data
 
 class ExperimentScanner():
     def __init__(self,
@@ -81,7 +82,7 @@ class ExperimentScanner():
         self.scan_hub()
         self.scan_deprecated_files_folders()
         self.scan_resource_files()
-        self.scan_resource_queue_definitions()
+        self.scan_resource_queues()
         self.scan_overview_xmls()
         self.scan_config_files()
         self.scan_home_soft_links()
@@ -322,20 +323,63 @@ class ExperimentScanner():
                                     xml_path=xml_path,
                                     xml_context=context)
                 self.add_message(code,description)    
+                
+    def scan_resource_limits_for_resource_xml(self,xml_path):
         
-    def scan_resource_queue_definitions(self):
+        root=self.maestro_experiment.get_interpreted_resource_lxml_element(xml_path)
+        if root is None:
+            return
+        
+        for batch in root.xpath("//BATCH"):
+            queue=batch.attrib.get("queue")
+            if not queue:
+                continue
+            system_limits=get_resource_limits_from_qstat_data(self.qstat_data,queue)
+            batch_limits=get_resource_limits_from_batch_element(batch)
+            
+            """
+            The dictionaries used here have more specific keys with units than
+            the resource XMLs so less mistakes will be made. 
+            This map helps convert them back.
+            """
+            key_to_attribute_name={"cpu_count":"cpu",
+                                   "memory_bytes":"memory",
+                                   "wallclock_seconds":"wallclock"}
+            for key,attribute in key_to_attribute_name.items():
+                value=batch_limits[key]
+                xml_value=batch_limits[attribute]
+                maximum=system_limits[key]
+                
+                if not maximum or value<=maximum:
+                    continue
+                code="e15"
+                description=hmm.get(code,
+                                    value=xml_value,
+                                    attribute=attribute,
+                                    maximum=maximum,
+                                    xml_path=xml_path,
+                                    queue=queue)
+                self.add_message(code,description)
+        
+    def scan_resource_queues(self):
         """
-        If qstat queue "123" does not exist, finds cases like:
-            FRONTEND_DEFAULT_Q=123
+        Scan queue usage from resource files.
         """
         
         if not self.qstat_data:
+            logger.debug("Skipping resource queue scan, no qstat_data")
             return
         
         queues=sorted(list(self.qstat_data.keys()))
         
+        "queues with a wallclock higher than allowed"
+        for xml_path in self.resource_files:
+            self.scan_resource_limits_for_resource_xml(xml_path)                    
+        
         """
-        These queues do not show up in jobctl-qstat but
+        Find queues that are used but do not exist in jobctl-qstat.
+        
+        Aliases are queues that do not show up in jobctl-qstat but
         they are still acceptable.
         """
         aliases=["xfer"]

@@ -6,9 +6,7 @@ from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, 
 from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
 from tests.temp_file_builder import setup_b1_experiment, setup_tmp_smco501_home
-
-with open(QSTAT_OUTPUT1_PATH,"r") as f:
-    QSTAT_CMD_OUTPUT=f.read()
+from tests.cache import QSTAT_CMD_OUTPUT
 
 class TestSuiteScan(unittest.TestCase):        
             

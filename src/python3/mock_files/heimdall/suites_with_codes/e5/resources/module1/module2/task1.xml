@@ -1,4 +1,4 @@
 <NODE_RESOURCES>
-  <BATCH machine="${FROOOOONTEND}" queue="$FRONTEND_DEFAULT_Q}" memory="1G" wallclock="10" catchup="4" cpu="1" />
+  <BATCH machine="${FROOOOONTEND}" queue="dev" memory="1G" wallclock="361" catchup="4" cpu="$CPU}" />
   <DEPENDS_ON dep_name="/node/path/does/not/exist" status="end" type="node" exp="/home/abc123/maestro_suites/zdps"/>
 </NODE_RESOURCES>

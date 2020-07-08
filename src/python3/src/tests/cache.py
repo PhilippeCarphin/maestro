@@ -7,6 +7,7 @@ Tests that use the cache must be smart enough never to modify these instances.
 
 from maestro_experiment import MaestroExperiment
 from tests.path import G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, BIG_ME_PATH, TURTLE_ME_PATH, SUBMIT_CHAIN_ME_PATH, STRANGE_RESOURCES_ME_PATH
+from tests.path import QSTAT_OUTPUT1_PATH
 
 print("'%s' is building MaestroExperiment cache."%__name__)
 
@@ -21,3 +22,6 @@ BIG_ME=MaestroExperiment(BIG_ME_PATH,user_home="")
 TURTLE_ME=MaestroExperiment(TURTLE_ME_PATH,user_home="")
 SUBMIT_CHAIN_ME=MaestroExperiment(SUBMIT_CHAIN_ME_PATH,user_home="")
 STRANGE_RESOURCES_ME=MaestroExperiment(STRANGE_RESOURCES_ME_PATH,user_home="")
+
+with open(QSTAT_OUTPUT1_PATH,"r") as f:
+    QSTAT_CMD_OUTPUT=f.read()

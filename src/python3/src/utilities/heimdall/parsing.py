@@ -13,6 +13,41 @@ def get_nodelogger_signals_from_task_path(path):
     data=file_cache.open(path)
     return get_nodelogger_signals_from_task_text(data)
 
+def get_resource_limits_from_batch_element(batch_element):
+    """
+    Given an lxml <BATCH> element, returns a resource limit dictionary
+    that can be compared to get_resource_limits_from_qstat_data
+    """
+    
+    result={"wallclock_seconds":0,
+            "cpu_count":0,
+            "memory_bytes":0}
+    
+    for attribute in ("wallclock","cpu","memory"):
+        result[attribute]="" if batch_element is None else batch_element.attrib.get(attribute)
+    
+    if batch_element is None:
+        return result
+    
+    try:
+        result["wallclock_seconds"]=int(batch_element.attrib["wallclock"])*60
+    except:
+        pass
+    
+    try:
+        result["cpu_count"]=int(batch_element.attrib["cpu"])
+    except:
+        pass
+    
+    try:
+        text=batch_element.attrib["memory"]
+        if text.lower().endswith("g"):
+            result["memory_bytes"]=int(text[:-1])*1024**3
+    except:
+        pass
+    
+    return result
+
 def get_nodelogger_signals_from_task_text(text):
     """
     Given the text in a task file, returns a list of all '-s' arguments like 'infox'
