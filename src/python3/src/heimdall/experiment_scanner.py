@@ -108,11 +108,13 @@ class ExperimentScanner():
                "code":"w7",
                "filetypes":["tsk","cfg"],
                "substring":"",
+               "strip_comments":True|False,
                "regex_string":"",
                "regex":<re.compile-result>,
                "description_suffix":""
             }
         """
+        
         path=HEIMDALL_CONTENT_CHECKS_CSV
         
         "filetype must be one of these"
@@ -127,12 +129,15 @@ class ExperimentScanner():
         for check_data in self.file_content_checks:
             if check_data["regex_string"]:
                 try:
-                    check_data["regex"]=re.compile(check_data["regex_string"])
+                    r=check_data["regex_string"]
+                    check_data["regex"]=re.compile(r)
                 except re.error:
                     raise ValueError("Bad regex string '%s' in file content CSV: '%s'"%(check_data["regex string"],path))
             
             if not check_data["regex_string"] and not check_data["substring"]:
                 raise ValueError("All columns in file content CSV require either substring or regex string: '%s'"%path)
+            
+            check_data["strip_comments"]=check_data["strip_comments"] == "yes"
             
             filetypes=[i.strip() for i in check_data["filetypes"].split(",")]
             if "all" in filetypes:
@@ -481,9 +486,12 @@ class ExperimentScanner():
         if bad_links:
             is_op=self.is_context_operational()
             code="w5" if is_op else "i1"
+            msg="\n".join(bad_links)
+            if len(bad_links)>1:
+                msg="\n"+msg
             description=hmm.get(code,
                                 real_home=home_root,
-                                bad_links=bad_links)
+                                bad_links=msg)
             self.add_message(code,description)
                 
     def scan_all_file_content(self):
@@ -515,12 +523,14 @@ class ExperimentScanner():
             "files of unknown type are not content scanned"
             return
         
-        content=file_cache.open_without_comments(path)    
+        content_without_comments=file_cache.open_without_comments(path)
+        content_with_comments=file_cache.open(path)
         for check_data in self.filetype_to_check_datas[filetype]:
             
+            content=content_without_comments if check_data["strip_comments"] else content_with_comments
             found_substring=bool(check_data["substring"]) and check_data["substring"] in content
             found_regex=check_data.get("regex") and bool(check_data.get("regex").search(content))
-                        
+            
             "describe what was found"
             search="search"
             if found_regex:
@@ -530,7 +540,7 @@ class ExperimentScanner():
                 
             if found_substring or found_regex:
                 description=hmm.get(check_data["code"],
-                                    search=search,
+                                    search=search.strip(),
                                     file_path=path)
                 self.add_message(check_data["code"],description)
         

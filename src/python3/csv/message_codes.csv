@@ -43,3 +43,4 @@ w14	Hub pairs have dissimilar targets	The hub folder links ‘{folder1}’ and �
 i2	Module name and path differ	The module folder ‘{folder_name}’ differs from the module name ‘{attribute_name}’ in the flow XML ‘{xml_path}’. This can help organize a project, but it may also be confusing.		
 b6	Non-maestro files in maestro folders	The maestro folder ‘{folder}’ should only contain maestro files like tsk, cfg, xml. These files were found: {filenames}		
 i3	Text editor swap files	Text editor swap files were found, for example for vim or emacs. If your editor is closed, you may want to recover or delete these: {swaps}		
+b7	Comments in config file	The pseudo-xml section (containing input, executables, and output) of the config file ‘{file_path}’ contains commented lines starting with “##”. The search is for {search}. These seem to be configuration lines and not comments, and should be removed.		
