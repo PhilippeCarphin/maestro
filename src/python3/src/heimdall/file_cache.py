@@ -13,7 +13,7 @@ import os.path
 from lxml import etree
 
 from constants import ENCODINGS
-from utilities.generic import cache, strip_comments_from_text, get_key_values_from_path
+from utilities.generic import cache, safe_open, strip_comments_from_text, get_key_values_from_path
 
 class FileCache():
     """
@@ -63,16 +63,7 @@ class FileCache():
     
     @cache
     def open_realpath(self,realpath):
-        if not self.isfile(realpath):
-            return ""
-        
-        for encoding in ENCODINGS:
-            try:
-                with open(realpath,"r",encoding=encoding) as f:
-                    return f.read()
-            except UnicodeDecodeError:
-                pass
-        return ""
+        return safe_open(realpath)
     
     @cache
     def is_broken_symlink(self,path):

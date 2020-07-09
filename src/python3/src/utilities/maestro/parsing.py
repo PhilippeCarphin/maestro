@@ -1,4 +1,4 @@
-from utilities import superstrip
+from utilities import superstrip, safe_open
 import re
 
 """
@@ -12,8 +12,8 @@ SECTION_START_REGEX=re.compile(r"[ ]*#[ ]+<([a-zA-Z]+)[^>]*>")
 SECTION_END_REGEX=re.compile(r"[ ]*#[ ]+<\/([a-zA-Z]+)[^>]*>")
 
 def get_weird_assignments_from_config_path(path):
-    with open(path,"r") as f:
-        return get_weird_assignments_from_config_text(f.read())
+    content=safe_open(path)
+    return get_weird_assignments_from_config_text(content)
 
 def get_weird_assignments_from_config_text(text):
     """

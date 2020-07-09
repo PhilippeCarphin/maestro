@@ -11,7 +11,7 @@ import lxml
 from lxml import etree
 from utilities.pretty import pretty, pprint_kwargs
 from utilities.xml import xml_cache
-from utilities.generic import cache
+from utilities.generic import cache, safe_open
 from home_logger import logger
 from constants import NODE_TYPES, CONTAINER_TAGS
 
@@ -283,8 +283,7 @@ def get_combined_flow_from_paths(xml_paths,verbose=False):
         if not os.path.isfile(path):
             continue
         
-        with open(path,"r") as f:
-            xml_data=f.read()
+        xml_data=safe_open(path)
         
         "xflow ignores 'name' in <MODULE> and uses module folder instead" 
         module_folder=path.split("/")[-2]

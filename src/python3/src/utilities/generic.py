@@ -6,6 +6,7 @@ import re
 import os
 import gzip
 import os.path
+from constants import ENCODINGS
 from utilities.colors import print_green
 from utilities.path import get_matching_paths_recursively
 
@@ -193,6 +194,25 @@ def safe_get_lines(path):
             pass
         
     return []
+
+def safe_open(path,verbose=False):
+    """
+    Try multiple encodings, if necessary.
+    Do not raise exceptions, return "" if total failure.
+    """
+    
+    if not os.path.isfile(path):
+        return ""
+    
+    for encoding in ENCODINGS:
+        try:
+            with open(path,"r",encoding=encoding) as f:
+                return f.read()
+        except:
+            pass
+    return ""
+
+safe_read=safe_open
 
 def safe_write(path,data,verbose=True):
     "Writes this data to path, creates any necessary folders."
