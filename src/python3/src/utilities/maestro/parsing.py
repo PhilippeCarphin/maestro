@@ -56,7 +56,7 @@ def get_weird_assignments_from_config_text(text):
         
         split=split_regex.split(line)
         
-        if len(split)==3:
+        if section and len(split)==3:
             empty,key,value=split
             if key and value:
                 data[section][key]=value
