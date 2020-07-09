@@ -682,6 +682,9 @@ class ExperimentScanner():
         "find invalid nodelogger signals"
         results=get_nodelogger_signals_from_task_path(task_path)
         for result in results:
+            if result["signal"].startswith("$"):
+                continue
+            
             if result["signal"] not in NODELOGGER_SIGNALS:
                 code="e006"
                 description=hmm.get(code,

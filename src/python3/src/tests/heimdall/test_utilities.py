@@ -13,8 +13,18 @@ from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, ge
 from utilities.heimdall.path import is_editor_swapfile
 from utilities import guess_user_home_from_path, pretty
 from utilities.maestro import get_weird_assignments_from_config_path
+from heimdall.file_cache import file_cache
 
 class TestUtilities(unittest.TestCase):
+    
+    def test_file_cache(self):
+        path=MOCK_FILES+"heimdall/suites_without_codes/w003/modules/module1/link-to-task1.tsk"
+        result=file_cache.is_broken_symlink(path)
+        self.assertFalse(result)
+        
+        path=MOCK_FILES+"heimdall/suites_with_codes/e004/modules/main/broken-symlink"
+        result=file_cache.is_broken_symlink(path)
+        self.assertTrue(result)
             
     def test_csv_dictionary(self):
         result=get_dictionary_list_from_csv(CSV_DICTIONARY)

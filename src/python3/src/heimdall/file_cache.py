@@ -11,6 +11,8 @@ same-name functions instead.
 import os
 import os.path
 from lxml import etree
+
+from constants import ENCODINGS
 from utilities.generic import cache, strip_comments_from_text, get_key_values_from_path
 
 class FileCache():
@@ -61,14 +63,24 @@ class FileCache():
     
     @cache
     def open_realpath(self,realpath):
-        if self.isfile(realpath):
-            with open(realpath,"r") as f:
-                return f.read()
+        if not self.isfile(realpath):
+            return ""
+        
+        for encoding in ENCODINGS:
+            try:
+                with open(realpath,"r",encoding=encoding) as f:
+                    return f.read()
+            except UnicodeDecodeError:
+                pass
         return ""
     
     @cache
     def is_broken_symlink(self,path):
-        return self.islink(path) and not os.path.exists(self.readlink(path))
+        if not self.islink(path):
+            return False
+        
+        link=os.path.dirname(path)+"/"+os.readlink(path)
+        return not self.exists(link)
     
     @cache
     def readlink(self,path):

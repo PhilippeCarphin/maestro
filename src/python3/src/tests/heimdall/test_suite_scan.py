@@ -68,10 +68,13 @@ class TestSuiteScan(unittest.TestCase):
             if code in unused_folders:
                 unused_folders.remove(code)
                 
-                msg="Experiment path: '%s'"%path
                 scanner=ExperimentScanner(path,
                                           critical_error_is_exception=False,
                                           debug_qstat_output_override=QSTAT_CMD_OUTPUT)
+                
+                msg="Experiment path: '%s'"%path
+                msg+="\n\n"+scanner.get_report_text()
+                
                 self.assertNotIn(code,scanner.codes,msg=msg)
             
     def test_good_suite(self):

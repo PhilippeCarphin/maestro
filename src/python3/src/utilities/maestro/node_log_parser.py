@@ -1,6 +1,7 @@
 import os.path
 
 from constants.maestro import NODE_STATUS
+from constants import ENCODINGS
 
 class NodeLogParser():
     def __init__(self,path,refresh_interval=10):
@@ -47,10 +48,9 @@ class NodeLogParser():
         """
         utf-8 encoding usually works, but sometimes a fallback
         is needed to prevent decode errors.
-        """
-        encodings=("utf-8","ISO-8859-1")
+        """        
         self.lines=[]
-        for encoding in encodings:
+        for encoding in ENCODINGS:
             try:
                 with open(self.path,"r",encoding=encoding) as f:
                     self.lines=f.readlines()
