@@ -17,6 +17,7 @@ from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target
 from utilities.qstat import get_qstat_data_from_text, get_qstat_data, get_resource_limits_from_qstat_data
+from utilities.shell import safe_check_output_with_status
 
 class ExperimentScanner():
     def __init__(self,
@@ -80,6 +81,7 @@ class ExperimentScanner():
         self.scan_exp_options()
         self.scan_xmls()
         self.scan_hub()
+        self.scan_git_repo()
         self.scan_deprecated_files_folders()
         self.scan_resource_files()
         self.scan_resource_queues()
@@ -153,6 +155,38 @@ class ExperimentScanner():
             
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+    
+    def scan_git_repo(self):
+        
+        must_have_repo=self.context in (SCANNER_CONTEXT.OPERATIONAL,
+                                        SCANNER_CONTEXT.PREOPERATIONAL,
+                                        SCANNER_CONTEXT.PARALLEL)
+        must_be_clean=must_have_repo
+        
+        if file_cache.isdir(self.path+".git"):
+            cmd="cd %s ; git status --porcelain"%self.path
+            output,status=safe_check_output_with_status(cmd)
+            has_repo=status==0
+        else:
+            output=""
+            status=1
+            has_repo=False
+        
+        if must_have_repo and not has_repo:
+            code="e16"
+            description=hmm.get(code,
+                                context=self.context)
+            self.add_message(code,description)
+        
+        if has_repo and output:
+            if must_be_clean:
+                code="w15"
+                description=hmm.get(code,
+                                    context=self.context)
+            else:
+                code="i4"
+                description=hmm.get(code)
+            self.add_message(code,description)
     
     def scan_extra_files(self):
         """

@@ -9,7 +9,7 @@ These functions prepare those files.
 import shutil
 import os
 from lxml import etree
-from utilities.shell import run_shell_cmd
+from utilities.shell import safe_check_output_with_status
 from utilities.xml import xml_cache
 
 from tests.path import MOCK_FILES, TMP_FOLDER
@@ -45,9 +45,9 @@ def setup_tmp_smco501_home():
         
     return target
 
-def setup_b1_experiment():
+def setup_tmp_experiment1():
     """
-    Returns a path to an experiment that produces the b1 code.
+    Returns a path to an experiment that produces the b1, w15 codes.
     """
     
     source=MOCK_FILES+"heimdall/suites_with_codes/e5"
@@ -71,4 +71,9 @@ def setup_b1_experiment():
         data=etree.tostring(root).decode("utf8")
         f.write(data)
         
+    "create new git repo so there are uncommited changes for w15"
+    cmd="cd %s ; git init ; sleep 0.1"%target
+    output,status=safe_check_output_with_status(cmd)
+    assert status==0
+    
     return target

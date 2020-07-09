@@ -5,7 +5,7 @@ from constants import SCANNER_CONTEXT
 from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, OPERATIONAL_HOME, PARALLEL_HOME, TMP_FOLDER, QSTAT_OUTPUT1_PATH
 from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
-from tests.temp_file_builder import setup_b1_experiment, setup_tmp_smco501_home
+from tests.temp_file_builder import setup_tmp_experiment1, setup_tmp_smco501_home
 from tests.cache import QSTAT_CMD_OUTPUT
 
 class TestSuiteScan(unittest.TestCase):        
@@ -17,7 +17,7 @@ class TestSuiteScan(unittest.TestCase):
         For example, 'suites_with_codes/e7' experiment has 'e7' code
         """
         
-        setup_b1_experiment()
+        setup_tmp_experiment1()
         setup_tmp_smco501_home()
                         
         for code in hmm.codes:
@@ -31,7 +31,7 @@ class TestSuiteScan(unittest.TestCase):
             
             "override the context, if necessary"
             context=None
-            if code in ["e7","e10","w7","w11","w12","e14"]:
+            if code in ["e7","e10","w7","w11","w12","e14","e16","w15"]:
                 context=SCANNER_CONTEXT.OPERATIONAL
             if code in ["i1"]:
                 context=SCANNER_CONTEXT.DEVELOPMENT
@@ -83,7 +83,7 @@ class TestSuiteScan(unittest.TestCase):
         paths=[TURTLE_ME_PATH,G0_MINI_ME_PATH,G1_MINI_ME_PATH,GV_MINI_ME_PATH]
         
         "since the good suites are minimal, never look for these codes"
-        ignore_codes=["w1", "w2", "i2"]
+        ignore_codes=["w1", "w2", "i2","e16"]
         
         """
         key is experiment path
