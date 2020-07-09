@@ -62,7 +62,7 @@ class TestUtilities(unittest.TestCase):
         self.assertEqual(result,expected)
         
         "use realpath to explore parent folders for home tests"
-        path=MOCK_FILES+"/heimdall/suites_with_codes/w5/"
+        path=MOCK_FILES+"/heimdall/suites_with_codes/w005/"
         expected=r(MOCK_FILES+"/heimdall/homes/smco502/")
         result=guess_user_home_from_path(path)
         self.assertEqual(result,expected)

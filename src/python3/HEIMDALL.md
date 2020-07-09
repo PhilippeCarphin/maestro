@@ -20,7 +20,7 @@ heimdall -h
 
 Every Heimdall message has a level: critical, error, warning, info, and best practice. For example `e3` or `c1`. The levels are based on whether tools like `xflow` and `mflow` can view and run the experiment.
 
-### Critical (c)
+### Critical \(c)
 
 Critical errors prevent the viewing or launching of the entire experiment.
 

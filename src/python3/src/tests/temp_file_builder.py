@@ -17,8 +17,8 @@ from tests.path import MOCK_FILES, TMP_FOLDER
 def setup_tmp_smco501_home():
     """
     Returns a path to a 501-like home that:
-        does not produce w11
-        does produce w12
+        does not produce w011
+        does produce w012
     """
     
     source=MOCK_FILES+"heimdall/homes/smco501"
@@ -33,10 +33,10 @@ def setup_tmp_smco501_home():
     root=xml_cache.get(xml_path)
     
     
-    exp=MOCK_FILES+"heimdall/suites_without_codes/w11"    
+    exp=MOCK_FILES+"heimdall/suites_without_codes/w011"    
     root.xpath("//Exp")[0].text=exp
     
-    exp=MOCK_FILES+"heimdall/suites_with_codes/w12"
+    exp=MOCK_FILES+"heimdall/suites_with_codes/w012"
     root.xpath("//Exp")[1].text=exp
         
     with open(xml_path,"w") as f:
@@ -47,11 +47,11 @@ def setup_tmp_smco501_home():
 
 def setup_tmp_experiment1():
     """
-    Returns a path to an experiment that produces the b1, w15 codes.
+    Returns a path to an experiment that produces the b001, w015 codes.
     """
     
-    source=MOCK_FILES+"heimdall/suites_with_codes/e5"
-    target=TMP_FOLDER+"b1"
+    source=MOCK_FILES+"heimdall/suites_with_codes/e005"
+    target=TMP_FOLDER+"b001"
     
     if os.path.exists(target):
         shutil.rmtree(target)
@@ -62,7 +62,7 @@ def setup_tmp_experiment1():
     root=xml_cache.get(xml_path)
     
     "this is the dynamic value to insert, which changes depending on who runs the test suite where"
-    exp=MOCK_FILES+"heimdall/suites_with_codes/w1"
+    exp=MOCK_FILES+"heimdall/suites_with_codes/w001"
     
     for element in root.xpath("//DEPENDS_ON"):
         element.set("exp",exp)

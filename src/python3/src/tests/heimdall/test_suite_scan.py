@@ -14,7 +14,7 @@ class TestSuiteScan(unittest.TestCase):
         """
         Test all experiments in 'suites_with_codes' folder.
         
-        For example, 'suites_with_codes/e7' experiment has 'e7' code
+        For example, 'suites_with_codes/e007' experiment has 'e7' code
         """
         
         setup_tmp_experiment1()
@@ -24,21 +24,21 @@ class TestSuiteScan(unittest.TestCase):
             path=SUITES_WITH_CODES+code
             
             "check that the test folder exists"
-            if code!="c3":
-                "exclude c3 because that's the error we expect - the folder does not exist"
+            if code!="c003":
+                "exclude c003 because that's the error we expect - the folder does not exist"
                 msg="Mock experiment for code '%s' does not exist at path '%s'. All codes must have a test case."%(code,path)
                 self.assertTrue(os.path.isdir(path),msg=msg)
             
             "override the context, if necessary"
             context=None
-            if code in ["e7","e10","w7","w11","w12","e14","e16","w15"]:
+            if code in ["e007","e010","w007","w011","w012","e014","e016","w015"]:
                 context=SCANNER_CONTEXT.OPERATIONAL
-            if code in ["i1"]:
+            if code in ["i001"]:
                 context=SCANNER_CONTEXT.DEVELOPMENT
                 
             "override op/par homes, if necessary"
             parallel_home=PARALLEL_HOME
-            if code == "w12":
+            if code == "w012":
                 parallel_home=TMP_FOLDER+"smco501"
             
             scanner=ExperimentScanner(path,
@@ -83,15 +83,15 @@ class TestSuiteScan(unittest.TestCase):
         paths=[TURTLE_ME_PATH,G0_MINI_ME_PATH,G1_MINI_ME_PATH,GV_MINI_ME_PATH]
         
         "since the good suites are minimal, never look for these codes"
-        ignore_codes=["w1", "w2", "i2","e16"]
+        ignore_codes=["w001", "w002", "i002","e016"]
         
         """
         key is experiment path
         value is list of codes that we allow because it exists in the real suite
         """
-        expected_errors={G0_MINI_ME_PATH:["b6","b8"],
-                         G1_MINI_ME_PATH:["b6","e5","b8"],
-                         GV_MINI_ME_PATH:["b8"]}
+        expected_errors={G0_MINI_ME_PATH:["b006","b008"],
+                         G1_MINI_ME_PATH:["b006","e005","b008"],
+                         GV_MINI_ME_PATH:["b008"]}
         expected_errors={key:set(value) for key,value in expected_errors.items()}
         
         for path in paths:
