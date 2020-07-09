@@ -63,8 +63,8 @@ def get_key_values_from_path(path,include_export_lines=True):
 
     if not os.path.isfile(path):
         return {}
-    with open(path,"r") as f:
-        text=f.read()
+
+    text=safe_read(path)
     
     return get_key_values_from_text(text,include_export_lines)
     
