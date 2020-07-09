@@ -1,6 +1,16 @@
 from utilities import superstrip
 import re
 
+"""
+These match:
+    # <input type="  ...   >
+and:
+    # </output>
+where group(1) is the section like 'input'
+"""    
+SECTION_START_REGEX=re.compile(r"[ ]*#[ ]+<([a-zA-Z]+)[^>]*>")
+SECTION_END_REGEX=re.compile(r"[ ]*#[ ]+<\/([a-zA-Z]+)[^>]*>")
+
 def get_weird_assignments_from_config_path(path):
     with open(path,"r") as f:
         return get_weird_assignments_from_config_text(f.read())
@@ -19,27 +29,37 @@ def get_weird_assignments_from_config_text(text):
         {"output":{"anlalt_nosfc":"${ASSIMCYC ..."}}}
     """
     
-    data={}
-    spaces_regex=re.compile("[ ]+")
+    split_regex=re.compile("[# \t]+")
     section=""
     sections=["input","executables","output"]
+    data={a:{} for a in sections}
     for line in text.split("\n"):
-        a=superstrip(line,"# ")
-        if not a:
+        
+        if not superstrip(line,"# "):
             continue
         
-        if a.startswith("<") and a.endswith(">"):
-            if a.startswith("</"):
+        if line.strip().startswith("##"):
+            continue
+        
+        if section:
+            match=SECTION_END_REGEX.search(line)
+            if match:
                 section=""
-            else:
-                section=a[1:-1]
-                if section not in sections:
-                    continue
-                data[section]={}
+                
         else:
-            c=spaces_regex.split(a)
-            if len(c)==2:
-                key,value=c
+            match=SECTION_START_REGEX.search(line)
+            
+            if match:
+                section=match.group(1)
+                if section not in sections:
+                    section=""
+        
+        split=split_regex.split(line)
+        
+        if len(split)==3:
+            empty,key,value=split
+            if key and value:
                 data[section][key]=value
+            
     return data
             

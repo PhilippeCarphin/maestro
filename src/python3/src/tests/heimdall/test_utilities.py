@@ -34,6 +34,12 @@ class TestUtilities(unittest.TestCase):
                   }
         self.assertEqual(result,expected)
         
+        path=MOCK_FILES+"weird-config-semi-xml2.cfg"
+        result=get_weird_assignments_from_config_path(path)
+        self.assertEqual(len(result["input"]),3)
+        self.assertEqual(len(result["executables"]),14)
+        self.assertEqual(len(result["output"]),0)
+        
     def test_is_editor_swapfile(self):
         swapfiles=["/folder1/.file1.swp",
                    "/folder1/.file1.swo",
