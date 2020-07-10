@@ -181,15 +181,9 @@ class ExperimentScanner():
                                         SCANNER_CONTEXT.PREOPERATIONAL,
                                         SCANNER_CONTEXT.PARALLEL)
         must_be_clean=must_have_repo
-        
-        if file_cache.isdir(self.path+".git"):
-            cmd="cd %s ; git status --porcelain"%self.path
-            output,status=safe_check_output_with_status(cmd)
-            has_repo=status==0
-        else:
-            output=""
-            status=1
-            has_repo=False
+        cmd="cd %s ; git status --porcelain"%self.path
+        output,status=safe_check_output_with_status(cmd)
+        has_repo=status==0
         
         if must_have_repo and not has_repo:
             code="e016"

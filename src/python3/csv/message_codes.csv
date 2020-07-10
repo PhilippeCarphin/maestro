@@ -29,7 +29,7 @@ e012	Undefined resource XML variables	The resource XML ‘{resource_path}’ use
 e013	Dissemination state does not match context	The experiment seems to have the ‘{context}’ context but variables in ‘{cfg_path}’ do not match what is expected: {unexpected}		
 e014	Non-links in hub	Experiments with the ‘{context}’ context can only have soft link folders in their ‘hub’ folder. Bad: {bad}		
 e015	Resource value higher than maximum	The resource value ‘{value}’ for ‘{attribute}’ in ‘{xml_path}’ is higher than the maximum of ‘{maximum}’ defined in jobctl-qstat for queue ‘{queue}’.		
-e016	No git repo	There is no ‘.git’ folder and therefore no git repo. Experiments with the ‘{context}’ context should always be version controlled with git.		
+e016	No git repo	There is no git repo tracking this experiment. Experiments with the ‘{context}’ context should always be version controlled with git.		
 i001	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable. Links:\n{bad_links}		
 i002	Module name and path differ	The module folder ‘{folder_name}’ differs from the module name ‘{attribute_name}’ in the flow XML ‘{xml_path}’. This can help organize a project, but it may also be confusing.		
 i003	Text editor swap files	Text editor swap files were found, for example for vim or emacs. If your editor is closed, you may want to recover or delete these:\n{swaps}		
