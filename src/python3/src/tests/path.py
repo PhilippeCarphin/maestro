@@ -17,6 +17,7 @@ GDPS_MINI_ME_PATH=MOCK_FILES+"gdps-mini/"
 G0_MINI_ME_PATH=GDPS_MINI_ME_PATH+"g0/"
 G1_MINI_ME_PATH=GDPS_MINI_ME_PATH+"g1/"
 GV_MINI_ME_PATH=GDPS_MINI_ME_PATH+"verification/"
+SWITCH_HOUR_ME_PATH=MOCK_FILES+"switch-datestamp-hour/"
 FILE_INDEX_ME_PATH=MOCK_FILES+"heimdall/file_index/"
 
 def get_lines_from_file(path,remove_prefix_slash=True):

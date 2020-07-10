@@ -5,7 +5,7 @@ from tests.path import BIG_ME_PATH, TURTLE_ME_PATH, SUBMIT_CHAIN_ME_PATH
 from constants import JSON_SCHEMAS, NODE_TYPE
 from utilities import assert_valid_json, pretty, get_true_host
 from utilities.mflow.resources import insert_default_batch_data
-from tests.cache import G1_MINI_ME, TURTLE_ME, BIG_ME, SUBMIT_CHAIN_ME
+from tests.cache import G1_MINI_ME, TURTLE_ME, BIG_ME, SUBMIT_CHAIN_ME, SWITCH_HOUR_ME
 
 """
 Tests for getting information about nodes.
@@ -18,6 +18,14 @@ class TestMaestroExperimentNodeData(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.maxDiff=5000
+        
+    def test_resource_path_under_loop(self):
+        me=SWITCH_HOUR_ME
+        node_path="module1/switch1/00/task1"
+        node_data=me.get_node_data(node_path)
+        result=node_data["resource_path"]
+        expected=me.path+"resources/module1/switch1/task1.xml"
+        self.assertEqual(result,expected)
         
     def test_default_machine(self):
         "machine is SEQ_DEFAULT_MACHINE from resources.def if undefined in <BATCH>"
