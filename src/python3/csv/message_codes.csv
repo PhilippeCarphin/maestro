@@ -7,7 +7,7 @@ b003	SupportInfo has no URL	The SupportInfo attribute in the XML ‘{xml_path}�
 b004	SupportInfo missing standard substring	The SupportInfo attribute in the XML ‘{xml_path}’ should start with a value like ‘Full Support’. Recommended start strings: {substrings}		
 b005	Deprecated files and folders	These files or folders are deprecated and should be deleted: {deprecated}		
 b006	Non-maestro files in maestro folders	The maestro folder ‘{folder}’ should only contain maestro files like tsk, cfg, xml. These files were found: {filenames}		
-b007	Comments in config file	The pseudo-xml section (containing input, executables, and output) of the config file ‘{file_path}’ contains commented lines starting with “##”. The search is for {search}. These seem to be configuration lines and not comments, and should be removed.		
+b007	Comments in config file	The pseudo-xml section (containing input, executables, and output) of the config file ‘{file_path}’ contains {count} commented lines starting with “##”. These seem to be configuration lines and not comments, and should be removed.		
 b008	Hidden queue alias used	The value ‘{value}’ for the resource variable ‘{name}’ is a hidden queue alias not easily visible in qstat. Consider using one of these queues instead: {queues}		
 c001	No EntryModule	EntryModule link does not exist: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
 c002	Bad EntryModule	EntryModule is not a link: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	

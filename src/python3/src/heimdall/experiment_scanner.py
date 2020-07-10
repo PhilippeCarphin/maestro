@@ -9,7 +9,7 @@ from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
 from home_logger import logger
-from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text
+from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text, get_commented_pseudo_xml_lines
 from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element
 from utilities.heimdall.context import guess_scanner_context_from_path
@@ -19,6 +19,9 @@ from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_f
 from utilities.qstat import get_qstat_data_from_text, get_qstat_data, get_resource_limits_from_qstat_data
 from utilities.shell import safe_check_output_with_status
 
+"""
+Matches codes like 'e001' and 'c010'
+"""
 CODE_REGEX=re.compile("[cewib][0-9]{3}")
 
 class ExperimentScanner():
@@ -489,6 +492,14 @@ class ExperimentScanner():
                                 context=self.context,
                                 cfg_path=path,
                                 unexpected=msg)
+            self.add_message(code,description)
+        
+        commented_lines=get_commented_pseudo_xml_lines(content)
+        if commented_lines:
+            code="b007"
+            description=hmm.get(code,
+                                file_path=path,
+                                count=len(commented_lines))
             self.add_message(code,description)
             
             

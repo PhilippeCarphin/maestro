@@ -6,4 +6,3 @@ code	filetypes	strip_comments	substring	regex_string
 w003	tsk,cfg	yes		/site[12]/ops/
 w004	tsk,cfg	yes		/space/hall[12]/sitestore/
 e008	resource_xml	yes		[a-zA-Z]+=['"]\$[a-zA-Z_]+.['"]
-b007	cfg	no		\n##[ \t]+.+[ \t]+.+\n

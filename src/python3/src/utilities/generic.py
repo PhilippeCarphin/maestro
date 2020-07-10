@@ -71,7 +71,7 @@ def get_key_values_from_path(path,include_export_lines=True):
 def get_key_values_from_text(text,include_export_lines=True):
     """
     Given text with bash-like variable declares:
-        ABC=123
+stab        ABC=123
         export DEF=456
     returns:
         {"ABC":"123",
