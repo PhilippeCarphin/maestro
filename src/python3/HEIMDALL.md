@@ -1,5 +1,7 @@
 Heimdall is a maestro suite scanner. Scan for errors, warnings, recommendations, and installation issues.
 
+# Codes
+
 What cases can Heimdall detect?
 
 * Critical errors like: missing EntryModule, suite folders like 'listings' have bad permissions or are missing.
