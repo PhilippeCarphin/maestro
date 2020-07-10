@@ -2,19 +2,19 @@
 # The message levels are best practice (b), info (i), warning (w), error (e), and critical (c).				
 code	label	description	url	notes
 b001	Hard coded dependency path	The ‘exp’ attribute ‘{exp_value}’ in the resources file ‘{resource_path}’ is hard coded. This is less portable and more fragile. Consider using a variable instead.		
-b002	SupportInfo is too long	The SupportInfo attribute in the XML ‘{xml_path}’ is ‘{char_count}’ but it should be shorter. The recommended maximum is {max_chars}. characters.		
+b002	SupportInfo is too long	The SupportInfo attribute in the XML ‘{xml_path}’ is ‘{char_count}’ characters long but it should be shorter. The recommended maximum is {max_chars}. characters.		
 b003	SupportInfo has no URL	The SupportInfo attribute in the XML ‘{xml_path}’ should contain a URL. This is the recommended way to provide detailed support status info and troubleshooting steps.		
-b004	SupportInfo missing standard substring	The SupportInfo attribute in the XML ‘{xml_path}’ should start with a value like ‘Full Support’. Recommended start strings: {substrings}		
+b004	SupportInfo missing standard substring	The SupportInfo attribute in the XML ‘{xml_path}’ should start with a value like ‘Full Support’. Recommended start strings:\n{substrings}		
 b005	Deprecated files and folders	These files or folders are deprecated and should be deleted: {deprecated}		
-b006	Non-maestro files in maestro folders	The maestro folder ‘{folder}’ should only contain maestro files like tsk, cfg, xml. These files were found: {filenames}		
+b006	Non-maestro files in maestro folders	The maestro folder ‘{folder}’ should only contain maestro files like tsk, cfg, xml. These files were found:\n{filenames}		
 b007	Comments in config file	The pseudo-xml section (containing input, executables, and output) of the config file ‘{file_path}’ contains {count} commented lines starting with “##”. These seem to be configuration lines and not comments, and should be removed.		
-b008	Hidden queue alias used	The value ‘{value}’ for the resource variable ‘{name}’ is a hidden queue alias not easily visible in qstat. Consider using one of these queues instead: {queues}		
+b008	Hidden queue alias used	The value ‘{value}’ for the resource variable ‘{name}’ is a hidden queue alias not easily visible in qstat. Consider using one of these queues instead:\n{queues}		
 c001	No EntryModule	EntryModule link does not exist: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
 c002	Bad EntryModule	EntryModule is not a link: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
 c003	No experiment here	Could not find an experiment for path: '{path}'. A valid experiment folder contains an 'EntryModule' link.	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
 c004	No EntryModule flow.xml	The required EntryModule flow.xml file does not exist: ‘{flow_xml}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
 c005	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to parse as XML: ‘{flow_xml}’		
-e001	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders	
+e001	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing:\n{folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders	
 e002	Bad XML	Failed to parse XML: ‘{xml}’		
 e003	Bad task name	Invalid task name ‘{task_name}’ at path '{task_path}’		
 e004	Broken symlink	Soft links were found with targets that do not exist:\n{broken_links}		
@@ -25,14 +25,14 @@ e008	Missing curly brackets in resource xml	Variables in resource XMLs must use 
 e009	Unbalanced curly brackets in resource xml	Found an uneven number of curly brackets ‘{attribute_value}’ in a resource file: ‘{file_path}’		
 e010	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a less portable and more fragile way to configure an experiment.		
 e011	Dependency experiment does not exist	The ‘exp’ attribute ‘{exp_value}’ in the resources file ‘{resource_path}’ is not a path to a folder that exists.		
-e012	Undefined resource XML variables	The resource XML ‘{resource_path}’ uses variables that are not defined in any resource files like ‘resources/resources.def’. Variables: {variable_names}		
+e012	Undefined resource XML variables	The resource XML ‘{resource_path}’ uses variables that are not defined in any resource files like ‘resources/resources.def’. Variables:\n{variable_names}		
 e013	Dissemination state does not match context	The experiment seems to have the ‘{context}’ context but variables in ‘{cfg_path}’ do not match what is expected: {unexpected}		
 e014	Non-links in hub	Experiments with the ‘{context}’ context can only have soft link folders in their ‘hub’ folder. Bad: {bad}		
 e015	Resource value higher than maximum	The resource value ‘{value}’ for ‘{attribute}’ in ‘{xml_path}’ is higher than the maximum of ‘{maximum}’ defined in jobctl-qstat for queue ‘{queue}’.		
 e016	No git repo	There is no ‘.git’ folder and therefore no git repo. Experiments with the ‘{context}’ context should always be version controlled with git.		
-i001	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable and cannot be installed operationally. Links:\n{bad_links}		
+i001	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable. Links:\n{bad_links}		
 i002	Module name and path differ	The module folder ‘{folder_name}’ differs from the module name ‘{attribute_name}’ in the flow XML ‘{xml_path}’. This can help organize a project, but it may also be confusing.		
-i003	Text editor swap files	Text editor swap files were found, for example for vim or emacs. If your editor is closed, you may want to recover or delete these: {swaps}		
+i003	Text editor swap files	Text editor swap files were found, for example for vim or emacs. If your editor is closed, you may want to recover or delete these:\n{swaps}		
 i004	Git repo has uncommited changes	There are uncommited changes in the git repo.		
 w001	Missing resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
 w002	Missing loop resource file	The loop ‘{node_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
@@ -43,7 +43,7 @@ w006	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{con
 w007	No support status in operational experiment	There is no SupportInfo attribute in the XML ‘{xml_path}’ or the XML does not exist. This is required for operational experiments.		
 w008	Multiple support statuses	The XML ‘{xml_path}’ has more than one SupportInfo element.		
 w009	Resource variable typo	The resource variable ‘{maybe_typo}’ is defined but the standard variable name ‘{expected}’ is not. Did you mean that instead?	https://wiki.cmc.ec.gc.ca/wiki/User:Lims/projects/tech_transfer_improvements#Using_standard_variables_for_machine_and_queue_definitions	
-w010	Bad queue value for resource variable	The value ‘{value}’ for the resource variable ‘{name}’ is not a queue available in qstat. Queues: {queues}		
+w010	Bad queue value for resource variable	The value ‘{value}’ for the resource variable ‘{name}’ is not a queue available in qstat. Queues:\n{queues}		
 w011	Experiment not in overview XML	The experiment seems to have the ‘{context}’ context but it was not found in the {exp_count} experiments in the overview XML: {xml_path}		
 w012	Experiment in unexpected overview XML	The experiment seems to have the ‘{context}’ context but it was found in the {exp_count} experiments in the ‘{xml_context}’ context overview XML: {xml_path}		
 w013	Misplaced dissemination variables	The variables {variables} belong only in ‘experiment.cfg’ files but were found in: ‘{cfg_path}’		

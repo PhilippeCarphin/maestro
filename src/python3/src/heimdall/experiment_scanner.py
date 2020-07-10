@@ -217,8 +217,6 @@ class ExperimentScanner():
         if swaps:
             code="i003"
             filenames="\n".join(swaps)
-            if len(swaps)>1:
-                filenames="\n"+filenames
             description=hmm.get(code,
                                 swaps=filenames)
             self.add_message(code,description)            
@@ -250,8 +248,6 @@ class ExperimentScanner():
             if extra:
                 code="b006"
                 filenames="\n".join(extra)
-                if len(extra)>1:
-                    filenames="\n"+filenames
                 description=hmm.get(code,
                                     folder=folder,
                                     filenames=filenames)
@@ -274,8 +270,6 @@ class ExperimentScanner():
             if bad:
                 code="e014"
                 msg="\n".join(bad)
-                if len(bad)>1:
-                    msg="\n"+msg
                 description=hmm.get(code,
                                     context=self.context,
                                     bad=msg)
@@ -329,8 +323,6 @@ class ExperimentScanner():
         deprecated=[path for path in paths if file_cache.exists(path)]
         if deprecated:
             msg="\n".join(deprecated)
-            if len(deprecated)>1:
-                msg="\n"+msg
             description=hmm.get(code,
                                 deprecated=msg)
             self.add_message(code,description)
@@ -501,8 +493,6 @@ class ExperimentScanner():
                     unexpected.append(line)
         if unexpected:
             msg="\n".join(unexpected)
-            if len(unexpected)>1:
-                msg="\n"+msg
             code="e013"
             description=hmm.get(code,
                                 context=self.context,
@@ -611,8 +601,6 @@ class ExperimentScanner():
             is_op=self.is_context_operational()
             code="w005" if is_op else "i001"
             msg="\n".join(bad_links)
-            if len(bad_links)>1:
-                msg="\n"+msg
             description=hmm.get(code,
                                 real_home=home_root,
                                 bad_links=msg)
