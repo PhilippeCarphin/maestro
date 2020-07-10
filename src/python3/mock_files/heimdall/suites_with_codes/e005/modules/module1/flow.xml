@@ -3,7 +3,7 @@
     <LOOP name="loop1"/>
     <SUBMITS sub_name="module2"/>
     <MODULE name="module2">
-        <SUBMITS name="task1"/>
+        <SUBMITS name="task1" type="user"/>
         <TASK name="task1"/>            
     </MODULE>
 </MODULE>

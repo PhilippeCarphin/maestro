@@ -49,3 +49,4 @@ w012	Experiment in unexpected overview XML	The experiment seems to have the ‘{
 w013	Misplaced dissemination variables	The variables {variables} belong only in ‘experiment.cfg’ files but were found in: ‘{cfg_path}’		
 w014	Hub pairs have dissimilar targets	The hub folder links ‘{folder1}’ and ‘{folder2}’ are expected to have similar targets. Instead they are very different:\n{target1}\n{target2}		
 w015	Git repo has uncommited changes	There are uncommited changes in the git repo. Experiments with the ‘{context}’ context should always have nothing to commit and a clean working tree from ‘git status’.		
+b009	Deprecated attribute in SUBMITS element	The attribute ‘type’ in <SUBMITS> elements is deprecated and can be removed. Found in files:\n{xml_paths}		

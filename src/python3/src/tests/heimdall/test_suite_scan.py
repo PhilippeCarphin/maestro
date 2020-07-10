@@ -92,10 +92,11 @@ class TestSuiteScan(unittest.TestCase):
         paths=[TURTLE_ME_PATH,G0_MINI_ME_PATH,G1_MINI_ME_PATH,GV_MINI_ME_PATH]
         
         """
+        "good" suites are really just "decent" suites.
         Even good suites may have these codes so ignore them.
-        Maybe because of the real path is a test suite, or git repo stuff
+        This may also be due to real path is a test suite, or git repo stuff.
         """
-        ignore_codes=["w001", "i002","e016", "i004"]
+        ignore_codes=["w001", "i002","e016", "i004", "b009"]
         
         """
         key is experiment path

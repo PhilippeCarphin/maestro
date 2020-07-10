@@ -877,6 +877,19 @@ class ExperimentScanner():
                 description=hmm.get(code,xml=path)
                 self.add_message(code,description)
         
+        deprecated_attribute_xmls=[]
+        for path in self.flow_files:
+            root=file_cache.etree_parse(path)
+            if root is None:
+                continue
+            elements=root.xpath("//SUBMITS[@type]")
+            if elements:
+                deprecated_attribute_xmls.append(path)
+        if deprecated_attribute_xmls:
+            code="b009"
+            description=hmm.get(code,xml_paths="\n".join(deprecated_attribute_xmls))
+            self.add_message(code,description)
+        
     def index_experiment_files(self):
         """
         Quickly find the path of all files that are in (or should be in)
