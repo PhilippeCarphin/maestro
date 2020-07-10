@@ -87,7 +87,7 @@ class TestUtilities(unittest.TestCase):
         expected=r(os.environ["HOME"]+"/")
         result=guess_user_home_from_path(path)
         self.assertEqual(result,expected)
-        
+                
     def test_nodelogger_signals(self):
         
         task_text="""${destination}/${ENVAR_output_banco_name}.postalt.${outputfile}

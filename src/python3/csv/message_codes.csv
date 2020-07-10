@@ -51,3 +51,4 @@ w014	Hub pairs have dissimilar targets	The hub folder links ‘{folder1}’ and 
 w015	Git repo has uncommited changes	There are uncommited changes in the git repo. Experiments with the ‘{context}’ context should always have nothing to commit and a clean working tree from ‘git status’.		
 b009	Deprecated attribute in SUBMITS element	The attribute ‘type’ in <SUBMITS> elements is deprecated and can be removed. Found in files:\n{xml_paths}		
 b010	Non-standard characters in executable name	Executable names have non-standard characters that do not match regex ‘{regex}’. This can cause bugs with tools, operating systems, and parsers. Consider renaming them:\n{details}		
+b011	Top-level file or folder in CMCCONST	There are references to files or folders in the root level of the CMCCONST folder. It is recommended instead to use folders in CMCCONST instead. The {search} was found in file: ‘{file_path}’	https://gitlab.science.gc.ca/CMOI/best-practices/blob/master/en/constants.md	

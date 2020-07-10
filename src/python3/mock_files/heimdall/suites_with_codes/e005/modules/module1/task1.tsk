@@ -14,3 +14,6 @@
             if [ "${ENVAR_output_mode}" = tree ]; then
                 ssh ${destination%%:*} mkdir -p ${destination##*:}/${ENVAR_output_banco_name}/postalt
             fi
+
+            
+some_command -a 123 ${CMCCONST}/abc.txt --verbose
