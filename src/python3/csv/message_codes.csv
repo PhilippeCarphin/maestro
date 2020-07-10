@@ -19,7 +19,7 @@ e002	Bad XML	Failed to parse XML: ‘{xml}’
 e003	Bad task name	Invalid task name ‘{task_name}’ at path '{task_path}’		
 e004	Broken symlink	Soft links were found with targets that do not exist:\n{broken_links}		
 e005	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML:\n{flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290	
-e006	Bad nodelogger signal	The executable ‘nodelogger’ was given a bad signal ‘{bad_signal}’ for its ‘-s’ argument. Line {line_number} in: ‘{task_path}’	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
+e006	Unknown nodelogger signal	The executable ‘nodelogger’ was given unknown signals for its ‘-s’ argument. This message won’t appear in the message center.\n{details}	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
 e007	Missing required resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. This is required for the ‘{context}’ context.		
 e008	Missing curly brackets in resource xml	Variables in resource XMLs must use curly brackets like ‘${{ABC}}’ not ‘$ABC’. The {search} was found in file: ‘{file_path}’		
 e009	Unbalanced curly brackets in resource xml	Found an uneven number of curly brackets ‘{attribute_value}’ in a resource file: ‘{file_path}’		

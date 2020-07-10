@@ -696,17 +696,22 @@ class ExperimentScanner():
         
         "find invalid nodelogger signals"
         results=get_nodelogger_signals_from_task_path(task_path)
+        msg_lines=[]
         for result in results:
             if result["signal"].startswith("$"):
                 continue
             
             if result["signal"] not in NODELOGGER_SIGNALS:
-                code="e006"
-                description=hmm.get(code,
-                                    bad_signal=result["signal"],
-                                    line_number=result["line_number"],
-                                    task_path=task_path)
-                self.add_message(code,description)
+                line="Signal '%s' in line %s of file '%s'"%(result["signal"],
+                                                            result["line_number"],
+                                                            task_path)
+                msg_lines.append(line)
+        
+        if msg_lines:
+            code="e006"
+            description=hmm.get(code,
+                                details=msg_lines)
+            self.add_message(code,description)
         
     def scan_modules(self):
         """
