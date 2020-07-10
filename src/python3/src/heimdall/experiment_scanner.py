@@ -708,7 +708,7 @@ class ExperimentScanner():
                 msg_lines.append(line)
         
         if msg_lines:
-            code="e006"
+            code="i005"
             description=hmm.get(code,
                                 details="\n".join(msg_lines))
             self.add_message(code,description)
@@ -1025,12 +1025,12 @@ class ExperimentScanner():
                 print(message["description"])
         
         if max(hidden_code_counts_by_char.values()):
-            msg="\nSkipped showing %s repeated codes: "%sum(hidden_code_counts_by_char.values())+"."
+            msg="\nSkipped showing %s repeated codes: "%sum(hidden_code_counts_by_char.values())
             for c in levels:
                 count=hidden_code_counts_by_char[c]
                 if count:
                     msg+="%s from code '%s', "%(count,c)
-            print(msg[:-2])
+            print(msg[:-2]+".")
         
         print("\nHeimdall found %s items to report for maestro suite:\n    %s"%(len(self.messages),self.path))
 
