@@ -228,6 +228,8 @@ class ExperimentScanner():
         maestro_files=sorted(list(set(maestro_files)))
         explored=set()
         
+        whitelist=[".gitignore"]
+        
         for path in maestro_files:
             
             folder=os.path.dirname(path)
@@ -237,6 +239,10 @@ class ExperimentScanner():
             
             extra=[]
             for basename in file_cache.listdir(folder):
+                
+                if basename in whitelist:
+                    continue
+                
                 path=folder+"/"+basename
                 if file_cache.isfile(path) and path not in maestro_files:
                     extra.append(path)
