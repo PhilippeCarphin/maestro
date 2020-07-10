@@ -27,7 +27,7 @@ e010	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{con
 e011	Dependency experiment does not exist	The ‘exp’ attribute ‘{exp_value}’ in the resources file ‘{resource_path}’ is not a path to a folder that exists.		
 e012	Undefined resource XML variables	The resource XML ‘{resource_path}’ uses variables that are not defined in any resource files like ‘resources/resources.def’. Variables:\n{variable_names}		
 e013	Dissemination state does not match context	The experiment seems to have the ‘{context}’ context but variables in ‘{cfg_path}’ do not match what is expected: {unexpected}		
-e014	Non-links in hub	Experiments with the ‘{context}’ context can only have soft link folders in their ‘hub’ folder. Bad:\n{bad}		
+e014	Non-links in hub	Experiments with the ‘{context}’ context can only have soft link folders in their ‘hub’ folder:\n{bad}		
 e015	Resource value higher than maximum	The resource value ‘{value}’ for ‘{attribute}’ in ‘{xml_path}’ is higher than the maximum of ‘{maximum}’ defined in jobctl-qstat for queue ‘{queue}’.		
 e016	No git repo	There is no git repo tracking this experiment. Experiments with the ‘{context}’ context should always be version controlled with git.		
 i001	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable. Links:\n{bad_links}		

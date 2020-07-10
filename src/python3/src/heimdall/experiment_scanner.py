@@ -259,7 +259,7 @@ class ExperimentScanner():
                             SCANNER_CONTEXT.PARALLEL):
             bad=[]
             for path in hub_items:
-                if not file_cache.islink(path) or not file_cache.isdir(path):
+                if not file_cache.islink(path):
                     bad.append(path)
             if bad:
                 code="e014"
