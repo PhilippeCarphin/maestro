@@ -98,6 +98,16 @@ class ExperimentScanner():
         self.scan_node_names()
         self.scan_broken_symlinks()
         
+        self.sort_messages()
+        
+    def sort_messages(self):
+        
+        def sort_key(a):
+            levels="cewib"
+            return str(levels.index(a["code"][0]))+a["code"][1:]
+        
+        self.messages=sorted(self.messages,key=sort_key)
+        
     def is_context_operational(self):
         return self.context in (SCANNER_CONTEXT.OPERATIONAL,
                                     SCANNER_CONTEXT.PREOPERATIONAL)
@@ -1016,7 +1026,7 @@ class ExperimentScanner():
                 print(message["description"])
         
         if max(hidden_code_counts_by_char.values()):
-            msg="\nSkipped showing %s repeated codes: "%sum(hidden_code_counts_by_char.values())
+            msg="\nSkipped showing %s repeated codes: "%sum(hidden_code_counts_by_char.values())+"."
             for c in levels:
                 count=hidden_code_counts_by_char[c]
                 if count:
