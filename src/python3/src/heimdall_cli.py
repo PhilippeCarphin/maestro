@@ -11,6 +11,8 @@ Options:
     --context=<context>          Heimdall will guess the context like operational, preoperational, or parallel. Or you can override the guess with this option.
     --level=<level>              Only show messages at this level or above. There is critical, error, warning, info, and best-practice. You can also just use the first letter as an argument. [default: best-practice]    
     --max-repeat=<count>         The same message code will be shown this maximum number of times. Use zero for unlimited. [default: 5]
+    --whitelist=<codes>          Comma delimited list of codes like '--whitelist=c001,w001'. Only show these codes.
+    --blacklist=<codes>          Comma delimited list of codes like '--blacklist=c001,w001'. Never show these codes.
     --home=<folder>              The home folder used to lookup files like '~/.suites/overrides.def'. By default, use the home of the owner of the maestro experiment.
     --op-home=<path>             Path to the home of the operational user. [default: /home/smco500]
     --par-home=<path>            Path to the home of the parallel user. [default: /home/smco501]
@@ -63,8 +65,13 @@ def main(args):
         return
     level=level[0]
     
+    whitelist=[] if not args["--whitelist"] else args["--whitelist"].split(",")
+    blacklist=[] if not args["--blacklist"] else args["--blacklist"].split(",")
+    
     scanner.print_report(level=level,
-                         max_repeat=max_repeat)
+                         max_repeat=max_repeat,
+                         whitelist=whitelist,
+                         blacklist=blacklist)
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="1.0")

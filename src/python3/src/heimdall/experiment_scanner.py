@@ -981,7 +981,9 @@ class ExperimentScanner():
     def print_report(self,
                      use_colors=True,
                      max_repeat=0,
-                     level="b"):
+                     level="b",
+                     whitelist=None,
+                     blacklist=None):
         char_color_functions=OrderedDict([("c",print_red),
                                           ("e",print_orange),
                                           ("w",print_yellow),
@@ -1015,11 +1017,19 @@ class ExperimentScanner():
                     hidden_code_counts_by_char[code[0]]+=1
                     continue
                 
+                if whitelist and code not in whitelist:
+                    hidden_code_counts_by_char[code[0]]+=1
+                    continue
+                
+                if blacklist and code in blacklist:
+                    hidden_code_counts_by_char[code[0]]+=1
+                    continue
+                
                 f(code+": "+message["label"])
                 print(message["description"])
         
         if max(hidden_code_counts_by_char.values()):
-            msg="\nSkipped showing %s repeated codes: "%sum(hidden_code_counts_by_char.values())
+            msg="\nSkipped showing %s codes because of repeat/whitelist/blacklist: "%sum(hidden_code_counts_by_char.values())
             for c in levels:
                 count=hidden_code_counts_by_char[c]
                 if count:
