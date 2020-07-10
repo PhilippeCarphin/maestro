@@ -2,7 +2,7 @@ Heimdall is a maestro suite scanner. Scan for errors, warnings, recommendations,
 
 # Codes
 
-What cases can Heimdall detect?
+What cases can `heimdall` detect?
 
 * Critical errors like: missing EntryModule, suite folders like 'listings' have bad permissions or are missing.
 * Errors like: dependency does not exist, bad XML, dissemination state does not match context.
@@ -40,7 +40,7 @@ cd /home/smco500/.suites/gdps/g0/listings/eccc-ppp3/main/intxfer_g0
 
 # Levels
 
-Every Heimdall message has a level: critical, error, warning, info, and best practice. For example `e003` or `c001`. The levels are based on whether tools like `xflow` and `mflow` can view and run the experiment.
+Every `heimdall` message has a level: critical, error, warning, info, and best practice. For example `e003` or `c001`. The levels are based on whether tools like `xflow` and `mflow` can view and run the experiment.
 
 ### Critical \(c)
 
@@ -79,14 +79,13 @@ Files in the root level of `maestro/src/python3/src/utilities` are generically u
 
 ### mflow
 
-Heimdall uses components of mflow, like the `MaestroExperiment` class. Rarely, development in heimdall involves changing `mflow` dependencies. In that case, it's good to run the `mflow` tests too:
+`heimdall` uses components of `mflow`, like the `MaestroExperiment` class. Rarely, development in `heimdall` involves changing `mflow` dependencies. In that case, it's good to run the `mflow` tests too:
 
 ```
 cd maestro/src/python3/bin
 ./run_mflow_tests
 ```
 
+# Myth
 
-
-
-
+In North mythology, Heimdall or Heimdallr is attested as possessing foreknowledge, keen eyesight and hearing, and keeps watch for invaders and the onset of Ragnarök. Heimdall sees all.
