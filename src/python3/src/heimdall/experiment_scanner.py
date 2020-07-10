@@ -710,7 +710,7 @@ class ExperimentScanner():
         if msg_lines:
             code="e006"
             description=hmm.get(code,
-                                details=msg_lines)
+                                details="\n".join(msg_lines))
             self.add_message(code,description)
         
     def scan_modules(self):
