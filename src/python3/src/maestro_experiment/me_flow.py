@@ -54,6 +54,16 @@ class ME_Flow():
         key is node_path of child, value is node_path of parent in the visual flow
         """
         self.flow_child_to_parent={}
+                
+        """
+        key is a node path used internally by mflow, including switch indexes like:
+            module1/switch1/00/task1
+            module1/switch1/12/task2
+        value is the node path understood by xflow and used to construct resource xml paths:
+            module1/switch1/task1
+            module1/switch1/task2
+        """
+        self.node_path_to_no_index_node_path={}
         
         self.build_flow_data()
         
@@ -98,8 +108,10 @@ class ME_Flow():
         Travel up through its ancestors to get node_data info and paths for config, resources, task, etc.
         """
         
-        flow_branch,node_path,module_path=get_paths_from_element(element)
+        flow_branch,node_path,no_index_node_path,module_path=get_paths_from_element(element)
         node_type=get_node_type_from_element(element)
+        
+        self.node_path_to_no_index_node_path[node_path]=no_index_node_path
         
         module_name=module_path.split("/")[0]
         flow_path=self.path+"modules/"+module_name+"/flow.xml"

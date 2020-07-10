@@ -39,7 +39,7 @@ class ME_NodeData():
         mpath=flow_data["module_path_inner"]
         
         "task, config, resource paths"
-        resource_path=self.path+"resources/"+node_path
+        resource_path=self.path+"resources/"+self.node_path_to_no_index_node_path[node_path]
         if is_container(node_type):
             task_path=""
             config_path=self.path+"modules/"+mpath+"/container.cfg"

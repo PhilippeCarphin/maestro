@@ -134,6 +134,11 @@ def get_node_path_from_flow_element(element,
     
     If inner_module_path, recursion stops at the first module instead of the root.
     This is used to construct the paths within the "$SEQ_EXP_HOME/modules" folder.
+    
+    Returns two node paths - with and without switch indexes:
+        module1/switch1/00/task1
+        module1/switch1/task1
+    (node_path, no_index_node_path)
     """
     
     is_submit=element.tag.lower() == "submits"
@@ -143,7 +148,7 @@ def get_node_path_from_flow_element(element,
         container_element=get_closest_container(element)
         results=container_element.xpath(xpath)
         if not results:
-            return ""
+            return "",""
         
         """
         Sometimes the root module name matches another child task element.
@@ -155,32 +160,40 @@ def get_node_path_from_flow_element(element,
     
     if element.tag.lower() not in NODE_TYPES:
         "non-flow elements like <DEPENDS_ON> have no node_path"
-        return ""
+        return "",""
     
-    node_path=element.attrib["name"]
-        
-    parent=element.getparent()
+    node_path=""
+    no_index_node_path=""        
+    parent=element
     while parent is not None:
+        
+        is_switch=parent.tag == "SWITCH_ITEM"
         node_path=parent.attrib["name"]+"/"+node_path
+        if not is_switch:
+            no_index_node_path=parent.attrib["name"]+"/"+no_index_node_path
         
         if inner_module_path and is_module(parent):
             break
         
         parent=parent.getparent()
-        
-    return node_path
+    
+    "remove trailing slash"
+    node_path=node_path[:-1]
+    no_index_node_path=no_index_node_path[:-1]
+    
+    return node_path, no_index_node_path
 
 def get_module_name_for_element(element):
     return get_closest_module(element).attrib.get("name","")
 
 def get_paths_from_element(element):
     """
-    Returns (flow_branch, node_path, module_path_inner)
+    Returns (flow_branch, node_path, no_index_node_path, module_path_inner)
     """     
     flow_branch=get_flow_branch_from_flow_element(element)
-    node_path=get_node_path_from_flow_element(element)
-    module_path=get_node_path_from_flow_element(element,inner_module_path=True)
-    return flow_branch, node_path, module_path
+    node_path,no_index_node_path=get_node_path_from_flow_element(element)
+    _,module_path=get_node_path_from_flow_element(element,inner_module_path=True)
+    return flow_branch, node_path, no_index_node_path, module_path
     
 def get_module_name_from_flow_xml(path):
     "Given a flow xml, returns the 'name' of the top module element."
@@ -194,7 +207,7 @@ def get_submits_from_flow_element(element):
     Returns a list of all node_path for every <SUBMITS> child of this element.
     """
     submit_children=[child for child in element if child.tag.lower()=="submits"]
-    result=[get_node_path_from_flow_element(child) for child in submit_children]
+    result=[get_node_path_from_flow_element(child)[0] for child in submit_children]
     return [i for i in result if i]
 
 def get_flow_children_from_flow_element(element):
@@ -207,7 +220,7 @@ def get_flow_children_from_flow_element(element):
     for child in element:
         tag=child.tag.lower()
         if tag in ("submits","switch_item"):
-            node_path=get_node_path_from_flow_element(child)
+            node_path=get_node_path_from_flow_element(child)[0]
             result.append(node_path)
         elif tag == "npass_task":
             """
@@ -221,7 +234,7 @@ def get_flow_children_from_flow_element(element):
             xpath=".//SUBMITS[@sub_name='%s']"%npt_name
             search=container.xpath(xpath)
             if not search:
-                node_path=get_node_path_from_flow_element(child)
+                node_path=get_node_path_from_flow_element(child)[0]
                 result.append(node_path)
     
     return [i for i in result if i]

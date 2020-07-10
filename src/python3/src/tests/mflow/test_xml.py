@@ -54,15 +54,20 @@ class TestMaestroXML(unittest.TestCase):
         module1=etree.fromstring(xml1)
         switch1=module1[1]
         item1=switch1[0]
+        task1=item1[0]
         
-        result=get_node_path_from_flow_element(module1)
-        self.assertEqual(result,"module1")
+        result1,result2=get_node_path_from_flow_element(module1)
+        self.assertEqual(result1,"module1")
         
-        result=get_node_path_from_flow_element(switch1)
-        self.assertEqual(result,"module1/switch1")
+        result1,result2=get_node_path_from_flow_element(switch1)
+        self.assertEqual(result1,"module1/switch1")
         
-        result=get_node_path_from_flow_element(item1)
-        self.assertEqual(result,"module1/switch1/item1")
+        result1,result2=get_node_path_from_flow_element(item1)
+        self.assertEqual(result1,"module1/switch1/item1")
+        
+        result1,result2=get_node_path_from_flow_element(task1)
+        self.assertEqual(result1,"module1/switch1/item1/task1")
+        self.assertEqual(result2,"module1/switch1/task1")
         
         result=get_flow_children_from_flow_element(module1)
         expected=["module1/switch1"]
@@ -382,9 +387,10 @@ class TestMaestroXML(unittest.TestCase):
         
         elements=flow.xpath(xpath)
         element=elements[0]
-        flow_branch,node_path,module_path=get_paths_from_element(element)
+        flow_branch,node_path,no_index_node_path,module_path=get_paths_from_element(element)
         expected="sample/Dependencies/downone/downtwo/dep_parent_keyword"
         self.assertEqual(node_path,expected)
+        self.assertEqual(no_index_node_path,expected)
         self.assertEqual(flow_branch,expected)
         
     def test_get_submits_and_children_from_element(self):
