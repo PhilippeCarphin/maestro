@@ -24,6 +24,11 @@ Matches codes like 'e001' and 'c010'
 """
 CODE_REGEX=re.compile("[cewib][0-9]{3}")
 
+"""
+Matches executables that are named reasonbly, without characters like "+"
+"""
+EXECUTABLE_NAME_REGEX=re.compile("^[a-zA-Z0-9-_.]+$")
+
 class ExperimentScanner():
     def __init__(self,
                  path,
@@ -445,8 +450,19 @@ class ExperimentScanner():
                 self.add_message(code,description)
         
     def scan_config_files(self):
+        
+        self.non_standard_character_lines=[]
+        
         for path in self.config_files:
             self.scan_config_file(path)
+            
+        if self.non_standard_character_lines:
+            code="b010"
+            details="\n".join(self.non_standard_character_lines)
+            description=hmm.get(code,
+                                regex=EXECUTABLE_NAME_REGEX.pattern,
+                                details=details)
+            self.add_message(code,description)
     
     def scan_config_file(self,path):
         "scan the content of config files (see scan_file_content for CSV content scan)"        
@@ -457,14 +473,21 @@ class ExperimentScanner():
         "find hard coded paths in pseudo-xml cfg variables"
         code="e010" if self.is_context_operational() else "w006"
         content=file_cache.open(path)
-        data=get_weird_assignments_from_config_text(content)
-        for section,d in data.items():
+        weird_data=get_weird_assignments_from_config_text(content)
+        for section,d in weird_data.items():
             for key,value in d.items():
                 if value.startswith("/"):
                     description=hmm.get(code,
                                         config_path=path,
                                         bad_path=value)
                     self.add_message(code,description)
+        
+        "find non-standard characters in names"
+        for section,d in weird_data.items():
+            for key,value in d.items():
+                if not EXECUTABLE_NAME_REGEX.match(key):
+                    line="'%s' in '%s'"%(key,path)
+                    self.non_standard_character_lines.append(line)
         
         "variables that should only be in experiment.cfg"
         if not path.endswith("experiment.cfg"):
