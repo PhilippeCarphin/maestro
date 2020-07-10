@@ -14,7 +14,7 @@ c002	Bad EntryModule	EntryModule is not a link: ‘{entry_module}’	https://wik
 c003	No experiment here	Could not find an experiment for path: '{path}'. A valid experiment folder contains an 'EntryModule' link.	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
 c004	No EntryModule flow.xml	The required EntryModule flow.xml file does not exist: ‘{flow_xml}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
 c005	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to parse as XML: ‘{flow_xml}’		
-e001	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing:\n{folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders	
+e001	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders	
 e002	Bad XML	Failed to parse XML: ‘{xml}’		
 e003	Bad task name	Invalid task name ‘{task_name}’ at path '{task_path}’		
 e004	Broken symlink	Soft links were found with targets that do not exist:\n{broken_links}		
