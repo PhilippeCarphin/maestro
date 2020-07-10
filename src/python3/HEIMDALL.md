@@ -12,6 +12,17 @@ What cases can Heimdall detect?
 
 And many more! See the [tab delimited CSV](csv/message_codes.csv) for every case. Each case has an automated test.
 
+# Development & Status
+
+`heimdall` is useful now but version `0.1` is still being developed.
+
+The project is spread out in two locations:
+
+* The [sts271/heimdall repo](https://gitlab.science.gc.ca/sts271/heimdall/issues), created in 2018, containing a historic backlog of issues and ideas.
+* The permanent home for `heimdall` in the `maestro` repo. Once the [0.1](https://gitlab.science.gc.ca/sts271/heimdall/issues?scope=all&state=opened&utf8=%E2%9C%93&milestone_title=0.1) milestone is complete, the `feature-heimdall-suite-scanner` can be merged into the maestro `integration` branch. The `0.1` milestone has low-hanging-fruit and critical items.
+
+Once the historic backlog of issues and ideas in the [sts271/heimdall repo](https://gitlab.science.gc.ca/sts271/heimdall/issues) are mostly done, it will be closed.
+
 # Screenshots
 
 ![alt text](/src/python3/screenshots/heimdall1.png)
