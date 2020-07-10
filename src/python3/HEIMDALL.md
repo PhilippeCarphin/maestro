@@ -12,7 +12,7 @@ And many more! See the [tab delimited CSV](csv/message_codes.csv) for every case
 
 # Screenshots
 
-![alt text](screenshots/heimdall1.png)
+![alt text](/src/python3/screenshots/heimdall1.png)
 
 # Try it out
 
