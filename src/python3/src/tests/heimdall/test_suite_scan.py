@@ -5,7 +5,7 @@ from constants import SCANNER_CONTEXT
 from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, OPERATIONAL_HOME, PARALLEL_HOME, TMP_FOLDER, QSTAT_OUTPUT1_PATH
 from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
-from tests.temp_file_builder import setup_tmp_experiment1, setup_tmp_smco501_home
+from tests.temp_file_builder import setup_tmp_experiment1, setup_tmp_smco501_home, setup_tmp_git_author_repo
 from tests.cache import QSTAT_CMD_OUTPUT
 
 class TestSuiteScan(unittest.TestCase):        
@@ -19,6 +19,7 @@ class TestSuiteScan(unittest.TestCase):
         
         setup_tmp_experiment1()
         setup_tmp_smco501_home()
+        setup_tmp_git_author_repo(always_recreate=True)
                                 
         for code in hmm.codes:
             path=SUITES_WITH_CODES+code
@@ -96,7 +97,7 @@ class TestSuiteScan(unittest.TestCase):
         Even good suites may have these codes so ignore them.
         This may also be due to real path is a test suite, or git repo stuff.
         """
-        ignore_codes=["w001", "i002","e016", "i004", "b009"]
+        ignore_codes=["w001", "i002","e016", "i004", "b009", "i006"]
         
         """
         key is experiment path

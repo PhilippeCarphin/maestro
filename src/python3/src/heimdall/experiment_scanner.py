@@ -14,6 +14,7 @@ from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile
+from utilities.heimdall.git import scan_git_authors
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target
 from utilities.qstat import get_qstat_data_from_text, get_qstat_data, get_resource_limits_from_qstat_data
@@ -196,6 +197,7 @@ class ExperimentScanner():
                                 context=self.context)
             self.add_message(code,description)
         
+        "are there uncommited changes"
         if has_repo and output:
             if must_be_clean:
                 code="w015"
@@ -205,6 +207,21 @@ class ExperimentScanner():
                 code="i004"
                 description=hmm.get(code)
             self.add_message(code,description)
+        
+        if has_repo:
+            lines=[]
+            authors=scan_git_authors(self.path)
+            for author in authors:
+                line="%s <%s>"%(author["name"],author["emails"][0])
+                lines.append(line)
+            dev_count=5
+            developers="\n".join(lines[:dev_count])
+            
+            if developers:
+                code="i006"
+                description=hmm.get(code,
+                                    developers=developers)
+                self.add_message(code,description)
     
     def scan_extra_files(self):
         """

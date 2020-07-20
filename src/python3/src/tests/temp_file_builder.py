@@ -12,7 +12,40 @@ from lxml import etree
 from utilities.shell import safe_check_output_with_status
 from utilities.xml import xml_cache
 
-from tests.path import MOCK_FILES, TMP_FOLDER
+from tests.path import MOCK_FILES, TMP_FOLDER, TURTLE_ME_PATH
+
+def setup_tmp_git_author_repo(always_recreate=False):
+    path=TMP_FOLDER+"git-author-repo"
+    if not always_recreate and os.path.exists(path):
+        return path
+    
+    if os.path.exists(path):
+        shutil.rmtree(path,ignore_errors=True)
+    shutil.copytree(TURTLE_ME_PATH,path,symlinks=True)
+    
+    author1a="Jim Jim <jim@jim.org>"
+    author1b="Jim Jim <jimmy@jimmy.org>"
+    author1c="Jimbo Jimbo <jim@jimbo.org>"
+    author2="Joe Joe <joe@joe.org>"
+    
+    commands=["cd "+path,
+              "git init",
+              "echo content1 > file1",
+              "git add file1",
+              "git commit --author=\"%s\" -am \"commit-1\" "%author1a,
+              "echo content2 > file1",
+              "git commit --author=\"%s\" -am \"commit-2\" "%author1b,
+              "echo content3 > file1",
+              "git commit --author=\"%s\" -am \"commit-3\" "%author2,
+              "echo content4 > file1",
+              "git commit --author=\"%s\" -am \"commit-4\" "%author1c]
+    cmd=" && ".join(commands)
+    
+    output,status=safe_check_output_with_status(cmd)
+    if status != 0:
+        raise ValueError("status '%s' from cmd '%s' output =\n%s"%(status,cmd,output))
+        
+    return path
 
 def setup_tmp_smco501_home():
     """

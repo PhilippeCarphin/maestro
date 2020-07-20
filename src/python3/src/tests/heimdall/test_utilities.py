@@ -6,11 +6,14 @@ import unittest
 import os.path
 
 from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES
+from tests.temp_file_builder import setup_tmp_git_author_repo
+
 from constants import SCANNER_CONTEXT
 from utilities import get_dictionary_list_from_csv
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs
 from utilities.heimdall.path import is_editor_swapfile
+from utilities.heimdall.git import scan_git_authors
 from utilities import guess_user_home_from_path, pretty
 from utilities.maestro import get_weird_assignments_from_config_path
 from heimdall.file_cache import file_cache
@@ -32,6 +35,17 @@ class TestUtilities(unittest.TestCase):
         self.assertEqual(result[1]["name"],"george")
         
         self.assertIn("noise",result[0])
+        
+    def test_git_authors(self):
+        path=setup_tmp_git_author_repo()        
+        result=scan_git_authors(path)
+        self.assertTrue(result)
+        
+        self.assertEqual(result[0]["name"],"Jimbo Jimbo")
+        self.assertEqual(result[1]["name"],"Joe Joe")
+        
+        emails=result[0]["emails"]
+        self.assertEqual(len(emails),3)
     
     def test_get_weird_assignments_from_config(self):     
         path=MOCK_FILES+"weird-config-semi-xml.cfg"
