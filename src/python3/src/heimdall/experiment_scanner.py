@@ -564,6 +564,24 @@ class ExperimentScanner():
                                     variable_names=str(variables))
                 self.add_message(code,description)
         
+        "run_orji must be enabled"
+        for path in self.resource_files:
+            
+            if not path.endswith("run_orji.xml"):
+                continue
+            
+            data=self.maestro_experiment.get_batch_data_from_xml(path)
+            try:
+                catchup=int(data.get("catchup"))
+            except:
+                continue
+            if catchup>4:
+                code="w016"
+                description=hmm.get(code,
+                                    resource_path=path,
+                                    catchup=catchup)
+                self.add_message(code,description)
+        
         "resources.def variable name typo"
         standard_resource_defines=["FRONTEND",
                                  "BACKEND",

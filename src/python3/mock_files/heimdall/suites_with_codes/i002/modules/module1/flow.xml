@@ -1,5 +1,7 @@
 <MODULE name="module1">
     <SUBMITS name="module2"/>
     <MODULE name="module2"/>
+    <SUBMITS name="run_orji"/>
+    <TASK name="run_orji"/>
 </MODULE>
 
