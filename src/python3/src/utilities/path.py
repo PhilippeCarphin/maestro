@@ -40,7 +40,7 @@ def get_links_source_and_target(path):
     This can be used to audit relative/absolute links.
     """
     
-    cmd="find %s -type l"%path
+    cmd="find %s -type l"%path.strip()
     output,status=safe_check_output_with_status(cmd)
     if status!=0:
         return []
