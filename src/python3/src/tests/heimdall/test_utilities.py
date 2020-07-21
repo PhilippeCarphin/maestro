@@ -15,6 +15,7 @@ from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, ge
 from utilities.heimdall.path import is_editor_swapfile
 from utilities.heimdall.git import scan_git_authors
 from utilities import guess_user_home_from_path, pretty
+from utilities.path import iterative_deepening_search
 from utilities.maestro import get_weird_assignments_from_config_path
 from heimdall.file_cache import file_cache
 
@@ -36,6 +37,21 @@ class TestUtilities(unittest.TestCase):
         self.assertEqual(result[1]["name"], "george")
 
         self.assertIn("noise", result[0])
+        
+    def test_iterative_deepening_search(self):
+        self.maxDiff=None
+        
+        path=MOCK_FILES+"iterative_deepening_search/folder1/"
+        max_seconds=0.1
+        debug_sleep_seconds=0.04
+        result=iterative_deepening_search(path,max_seconds,
+                                          debug_sleep_seconds=debug_sleep_seconds)
+        expected=[path+"file1a",
+                  path+"file1b",
+                  path+"folder2/file2a",
+                  path+"folder2/file2b"]
+        msg="\nresult =\n"+"\n".join(result)
+        self.assertEqual(result,expected,msg=msg)
 
     def test_git_authors(self):
         path = setup_tmp_git_author_repo()

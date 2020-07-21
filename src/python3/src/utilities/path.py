@@ -2,10 +2,9 @@
 import os
 import os.path
 import subprocess
+import time
 
-from utilities.colors import print_green
 from utilities.shell import safe_check_output_with_status
-
 
 def list_files_recursively(path):
     """
@@ -61,6 +60,79 @@ def get_links_source_and_target(path):
 
     return results
 
+def iterative_deepening_search(rootdir,
+                               max_seconds, 
+                               follow_links=True,
+                               debug_sleep_seconds=0):
+    """
+    Returns a list of file paths in this rootdir - as many as possible in the time given.
+    Example:
+        folder1/folder2/folder3
+        folder1/folder2/folder4
+    We search folder1
+    folders 1, 2, and 3 contains just a few files.
+    folder4 contains ten million files and listing them exceeds max_seconds.
+    
+    This will return the paths to files in folder1, folder2, but not folder3 or folder 4.
+    
+    debug_sleep_seconds can be used for testing - each depth iteration will sleep 
+    this much to simulate large numbers of files.
+    """
+    
+    assert type(max_seconds) in (int,float)
+    assert max_seconds>0
+    max_depth=100
+    
+    ids_start_time=time.time()
+    
+    "how long the most recent depth search took"
+    previous_depth_seconds=0
+    
+    "the results of the most recent search"
+    previous_results=[]
+    
+    for depth in range(1,max_depth):
+        
+        time_remaining=ids_start_time+max_seconds-time.time()
+        if time_remaining<0:
+            break
+        
+        """
+        depth+1 will take longer than depth, so stop now if we have 
+        less time left than last search took.
+        """
+        if time_remaining < previous_depth_seconds:
+            break
+        
+        start_time=time.time()
+        results=timeout_search(rootdir,depth,time_remaining,follow_links=follow_links)
+        if debug_sleep_seconds:
+            time.sleep(debug_sleep_seconds)
+        previous_depth_seconds=time.time()-start_time
+        
+        "same result as depth-1 means we searched all, no need for deeper."
+        if len(results) == len(previous_results):
+            return results
+        
+        previous_results=results
+    
+    return sorted(results)
+    
+def timeout_search(rootdir,depth,max_seconds,follow_links=True):
+    """
+    Returns a list of all files found in rootdir at this depth.
+    Returns an empty list of the search takes longer than max_seconds.
+    """
+    
+    follow_links_option="-L" if follow_links else ""
+    cmd="timeout %s find %s %s -maxdepth %s -type f | cut -c1-"%(max_seconds,
+                                                    follow_links_option,
+                                                    rootdir,
+                                                    depth)
+    output,status=safe_check_output_with_status(cmd)
+    if status==0:
+        return output.strip().split("\n")
+    return []
 
 def get_matching_paths_recursively(rootdir, extension="", verbose=0,
                                    path_blacklist=None, path_whitelist=None, follow_links=True,
