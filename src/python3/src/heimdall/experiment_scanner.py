@@ -93,6 +93,7 @@ class ExperimentScanner():
         self.scan_exp_options()
         self.scan_xmls()
         self.scan_hub()
+        self.scan_gitignore()
         self.scan_git_repo()
         self.scan_deprecated_files_folders()
         self.scan_resource_files()
@@ -181,6 +182,49 @@ class ExperimentScanner():
 
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+    
+    def scan_gitignore(self):
+        
+        has_repo=file_cache.isdir(self.path+".git")
+        if not has_repo:
+            return
+        
+        gitignore_path=self.path+".gitignore"
+
+        "no gitignore"
+        if not file_cache.isfile(gitignore_path):
+            code = "w020"
+            description = hmm.get(code,
+                                  gitignore_path=gitignore_path)
+            self.add_message(code, description)
+            return
+        
+        content=file_cache.open(gitignore_path)
+        lines=[line.strip() for line in content.split("\n") if line.strip()]            
+        must_have=["sequencing","stats","logs","listings"]
+        must_not_have=["hub","EntryModule","modules","flow.xml"]
+        
+        "gitignore must contain, and must not contain"
+        for line in lines:
+            if line in must_have:
+                must_have.remove(line)
+            
+            for bad in must_not_have:
+                if line==bad or line=="/"+bad:
+                    code="w018"
+                    description = hmm.get(code,
+                                          line=line,
+                                          gitignore_path=gitignore_path)
+                    self.add_message(code, description)
+        
+        "required lines were not found"
+        if must_have:
+            content="'"+"', '".join(must_have)+"'"
+            code="w019"
+            description = hmm.get(code,
+                                  content=content,
+                                  gitignore_path=gitignore_path)
+            self.add_message(code, description)
 
     def scan_git_repo(self):
 
@@ -191,7 +235,8 @@ class ExperimentScanner():
         cmd = "cd %s ; git status --porcelain" % self.path
         output, status = safe_check_output_with_status(cmd)
         has_repo = status == 0
-
+        
+        "no repo"
         if must_have_repo and not has_repo:
             code = "e016"
             description = hmm.get(code,
@@ -216,7 +261,7 @@ class ExperimentScanner():
                 line = "%s <%s>" % (author["name"], author["emails"][0])
                 lines.append(line)
             dev_count = 5
-            developers = "\n".join(lines[:dev_count])
+            developers = "    "+"\n    ".join(lines[:dev_count])
 
             if developers:
                 code = "i006"

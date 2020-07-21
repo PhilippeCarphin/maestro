@@ -56,3 +56,6 @@ i006	Lead developers from git history	Based on the git history for this project 
 w016	The task run_orji is disabled	The task resource ‘{resource_path}’ has a catchup value of ‘{catchup}’ but ‘run_orji’ tasks should always be enabled. This way, users get to decide whether to subscribe or unsubscribe.	https://wiki.cmc.ec.gc.ca/wiki/orji	
 w017	Archive file is not a link	The archive file ‘{bad}’ is not a link. Files named ‘.protocole_*’ or ‘.archive_monitor_*’ must be links so that the maintainers of the archive system can more easily manage its settings.		
 b012	Deprecated archive file	The file ‘{bad}’ is a deprecated archive file and should be deleted. If the hub has no other archive files, its archiving status should be examined.		
+w018	Bad items in gitignore	The gitignore file ‘{gitignore_path}’ should not contain line ‘{line}’. It’s important that this pattern is in the git repository so a full working suite can be shared.		
+w019	Missing items in gitignore	The gitignore file ‘{gitignore_path}’ should contain {content}. This will ignore files generated when running this suite which do not belong in the version controlled project.		
+w020	No gitignore	There should be a gitignore file here: ‘{gitignore_path}’. No gitignore means large amounts of unimportant files may be accidentally shared or added to the project.		
