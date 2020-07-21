@@ -15,92 +15,94 @@ from lxml import etree
 from constants import ENCODINGS
 from utilities.generic import cache, safe_open, strip_comments_from_text, get_key_values_from_path
 
+
 class FileCache():
     """
     Some functions do not have cache, for example when
     the cache key should be realpath and not path.
     This prevents caching duplicates for two paths that have the same realpath.
     """
-    
+
     def __init__(self):
-        self.xml_parser=etree.XMLParser()
-    
-    def etree_parse(self,path):
+        self.xml_parser = etree.XMLParser()
+
+    def etree_parse(self, path):
         """
         Return the parsed lxml element for the XML at this path.
         Error returns None.
         """
-        realpath=self.realpath(path)   
+        realpath = self.realpath(path)
         return self.etree_parse_from_realpath(realpath)
 
     @cache
-    def get_key_values_from_realpath(self,realpath):
+    def get_key_values_from_realpath(self, realpath):
         return get_key_values_from_path(realpath)
-    
-    def get_key_values_from_path(self,path):
-        realpath=self.realpath(path)
+
+    def get_key_values_from_path(self, path):
+        realpath = self.realpath(path)
         return self.get_key_values_from_realpath(realpath)
-    
+
     @cache
-    def etree_parse_from_realpath(self,realpath):
+    def etree_parse_from_realpath(self, realpath):
         try:
-            tree=etree.parse(realpath, parser=self.xml_parser)
+            tree = etree.parse(realpath, parser=self.xml_parser)
             return tree.getroot()
         except:
             return None
-        
+
     @cache
-    def open_without_comments(self,path):
+    def open_without_comments(self, path):
         """
         Return the text content of this file, minus any lines that are
         comments, like '#' in bash.
         """
         return strip_comments_from_text(self.open(path))
-        
-    def open(self,path):
-        realpath=self.realpath(path)
+
+    def open(self, path):
+        realpath = self.realpath(path)
         return self.open_realpath(realpath)
-    
+
     @cache
-    def open_realpath(self,realpath):
+    def open_realpath(self, realpath):
         return safe_open(realpath)
-    
+
     @cache
-    def is_broken_symlink(self,path):
+    def is_broken_symlink(self, path):
         if not self.islink(path):
             return False
-        
-        link=os.path.dirname(path)+"/"+os.readlink(path)
+
+        link = os.path.dirname(path)+"/"+os.readlink(path)
         return not self.exists(link)
-    
+
     @cache
-    def readlink(self,path):
+    def readlink(self, path):
         return os.readlink(path)
-    
+
     @cache
-    def listdir(self,path):
+    def listdir(self, path):
         if self.isdir(path):
             return os.listdir(path)
         return []
-    
+
     @cache
-    def isfile(self,path):
+    def isfile(self, path):
         return os.path.isfile(path)
-    
+
     @cache
-    def isdir(self,path):
+    def isdir(self, path):
         return os.path.isdir(path)
-    
+
     @cache
-    def islink(self,path):
+    def islink(self, path):
         return os.path.islink(path)
-    
+
     @cache
-    def exists(self,path):
+    def exists(self, path):
         return os.path.exists(path)
-    
+
     @cache
-    def realpath(self,path):
+    def realpath(self, path):
         return os.path.realpath(path)
-    
-file_cache=FileCache()
+
+
+file_cache = FileCache()

@@ -21,14 +21,18 @@ def print_color(text, color=0, end="\n"):
 def print_orange(text, end="\n"):
     print_color(text, COLORS.ORANGE, end=end)
 
+
 def print_blue(text, end="\n"):
     print_color(text, COLORS.BLUE, end=end)
+
 
 def print_red(text, end="\n"):
     print_color(text, COLORS.RED, end=end)
 
+
 def print_green(text, end="\n"):
     print_color(text, COLORS.GREEN, end=end)
+
 
 def print_yellow(text, end="\n"):
     print_color(text, COLORS.YELLOW, end=end)

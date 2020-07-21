@@ -14,38 +14,40 @@ from utilities.xml import xml_cache
 
 from tests.path import MOCK_FILES, TMP_FOLDER, TURTLE_ME_PATH
 
+
 def setup_tmp_git_author_repo(always_recreate=False):
-    path=TMP_FOLDER+"git-author-repo"
+    path = TMP_FOLDER+"git-author-repo"
     if not always_recreate and os.path.exists(path):
         return path
-    
+
     if os.path.exists(path):
-        shutil.rmtree(path,ignore_errors=True)
-    shutil.copytree(TURTLE_ME_PATH,path,symlinks=True)
-    
-    author1a="Jim Jim <jim@jim.org>"
-    author1b="Jim Jim <jimmy@jimmy.org>"
-    author1c="Jimbo Jimbo <jim@jimbo.org>"
-    author2="Joe Joe <joe@joe.org>"
-    
-    commands=["cd "+path,
-              "git init",
-              "echo content1 > file1",
-              "git add file1",
-              "git commit --author=\"%s\" -am \"commit-1\" "%author1a,
-              "echo content2 > file1",
-              "git commit --author=\"%s\" -am \"commit-2\" "%author1b,
-              "echo content3 > file1",
-              "git commit --author=\"%s\" -am \"commit-3\" "%author2,
-              "echo content4 > file1",
-              "git commit --author=\"%s\" -am \"commit-4\" "%author1c]
-    cmd=" && ".join(commands)
-    
-    output,status=safe_check_output_with_status(cmd)
+        shutil.rmtree(path, ignore_errors=True)
+    shutil.copytree(TURTLE_ME_PATH, path, symlinks=True)
+
+    author1a = "Jim Jim <jim@jim.org>"
+    author1b = "Jim Jim <jimmy@jimmy.org>"
+    author1c = "Jimbo Jimbo <jim@jimbo.org>"
+    author2 = "Joe Joe <joe@joe.org>"
+
+    commands = ["cd "+path,
+                "git init",
+                "echo content1 > file1",
+                "git add file1",
+                "git commit --author=\"%s\" -am \"commit-1\" " % author1a,
+                "echo content2 > file1",
+                "git commit --author=\"%s\" -am \"commit-2\" " % author1b,
+                "echo content3 > file1",
+                "git commit --author=\"%s\" -am \"commit-3\" " % author2,
+                "echo content4 > file1",
+                "git commit --author=\"%s\" -am \"commit-4\" " % author1c]
+    cmd = " && ".join(commands)
+
+    output, status = safe_check_output_with_status(cmd)
     if status != 0:
-        raise ValueError("status '%s' from cmd '%s' output =\n%s"%(status,cmd,output))
-        
+        raise ValueError("status '%s' from cmd '%s' output =\n%s" % (status, cmd, output))
+
     return path
+
 
 def setup_tmp_smco501_home():
     """
@@ -53,60 +55,60 @@ def setup_tmp_smco501_home():
         does not produce w011
         does produce w012
     """
-    
-    source=MOCK_FILES+"heimdall/homes/smco501"
-    target=TMP_FOLDER+"smco501"
-    
+
+    source = MOCK_FILES+"heimdall/homes/smco501"
+    target = TMP_FOLDER+"smco501"
+
     if os.path.exists(target):
         shutil.rmtree(target)
-    shutil.copytree(source,target,symlinks=True)
-        
-    xml_path=target+"/xflow.suites.xml"
-    
-    root=xml_cache.get(xml_path)
-    
-    
-    exp=MOCK_FILES+"heimdall/suites_without_codes/w011"    
-    root.xpath("//Exp")[0].text=exp
-    
-    exp=MOCK_FILES+"heimdall/suites_with_codes/w012"
-    root.xpath("//Exp")[1].text=exp
-        
-    with open(xml_path,"w") as f:
-        data=etree.tostring(root).decode("utf8")
+    shutil.copytree(source, target, symlinks=True)
+
+    xml_path = target+"/xflow.suites.xml"
+
+    root = xml_cache.get(xml_path)
+
+    exp = MOCK_FILES+"heimdall/suites_without_codes/w011"
+    root.xpath("//Exp")[0].text = exp
+
+    exp = MOCK_FILES+"heimdall/suites_with_codes/w012"
+    root.xpath("//Exp")[1].text = exp
+
+    with open(xml_path, "w") as f:
+        data = etree.tostring(root).decode("utf8")
         f.write(data)
-        
+
     return target
+
 
 def setup_tmp_experiment1():
     """
     Returns a path to an experiment that produces the b001, w015 codes.
     """
-    
-    source=MOCK_FILES+"heimdall/suites_with_codes/e005"
-    target=TMP_FOLDER+"b001"
-    
+
+    source = MOCK_FILES+"heimdall/suites_with_codes/e005"
+    target = TMP_FOLDER+"b001"
+
     if os.path.exists(target):
         shutil.rmtree(target)
-    shutil.copytree(source,target,symlinks=True)
-        
-    xml_path=target+"/resources/module1/module2/task1.xml"
-    
-    root=xml_cache.get(xml_path)
-    
+    shutil.copytree(source, target, symlinks=True)
+
+    xml_path = target+"/resources/module1/module2/task1.xml"
+
+    root = xml_cache.get(xml_path)
+
     "this is the dynamic value to insert, which changes depending on who runs the test suite where"
-    exp=MOCK_FILES+"heimdall/suites_with_codes/w001"
-    
+    exp = MOCK_FILES+"heimdall/suites_with_codes/w001"
+
     for element in root.xpath("//DEPENDS_ON"):
-        element.set("exp",exp)
-        
-    with open(xml_path,"w") as f:
-        data=etree.tostring(root).decode("utf8")
+        element.set("exp", exp)
+
+    with open(xml_path, "w") as f:
+        data = etree.tostring(root).decode("utf8")
         f.write(data)
-        
+
     "create new git repo so there are uncommited changes for w15"
-    cmd="cd %s ; git init ; sleep 0.1"%target
-    output,status=safe_check_output_with_status(cmd)
-    assert status==0
-    
+    cmd = "cd %s ; git init ; sleep 0.1" % target
+    output, status = safe_check_output_with_status(cmd)
+    assert status == 0
+
     return target

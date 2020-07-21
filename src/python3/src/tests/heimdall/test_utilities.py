@@ -18,93 +18,94 @@ from utilities import guess_user_home_from_path, pretty
 from utilities.maestro import get_weird_assignments_from_config_path
 from heimdall.file_cache import file_cache
 
+
 class TestUtilities(unittest.TestCase):
-    
+
     def test_file_cache(self):
-        path=MOCK_FILES+"heimdall/suites_without_codes/w003/modules/module1/link-to-task1.tsk"
-        result=file_cache.is_broken_symlink(path)
+        path = MOCK_FILES+"heimdall/suites_without_codes/w003/modules/module1/link-to-task1.tsk"
+        result = file_cache.is_broken_symlink(path)
         self.assertFalse(result)
-        
-        path=MOCK_FILES+"heimdall/suites_with_codes/e004/modules/main/broken-symlink"
-        result=file_cache.is_broken_symlink(path)
+
+        path = MOCK_FILES+"heimdall/suites_with_codes/e004/modules/main/broken-symlink"
+        result = file_cache.is_broken_symlink(path)
         self.assertTrue(result)
-            
+
     def test_csv_dictionary(self):
-        result=get_dictionary_list_from_csv(CSV_DICTIONARY)
-        self.assertEqual(len(result),2)
-        self.assertEqual(result[1]["name"],"george")
-        
-        self.assertIn("noise",result[0])
-        
+        result = get_dictionary_list_from_csv(CSV_DICTIONARY)
+        self.assertEqual(len(result), 2)
+        self.assertEqual(result[1]["name"], "george")
+
+        self.assertIn("noise", result[0])
+
     def test_git_authors(self):
-        path=setup_tmp_git_author_repo()        
-        result=scan_git_authors(path)
+        path = setup_tmp_git_author_repo()
+        result = scan_git_authors(path)
         self.assertTrue(result)
-        
-        self.assertEqual(result[0]["name"],"Jimbo Jimbo")
-        self.assertEqual(result[1]["name"],"Joe Joe")
-        
-        emails=result[0]["emails"]
-        self.assertEqual(len(emails),3)
-    
-    def test_get_weird_assignments_from_config(self):     
-        path=MOCK_FILES+"weird-config-semi-xml.cfg"
-        result=get_weird_assignments_from_config_path(path)
-        expected={"input":{"anl_archives":"${__archives__}"},
-                  "executables":{"editfst":"editfst",
-                                 "r.read_link":"r.read_link",
-                                 "copy":"${ASSIMCYCLE_TRANSFER_COMMAND}"},
-                  "output":{"anlalt_nosfc":"${ASSIMCYCLE_getalt_output}/${ASSIMCYCLE_DATE}_000_nosfc"}
-                  }
-        self.assertEqual(result,expected)
-        
-        path=MOCK_FILES+"weird-config-semi-xml2.cfg"
-        result=get_weird_assignments_from_config_path(path)
-        self.assertEqual(len(result["input"]),3)
-        self.assertEqual(len(result["executables"]),14)
-        self.assertEqual(len(result["output"]),0)
-        
+
+        self.assertEqual(result[0]["name"], "Jimbo Jimbo")
+        self.assertEqual(result[1]["name"], "Joe Joe")
+
+        emails = result[0]["emails"]
+        self.assertEqual(len(emails), 3)
+
+    def test_get_weird_assignments_from_config(self):
+        path = MOCK_FILES+"weird-config-semi-xml.cfg"
+        result = get_weird_assignments_from_config_path(path)
+        expected = {"input": {"anl_archives": "${__archives__}"},
+                    "executables": {"editfst": "editfst",
+                                    "r.read_link": "r.read_link",
+                                    "copy": "${ASSIMCYCLE_TRANSFER_COMMAND}"},
+                    "output": {"anlalt_nosfc": "${ASSIMCYCLE_getalt_output}/${ASSIMCYCLE_DATE}_000_nosfc"}
+                    }
+        self.assertEqual(result, expected)
+
+        path = MOCK_FILES+"weird-config-semi-xml2.cfg"
+        result = get_weird_assignments_from_config_path(path)
+        self.assertEqual(len(result["input"]), 3)
+        self.assertEqual(len(result["executables"]), 14)
+        self.assertEqual(len(result["output"]), 0)
+
     def test_is_editor_swapfile(self):
-        swapfiles=["/folder1/.file1.swp",
-                   "/folder1/.file1.swo",
-                   "/folder1/#file1#",
-                   "/folder1/.#file1"]
-        
+        swapfiles = ["/folder1/.file1.swp",
+                     "/folder1/.file1.swo",
+                     "/folder1/#file1#",
+                     "/folder1/.#file1"]
+
         for path in swapfiles:
-            self.assertTrue(is_editor_swapfile(path),msg="path = '%s'"%path)
-        
-        not_swapfiles=["/folder1/.file.swf",
-                       "/folder1/.file.swp.txt",
-                       "/folder1/file.swp",
-                       "/folder1/#file1#.txt"]
-                       
+            self.assertTrue(is_editor_swapfile(path), msg="path = '%s'" % path)
+
+        not_swapfiles = ["/folder1/.file.swf",
+                         "/folder1/.file.swp.txt",
+                         "/folder1/file.swp",
+                         "/folder1/#file1#.txt"]
+
         for path in not_swapfiles:
-            self.assertFalse(is_editor_swapfile(path),msg="path = '%s'"%path)
-        
+            self.assertFalse(is_editor_swapfile(path), msg="path = '%s'" % path)
+
     def test_guess_user_home_from_path(self):
-        
+
         def r(path):
             return os.path.realpath(path)+"/"
-        
-        path=MOCK_FILES+"/heimdall/homes/smco500/maestro_suites/preop_zdps/"
-        expected=r(MOCK_FILES+"/heimdall/homes/smco502/")
-        result=guess_user_home_from_path(path)
-        self.assertEqual(result,expected)
-        
+
+        path = MOCK_FILES+"/heimdall/homes/smco500/maestro_suites/preop_zdps/"
+        expected = r(MOCK_FILES+"/heimdall/homes/smco502/")
+        result = guess_user_home_from_path(path)
+        self.assertEqual(result, expected)
+
         "use realpath to explore parent folders for home tests"
-        path=MOCK_FILES+"/heimdall/suites_with_codes/w005/"
-        expected=r(MOCK_FILES+"/heimdall/homes/smco502/")
-        result=guess_user_home_from_path(path)
-        self.assertEqual(result,expected)
-        
-        path=os.environ["HOME"]+"/this-folder-does-not-exist-probably/123/"
-        expected=r(os.environ["HOME"]+"/")
-        result=guess_user_home_from_path(path)
-        self.assertEqual(result,expected)
-                
+        path = MOCK_FILES+"/heimdall/suites_with_codes/w005/"
+        expected = r(MOCK_FILES+"/heimdall/homes/smco502/")
+        result = guess_user_home_from_path(path)
+        self.assertEqual(result, expected)
+
+        path = os.environ["HOME"]+"/this-folder-does-not-exist-probably/123/"
+        expected = r(os.environ["HOME"]+"/")
+        result = guess_user_home_from_path(path)
+        self.assertEqual(result, expected)
+
     def test_nodelogger_signals(self):
-        
-        task_text="""${destination}/${ENVAR_output_banco_name}.postalt.${outputfile}
+
+        task_text = """${destination}/${ENVAR_output_banco_name}.postalt.${outputfile}
                     fi
                 done
             fi ## Fin du 'else' relie au 'if [ -f ${TASK_INPUT}/${target} ]'
@@ -118,39 +119,31 @@ class TestUtilities(unittest.TestCase):
                 ssh ${destination%%:*} mkdir -p ${destination##*:}/${ENVAR_output_banco_name}/postalt
             fi
 """
-        results=get_nodelogger_signals_from_task_text(task_text)
-        signals=[r["signal"] for r in results]
-        expected=["infox","abort"]
-        self.assertEqual(signals,expected)
-        
+        results = get_nodelogger_signals_from_task_text(task_text)
+        signals = [r["signal"] for r in results]
+        expected = ["infox", "abort"]
+        self.assertEqual(signals, expected)
+
     def test_context_guess(self):
-        paths={CONTEXT_GUESS_HOMES+"smco500/.suites/zdps":SCANNER_CONTEXT.OPERATIONAL,
-               CONTEXT_GUESS_HOMES+"smco502/.suites/zdps":SCANNER_CONTEXT.OPERATIONAL,
-               CONTEXT_GUESS_HOMES+"smco502/maestro_suites/zdps":SCANNER_CONTEXT.OPERATIONAL,
-               CONTEXT_GUESS_HOMES+"smco502/.suites/preop_zdps":SCANNER_CONTEXT.PREOPERATIONAL,
-               CONTEXT_GUESS_HOMES+"smco501/.suites/zdps":SCANNER_CONTEXT.PARALLEL,
-               CONTEXT_GUESS_HOMES+"smco500/maestro_suites/zdps":SCANNER_CONTEXT.OPERATIONAL,
-               G0_MINI_ME_PATH:SCANNER_CONTEXT.TEST}
-        
-        for path,expected in paths.items():
-            msg="\npath = '%s'"%path
-            self.assertTrue(os.path.exists(path),msg=msg)
-            result=guess_scanner_context_from_path(path)
-            self.assertEqual(result,expected,msg=msg)
-            
+        paths = {CONTEXT_GUESS_HOMES+"smco500/.suites/zdps": SCANNER_CONTEXT.OPERATIONAL,
+                 CONTEXT_GUESS_HOMES+"smco502/.suites/zdps": SCANNER_CONTEXT.OPERATIONAL,
+                 CONTEXT_GUESS_HOMES+"smco502/maestro_suites/zdps": SCANNER_CONTEXT.OPERATIONAL,
+                 CONTEXT_GUESS_HOMES+"smco502/.suites/preop_zdps": SCANNER_CONTEXT.PREOPERATIONAL,
+                 CONTEXT_GUESS_HOMES+"smco501/.suites/zdps": SCANNER_CONTEXT.PARALLEL,
+                 CONTEXT_GUESS_HOMES+"smco500/maestro_suites/zdps": SCANNER_CONTEXT.OPERATIONAL,
+                 G0_MINI_ME_PATH: SCANNER_CONTEXT.TEST}
+
+        for path, expected in paths.items():
+            msg = "\npath = '%s'" % path
+            self.assertTrue(os.path.exists(path), msg=msg)
+            result = guess_scanner_context_from_path(path)
+            self.assertEqual(result, expected, msg=msg)
+
     def test_get_levenshtein_pairs(self):
-        items=["cat","ppp1","ppp2"]
-        result=get_levenshtein_pairs(items)
-        expected={"pairs":[["ppp1","ppp2"]],
-                  "no_match":["cat"],
-                  "matches":["ppp1","ppp2"]}
-        msg="\nexpected = \n"+pretty(expected)+"\nresult = \n"+pretty(result)
-        self.assertEqual(result,expected,msg=msg)
-        
-        
-        
-        
-        
-        
-        
-        
+        items = ["cat", "ppp1", "ppp2"]
+        result = get_levenshtein_pairs(items)
+        expected = {"pairs": [["ppp1", "ppp2"]],
+                    "no_match": ["cat"],
+                    "matches": ["ppp1", "ppp2"]}
+        msg = "\nexpected = \n"+pretty(expected)+"\nresult = \n"+pretty(result)
+        self.assertEqual(result, expected, msg=msg)

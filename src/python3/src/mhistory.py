@@ -26,28 +26,29 @@ from history import get_yyyymmddhh
 from utilities import docopt, print_green
 from history import scan_maestro_statuses, print_results, save_report_html
 
-start_datestamp=get_yyyymmddhh(hours_offset=-12)
-end_datestamp=get_yyyymmddhh()
-__doc__=__doc__.replace("$HOME",os.environ["HOME"])
-__doc__=__doc__.replace("$START_DATESTAMP",start_datestamp)
-__doc__=__doc__.replace("$END_DATESTAMP",end_datestamp)
+start_datestamp = get_yyyymmddhh(hours_offset=-12)
+end_datestamp = get_yyyymmddhh()
+__doc__ = __doc__.replace("$HOME", os.environ["HOME"])
+__doc__ = __doc__.replace("$START_DATESTAMP", start_datestamp)
+__doc__ = __doc__.replace("$END_DATESTAMP", end_datestamp)
 
-def main(args):    
-    start=args["--start"]
-    end=args["--end"]
-    html_path=args["--html-path"].replace("$UNIX_TIME",str(round(time.time())))
-    verbose=not args["--html"] and not args["--json"]
 
-    results=scan_maestro_statuses(args["<maestro-experiment>"], start, end,
-                                  fill_in_date_gaps=True)
+def main(args):
+    start = args["--start"]
+    end = args["--end"]
+    html_path = args["--html-path"].replace("$UNIX_TIME", str(round(time.time())))
+    verbose = not args["--html"] and not args["--json"]
+
+    results = scan_maestro_statuses(args["<maestro-experiment>"], start, end,
+                                    fill_in_date_gaps=True)
 
     if args["--json"]:
-        print(json.dumps(results,indent=4,sort_keys=1))
+        print(json.dumps(results, indent=4, sort_keys=1))
     elif verbose:
         print_results(results)
-        
+
     if args["--html"] or args["--browser"]:
-        save_report_html(results,html_path,verbose=verbose)
+        save_report_html(results, html_path, verbose=verbose)
 
     if args["--html"]:
         print(html_path)
@@ -55,9 +56,10 @@ def main(args):
     if args["--browser"]:
         print_green(f"Opening '{html_path}' with a web browser.")
         webbrowser.get("firefox").open(html_path)
-        
+
     if verbose:
         print_green("Done.")
+
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="1.0")

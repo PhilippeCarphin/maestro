@@ -12,13 +12,16 @@ class CURSES_COLOR_INDEX:
     PURPLE = 6
     AQUA = 7
     SILVER = 8
-CURSES_COLOR_INDEXES=(CURSES_COLOR_INDEX.GREY,
-                      CURSES_COLOR_INDEX.RED,
-                      CURSES_COLOR_INDEX.GREEN,
-                      CURSES_COLOR_INDEX.ORANGE,
-                      CURSES_COLOR_INDEX.BLUE,
-                      CURSES_COLOR_INDEX.PURPLE,
-                      CURSES_COLOR_INDEX.SILVER)
+
+
+CURSES_COLOR_INDEXES = (CURSES_COLOR_INDEX.GREY,
+                        CURSES_COLOR_INDEX.RED,
+                        CURSES_COLOR_INDEX.GREEN,
+                        CURSES_COLOR_INDEX.ORANGE,
+                        CURSES_COLOR_INDEX.BLUE,
+                        CURSES_COLOR_INDEX.PURPLE,
+                        CURSES_COLOR_INDEX.SILVER)
+
 
 class COLORS:
     RED = 41
@@ -36,8 +39,3 @@ class COLORS:
     MAGENTA = 105
     TURQUOISE = 106
     WHITE = 107
-
-    
-
-
-

@@ -20,61 +20,60 @@ Options:
     --verbose                    Enable verbose debug logging in the "$HOME/logs/mflow" files.
     -h --help   Show this description.
 """
+from utilities import clamp
+from utilities.docopt import docopt
 import os
 
 from constants import SCANNER_CONTEXTS
 from heimdall import ExperimentScanner
 from utilities.heimdall.docstring import adjust_docstring
-__doc__=adjust_docstring(__doc__)
+__doc__ = adjust_docstring(__doc__)
 
-from utilities.docopt import docopt
-from utilities import clamp
 
 def main(args):
     """
     Parse and validate the commandline options before proceeding to run the scan.
     """
-    
-    experiment_path=args["--exp"]
+
+    experiment_path = args["--exp"]
     if experiment_path.startswith("~"):
-        experiment_path=os.path.expanduser(experiment_path)
-        
-    context=args["--context"]
+        experiment_path = os.path.expanduser(experiment_path)
+
+    context = args["--context"]
     if context and context not in SCANNER_CONTEXTS:
-        print("Invalid context '%s'. Context must be one of:\n    %s"%(context,"\n    ".join(SCANNER_CONTEXTS)))
+        print("Invalid context '%s'. Context must be one of:\n    %s" % (context, "\n    ".join(SCANNER_CONTEXTS)))
         return
-        
+
     print("Scanning maestro experiment.")
-    
-    scanner=ExperimentScanner(experiment_path,
-                              context=context,
-                              operational_home=args["--op-home"],
-                              parallel_home=args["--par-home"],
-                              critical_error_is_exception=False)
-    
+
+    scanner = ExperimentScanner(experiment_path,
+                                context=context,
+                                operational_home=args["--op-home"],
+                                parallel_home=args["--par-home"],
+                                critical_error_is_exception=False)
+
     try:
-        max_repeat=int(args["--max-repeat"])
-        max_repeat=max(0,max_repeat)
+        max_repeat = int(args["--max-repeat"])
+        max_repeat = max(0, max_repeat)
     except:
         print("Bad --max-repeat value. Must be an integer.")
         return
-    
-    level=args["--level"].lower()
+
+    level = args["--level"].lower()
     if not level or level[0] not in "cewib":
         print("Bad --level option. See -h for more info.")
         return
-    level=level[0]
-    
-    whitelist=[] if not args["--whitelist"] else args["--whitelist"].split(",")
-    blacklist=[] if not args["--blacklist"] else args["--blacklist"].split(",")
-    
+    level = level[0]
+
+    whitelist = [] if not args["--whitelist"] else args["--whitelist"].split(",")
+    blacklist = [] if not args["--blacklist"] else args["--blacklist"].split(",")
+
     scanner.print_report(level=level,
                          max_repeat=max_repeat,
                          whitelist=whitelist,
                          blacklist=blacklist)
 
+
 if __name__ == "__main__":
     args = docopt(__doc__, version="1.0")
     main(args)
-
-
