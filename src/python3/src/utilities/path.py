@@ -121,7 +121,7 @@ def iterative_deepening_search(rootdir,
 def timeout_search(rootdir,depth,max_seconds,follow_links=True):
     """
     Returns a list of all files found in rootdir at this depth.
-    Returns an empty list of the search takes longer than max_seconds.
+    Returns an empty list if the search takes longer than max_seconds.
     """
     
     follow_links_option="-L" if follow_links else ""

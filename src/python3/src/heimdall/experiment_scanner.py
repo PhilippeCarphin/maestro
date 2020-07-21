@@ -16,7 +16,7 @@ from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile
 from utilities.heimdall.git import scan_git_authors
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
-from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target
+from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target, iterative_deepening_search
 from utilities.qstat import get_qstat_data_from_text, get_qstat_data, get_resource_limits_from_qstat_data
 from utilities.shell import safe_check_output_with_status
 
@@ -290,7 +290,24 @@ class ExperimentScanner():
                                       context=self.context,
                                       bad=msg)
                 self.add_message(code, description)
-
+                
+        "bad archive and protocol files"
+        for path in self.hub_files:
+            basename=os.path.basename(path)
+            
+            if basename==".protocole":
+                code = "b012"
+                description = hmm.get(code,
+                                      bad=path)
+                self.add_message(code, description)
+            
+            if basename.startswith(".protocole_") or basename.startswith(".archive_monitor_"):
+                if not file_cache.islink(path):
+                    code = "w017"
+                    description = hmm.get(code,
+                                          bad=path)
+                    self.add_message(code, description)
+        
         """
         dissimilar targets
         for example eccc-ppp3 and eccc-ppp4 should have nearly identical targets
@@ -1011,6 +1028,13 @@ class ExperimentScanner():
                 config_files.append(path)
             elif path.endswith(".xml"):
                 xml_files.append(path)
+        
+        """
+        hub files
+        This search may be endless, so cut off the search after some time.
+        """
+        max_seconds=1
+        hub_files=iterative_deepening_search(self.path+"hub",max_seconds)
 
         def sls(items):
             "sls is short for sorted, list, set"
@@ -1024,6 +1048,9 @@ class ExperimentScanner():
 
         "all cfg files"
         self.config_files = sls(config_files)
+        
+        "all, or many hub files to some depth"
+        self.hub_files = sls(hub_files)
 
         "all flow.xml files"
         self.flow_files = sls(flow_files)
