@@ -2885,6 +2885,8 @@ proc Overview_quit {} {
          }
       }
    }
+
+
    ThreadPool_quit
 
    catch { 
@@ -2893,8 +2895,16 @@ proc Overview_quit {} {
    }
    
    ::log::log notice "xflow_overview exited normally..."
-   
+
+   set fileLoggerThreadId [SharedData_getMiscData FILE_LOGGER_THREAD]
+   if { ${fileLoggerThreadId} != "" && [thread::exists ${fileLoggerThreadId}] } {
+      thread::release ${fileLoggerThreadId}
+   }
+
+   # destroy $top
    exit 0
+
+
 }
 
 proc Overview_parseCmdOptions {} {
