@@ -43,10 +43,10 @@ proc LogReader_readMonitorDatestamps { {start_delay -1} } {
 
       foreach { key value } [array get LogReader_Datestamps] {
          if [ catch {
-            # puts "LogReader_readMonitorDatestamps [thread::id] found key:${key} value:${value}"
+            
             set expPath [lindex ${value} 0]
             set datestamp [lindex ${value} 1]
-            # puts "LogReader_readMonitorDatestamps LogReader_readFile ${expPath} ${datestamp}"
+            
             LogReader_readFile ${expPath} ${datestamp} all
             set offset [SharedData_getExpDatestampOffset ${expPath} ${datestamp}]
             
@@ -54,9 +54,9 @@ proc LogReader_readMonitorDatestamps { {start_delay -1} } {
               # send heartbeat with the overview
               # It could be that the key was modified while I'm processing this loop so before
 	      # I resend the heartbeat I re-check that the key still exists
-	      # if { [array get LogReader_Datestamps ${key}] != "" } {
-	         # SharedData_setExpHeartbeat ${expPath} ${datestamp} [thread::id] [clock seconds] ${offset}
-              # }
+	      
+	         
+              
            }
          } message ] {
             ::log::log notice "ERROR in LogReader_readMonitorDatestamps: key:${key} ${message}"
@@ -81,17 +81,13 @@ proc LogReader_readMonitorDatestamps { {start_delay -1} } {
 #         this is the default under normal monitoring usage
 #    no_overview: message entries sent to xflow and msg_center when applicable
 #                 you would use this for example, when the user chooses an old datestamp through xflow, the overview does not not to be updated
-#
 #    refresh_flow: message entries only sent to xflow
 #                 You would use this for example, when the flow is refreshed by the user, you don't want the overview to be flickering with
 #		  any update status from an already processed log file
-# 
 # read_toplog: is used to read ${datestamp}_toplog file instead of ${datestamp}_nodelog file for performance purpose
 #              usually set to true by overview ; for now, the reading of toplog is only done at overview startup.
 #              after startup, it reverts to nodelog for any further updates.
-#
 # use_log_cache: is used to tell logreader to start reading at a certain point in the log file as opposed to reading from start
-# 
 proc LogReader_startExpLogReader { exp_path datestamp read_type {read_toplog false} {use_log_cache false} } {
    global MSG_CENTER_THREAD_ID CREADER_FIELD_SEPARATOR
    ::log::log debug "LogReader_startExpLogReader  exp_path:$exp_path datestamp:$datestamp read_type:${read_type} read_toplog:${read_toplog} use_log_cache:${use_log_cache}"
@@ -103,7 +99,7 @@ proc LogReader_startExpLogReader { exp_path datestamp read_type {read_toplog fal
 
    if { ! [info exists MSG_CENTER_THREAD_ID] } {
       if { [SharedData_getMiscData OVERVIEW_MODE] == true } {
-         # Utils_logInit
+         
          set MSG_CENTER_THREAD_ID [SharedData_getMiscData OVERVIEW_THREAD_ID]
       } else {
          set MSG_CENTER_THREAD_ID [thread::id]
@@ -155,11 +151,11 @@ proc LogReader_startExpLogReader { exp_path datestamp read_type {read_toplog fal
       # send first heartbeat
       if { [SharedData_getMiscData OVERVIEW_MODE] == true && [SharedData_getMiscData STARTUP_DONE] == true } {
          set offset [SharedData_getExpDatestampOffset ${exp_path} ${datestamp}]
-         # thread::send -async [SharedData_getMiscData OVERVIEW_THREAD_ID] "Overview_addHeartbeatDatestamp ${exp_path} ${datestamp}"
-         # SharedData_setExpHeartbeat ${exp_path} ${datestamp} [thread::id] [clock seconds] ${offset}
+         
+         
       }
 
-      # SharedData_setExpNodeLogCache ${exp_path} ${datestamp} true
+      
    }
 
    } message ] {
@@ -173,14 +169,12 @@ proc LogReader_startExpLogReader { exp_path datestamp read_type {read_toplog fal
 # used at xflow startup to retrieve statuses in logs: 
 # executes C logreader that outputs tsv elements
 # then set the tsv structures in the environment
-#
 # The returned output from logreader contains 3 lines
 # line1 contains a list of node names with statuses and stats; the nodes must have entries in the log file to appear here
 #       each nodename, statuses, stats keyword are separated by a backslash character
 # line2 contains a list of all node names and avg; even nodes that do not have entries in the log file (i.e. have not executed yet)
 #       each nodename, avg keyword are separated by a backslash character
 # line 3 contains the read offset of the last line read by logreader
-#
 proc LogReader_readTsv { exp_path datestamp } {
    ::log::log debug "LogReader_readTsv execution on ${exp_path}/logs/${datestamp}_nodelog"
    if { ![file exists ${exp_path}/logs/${datestamp}_nodelog] } {
@@ -209,12 +203,11 @@ proc LogReader_readTsv { exp_path datestamp } {
                set tmpnode $tsvel
                set flowNode [SharedData_getExpNodeMapping ${exp_path} ${datestamp} ${tmpnode}]
                set pair 1
-               # puts "LogReader_readTsv statuses tsvel:$tsvel set pair:$pair"
+               
             } elseif { $pair == 1 } {
                # the second element of the list contains the node statuses
 	       # example:
 	       # statuses {+1 {end 20160317.18:53:33} +2 {end 20160317.18:53:49} +3 {end 20160317.18:53:58} +4^last {end 20160317.18:53:39} all {end 20160317.18:53:58} }
-	       #
                set runtimeVar "SharedFlowNode_${exp_path}_${datestamp}_runtime"
                set cmd "tsv::keylset ${runtimeVar} ${flowNode} ${tsvel}"
 	       ::log::log debug "LogReaderTsv setting statuses cmd:$cmd"
@@ -244,7 +237,7 @@ proc LogReader_readTsv { exp_path datestamp } {
                set tmpnode $tsvel
                set flowNode [SharedData_getExpNodeMapping ${exp_path} ${datestamp} ${tmpnode}]
                set pair 1
-               # puts "LogReader_readTsv statuses tsvel:$tsvel set pair:$pair"
+               
             } elseif { $pair == 1 } {
                # the second element of the list contains the node avg values
 	       # example:
@@ -267,7 +260,7 @@ proc LogReader_readTsv { exp_path datestamp } {
       }
 
       }
-      # enf of switch
+      
       incr lineCount
    }
 
@@ -360,19 +353,19 @@ proc processTsvStatuses { exp_path datestamp flownode } {
       }
    } else {
       foreach { stored_member status } [array get statuses] {
-         # puts "flownode:$flownode stored_member:$stored_member status:$status"
+         
          if { $stored_member != "null" && $stored_member != "all" } {
             if { [tsv::keylget ${displayInfoVar} ${flownode} latest_member {}] == 0 || [tsv::keylget ${displayInfoVar} ${flownode} latest_member] == "" } {
                tsv::keylset ${displayInfoVar} ${flownode} latest_member $stored_member
                tsv::keylset ${displayInfoVar} ${flownode} ${stored_member}_timestamp [lindex $status 1]
-	       # puts "saving tmp_latest_member:$stored_member ${stored_member}_timestamp [lindex $status 1] " 
+	       
             } else {
                set tmp_latest_member [tsv::keylget ${displayInfoVar} ${flownode} latest_member]
-	       # puts "tmp_latest_member:$tmp_latest_member"
+	       
                if { [tsv::keylget ${displayInfoVar} ${flownode} ${tmp_latest_member}_timestamp {}] != 0 } {
                   set oldtime [tsv::keylget ${displayInfoVar} ${flownode} ${tmp_latest_member}_timestamp]
                   set newtime [lindex $status 1]
-	          # puts "tmp_latest_member:$tmp_latest_member oldtime:$oldtime newtime:$newtime"
+	          
                   if { [SharedFlowNode_isTimestampOlder $newtime $oldtime] == 1 } {
                      tsv::keylset ${displayInfoVar} ${flownode} latest_member $stored_member
                      tsv::keylset ${displayInfoVar} ${flownode} ${stored_member}_timestamp [lindex $status 1]
@@ -386,10 +379,9 @@ proc processTsvStatuses { exp_path datestamp flownode } {
 
 # read_type is one of all, no_overview, refresh_flow, msg_center
 # see LogReader_startExpLogReader for more info
-#
 proc LogReader_readFile { exp_path datestamp {read_type no_overview} {read_toplog false} } {
    global LOGREADER_UPDATE_NODES_${exp_path}_${datestamp} env
-   # ::log::log debug "LogReader_readFile exp_path:${exp_path} datestamp:${datestamp} read_type:${read_type}"
+   
    ::log::log debug "LogReader_readFile exp_path:${exp_path} datestamp:${datestamp} read_type:${read_type} read_toplog:${read_toplog}"
    set LOGREADER_UPDATE_NODES_${exp_path}_${datestamp}  ""
    set isOverviewMode [SharedData_getMiscData OVERVIEW_MODE]
@@ -430,7 +422,7 @@ proc LogReader_readFile { exp_path datestamp {read_type no_overview} {read_toplo
       ::log::log debug "LogReader_readFile exp_path:${exp_path} datestamp:${datestamp} logfile:${logfile}"
       if { [file exists $logfile] } {
          set f_logfile [ open $logfile r ]
-	 # fconfigure ${f_logfile} -buffering line
+	 
          flush stdout
          
          if { ${isStartupDone} == "true" } {
@@ -496,13 +488,13 @@ proc LogReader_readFile { exp_path datestamp {read_type no_overview} {read_toplo
       SharedData_setExpUpdatedNodes ${exp_path} ${datestamp} [set LOGREADER_UPDATE_NODES_${exp_path}_${datestamp}]
       # let gui knows that he needs to redraw the flow
       if { ${isOverviewMode} == true } {
-         # ::log::log notice "LogReader_readFile xflow_redrawNodesEvent ${exp_path} ${datestamp}"
+         
          ::log::log debug "LogReader_readFile xflow_redrawNodesEvent ${exp_path} ${datestamp}"
-         # puts "LogReader_readFile xflow_redrawNodesEvent ${exp_path} ${datestamp}"
+         
          thread::send -async ${overviewThreadId} "xflow_redrawNodesEvent ${exp_path} ${datestamp}" SendDone
          vwait SendDone
          ::log::log debug "LogReader_readFile xflow_redrawNodesEvent ${exp_path} ${datestamp} DONE"
-         # ::log::log notice "LogReader_readFile xflow_redrawNodesEvent ${exp_path} ${datestamp} DONE"
+         
       } else {
          # in non-overview mode, xflow and LogReader runs within same thread
          # we are sending the request through the thread messaging  instead of direct call
@@ -517,7 +509,7 @@ proc LogReader_readFile { exp_path datestamp {read_type no_overview} {read_toplo
 # NOTE: this is not used for now
 proc LogReader_processCreaderLine { _exp_path _datestamp _line _toOverview _ToFlow _toMsgCenter } {
    global CREADER_FIELD_SEPARATOR MSG_CENTER_THREAD_ID
-   # puts "LogReader_processCreaderLine _line:$_line CREADER_FIELD_SEPARATOR:$CREADER_FIELD_SEPARATOR"
+   
    # split the data for the line based on the separator !~!
    set dataList [textutil::splitx ${_line} ${CREADER_FIELD_SEPARATOR}]
    # assign each value with the respective order
@@ -552,13 +544,13 @@ proc LogReader_processCreaderLine { _exp_path _datestamp _line _toOverview _ToFl
          if { ${node} == [SharedData_getExpRootNode ${_exp_path} ${_datestamp}] } {
             ::log::log debug "LogReader_processCreaderLine to overview time:$timestamp node=$node msgtype=$msgtype"
             ::log::log notice "LogReader_processCreaderLine to overview time:$timestamp node=$node datestamp:${_datestamp} msgtype=$msgtype"
-            # puts "LogReader_processLine Overview_updateExp [thread::id] \"${_exp_path}\" \"${_datestamp}\" \"${msgtype}\" \"${timestamp}\""
+            
             # sends the command in async mode to avoid potential deadlock... however the vwait ensures that it waits for the
             # command to be finished before going further
             thread::send -async [SharedData_getMiscData OVERVIEW_THREAD_ID] \
                "Overview_updateExp [thread::id] \"${_exp_path}\" \"${_datestamp}\" \"${msgtype}\" \"${timestamp}\"" SendDone
             vwait SendDone
-            # puts "LogReader_processLine Overview_updateExp [thread::id] \"${_exp_path}\" \"${_datestamp}\" \"${msgtype}\" \"${timestamp}\" DONE"
+            
          }
       }
    }
@@ -650,15 +642,15 @@ proc LogReader_processLine { _exp_path _datestamp _line _toOverview _ToFlow _toM
                }
                if { ${node} == [SharedData_getExpRootNode ${_exp_path} ${_datestamp}] } {
                   ::log::log debug "LogReader_processLine to overview time:$timestamp node=$node type=$type"
-                  # ::log::log notice "LogReader_processLine to overview time:$timestamp node=$node datestamp:${_datestamp} type=$type"
-                  # puts "LogReader_processLine Overview_updateExp [thread::id] \"${_exp_path}\" \"${_datestamp}\" \"${type}\" \"${timestamp}\""
+                  
+                  
                   # sends the command in async mode to avoid potential deadlock... however the vwait ensures that it waits for the
                   # command to be finished before going further
                   thread::send -async [SharedData_getMiscData OVERVIEW_THREAD_ID] \
                   "Overview_updateExp [thread::id] \"${_exp_path}\" \"${_datestamp}\" \"${type}\" \"${timestamp}\"" SendDone
                   vwait SendDone
-                  # ::log::log notice "LogReader_processLine to overview time:$timestamp node=$node datestamp:${_datestamp} type=$type DONE"
-                  # puts "LogReader_processLine Overview_updateExp [thread::id] \"${_exp_path}\" \"${_datestamp}\" \"${type}\" \"${timestamp}\" DONE"
+                  
+                  
                }
             }
          }
@@ -667,7 +659,7 @@ proc LogReader_processLine { _exp_path _datestamp _line _toOverview _ToFlow _toM
 }
 
 proc LogReader_processFlowLine { _exp_path _node _datestamp _type _loopExt _timestamp {_msg ""} } {
-  #  puts " LogReader_processFlowLine _exp_path:${_exp_path} node:${_node} _datestamp:${_datestamp} type:${_type} _loopExt:${_loopExt}" 
+  
    # node & signal is mandatory to be processed
    # else the line is ignored
    set loopInfoDisplay ""
@@ -790,7 +782,7 @@ proc LogReader_updateNodes { exp_path datestamp node } {
 # of refreshing multiple times for each modified branch
 proc LogReader_updateSingleNode { exp_path datestamp node } {
 
-   # puts "LogReader_updateSingleNode node:$node"
+   
    global LOGREADER_UPDATE_NODES_${exp_path}_${datestamp} 
    if { ! [info exists LOGREADER_UPDATE_NODES_${exp_path}_${datestamp}] || [set LOGREADER_UPDATE_NODES_${exp_path}_${datestamp}] == "" } {
       set LOGREADER_UPDATE_NODES_${exp_path}_${datestamp} ${node}
@@ -815,7 +807,7 @@ proc LogReader_updateSingleNode { exp_path datestamp node } {
       set LOGREADER_UPDATE_NODES_${exp_path}_${datestamp} ${newUpdatedNode}
    }
 
-   # puts "LogReader_updateSingleNode LOGREADER_UPDATE_NODES_${exp_path}_${datestamp} [set LOGREADER_UPDATE_NODES_${exp_path}_${datestamp}]"
+   
 }
 
 # the date is sorted in reverse order, the most recent date will appear first

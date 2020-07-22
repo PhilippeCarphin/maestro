@@ -1,0 +1,71 @@
+<MODULE name="cmdw_post_processing">
+    <SUBMITS sub_name="warm_start"/>
+    <TASK name="warm_start"/>
+    <SUBMITS sub_name="analyses"/>
+    <SUBMITS sub_name="run"/>
+    <SUBMITS sub_name="precipitations_observees"/>
+    <SUBMITS sub_name="pcp_cumul"/>
+    <SUBMITS sub_name="cleanup_DEPOT"/>
+    <FAMILY name="analyses">
+        <SUBMITS sub_name="run"/>
+        <SWITCH name="run" type="datestamp_hour">
+            <SWITCH_ITEM name="00"/>
+            <SWITCH_ITEM name="06">
+                <SUBMITS sub_name="analyse_GZ_TT_UV"/>
+                <FAMILY name="analyse_GZ_TT_UV">
+                    <SUBMITS sub_name="hemisphere_nord"/>
+                    <FAMILY name="hemisphere_nord">
+                        <SUBMITS sub_name="plind"/>
+                        <SUBMITS sub_name="pline"/>
+                        <TASK name="plind"/>
+                        <TASK name="pline"/>
+                    </FAMILY>
+                </FAMILY>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="12"/>
+            <SWITCH_ITEM name="18">
+                <SUBMITS sub_name="analyse_GZ_TT_UV"/>
+                <FAMILY name="analyse_GZ_TT_UV">
+                    <SUBMITS sub_name="hemisphere_nord"/>
+                    <FAMILY name="hemisphere_nord">
+                        <SUBMITS sub_name="plind"/>
+                        <SUBMITS sub_name="pline"/>
+                        <TASK name="plind"/>
+                        <TASK name="pline"/>
+                    </FAMILY>
+                </FAMILY>
+            </SWITCH_ITEM>
+        </SWITCH>
+    </FAMILY>
+    <SWITCH name="run" type="datestamp_hour">
+        <SWITCH_ITEM name="00"/>
+        <SWITCH_ITEM name="06"/>
+        <SWITCH_ITEM name="12"/>
+        <SWITCH_ITEM name="18">
+            <SUBMITS sub_name="ymos3"/>
+            <TASK name="ymos3"/>
+        </SWITCH_ITEM>
+    </SWITCH>
+    <FAMILY name="precipitations_observees">
+        <SUBMITS sub_name="run"/>
+        <SWITCH name="run" type="datestamp_hour">
+            <SWITCH_ITEM name="00">
+                <SUBMITS sub_name="plmag"/>
+                <TASK name="plmag"/>
+                <SUBMITS sub_name="plmah"/>
+                <TASK name="plmah"/>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="06"/>
+            <SWITCH_ITEM name="12">
+                <SUBMITS sub_name="plmag"/>
+                <TASK name="plmag"/>
+                <SUBMITS sub_name="plmah"/>
+                <TASK name="plmah"/>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="18"/>
+        </SWITCH>
+     </FAMILY>
+    <TASK name="pcp_cumul"/>
+    <TASK name="cleanup_DEPOT"/>
+</MODULE>
+

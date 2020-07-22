@@ -1,0 +1,3 @@
+sleep 1
+nodelogger -n ${SEQ_NODE} ${SEQ_LOOP_ARGS} -s info -m "turtleTask2 nodelogger"
+sleep 3

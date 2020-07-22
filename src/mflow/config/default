@@ -1,0 +1,41 @@
+# This file configures mflow.
+
+# Show node type in flow.
+FLOW_NODE_SHOW_TYPE=false
+
+# How many seconds to wait after each node status refresh.
+FLOW_STATUS_REFRESH_SECONDS=10
+
+# The default program to launch to view and edit text files.
+# This should be a terminal program like vim, not graphical like gvim, for fastest response times.
+TEXT_VIEWER_AND_EDITOR=vim
+
+# What happens when you press up/down/left/right.
+# Change coordinates of the cursor, or simply jump around the flow tree.
+# 'coordinate' or 'tree'
+KEYBOARD_NAVIGATION=tree
+
+# Pressing up/down will try to jump to the nearest node, even if
+# it is on a very different branch.
+NAVIGATION_BRANCH_JUMPS=true
+
+# How much vertical space is between node siblings
+NODE_MARGIN_BOTTOM=2
+
+# The number of "-" characters in the "----->" node child flow arrows.
+NODE_ARROW_DASH_COUNT=5
+
+# The colors of the header, footer in different modes, cursor, etc.
+# GREY | RED | GREEN | ORANGE | BLUE | PURPLE | AQUA | SILVER
+# Available colors found in 'class CURSES_COLOR_INDEX' in 'constants/colors.py'
+EDIT_MODE_COLOR=ORANGE
+VIEW_MODE_COLOR=SILVER
+CURSOR_COLOR=ORANGE
+
+# When running a 'maestro' command to submit or force status, you can 
+# either see or ignore the command output.
+VIEW_MAESTRO_COMMAND_OUTPUT=false
+
+# The command used to open a new terminal window to "view work directory".
+# The '%s' is replaced with the full path of the work directory.
+VIEW_WORKDIR_COMMAND=konsole "--workdir=%s"

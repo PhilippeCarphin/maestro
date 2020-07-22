@@ -1,0 +1,19 @@
+<MODULE name="sfc">
+  <SUBMITS sub_name="exec_at"/>
+  <TASK name="exec_at">
+    <SUBMITS sub_name="getObservations"/>
+    <SUBMITS sub_name="getTrials"/>
+  </TASK>
+  <TASK name="getTrials"/>
+  <TASK name="getObservations">
+    <SUBMITS sub_name="tses"/>
+  </TASK>
+  <TASK name="tses">
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <SUBMITS sub_name="tp"/>
+  </TASK>
+  <TASK name="tp">
+    <SUBMITS sub_name="Transfer"/>
+  </TASK>
+  <TASK name="Transfer"/>
+</MODULE>

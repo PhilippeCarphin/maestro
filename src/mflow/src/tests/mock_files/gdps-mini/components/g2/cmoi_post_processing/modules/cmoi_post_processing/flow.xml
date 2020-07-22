@@ -1,0 +1,7 @@
+<MODULE name="cmoi_post_processing">
+    <SUBMITS sub_name="comp_classic2dm"/>
+    <SUBMITS sub_name="proft"/>
+    <TASK name="comp_classic2dm"/>
+    <TASK name="proft"/>
+</MODULE>
+

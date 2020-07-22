@@ -6,7 +6,7 @@ package require log
 
 global env
 set lib_dir $env(SEQ_SRC)/xflow/lib
-# puts "lib_dir=$lib_dir"
+
 set auto_path [linsert $auto_path 0 $lib_dir ]
 
 namespace eval ::trashSel {
@@ -46,14 +46,14 @@ namespace eval ::trashSel {
     proc  Exp_Clean {w {_exp_path ""} } {   
       variable cmd
       
-      #set PROGRESS_REPORT_TXT "Cleanup experiment"
-      #set progressW [ProgressDlg $w.pcleanup -title "Cleanup experiment" -parent ${w} -textvariable PROGRESS_REPORT_TXT -type incremental -variable 5]
+      
+      
 
       catch { eval [exec -ignorestderr ksh -c $cmd&]}
       ::log::log debug "Exp_Clean ksh -c $cmd"
       `Datestamp_Refresh $w 
 
-      #destroy ${progressW}
+      
       tk_messageBox -message "${_exp_path} has been cleaned..." \
      	    -title "Clean Experiment" -type ok -icon info
     }
@@ -94,8 +94,8 @@ namespace eval ::trashSel {
     # Capitalise the given word.  Assumes the first capitalisable
     # letter is the first character in the argument.
     proc 'capitalise {word} {
-	#set cUpper [string toupper [string index $word 0]]
-	#set cLower [string tolower [string range $word 1 end]]
+	
+	
         set cUpper [string toupper [string range $word 0 end]]
 	return ${cUpper}
     }
@@ -111,7 +111,7 @@ namespace eval ::trashSel {
 	return $newlist
     }
 
-    # ----------------------------------------------------------------------
+    
     # Now we start in earnest
     namespace export trash_choose
 
@@ -289,8 +289,8 @@ namespace eval ::trashSel {
 	    }
 	}
 	set Datestamp [$w get $index]
-	##DEBUG
-	#wm title [winfo toplevel $w] $Datestamp
+	
+	
 	'set_listcln ${EXP_PATH}
     }
     # Called when changing the datestamp.  Sets the datestamp to either be
@@ -313,8 +313,8 @@ namespace eval ::trashSel {
 	    }
 	}
 	set Hostname [$w get $index]
-	##DEBUG
-	#wm title [winfo toplevel $w] $Datestamp
+	
+	
 	'set_listcln ${EXP_PATH}
     }
 
@@ -409,7 +409,7 @@ namespace eval ::trashSel {
 	return $result
     }
 
-    # ----------------------------------------------------------------------
+    
 
     proc trash_choose {args} {
         global env
@@ -571,7 +571,7 @@ proc Trash_getToplevel {} {
    return .__trash_choose
 }
 
-# ----------------------------------------------------------------------
+
 # Stuff for testing the font selector
 proc Trash_init {{_exp_path ""} {_datestamp ""}} {
   global EXP_PATH

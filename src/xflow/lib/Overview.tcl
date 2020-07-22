@@ -23,7 +23,7 @@ proc Overview_setTkOptions {} {
    option add *selectBackground [SharedData_getColor SELECT_BG]
    catch { option add *troughColor [::tk::Darken [option get . background Scrollbar] 85] }
 
-   #ttk::style configure Xflow.Menu -background cornsilk4
+   
 }
 
 # this function is called to advance the time group to a new hour...
@@ -33,7 +33,6 @@ proc Overview_setTkOptions {} {
 # - Every exp box is also shifted
 # - An exp box disappears at the far left when its timings are off the grid
 # - An exp appears at the far right when its reference timings are visible in the grid
-#
 # - the first time this function is called, new_hour should be empty.
 # - the function wil calculate the time remaining until 
 # the next hour switch and then wake up every hour to perform the same task
@@ -166,7 +165,7 @@ proc Overview_GridAdvanceHour { {new_hour ""} } {
 
    Overview_HighLightFindNode ${LIST_TAG}
    Overview_checkGridLimit 
-   # Overview_setCurrentTime ${canvasW}
+   
    ::log::log notice "Overview_GridAdvanceHour new_hour:${new_hour} [clock format ${currentClock}] DONE"
 
   } message ] {
@@ -201,7 +200,6 @@ proc Overview_redrawExp { exp_path } {
 }
 
 # sends a notification when an exp/datestamp is in idle state... 
-#
 # idle state is defined by an experiment where 
 # 1) the log file exists (not in default state)
 # 2) The log files and has not been modified in over
@@ -273,7 +271,7 @@ proc Overview_checkExpIdle { { next_check_time 3600000 } } {
 proc Overview_checkExpSubmitLate { { next_check_time 900000 }} {
    global CHECK_EXP_IDLE
 
-   # puts "Overview_checkExpSubmitLate date:[exec -ignorestderr date]"
+   
    if { ${CHECK_EXP_IDLE} == true } {
 
       set canvasW [Overview_getCanvas]
@@ -302,9 +300,9 @@ proc Overview_checkExpSubmitLate { { next_check_time 900000 }} {
                      set hour [Utils_getHourFromDatestamp ${checkTag}]
                      set datestamp [Overview_getScheduledInfo ${expPath} ${hour}]
                      set refTimeStartSeconds [Overview_getScheduledInfo ${expPath} ${hour} ${refStartTime} time]
-		     # set dayValue [Utils_getDayClockFromDatestamp ${datestamp}]
+		     
 		     scan ${refStartTime} %d:%d hourValue minuteValue
-                     # set refTimeStartSeconds [clock add ${dayValue} ${hourValue} hour ${minuteValue} minute]
+                     
                      set refTimeLateSeconds [clock add ${refTimeStartSeconds} ${expSubmitLateThreshold} minute]
 
                      # check if exp box is passed current time and that is not within the log span discard
@@ -363,11 +361,10 @@ proc Overview_checkExpSubmitLate { { next_check_time 900000 }} {
 # retrieves the scheduled datestamp or the scheduled start time of the run in seconds
 # the datestamp_or_time argument is used to know whether the datestamp or the time should be returned
 # if datestamp_or_time not given, default is datestamp
-# 
 # returned datestamp value is full i.e. 20160418160000
 # returned time format value is seconds...same as output of [clock seconds]
 proc Overview_getScheduledInfo { exp_path datestamp_hour {start_time ""} {datestamp_or_time datestamp}} {
-   # ::log::log debug "Overview_getScheduledInfo $exp_path $datestamp_hour start_time:$start_time $datestamp_or_time"
+   
    global graphStartX
 
    set currentTimeX [Overview_getCurrentTimeX]
@@ -436,7 +433,7 @@ proc Overview_getScheduledInfo { exp_path datestamp_hour {start_time ""} {datest
 }
 
 proc Overview_isExpIdle { exp_path datestamp } {
-   # puts "Overview_isExpIdle exp_path:$exp_path datestamp:$datestamp"
+   
    set lastStatus [OverviewExpStatus_getLastStatus ${exp_path} ${datestamp}]
    set lastStatusTime [OverviewExpStatus_getLastStatusTime ${exp_path} ${datestamp}]
    set isIdle false
@@ -444,7 +441,7 @@ proc Overview_isExpIdle { exp_path datestamp } {
    if { ! [string match "default*" ${datestamp}] && ${lastStatus} != "end" && [LogMonitor_isLogFileActive ${exp_path} ${datestamp} ${idleThreshold}] == false } {
       set isIdle true
    }
-   # puts "Overview_isExpIdle exp_path:$exp_path datestamp:$datestamp"
+   
    return ${isIdle}
 }
 
@@ -493,7 +490,7 @@ proc Overview_closeWarningDlg { exp_path datestamp callingTopLevelW title } {
 
 proc Overview_showWarningReminder { exp_path datestamp callingTopLevelW } {
    global WARNING_AFTERID_${callingTopLevelW}
-   # puts "Overview_showWarningReminder exp_path:${exp_path} datestamp:${datestamp}"
+   
    if { [winfo exists ${callingTopLevelW}] } {
       wm withdraw ${callingTopLevelW}; wm deiconify ${callingTopLevelW} ; raise ${callingTopLevelW}
       set WARNING_AFTERID_${callingTopLevelW} [after 60000 [list Overview_showWarningReminder  ${exp_path} ${datestamp} ${callingTopLevelW}]]
@@ -537,9 +534,9 @@ proc Overview_getXCoordTime { timevalue {shift_day false} } {
    set timeHour [Utils_getPaddedValue [Utils_getHourFromTime ${timevalue}]]
    set timeMinute [Utils_getMinuteFromTime ${timevalue}]
 
-   # puts "Overview_getXCoordTime timevalue:$timevalue graphStartX:$graphStartX"
+   
    if { ${timeHour} > 24 } {
-      # return max of grid
+      
       set xoord [expr ${graphStartX} + 24 * ${graphHourX} ]
       return ${xoord}
    }
@@ -628,8 +625,6 @@ proc Overview_getZeroHourX {} {
    return ${zeroHourX}
 }
 
-#
-#
 # this function process the exp box logic when the root experiment node
 # is in init state
 proc Overview_processInitStatus { canvas exp_path datestamp {status init} } {
@@ -861,7 +856,7 @@ proc Overview_processEndStatus { canvas exp_path datestamp {status end} } {
          }
       }
    } else {
-         # Overview_ExpCreateStartIcon ${canvas} ${exp_path} ${datestamp} ${statusTime}
+         
       if { [expr ${endDateTime} <= ${xoriginDateTime}]  } {
          set shiftDay true
          OverviewExpStatus_setLastStatusInfo ${exp_path} ${datestamp} init "" ""
@@ -927,7 +922,7 @@ proc Overview_setExpLate { canvas exp_path datestamp } {
    set status [OverviewExpStatus_getLastStatus ${exp_path} ${datestamp}]
    set refEndTime [Overview_getRefTimings ${exp_path} [Utils_getHourFromDatestamp ${datestamp}]  end]
 
-   # puts "Overview_setExpLate  $exp_path $datestamp status:$status refEndTime:${refEndTime}" 
+   
    set expBoxTag [Overview_getExpBoxTag ${exp_path} ${datestamp} ${status}]
    set expGroupBoxTag [DisplayGrp_getGroupExpBoxTagName ${displayGroup}]
    ${canvas} itemconfigure ${expBoxTag}.text -fill DarkViolet
@@ -940,7 +935,7 @@ proc Overview_setExpLate { canvas exp_path datestamp } {
       }
       set startY [lindex ${middleBoxCoords} 1]
       set endY [lindex ${middleBoxCoords} 3]
-      # ${canvas} create line ${refEndTimeX} ${startY} ${refEndTimeX} ${endY} -width 4 -fill [::DrawUtils::getOutlineStatusColor end]
+      
       ${canvas} create line ${refEndTimeX} ${startY} ${refEndTimeX} ${endY} -width 4 -fill DarkViolet -tags "${expGroupBoxTag} ${exp_path} ${expBoxTag} ${expBoxTag}.late_line"
    }
 }
@@ -986,7 +981,7 @@ proc Overview_ExpCreateStartIcon { canvas exp_path datestamp timevalue {shift_da
    set startX2 [expr $startX + ${startEndIconSize}]
    set startY2 [expr $startY + ${startEndIconSize}]
 
-   # puts "Overview_ExpCreateStartIcon $exp_path $datestamp $timevalue startX:$startX"
+   
    set currentStatus [OverviewExpStatus_getLastStatus ${exp_path} ${datestamp}]
 
    # delete previous box
@@ -996,7 +991,7 @@ proc Overview_ExpCreateStartIcon { canvas exp_path datestamp timevalue {shift_da
    set shortName [SharedData_getExpShortName ${exp_path}]
    set expLabel " ${shortName} "
    set outlineColor [::DrawUtils::getOutlineStatusColor ${currentStatus}]
-   # puts "Overview_ExpCreateStartIcon outlineColor:$outlineColor currentStatus:$currentStatus"
+   
    if { ${shift_day} == true || [string match "defaut*" ${datestamp}] } {
       set currentStatus init
       set expBoxTag [Overview_getExpBoxTag ${exp_path} ${datestamp} default]
@@ -1038,7 +1033,7 @@ proc Overview_ExpCreateEndIcon { canvas exp_path datestamp timevalue {shift_day 
    set startY         [expr ${currentY} +  $expEntryHeight/2 - (${startEndIconSize}/2)]
 
    set currentStatus [OverviewExpStatus_getLastStatus ${exp_path} ${datestamp}]
-   # puts "Overview_ExpCreateEndIcon currentStatus:$currentStatus"
+   
    if { ${shift_day} == true || [string match "defaut*" ${datestamp}] } {
       set currentStatus init
       set expBoxTag [Overview_getExpBoxTag ${exp_path} ${datestamp} default]
@@ -1185,12 +1180,12 @@ proc Overview_getRefTimings { exp_path hour start_or_end } {
          set foundTimings [lindex ${refTimings} 1]
       }
    }
-   # puts "Overview_getRefTimings ${exp_path} ${hour} ${start_or_end} value: ${foundTimings}"
+   
    return ${foundTimings}
 }
 
 proc Overview_getExpBoxTag { exp_path datestamp status {full_tag true} } {
-   # puts "Overview_getExpBoxTag ${exp_path} $datestamp $status"
+   
    set refTimings [SharedData_getExpTimings ${exp_path}]
    if { [string match "default*" ${datestamp}] } {
       set expBoxTag ${datestamp}
@@ -1209,7 +1204,7 @@ proc Overview_getExpBoxTag { exp_path datestamp status {full_tag true} } {
    if { ${full_tag} == true } {
       set expBoxTag ${exp_path}.${expBoxTag}
    }
-   #puts "Overview_getExpBoxTag $exp_path $datestamp status value:$expBoxTag"
+   
    return ${expBoxTag}
 }
 
@@ -1246,12 +1241,12 @@ proc Overview_getExpBoxTags { canvas exp_path } {
 proc Overview_isExpBoxObsolete { exp_path datestamp } {
    ::log::log debug "Overview_isExpBoxObsolete $exp_path $datestamp"
    if { ${datestamp} == "default" } {
-      # puts "Overview_isExpBoxObsolete exp_path:${exp_path} datestamp:${datestamp}"
+      
       return false
    }
 
    set endTime [OverviewExpStatus_getEndTime  ${exp_path} ${datestamp}]
-   # puts "Overview_isExpBoxObsolete $exp_path endTime:$endTime"
+   
    set xoriginDateTime [Overview_GraphGetXOriginDateTime]
    set currentStatus [OverviewExpStatus_getLastStatus ${exp_path} ${datestamp}]
 
@@ -1277,11 +1272,10 @@ proc Overview_isExpBoxObsolete { exp_path datestamp } {
 }
 
 proc Overview_addExpDefaultBoxes { canvas exp_path {myhour ""} } {
-   # puts "Overview_addExpDefaultBoxes $exp_path"
+   
    if { [SharedData_getExpShowExp ${exp_path}] == false } {
       # this is a configuration from ExpOptions.xml
       # user decided that this suite not be shown in overview i.e. mainly used for default suite
-      # puts "Overview_addExpDefaultBoxes skipping ${exp_path}"
       return
    }
 
@@ -1302,7 +1296,7 @@ proc Overview_addExpDefaultBoxes { canvas exp_path {myhour ""} } {
 	          }
                } else {
 	           if { [Overview_isExpScheduled ${exp_path} ${hour} ${startTime}] == true } {
-		      # puts "Overview_updateExpBox ${canvas} ${exp_path} default_${hour} init"
+		      
                       Overview_updateExpBox ${canvas} ${exp_path} default_${hour} init
                    }
 	       }
@@ -1355,7 +1349,7 @@ proc Overview_isExpScheduled { exp_path hour start_time } {
 }
 
 proc Overview_addExpDefaultBox { canvas exp_path datestamp } {
-   # puts "Overview_addExpDefaultBox $exp_path $datestamp"
+   
    set refTimings [SharedData_getExpTimings ${exp_path}]
    if { ${refTimings} != "" } {
       set hour         [Utils_getHourFromDatestamp ${datestamp}]
@@ -1376,9 +1370,9 @@ proc Overview_addExpDefaultBox { canvas exp_path datestamp } {
 }
 
 proc Overview_removeExpBox { canvas exp_path datestamp status } {
-   # ::log::log notice "Overview_removeExpBox ${exp_path} ${datestamp} ${status}"
+   
 
-   # puts "Overview_removeExpBox $canvas $exp_path datestamp:$datestamp status:$status"
+   
    set expBoxTag [Overview_getExpBoxTag ${exp_path} ${datestamp} ${status}]
    ${canvas} delete ${expBoxTag}.text
    ${canvas} delete ${expBoxTag}.start
@@ -1391,17 +1385,17 @@ proc Overview_removeExpBox { canvas exp_path datestamp status } {
    if { ! [string match "default*" ${datestamp}] } {
       set hour [Utils_getHourFromDatestamp ${datestamp}]
       set schedDatestamp [Overview_getScheduledInfo ${exp_path} ${hour}]
-      # ::log::log notice "Overview_removeExpBox ${exp_path} datestamp:${datestamp} schedDatestamp:$schedDatestamp"
+      
       # delete the default box only if the datestamp matches the one that should be launched
       # for instance if I resubmit a run from yesterday's datestamp, the default one for today
       # should be untouched
       # The default box is also deleted if the exp does not use daily datestamp i.e. for exps
       # like geps reforecast & reforecast_stat
       if { ${datestamp} == ${schedDatestamp} || [SharedData_getExpIsDailyDatestamp ${exp_path}] == false } {
-         # ::log::log notice "Overview_removeExpBox ${exp_path} datestamp:${datestamp} schedDatestamp:$schedDatestamp deleting default"
+         
          # try delete default_${hour} tag
          set expBoxTag [Overview_getExpBoxTag ${exp_path} ${datestamp} default]
-         # puts "Overview_removeExpBox deleting ${expDefaultTag}"
+         
          ${canvas} delete ${expBoxTag}.text
          ${canvas} delete ${expBoxTag}.start
          ${canvas} delete ${expBoxTag}.middle
@@ -1559,7 +1553,7 @@ proc Overview_OptimizeExpBoxes { displayGroup } {
                      ${canvasW} move ${exp} 0 ${deltay}
                      DisplayGrp_setMaxY ${displayGroup} [lindex $overlapCoords 1]
                      DisplayGrp_processOverlap ${displayGroup}
-                     # DisplayGrp_processEmptyRows ${displayGroup}
+                     
                      set done true
                   } else {
                      if { [expr ${ySlotStart} == [${displayGroup} cget -max_y]] } {
@@ -1734,7 +1728,7 @@ proc Overview_boxMenu { canvas exp_path datestamp x y } {
 
     tk_popup $popMenu $x $y
    ::tooltip::tooltip $popMenu -index 0 "Show Exp History"
-   # Overview_addMsgCenterWidget ${exp_path} ${datestamp} ${list_tag}
+   
 }
 
 proc Overview_xmlOptionsCallback { exp_path } {
@@ -1864,7 +1858,7 @@ proc Overview_launchExpFlow { exp_path datestamp {datestamp_hour ""} } {
 	    set readType all
 	 }
          ::log::log notice "Overview_launchExpFlow new exp thread: ${expThreadId}  calling LogReader_startExpLogReader... ${exp_path} ${datestamp} refresh_flow false ${useLogCache}"
-         # thread::send -async ${expThreadId} "LogReader_startExpLogReader ${exp_path} \"${datestamp}\" refresh_flow false ${useLogCache}" LogReaderDone
+         
          thread::send -async ${expThreadId} "LogReader_startExpLogReader ${exp_path} \"${datestamp}\" ${readType} false ${useLogCache}" LogReaderDone
          vwait LogReaderDone
 	 # tell next read to use cache
@@ -1962,12 +1956,12 @@ proc Overview_releaseExpThread { exp_thread_id exp_path datestamp } {
 proc Overview_releaseLoggerThread { exp_thread_id exp_path datestamp } {
    if { ${exp_thread_id} != "" } {
       ::log::log notice "Overview_releaseLoggerThread releasing inactive log exp=${exp_path} datestamp=${datestamp}"
-      # ::thread::send -async ${exp_thread_id} "LogReader_removeMonitorDatestamp ${exp_path} ${datestamp}"
+      
       # remove monitoring from the thread
       ::thread::send ${exp_thread_id} "LogReader_removeMonitorDatestamp ${exp_path} \"${datestamp}\""
 
       # remove heartbeat monitoring
-      # Overview_removeHeartbeatDatestamp ${exp_thread_id} ${exp_path} ${datestamp}
+      
       if { [SharedData_getMiscData STARTUP_DONE] == false } {
          ThreadPool_releaseThread ${exp_thread_id} ${exp_path} "${datestamp}"
       }
@@ -1999,7 +1993,7 @@ proc Overview_childInitDone { exp_thread_id exp_path datestamp } {
       ::log::log debug "Overview_childInitDone Overview_releaseLoggerThread ${exp_thread_id} ${exp_path} ${datestamp}"
       Overview_releaseLoggerThread ${exp_thread_id} ${exp_path} ${datestamp}
    } else {
-      # Overview_addHeartbeatDatestamp ${exp_path} ${datestamp}
+      
    }
 
    # check if all startup threads are done reading
@@ -2036,11 +2030,11 @@ proc Overview_waitStartupDatestamps {} {
 # update the status of an experiment node in the overview panel.
 # See LogReader.tcl
 proc Overview_updateExp { exp_thread_id exp_path datestamp status timestamp } {
-   # puts "Overview_updateExp $exp_thread_id $exp_path $datestamp $status $timestamp"
+   
 
    global AUTO_LAUNCH LIST_TAG
    ::log::log debug "Overview_updateExp exp_thread_id:$exp_thread_id ${exp_path} datestamp:$datestamp status:$status timestamp:$timestamp "
-   # ::log::log debug "Overview_updateExp exp_thread_id:$exp_thread_id ${exp_path} datestamp:$datestamp status:$status timestamp:$timestamp "
+   
    ::log::log notice "Overview_updateExp exp_thread_id:$exp_thread_id ${exp_path} datestamp:$datestamp status:$status timestamp:$timestamp "
    set canvas [Overview_getCanvas]
    # retrieve the date & time from the given time stamp
@@ -2108,8 +2102,8 @@ proc Overview_checkGridLimit {} {
    set displayGroups [ExpXmlReader_getGroups]
    set lastGroup [lindex ${displayGroups} end]
    if { ${lastGroup} != "" } {
-      #puts "Overview_checkGridLimit last group y:[${lastGroup} cget -y] max_y:[${lastGroup} cget -max_y]"
-      #puts "Overview_checkGridLimit grid max_y: [[Overview_getCanvas] coords grid_max_y]"
+      
+      
       set canvasW [Overview_getCanvas]
       # get the max y from the exp boxes
       set maxExpBoxY [${lastGroup} cget -max_y]
@@ -2119,7 +2113,7 @@ proc Overview_checkGridLimit {} {
          set maxGridY [lindex ${maxGridCoords} 1]
          if { ${maxGridY} <= [expr ${maxExpBoxY} + ${expEntryHeight}] } {
             # grid is too small, increase it
-            #puts "Overview_checkGridLimit adjust grid from ${maxGridY} to ${maxExpBoxY}"
+            
             set graphy [expr ${maxExpBoxY} + ${expEntryHeight}/2]
             ::log::log debug "Overview_checkGridLimit expanding grid to graphy:$graphy"
             Overview_redrawGrid
@@ -2154,11 +2148,11 @@ proc Overview_setCanvasScrollArea {} {
    set canvasW [Overview_getCanvas]
    set groupCanvasW [Overview_getGroupDisplayCanvas]
 
-   # set canvasBox [${canvasW} bbox canvas_bg_image]
+   
    set canvasBox [${canvasW} bbox grid_item ]
    set groupCanvasBox [${groupCanvasW} bbox all]
 
-   # puts "Overview_setCanvasScrollArea canvasBox:$canvasBox groupCanvasBox:$groupCanvasBox"
+   
    set canvasX2 [lindex ${canvasBox} 2]
    set canvasY2 [lindex ${canvasBox} 3]
    set groupCanvasX2 [expr [lindex ${groupCanvasBox} 2] - 2]
@@ -2295,9 +2289,9 @@ proc Overview_getRunBoxBoundaries { canvas exp_path datestamp } {
 # it is updated everytime the exp node root status changes
 proc Overview_setExpTooltip { canvas exp_path datestamp } {
    ::log::log debug "Overview_setExpTooltip exp_path:${exp_path} datestamp:${datestamp}"
-   # puts "Overview_setExpTooltip exp_path:${exp_path} datestamp:${datestamp}"
+   
 
-   # set expName [file tail ${exp_path}]
+   
    set expName [SharedData_getExpShortName ${exp_path}]
    if { [string match "default*" ${datestamp}] } {
       set currentStatus default
@@ -2403,7 +2397,7 @@ proc Overview_moveGroups { source_group delta_x delta_y } {
 proc Overview_addGroup { canvas displayGroup } {
    global expEntryHeight
 
-   # puts "Overview_addGroup displayGroup:${displayGroup}"
+   
    set groupName [$displayGroup cget -name]
 
    # the tagName is used to refer the group in the canvas
@@ -2455,7 +2449,7 @@ proc Overview_addGroupExps { canvas } {
    set progressMax [Overview_getStartupNofDatestamps]
 
    if { ${progressMax} > 0 } {
-      # puts "Overview_addGroupExps: nof log files to be loaded: [array size EXP_THREAD_STARTUP_DONE]"
+      
       # startup progress bar
       set STARTUP_PROGRESS_VALUE 0
       set progressBar [ProgressDlg .overview_progress \
@@ -2514,7 +2508,7 @@ proc Overview_checkStartupError {} {
 # display different font for each level
 proc Overview_getLevelFont { canvas item_tag level } {
     global LIST_FONT_LEVEL
-    #puts "Overview_getLevelFont item_tag:$item_tag Lavel:$level"
+    
    lappend LIST_FONT_LEVEL [list $canvas $item_tag $level ]
    set searchFont canvas_level_${level}_font
    if { [lsearch [font names] $searchFont] == -1 } {
@@ -2601,7 +2595,6 @@ proc Overview_createGraph { } {
   
    # y axe origin
    # this is now created on the group canvas instead of the grid 
-   # 
    set origX [expr ${groupDisplayMaxX} + 2]
    ${groupCanvasW} create line $origX [expr $graphStartY - 20] $origX [expr $graphStartY + $graphy] -arrow first -tag "grid_item grid_x_origin"
    ${groupCanvasW} create line $origX  [expr $graphStartY + $graphy] [expr $origX + 3] [expr $graphStartY + $graphy] -tag "grid_item grid_x_origin"
@@ -2752,7 +2745,7 @@ proc Overview_GraphGetXOriginTime {} {
 
 # this function is called to delete an hour grid at the specified hour value.
 proc Overview_GraphDeleteHourLine {canvas hour} {
-   # set hour [Utils_getPaddedValue ${hour}]
+   
    set toDeleteTag [Overview_getGridTagHour ${hour}]
    ::log::log debug "Overview_GraphDeleteHourLine deleting tag hour: ${toDeleteTag}"
    ${canvas} delete ${toDeleteTag}
@@ -2796,8 +2789,8 @@ proc Overview_GraphAddHourLine {canvas grid_count hour} {
    $canvas create line $x1 [expr $y1 + $graphy] $x2 [expr $y2 + $graphy ] -tag "grid_item grid_hour ${tagHour}"
    $canvas create line $x1 [expr $y1 + 5] $x2 [expr $y2 + $graphy - 5 ] -dash 2 -fill grey60 -tag  "grid_item grid_hour ${tagHour}"
 
-   # $canvas create text $x2 [expr $y1 - 20 ] -text $xLabel -tag "grid_item grid_hour ${tagHour}"
-   # $canvas create text $x2 [expr $y2 + $graphy +20 ] -text $xLabel -tag "grid_item grid_hour ${tagHour} grid_footer"
+   
+   
    $canvas create text $x2 [expr $y1 - 8 ] -text $xLabel -tag "grid_item grid_hour ${tagHour}"
    $canvas create text $x2 [expr $y2 + $graphy +8 ] -text $xLabel -tag "grid_item grid_hour ${tagHour} grid_footer"
 
@@ -3134,21 +3127,21 @@ proc Overview_addHelpMenu { parent } {
 proc Overview_createMenu { _toplevelW } {
    set topFrame ${_toplevelW}.topframe
    frame ${topFrame} -relief [SharedData_getMiscData MENU_RELIEF]
-   # grid ${topFrame} -row 0 -column 0 -sticky nsew -padx 2
-   # grid ${topFrame} -row 0 -column 1 -sticky nsew -padx 2
+   
+   
    grid ${topFrame} -row 0 -column 1 -sticky ew -padx 2
    Overview_addFileMenu ${topFrame}
    Overview_addPrefMenu ${topFrame}
    Overview_addHelpMenu ${topFrame}
-   # Overview_createLabel ${topFrame}
+   
 }
 
 # display is to right of menu as bold text
-# NOT USED
+
 proc Overview_createLabel { parentWidget } {
    set labelFrame [frame ${parentWidget}.label_frame]
    set labelW [label ${labelFrame}.label -font [xflow_getExpLabelFont] -text [DisplayGrp_getWindowsLabel]]
-   # grid ${labelW} -sticky nesw
+   
    grid ${labelW} -sticky ew 
    pack ${labelFrame} -side left -padx {20 0}
 }
@@ -3213,11 +3206,11 @@ proc Overview_HighLightFindNode { ll } {
      set x1 [expr [lindex ${boundaries} 0] - ${findBoxDelta}]
      set y1 [DisplayGrp_getCurrentSlotY [lindex ${boundaries} 1]]
      set x2 [expr [lindex ${boundaries} 2] + ${findBoxDelta}]
-     # set y2 [expr [lindex ${boundaries} 3] + ${findBoxDelta}]
+     
      set y2 [expr ${y1} + ${expEntryHeight}]
    
      set selectTag ${canvas}.find_select
-     # ${canvas} create rectangle ${x1} ${y1} ${x2} ${y2} -width  ${expBoxOutlineWidth} -fill ${selectColor} -tag ${selectTag}
+     
      ${canvas} create rectangle ${x1} ${y1} ${x2} ${y2} -width 1 -fill ${selectColor} -tag ${selectTag} -outline grey
      ${canvas} lower ${selectTag} ${expBoxTag}
    }
@@ -3342,7 +3335,7 @@ proc Overview_addMsgCenterWidget { exp_path datestamp ll} {
 }
 
 proc Overview_createMsgCenterbar { _toplevelW } {
-   # puts "Overview_createMsgCenterbar"
+   
    variable infoText
 
    set nb_all     [OverviewExpMsgCenter_getactiveInfo all]
@@ -3463,7 +3456,7 @@ proc Overview_createToolbar { _toplevelW } {
    set colorLegendW ${toolbarW}.button_colorlegend
    set fontW ${toolbarW}.button_font
    # create frame main toolbar
-   # frame ${mainToolbarW} -bd 1
+   
    labelframe ${mainToolbarW} -text Toolbar
 
    # create frame core toolbar
@@ -3509,7 +3502,7 @@ proc Overview_createToolbar { _toplevelW } {
 
 
 proc Overview_createCanvas { _toplevelW } {
-   # set canvasFrame [frame ${_toplevelW}.canvas_frame]
+   
    set canvasPanedW [panedwindow ${_toplevelW}.canvas_pane -showhandle 1 -orient horizontal -handlesize 2 -sashwidth 2]
    set canvasFrame [frame ${canvasPanedW}.canvas_frame]
    set groupCanvasFrame [frame ${canvasPanedW}.group_canvas_frame]
@@ -3518,8 +3511,7 @@ proc Overview_createCanvas { _toplevelW } {
 
    set groupCanvasW [Overview_getGroupDisplayCanvas]
    set group_xScrollW [scrollbar ${groupCanvasFrame}.group_xscroll]
-   # autoscroll messes up the two canvas when scrolling to the end of the canvas... disable for now
-   # ::autoscroll::autoscroll ${group_xScrollW}
+   
    canvas ${groupCanvasW} -relief flat -bd 0 -highlightthickness 0 -xscrollcommand [list ${group_xScrollW} set]
    ${group_xScrollW} configure -orient horizontal -command [list ${groupCanvasW} xview]
    grid ${groupCanvasW} -row 0 -column 0 -sticky nsew
@@ -3548,7 +3540,7 @@ proc Overview_createCanvas { _toplevelW } {
 
    # only show the scrollbars if required
    ::autoscroll::autoscroll ${yScrollW}
-   # ::autoscroll::autoscroll ${xScrollW}
+   
 
    canvas ${canvasW} -relief flat -bd 0 -bg [SharedData_getColor CANVAS_COLOR]  -highlightthickness 0 \
       -yscrollcommand [list ${yScrollW} set] -xscrollcommand [list ${xScrollW} set]
@@ -3560,7 +3552,7 @@ proc Overview_createCanvas { _toplevelW } {
    # make the canvas expandable to right & bottom
    grid rowconfigure ${canvasFrame} 0 -weight 1
    grid columnconfigure ${canvasFrame} 0 -weight 1
-   # grid columnconfigure ${canvasFrame} 0 -weight 1
+   
 
    grid ${canvasPanedW} -row 2 -column 1 -sticky nsew -rowspan 2
    
@@ -3569,7 +3561,7 @@ proc Overview_createCanvas { _toplevelW } {
 
 proc Overview_PaneHandleEvent { widget x y } {
    global HANDLE_INIT_POSITION
-   # puts "Overview_PaneHandleMotionEvent $widget x:$x y:$y"
+   
    set canvasPane [Overview_getCanvasPane]
    foreach {posX posY} [${canvasPane} sash coord 0] {}
 
@@ -3804,12 +3796,12 @@ proc Overview_checkDatestampHeartbeats {} {
 	 continue
       }
       set elapsed [expr ${currentTime} - ${lastHeartbeat}]
-      # puts "Overview_checkDatestampHeartbeats key:${key} current time:${currentTime} last heatbeat: ${lastHeartbeat}"
-      # puts "Overview_checkDatestampHeartbeats key:${key} elapsed: [expr ${currentTime} - ${lastHeartbeat}]"
+      
+      
       if { ${elapsed} > 60 } {
          # no heartbeat received for the last 60 seconds...
 	 set threadId [lindex ${heartbeatData} 0]
-         # puts "Overview_checkDatestampHeartbeats key:${key} threadId:${threadId} SOMETHINGS WRONG!"
+         
          ::log::log notice "Thread Hearbeat: heartbeat not received from thread ${threadId} exp:${expPath} datestamp:${datestamp} for more than 60 seconds... destroying thread..."
 	 # we consider the tread unreachable and we need to destroy it
          Overview_processDeadThread ${threadId}
@@ -3829,7 +3821,7 @@ proc Overview_checkDatestampHeartbeats {} {
 # 4) re-assign all datestamps that the thread was monitoring to other threads
 proc Overview_processDeadThread { thread_id } {
    global HeartbeatDatestamps
-   # puts "Overview_processDeadThread thread_id:$thread_id"
+   
    ::log::log notice "Thread Heartbeat: preparing to dropt thread ${thread_id}"
    set affectedOnes {}
    # get info about every datestamp that the thread is monitoring
@@ -3929,7 +3921,7 @@ proc Overview_main {} {
    bind ${topOverview} <Configure> [list Overview_setMainCoords ${topOverview}]
 
    wm withdraw ${topOverview}
-   # wm iconify ${topOverview}
+   
 
    if { [SharedData_getMiscData SUITES_FILE] != "" } {
       Overview_readExperiments
@@ -3970,8 +3962,8 @@ proc Overview_main {} {
    grid rowconfigure ${topOverview} 1 -weight 0
    grid rowconfigure ${topOverview} 2 -weight 15 -uniform a
 
-   # set sizeGripWidget [ttk::sizegrip ${topOverview}.sizeGrip]
-   # grid ${sizeGripWidget} -sticky se
+   
+   
 
    # trap windows kill to gracefully exit
    wm protocol ${topOverview} WM_DELETE_WINDOW [list Overview_quit ]
@@ -4015,9 +4007,9 @@ proc Overview_main {} {
    MsgCenter_startupDone
 
    wm geometry ${topOverview} =1500x600
-   # wm withdraw ${topOverview} ; wm deiconify ${topOverview}
+   
    wm deiconify ${topOverview}
-   # wm geometry ${topOverview}  +0+0
+   
 
    Overview_savePaneInitialState
 
@@ -4025,7 +4017,7 @@ proc Overview_main {} {
    Overview_mouseWheelCheck
 
    # start the reader for currently active logs
-   # ::thread::broadcast "LogReader_readMonitorDatestamps true"
+   
    # delay each log thread by 1 sec apart
    global PoolId
    set count 1
@@ -4089,10 +4081,10 @@ source $env(SEQ_SRC)/xflow/lib/ClockWrapper.tcl
 package require ClockWrapper
 interp alias {} ::clock {} ::ClockWrapper
 ::ClockWrapper::setDelta "4 hour"
-# ::ClockWrapper::setDelta "-1 hour"
-# ::ClockWrapper::setDelta "0 second"
-# Overview_GridAdvanceHour 5
-# Overview_redrawGrid
+
+
+
+
 set canvasW [Overview_getCanvas]
 set displayGroups [ExpXmlReader_getGroups]
  foreach displayGroup $displayGroups {

@@ -1,5 +1,5 @@
 package require Tk
-#package require Tktable
+
 package require tablelist
 package require autoscroll
 package require tooltip
@@ -7,7 +7,7 @@ package require log
 
 global env
 set lib_dir $env(SEQ_SRC)/xflow/lib
-# puts "lib_dir=$lib_dir"
+
 set auto_path [linsert $auto_path 0 $lib_dir ]
 
 proc MsgCenter_setTkOptions {} {
@@ -15,7 +15,7 @@ proc MsgCenter_setTkOptions {} {
    option add *selectBackground [SharedData_getColor SELECT_BG]
    catch { option add *troughColor [::tk::Darken [option get . background Scrollbar] 85] }
 
-   #ttk::style configure Xflow.Menu -background cornsilk4
+
 }
 
 proc MsgCenter_SetNotebOption {notebookW_} {
@@ -213,13 +213,13 @@ proc MsgCenter_submitNodes { table_widget {flow continue}} {
              set last_item true
          }
          set commandArgs "-d ${datestamp} -n ${node} -s submit ${seqLoopArgs} -f ${flow}"
-         # ::log::log notice "${seqExec} ${commandArgs}"
+
 	 Sequencer_runSubmit ${expPath} ${datestamp} [winfo toplevel ${table_widget}] $seqExec ${winTitle} top 1  ${commandArgs} $id ${last_item}
          update idletasks
 
          incr count
       }
-      # end while
+
 
       foreach selectedRow ${selections} {
          MsgCenter_addSubmitAction ${table_widget} ${selectedRow} ${flow}
@@ -305,7 +305,7 @@ proc MsgCenter_displayMsgTabMenu {table_w_ parent x y X Y} {
   global LOG_ACTIVATION_IDS
   
   set message_type   [lindex [string tolower [$parent tab [$parent index @$x,$y] -text]] 0]
-  #set isMsgLogActive [$parent tab [$parent index @$x,$y] -state]
+
 
   set widget ${parent}.message_log_menu
   if { [winfo exists $widget] } {
@@ -642,7 +642,7 @@ proc MsgCenter_newMessage { table_w_ datestamp_ timestamp_ type_ node_ msg_ exp_
    set is_exist [lsearch -glob ${MSG_TABLE} [list ${timestamp_} ${datestamp_} ${type_} "" ${node_} ${msg_} ${exp_} *]]
 
    if { ${is_exist} < 0 } {
-     #incr MSG_COUNTER
+
      ::log::log debug "MsgCenter_newMessage node_:$node_ type_:$type_ msg_:$msg_"
      lappend MSG_TABLE [list ${timestamp_} ${datestamp_} ${type_} "" ${node_} ${msg_} ${exp_} ${isUnack}]
      set MSG_COUNTER   [llength ${MSG_TABLE}]
@@ -659,7 +659,7 @@ proc MsgCenter_newMessage { table_w_ datestamp_ timestamp_ type_ node_ msg_ exp_
              ${notebookW} select ${notebookW}.${type_}
           }
           set MSG_ACTIVE_COUNTER [llength ${MSG_ACTIVE_TABLE}]
-          #${table_w_} see ${MSG_ACTIVE_COUNTER}
+
         }
         # for sysinfo, we don't flash or beep
         switch ${type_} {
@@ -760,7 +760,7 @@ proc MsgCenter_addActiveMessage { datestamp_ timestamp_ type_ node_ msg_ exp_ is
         lappend MSG_ACTIVE_TABLE [list ${displayedTimestamp} ${displayedDatestamp} ${type_} "" ${displayedNodeText} ${msg_} ${exp_} ${isMsgack_}]
       }
    }
-   #set MSG_ACTIVE_COUNTER [llength ${MSG_ACTIVE_TABLE}]
+
    return ${isMsgActive}
 }
 
@@ -924,7 +924,7 @@ proc MsgCenter_ackMessages { table_w_ {message_tab ""} } {
    global MsgTableColMap
    global MSG_ACTIVE_COUNTER NB_ACTIVE_ELM
 
-   #wm attributes . -topmost 0
+
    MsgCenter_stopBell ${table_w_}
 
    if { ${message_tab} == "" } {
@@ -1221,7 +1221,7 @@ proc MsgCenter_processNewMessage { datestamp_ timestamp_ type_ node_ msg_ exp_ }
    }
 
    catch { thread::mutex unlock ${MSG_CENTER_MUTEX} }
-   # ::log::log notice "MsgCenterThread_processNewMessage ${datestamp_} ${timestamp_} ${type_} ${node_} ${msg_} ${exp_} DONE"
+
 }
 
 # called by xflow or xflow_overview to let msg center
@@ -1370,7 +1370,7 @@ proc MsgCenter_rightClickCallback { table_widget w x y } {
          toplevel ${xflowToplevel}; wm withdraw ${xflowToplevel}
       }
 
-      # puts "MsgCenter_rightClickCallback calling xflow_modeMenu..."
+
       xflow_setWidgetNames
 
       set winx [expr [winfo rootx ${w}] + ${x}]
@@ -1398,8 +1398,8 @@ proc MsgCenter_init {} {
    set DEBUG_TRACE [SharedData_getMiscData DEBUG_TRACE]
    set MSG_BELL_TRIGGER [SharedData_getMiscData MSG_CENTER_BELL_TRIGGER]
 
-   # Utils_logInit
-   # Utils_createTmpDir
+
+
 
    set List_Xflow {}
    array set NB_ACTIVE_ELM { 
@@ -1464,8 +1464,8 @@ proc MsgCenter_init {} {
          MsgTable 3
       }
 
-      #SharedData_initColors
-      #MsgCenter_setTkOptions
+
+
 
       MsgCenter_createWidgets
       MsgCenter_close

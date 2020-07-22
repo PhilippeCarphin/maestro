@@ -67,7 +67,7 @@ void SeqDep_deleteDep(SeqDepDataPtr * dep);
 void SeqDep_printDep(int trace_level, SeqDepDataPtr dep);
 
 typedef struct _SeqDependsNode {
-   struct _SeqDependsList *nextPtr;
+   struct _SeqDependsNode *nextPtr;
    SeqDepDataPtr depData;
 } SeqDependsNode;
 typedef SeqDependsNode* SeqDepNodePtr;

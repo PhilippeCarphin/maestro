@@ -1,0 +1,8 @@
+<MODULE name="mupy">
+    <SUBMITS sub_name="mupy2"/>
+    <TASK name="mupy2">
+        <SUBMITS sub_name="mupy1"/>
+    </TASK>
+    <TASK name="mupy1"/>
+</MODULE>
+

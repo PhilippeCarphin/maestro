@@ -1,22 +1,5 @@
 /* l2d2_socket.c - Network functions for server code of the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -47,11 +30,11 @@
 
 extern char * str2md5(const char *, int );
 
-static struct  sockaddr_in server;      /* server socket */
+static struct  sockaddr_in server;      
 static socklen_t sizeserver = sizeof(server);
 static int must_init_signal = 1;
 
-/* GetHostName */
+
 int GetHostName(char *name, size_t len) 
 {
   int junk;
@@ -108,7 +91,7 @@ char *get_Authorization( char *filename , char *username , char **m5sum )
 
      close(fd);
      
-     /* compute md5sum here */
+     
      *m5sum=str2md5(auth_buf,strlen(auth_buf));
 
      return(auth_buf);
@@ -141,7 +124,7 @@ void set_Authorization (unsigned int pid ,char * hostn , char * hip, int port , 
      rt = write(fd, buf, nc);
      rt = close(fd);
      
-     /* compute md5sum here */
+     
      *m5sum=str2md5(buf,strlen(buf));
 }
 
@@ -205,7 +188,7 @@ int get_socket_net()
      /* ignore SIGPIPE signal (i.e. do no abort but return error) */
 
      if (must_init_signal)
-       {  /* DO THIS ONLY ONCE */
+       {  
 	 
 	 signal(SIGPIPE, SIG_IGN); 
 	 must_init_signal = 0;

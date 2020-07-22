@@ -1,0 +1,35 @@
+<MODULE name="umos">
+    <SUBMITS sub_name="WarmStart"/>
+    <SUBMITS sub_name="umos_pred_144"/>
+    <SUBMITS sub_name="umos_pred_240"/>
+    <SUBMITS sub_name="loop_umos_prev"/>
+    <SUBMITS sub_name="umos_qc"/>
+    <SUBMITS sub_name="loop_umos_sscp"/>
+    <SUBMITS sub_name="umos_csv_prev"/>
+    <SUBMITS sub_name="umos_prev_archive"/>
+    <SUBMITS sub_name="umos_verif_spot3"/>
+    <SUBMITS sub_name="umos_verif_tempd"/>
+    <SUBMITS sub_name="Validation_UMOS"/>
+    <MODULE name="WarmStart"/>
+    <MODULE name="umos_pred_144"/>
+    <MODULE name="umos_pred_240"/>
+    <LOOP name="loop_umos_prev">
+        <SUBMITS sub_name="umos_prev"/>
+        <SUBMITS sub_name="umos_prev_dm"/>
+        <MODULE name="umos_prev"/>
+        <MODULE name="umos_prev_dm"/>
+    </LOOP>
+    <MODULE name="umos_qc"/>
+    <LOOP name="loop_umos_sscp">
+        <SUBMITS sub_name="umos_sscp"/>
+        <SUBMITS sub_name="umos_coef"/>
+        <MODULE name="umos_sscp"/>
+        <MODULE name="umos_coef"/>
+    </LOOP>
+    <MODULE name="umos_csv_prev"/>
+    <MODULE name="umos_prev_archive"/>
+    <MODULE name="umos_verif_spot3"/>
+    <MODULE name="umos_verif_tempd"/>
+    <MODULE name="Validation_UMOS"/>
+</MODULE>
+

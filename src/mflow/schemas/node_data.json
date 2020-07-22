@@ -1,0 +1,85 @@
+{
+    "_schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+        "catchup": {
+            "type": "integer"
+        },
+        "flow_children_node_paths": {
+            "type": "array"
+        },
+        "config_path": {
+            "type": "string"
+        },
+        "cpu": {
+            "type": "integer"
+        },
+        "flow_branch": {
+            "type": "string"
+        },
+        "flow_path": {
+            "type": "string"
+        },
+        "loop_indexes_available": {
+            "type": "array"
+        },
+        "machine": {
+            "type": "string"
+        },
+        "memory": {
+            "type": "string"
+        },
+        "module_name": {
+            "type": "string"
+        },
+        "name": {
+            "type": "string"
+        },
+        "path": {
+            "type": "string"
+        },
+        "resource_path": {
+            "type": "string"
+        },
+        "submits_children_node_paths": {
+            "type": "array"
+        },
+        "task_path": {
+            "type": "string"
+        },
+        "queue": {
+            "type": "string"
+        },
+        "soumet_args": {
+            "type": "string"
+        },
+        "type": {
+            "type": "string"
+        },
+        "wallclock": {
+            "type": "integer"
+        }
+    },
+    "required": [
+        "catchup",
+        "config_path",
+        "cpu",
+        "flow_children_node_paths",
+        "flow_branch",
+        "flow_path",
+        "loop_indexes_available",
+        "machine",
+        "memory",
+        "module_name",
+        "name",
+        "path",
+        "queue",
+        "resource_path",
+        "soumet_args",
+        "submits_children_node_paths",
+        "task_path",
+        "type",
+        "wallclock"
+    ],
+    "type": "object",
+    "additionalProperties": false
+}

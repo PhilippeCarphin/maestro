@@ -1,0 +1,104 @@
+<MODULE name="genbiascorr">
+  <SUBMITS sub_name="getTrials"/>
+  <SUBMITS sub_name="getBCorr"/>
+  <SUBMITS sub_name="getObservations"/>
+
+  <TASK name="getBCorr"/>
+  <TASK name="getTrials"/>
+
+  <TASK name="getObservations">
+    <SUBMITS sub_name="Var3D"/>
+    <SUBMITS sub_name="Thinning"/>
+  </TASK>
+
+  <FAMILY name="Var3D">
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+
+    <SUBMITS sub_name="trigger"/>    
+    <TASK name="trigger">
+      <SUBMITS sub_name="envar"/>
+    </TASK>
+    <MODULE name="envar"/>
+  </FAMILY>
+
+  <TASK name="Thinning">
+    <SUBMITS sub_name="OmA"/>
+    <SUBMITS sub_name="Amsua"/>
+    <SUBMITS sub_name="Amsub"/>
+    <SUBMITS sub_name="Ssmis"/>
+    <SUBMITS sub_name="Atms"/>
+    <SUBMITS sub_name="Airs"/>
+    <SUBMITS sub_name="Iasi"/>
+    <SUBMITS sub_name="Cris"/>
+    <SUBMITS sub_name="CSR"/>
+
+    <SUBMITS sub_name="Transfer_gbc"/>
+  </TASK>
+
+  <FAMILY name="OmA">
+    <DEPENDS_ON dep_name="./Var3D" status="end" type="node"/>
+
+    <SUBMITS sub_name="trigger"/>    
+    <TASK name="trigger">
+      <SUBMITS sub_name="envar"/>
+    </TASK>
+    <MODULE name="envar"/>
+  </FAMILY>
+  
+  <TASK name="Amsua">
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./OmA" status="end" type="node"/>
+  </TASK>
+
+  <TASK name="Amsub">
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./OmA" status="end" type="node"/>
+  </TASK>
+
+  <TASK name="Ssmis">
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./OmA" status="end" type="node"/>
+  </TASK>
+
+  <TASK name="Atms">
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./OmA" status="end" type="node"/>
+  </TASK>
+
+  <TASK name="Airs">
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./OmA" status="end" type="node"/>
+  </TASK>
+
+  <TASK name="Iasi">
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./OmA" status="end" type="node"/>
+  </TASK>
+
+  <TASK name="Cris">
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./OmA" status="end" type="node"/>
+  </TASK>
+
+  <TASK name="CSR">
+    <DEPENDS_ON dep_name="./getBCorr"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getTrials" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./OmA" status="end" type="node"/>
+  </TASK>
+
+  <TASK name="Transfer_gbc">
+    <DEPENDS_ON dep_name="./Amsua"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./Amsub"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./Ssmis"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./Atms"  status="end" type="node"/>
+    <DEPENDS_ON dep_name="./Airs"   status="end" type="node"/>
+    <DEPENDS_ON dep_name="./Iasi"   status="end" type="node"/>
+    <DEPENDS_ON dep_name="./Cris"   status="end" type="node"/>
+    <DEPENDS_ON dep_name="./CSR"    status="end" type="node"/>
+  </TASK>
+
+</MODULE>

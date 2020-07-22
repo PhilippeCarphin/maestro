@@ -1,0 +1,7 @@
+
+nodelogger -n ${SEQ_NODE} ${SEQ_LOOP_ARGS} -s info -m "donatello=${donatello} Donatello=${Donatello} BossaNova=${BossaNova}"
+
+echo INTO THE VOID IT GOES
+
+nodelogger -n ${SEQ_NODE} ${SEQ_LOOP_ARGS} -s info -m "sleeping NAO"
+sleep 3

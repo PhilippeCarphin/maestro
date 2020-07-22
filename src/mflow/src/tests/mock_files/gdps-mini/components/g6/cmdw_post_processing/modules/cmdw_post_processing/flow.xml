@@ -1,0 +1,40 @@
+<MODULE name="cmdw_post_processing">
+    <SUBMITS sub_name="WarmStart"/>
+    <SUBMITS sub_name="analyses"/>
+    <SUBMITS sub_name="perfect_prog"/>
+    <SUBMITS sub_name="cleanup_DEPOT"/>
+    <TASK name="WarmStart"/>
+    <FAMILY name="analyses">
+        <SUBMITS sub_name="run"/>
+        <SWITCH name="run" type="datestamp_hour">
+            <SWITCH_ITEM name="00">
+                <SUBMITS sub_name="dfxgl"/>
+                <TASK name="dfxgl"/>
+                <SUBMITS sub_name="dfxtm"/>
+                <TASK name="dfxtm"/>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="06">
+                <SUBMITS sub_name="dfxsn"/>
+                <TASK name="dfxsn"/>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="12"/>
+            <SWITCH_ITEM name="18"/>
+        </SWITCH>
+    </FAMILY>
+    <SWITCH name="perfect_prog" type="datestamp_hour">
+        <SWITCH_ITEM name="00"/>
+        <SWITCH_ITEM name="06">
+            <SUBMITS sub_name="ppobs"/>
+            <TASK name="ppobs"/>
+        </SWITCH_ITEM>
+        <SWITCH_ITEM name="12"/>
+        <SWITCH_ITEM name="18">
+            <SUBMITS sub_name="sfmbc"/>
+            <TASK name="sfmbc"/>
+            <SUBMITS sub_name="ppgbc"/>
+            <TASK name="ppgbc"/>
+        </SWITCH_ITEM>
+    </SWITCH>
+    <TASK name="cleanup_DEPOT"/>
+</MODULE>
+

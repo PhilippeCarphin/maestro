@@ -1,0 +1,24 @@
+<MODULE name="pre_assimcycle">
+    <SUBMITS sub_name="get_arcdata_cutoff"/>
+    <SUBMITS sub_name="get_arcdata_derisfc"/>
+    <SUBMITS sub_name="get_arcdata_derialt"/>
+
+    <TASK name="get_arcdata_cutoff">
+        <SUBMITS sub_name="cutoff"/>
+    </TASK>
+    <MODULE name="cutoff"/>
+    <TASK name="get_arcdata_derisfc">
+        <SUBMITS sub_name="derisfc"/>
+    </TASK>
+    <MODULE name="derisfc">
+        <DEPENDS_ON dep_name="./cutoff" status="end" type="node"/>
+    </MODULE>
+    <TASK name="get_arcdata_derialt">
+        <SUBMITS sub_name="derialt"/>
+    </TASK>
+    <MODULE name="derialt">
+        <DEPENDS_ON dep_name="./cutoff" status="end" type="node"/>
+    </MODULE>
+
+</MODULE>
+

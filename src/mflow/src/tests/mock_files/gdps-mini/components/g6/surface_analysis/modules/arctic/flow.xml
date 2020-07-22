@@ -1,0 +1,34 @@
+<MODULE name="ice_analysis">
+    <SUBMITS sub_name="ColdStart"/>
+    <SUBMITS sub_name="ice_derivate"/>
+    <SUBMITS sub_name="ice_3DVar"/>
+    <TASK name="ColdStart"/>
+    <FAMILY name="ice_derivate">
+        <SUBMITS sub_name="derivate_cis"/>
+        <SUBMITS sub_name="derivate_ssmi"/>
+        <SUBMITS sub_name="derivate_ssmis"/>
+        <SUBMITS sub_name="derivate_amsr2"/>
+        <SUBMITS sub_name="derivate_ascat"/>
+        <SUBMITS sub_name="derivate_bogus"/>
+        <SUBMITS sub_name="derivate_avhrr"/>
+        <TASK name="derivate_cis"/>
+        <TASK name="derivate_ssmi"/>
+        <TASK name="derivate_ssmis"/>
+        <TASK name="derivate_amsr2"/>
+        <TASK name="derivate_ascat">
+            <SUBMITS sub_name="qc_ascat"/>
+        </TASK>
+        <TASK name="qc_ascat"/>
+        <TASK name="derivate_bogus"/>
+        <TASK name="derivate_avhrr"/>
+    </FAMILY>
+    <FAMILY name="ice_3DVar">
+        <DEPENDS_ON dep_name="./ice_derivate" status="end" type="node"/>
+
+        <SUBMITS sub_name="run_3DVar"/>
+        <TASK name="run_3DVar">
+            <SUBMITS sub_name="transfer"/>
+        </TASK>
+        <TASK name="transfer"/>
+    </FAMILY>
+</MODULE>

@@ -1,0 +1,22 @@
+<MODULE name="obs_minus_fcst">
+
+  <SUBMITS sub_name="exec_at"/>
+  <TASK name="exec_at">
+    <SUBMITS sub_name="leadTimeLoop"/>
+  </TASK>  
+  
+  <LOOP name="leadTimeLoop">
+    <SUBMITS sub_name="getObservations"/>
+
+    <TASK name="getObservations">
+      <SUBMITS sub_name="OminusF"/>
+    </TASK>  
+    
+    <TASK name="OminusF">
+      <SUBMITS sub_name="Transfer"/>
+    </TASK>  
+    
+    <TASK name="Transfer"/>
+  </LOOP>
+
+</MODULE>

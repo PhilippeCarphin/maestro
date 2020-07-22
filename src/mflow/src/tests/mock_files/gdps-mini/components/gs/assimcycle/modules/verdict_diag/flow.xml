@@ -1,0 +1,7 @@
+<MODULE name="verdict_diag">
+  <SUBMITS sub_name="hyb"/>
+  <SUBMITS sub_name="pres"/>
+
+  <TASK name="hyb"/>
+  <TASK name="pres"/>
+</MODULE>

@@ -1,0 +1,4 @@
+TIMESTAMP=20200527.14:30:40:SEQNODE=/gdps_verif/SCORES_VS_OBSERVATIONS/Foreign_scores/Gfs_scores:MSGTYPE=end:SEQLOOP=:SEQMSG=job_ID=39626147.cs4fe01
+TIMESTAMP=20200527.14:32:37:SEQNODE=/gdps_verif/SCORES_VS_OBSERVATIONS/Foreign_scores/Gfs_scores:MSGTYPE=init:SEQLOOP=:SEQMSG=
+TIMESTAMP=20200527.14:32:51:SEQNODE=/gdps_verif/SCORES_VS_OBSERVATIONS/Foreign_scores/Gfs_scores:MSGTYPE=submit:SEQLOOP=:SEQMSG=Machine=eccc-ppp4 Queue=production CPU=1 (x1 CPU Multiplier as 1 MPIxOMP) Memory=4G Wallclock Limit=20 mpi=0 Submit method:Manual or cron submitted from host eccc-ppp4 soumetArgs=""
+TIMESTAMP=20200527.14:33:22:SEQNODE=/gdps_verif/SCORES_VS_OBSERVATIONS/Foreign_scores/Gfs_scores:MSGTYPE=abort:SEQLOOP=:SEQMSG=ord_soumet failed on eccc-ppp4. Check submission listing. Submission of job Gfs_scores failed

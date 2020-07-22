@@ -1,0 +1,227 @@
+<MODULE name="validation">
+    <SUBMITS sub_name="champ_essai"/>
+    <SUBMITS sub_name="analyses"/>
+    <SUBMITS sub_name="precipitations"/>
+    <SUBMITS sub_name="meteo_generale"/>
+    <SUBMITS sub_name="aviation"/>
+    <SUBMITS sub_name="temps_violent_hiver"/>
+    <SUBMITS sub_name="temps_violent_ete"/>
+    <SUBMITS sub_name="perfect_prog"/>
+    <SUBMITS sub_name="divers"/>
+    <SUBMITS sub_name="domaines"/>
+    <SUBMITS sub_name="labCentral_tracks"/>
+    <SUBMITS sub_name="labCentral_bourrasques"/>
+    <SUBMITS sub_name="labHAL_fog_stratus"/>
+    <FAMILY name="champ_essai">
+        <SUBMITS sub_name="validation_plhaa"/>
+        <MODULE name="validation_plhaa"/>
+    </FAMILY>
+    <FAMILY name="analyses">
+        <SUBMITS sub_name="validation_fx250_fx500"/>
+        <SUBMITS sub_name="validation_plhae"/>
+        <SUBMITS sub_name="validation_plhj"/>
+        <SUBMITS sub_name="validation_plhb"/>
+        <SUBMITS sub_name="validation_aws_250mb"/>
+        <SUBMITS sub_name="validation_aws_500mb"/>
+        <MODULE name="validation_fx250_fx500"/>
+        <MODULE name="validation_plhae"/>
+        <MODULE name="validation_plhj"/>
+        <MODULE name="validation_plhb"/>
+        <MODULE name="validation_aws_250mb"/>
+        <MODULE name="validation_aws_500mb"/>
+    </FAMILY>
+    <FAMILY name="precipitations">
+        <SUBMITS sub_name="calculs"/>
+        <SUBMITS sub_name="cartes"/>
+        <SUBMITS sub_name="bulletins"/>
+	<FAMILY name="calculs">
+	  <SUBMITS sub_name="validation_pcpn_interval"/>
+	  <SUBMITS sub_name="validation_pcpn_interval_native"/>
+	  <MODULE name="validation_pcpn_interval"/>
+	  <MODULE name="validation_pcpn_interval_native"/>
+	</FAMILY>
+        <FAMILY name="cartes">
+            <SUBMITS sub_name="validation_plhfc"/>
+	    <SUBMITS sub_name="run"/>
+            <MODULE name="validation_plhfc"/>
+	    <SWITCH name="run" type="datestamp_hour">
+              <SWITCH_ITEM name="00">
+		<SUBMITS sub_name="validation_plhcd"/>
+		<SUBMITS sub_name="validation_plhce"/>
+		<MODULE name="validation_plhcd"/>
+		<MODULE name="validation_plhce"/>
+	      </SWITCH_ITEM>
+	    </SWITCH>
+        </FAMILY>
+        <FAMILY name="bulletins">
+            <SUBMITS sub_name="validation_fgc13"/>
+            <MODULE name="validation_fgc13"/>
+        </FAMILY>
+    </FAMILY>
+    <FAMILY name="meteo_generale">
+        <SUBMITS sub_name="calculs"/>
+        <SUBMITS sub_name="cartes"/>
+        <SUBMITS sub_name="bulletins"/>
+	<FAMILY name="calculs">
+	    <SUBMITS sub_name="validation_loop_humidity_and_temperature"/>
+	    <MODULE name="validation_loop_humidity_and_temperature"/>
+	</FAMILY>
+        <FAMILY name="cartes">
+            <SUBMITS sub_name="validation_dfx20"/>
+            <SUBMITS sub_name="validation_loop_4_pan_classique"/>
+            <SUBMITS sub_name="validation_2_panneaux_classique"/>
+            <SUBMITS sub_name="validation_2_panneaux_classique_fichiers_standard"/>
+            <SUBMITS sub_name="validation_dfxf4"/>
+            <SUBMITS sub_name="validation_dfx24"/>
+            <MODULE name="validation_dfx20"/>
+            <MODULE name="validation_loop_4_pan_classique"/>
+            <MODULE name="validation_2_panneaux_classique"/>
+            <MODULE name="validation_2_panneaux_classique_fichiers_standard"/>
+            <MODULE name="validation_dfxf4"/>
+            <MODULE name="validation_dfx24"/>
+        </FAMILY>
+        <FAMILY name="bulletins">
+            <SUBMITS sub_name="validation_fxcn6"/>
+	    <SUBMITS sub_name="run"/>
+            <MODULE name="validation_fxcn6"/>
+	    <SWITCH name="run" type="datestamp_hour">
+              <SWITCH_ITEM name="12">
+		<SUBMITS sub_name="validation_fpext"/>
+		<SUBMITS sub_name="validation_fpext_fichiers_standard"/>
+		<MODULE name="validation_fpext"/>
+		<MODULE name="validation_fpext_fichiers_standard"/>
+	      </SWITCH_ITEM>
+	    </SWITCH>
+        </FAMILY>
+    </FAMILY>
+    <FAMILY name="aviation">
+        <SUBMITS sub_name="cartes"/>
+        <SUBMITS sub_name="bulletins"/>
+        <FAMILY name="cartes">
+            <SUBMITS sub_name="aviation_atlantique_nord"/>
+            <SUBMITS sub_name="givrage"/>
+            <FAMILY name="aviation_atlantique_nord">
+                <SUBMITS sub_name="validation_loop_jt"/>
+                <SUBMITS sub_name="validation_loop_ti"/>
+                <SUBMITS sub_name="validation_plhsg"/>
+                <SUBMITS sub_name="validation_loop_jt_fichiers_standard"/>
+                <SUBMITS sub_name="validation_loop_ti_fichiers_standard"/>
+                <MODULE name="validation_loop_jt"/>
+                <MODULE name="validation_loop_ti"/>
+                <MODULE name="validation_plhsg"/>
+                <MODULE name="validation_loop_jt_fichiers_standard"/>
+                <MODULE name="validation_loop_ti_fichiers_standard"/>
+            </FAMILY>
+            <FAMILY name="givrage">
+                <SUBMITS sub_name="validation_plhi"/>
+                <MODULE name="validation_plhi"/>
+            </FAMILY>
+        </FAMILY>
+        <FAMILY name="bulletins">
+            <SUBMITS sub_name="validation_loop_fbcn"/>
+            <SUBMITS sub_name="validation_fnt12"/>
+            <MODULE name="validation_loop_fbcn"/>
+            <MODULE name="validation_fnt12"/>
+        </FAMILY>
+    </FAMILY>
+    <FAMILY name="temps_violent_hiver">
+        <SUBMITS sub_name="calculs"/>
+        <FAMILY name="calculs">
+            <SUBMITS sub_name="validation_loop_edigraf"/>
+            <SUBMITS sub_name="validation_loop_winter_severe_weather"/>
+            <MODULE name="validation_loop_edigraf"/>
+            <MODULE name="validation_loop_winter_severe_weather"/>
+        </FAMILY>
+    </FAMILY>
+    <FAMILY name="temps_violent_ete">
+        <SUBMITS sub_name="calculs"/>
+        <FAMILY name="calculs">
+            <SUBMITS sub_name="validation_loop_convective_indices_buoyancy"/>
+            <SUBMITS sub_name="validation_loop_capes"/>
+            <MODULE name="validation_loop_convective_indices_buoyancy"/>
+            <MODULE name="validation_loop_capes"/>
+        </FAMILY>
+    </FAMILY>
+    <FAMILY name="perfect_prog">
+        <SUBMITS sub_name="validation_ft123"/>
+        <SUBMITS sub_name="validation_ym372"/>
+        <SUBMITS sub_name="validation_pps72"/>
+        <SUBMITS sub_name="validation_pppcl"/>
+        <SUBMITS sub_name="validation_fxcn5_fichiers_standard"/>
+        <SUBMITS sub_name="validation_fxcn5_bulletins"/>
+        <SUBMITS sub_name="validation_mupy2"/>
+        <SUBMITS sub_name="validation_mupy1"/>
+        <SUBMITS sub_name="jobs_a_00Z"/>
+        <MODULE name="validation_ft123"/>
+        <MODULE name="validation_ym372"/>
+        <MODULE name="validation_pps72"/>
+        <MODULE name="validation_pppcl"/>
+        <MODULE name="validation_fxcn5_fichiers_standard"/>
+        <MODULE name="validation_fxcn5_bulletins"/>
+        <MODULE name="validation_mupy2"/>
+        <MODULE name="validation_mupy1"/>
+        <SWITCH name="jobs_a_00Z" type="datestamp_hour">
+            <SWITCH_ITEM name="00">
+                <SUBMITS sub_name="validation_ft35a"/>
+                <MODULE name="validation_ft35a"/>
+                <SUBMITS sub_name="validation_anefu"/>
+                <MODULE name="validation_anefu"/>
+                <SUBMITS sub_name="validation_anefu_bulletins"/>
+                <MODULE name="validation_anefu_bulletins"/>
+                <SUBMITS sub_name="validation_y3144"/>
+                <MODULE name="validation_y3144"/>
+                <SUBMITS sub_name="validation_pc144"/>
+                <MODULE name="validation_pc144"/>
+                <SUBMITS sub_name="validation_ps144"/>
+                <MODULE name="validation_ps144"/>
+                <SUBMITS sub_name="validation_ft710"/>
+                <MODULE name="validation_ft710"/>
+                <SUBMITS sub_name="validation_tfmcn"/>
+                <MODULE name="validation_tfmcn"/>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="12"/>
+        </SWITCH>
+    </FAMILY>
+    <FAMILY name="divers">
+        <SUBMITS sub_name="run"/>
+        <SUBMITS sub_name="validation_uvboz_fichiers_standard"/>
+        <SUBMITS sub_name="validation_uvboz_fichiers_burp"/>
+        <SUBMITS sub_name="validation_dfxuv"/>
+	<SWITCH name="run" type="datestamp_hour">
+          <SWITCH_ITEM name="00">
+            <SUBMITS sub_name="validation_plhca"/>
+            <SUBMITS sub_name="validation_plhcb"/>
+            <SUBMITS sub_name="validation_spwav"/>
+            <MODULE name="validation_plhca"/>
+            <MODULE name="validation_plhcb"/>
+            <MODULE name="validation_spwav"/>	    
+	  </SWITCH_ITEM>
+	</SWITCH>
+        <MODULE name="validation_uvboz_fichiers_standard"/>
+        <MODULE name="validation_uvboz_fichiers_burp"/>
+        <MODULE name="validation_dfxuv"/>
+    </FAMILY>
+    <FAMILY name="domaines">
+        <SUBMITS sub_name="validation_afghanistan"/>
+        <SUBMITS sub_name="validation_africa"/>
+        <SUBMITS sub_name="validation_yugoslavia"/>
+        <MODULE name="validation_afghanistan"/>
+        <MODULE name="validation_africa"/>
+        <MODULE name="validation_yugoslavia"/>
+    </FAMILY>
+    <FAMILY name="labCentral_tracks">
+        <SUBMITS sub_name="validation_track_mslp_gz"/>
+        <SUBMITS sub_name="validation_track_tropic"/>
+        <MODULE name="validation_track_mslp_gz"/>
+        <MODULE name="validation_track_tropic"/>
+    </FAMILY>
+    <FAMILY name="labCentral_bourrasques">
+        <SUBMITS sub_name="validation_bourrasques"/>
+        <MODULE name="validation_bourrasques"/>
+    </FAMILY>
+    <FAMILY name="labHAL_fog_stratus">
+        <SUBMITS sub_name="validation_fog_stratus"/>
+        <MODULE name="validation_fog_stratus"/>
+    </FAMILY>
+</MODULE>
+
