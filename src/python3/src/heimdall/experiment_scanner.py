@@ -114,6 +114,7 @@ class ExperimentScanner():
         self.scan_all_task_content()
         self.scan_node_names()
         self.scan_broken_symlinks()
+        self.scan_root_links()
 
         self.sort_messages()
 
@@ -197,6 +198,26 @@ class ExperimentScanner():
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
     
+    def scan_root_links(self):
+        """
+        recommend the creation of 'forecast' soft link for folders like 'e1'
+        """
+
+                
+        links=get_links_source_and_target(self.path,max_depth=1)
+        target_basenames=[os.path.basename(link["target"]) for link in links]
+        source_basenames=[os.path.basename(link["source"]) for link in links]
+        link_basenames=target_basenames+source_basenames
+        
+        r=re.compile("[a-z][0-9]")
+        for folder in file_cache.listdir(self.path):
+            if r.match(folder) and folder not in link_basenames:
+                code = "b013"
+                unclear=self.path+folder
+                description = hmm.get(code,
+                                      unclear=unclear)
+                self.add_message(code, description)
+                
     def scan_gitignore(self):
         
         has_repo=file_cache.isdir(self.path+".git")

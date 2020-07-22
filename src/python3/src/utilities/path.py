@@ -27,7 +27,7 @@ def list_files_recursively(path):
     return output.strip().decode("utf8").split("\n")
 
 
-def get_links_source_and_target(path):
+def get_links_source_and_target(path,max_depth=0):
     """
     Searches this path recursively for all symlinks, returning a list of 
     dictionaries, with all symlinks and their unresolved targets:
@@ -39,8 +39,11 @@ def get_links_source_and_target(path):
 
     This can be used to audit relative/absolute links.
     """
+    
+    assert type(max_depth) is int and max_depth>=0
+    depth_option=" -maxdepth %s"%max_depth if max_depth else ""
 
-    cmd = "find %s -type l" % path.strip()
+    cmd = "find %s %s -type l" % (path.strip(),depth_option)
     output, status = safe_check_output_with_status(cmd)
     if status != 0:
         return []
