@@ -39,6 +39,11 @@ class TestUtilities(unittest.TestCase):
         self.assertIn("noise", result[0])
         
     def test_iterative_deepening_search(self):
+        """
+        This test is technically non-deterministic.
+        If it fails, consider rerunning the tests, or rewriting 
+        the test so it's more stable on all systems.
+        """
         self.maxDiff=None
         
         path=MOCK_FILES+"iterative_deepening_search/folder1/"

@@ -5,7 +5,7 @@ b001	Hard coded dependency path	The ‘exp’ attribute ‘{exp_value}’ in the
 b002	SupportInfo is too long	The SupportInfo attribute in the XML ‘{xml_path}’ is ‘{char_count}’ characters long but it should be shorter. The recommended maximum is {max_chars}. characters.		
 b003	SupportInfo has no URL	The SupportInfo attribute in the XML ‘{xml_path}’ should contain a URL. This is the recommended way to provide detailed support status info and troubleshooting steps.		
 b004	SupportInfo missing standard substring	The SupportInfo attribute in the XML ‘{xml_path}’ should start with a value like ‘Full Support’. Recommended start strings:\n{substrings}		
-b005	Deprecated files and folders	These files or folders are deprecated and should be deleted: {deprecated}		
+b005	Deprecated file or folder	The file or folder ‘{path}’ is deprecated and should be deleted.		
 b006	Non-maestro files in maestro folders	The maestro folder ‘{folder}’ should only contain maestro files like tsk, cfg, xml. These files were found:\n{filenames}		
 b007	Comments in config file	The pseudo-xml section (containing input, executables, and output) of the config file ‘{file_path}’ contains {count} commented lines starting with “##”. These seem to be configuration lines and not comments, and should be removed.		
 b008	Hidden queue alias used	The value ‘{value}’ for the resource variable ‘{name}’ is a hidden queue alias not easily visible in qstat. Consider using one of these queues instead:\n{queues}		
@@ -59,3 +59,4 @@ b012	Deprecated archive file	The file ‘{bad}’ is a deprecated archive file a
 w018	Bad items in gitignore	The gitignore file ‘{gitignore_path}’ should not contain line ‘{line}’. It’s important that this pattern is in the git repository so a full working suite can be shared.		
 w019	Missing items in gitignore	The gitignore file ‘{gitignore_path}’ should contain {content}. This will ignore files generated when running this suite which do not belong in the version controlled project.		
 w020	No gitignore	There should be a gitignore file here: ‘{gitignore_path}’. No gitignore means large amounts of unimportant files may be accidentally shared or added to the project.		
+w021	Suite file in $CMCCONST	The realpath for file ‘{path}’ is in the $CMCCONST folder ‘{cmcconst}’. Task, config, flow, and resource XML files used in a suite should not be in the $CMCCONST folder.	https://gitlab.science.gc.ca/CMOI/best-practices/blob/master/en/constants.md	

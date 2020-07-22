@@ -2,7 +2,7 @@ import os.path
 import unittest
 
 from constants import SCANNER_CONTEXT
-from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, OPERATIONAL_HOME, PARALLEL_HOME, TMP_FOLDER, QSTAT_OUTPUT1_PATH
+from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, OPERATIONAL_HOME, PARALLEL_HOME, TMP_FOLDER, QSTAT_OUTPUT1_PATH, CMCCONST_OVERRIDE
 from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
 from tests.temp_file_builder import setup_tmp_experiment1, setup_tmp_smco501_home, setup_tmp_git_author_repo
@@ -54,7 +54,8 @@ class TestSuiteScan(unittest.TestCase):
                                         operational_home=OPERATIONAL_HOME,
                                         parallel_home=parallel_home,
                                         critical_error_is_exception=False,
-                                        debug_qstat_output_override=QSTAT_CMD_OUTPUT)
+                                        debug_qstat_output_override=QSTAT_CMD_OUTPUT,
+                                        debug_cmcconst_override=CMCCONST_OVERRIDE)
 
             msg = "Experiment path: '%s'" % path
             self.assertIn(code, scanner.codes, msg=msg)

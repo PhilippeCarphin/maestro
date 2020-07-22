@@ -38,7 +38,8 @@ class ExperimentScanner():
                  operational_home=None,
                  parallel_home=None,
                  critical_error_is_exception=True,
-                 debug_qstat_output_override=""):
+                 debug_qstat_output_override="",
+                 debug_cmcconst_override=""):
 
         if not path.endswith("/"):
             path += "/"
@@ -68,7 +69,14 @@ class ExperimentScanner():
             self.qstat_data = get_qstat_data_from_text(debug_qstat_output_override)
         else:
             self.qstat_data = get_qstat_data(timeout=3)
-
+        
+        """
+        Instead of environment CMCCONST value, use this instead.
+        Useful for debugging/tests.
+        """
+        if debug_cmcconst_override:
+            os.environ["CMCCONST"]=debug_cmcconst_override
+            
         critical_errors = find_critical_errors(path)
         for code, kwargs in critical_errors.items():
             description = hmm.get(code, **kwargs)
@@ -88,6 +96,7 @@ class ExperimentScanner():
 
         self.scan_required_folders()
         self.scan_required_files()
+        self.scan_declared_files()
         self.scan_extra_files()
         self.scan_all_file_content()
         self.scan_exp_options()
@@ -119,6 +128,11 @@ class ExperimentScanner():
     def is_context_operational(self):
         return self.context in (SCANNER_CONTEXT.OPERATIONAL,
                                 SCANNER_CONTEXT.PREOPERATIONAL)
+
+    def is_context_monitored(self):
+        return self.context in (SCANNER_CONTEXT.OPERATIONAL,
+                                SCANNER_CONTEXT.PREOPERATIONAL,
+                                SCANNER_CONTEXT.PARALLEL)
 
     def add_message(self, code, description, url=""):
 
@@ -256,7 +270,9 @@ class ExperimentScanner():
 
         if has_repo:
             lines = []
-            authors = scan_git_authors(self.path)
+            include_current_branch=not self.is_context_monitored()
+            authors = scan_git_authors(self.path,
+                                       include_current_branch=include_current_branch)
             for author in authors:
                 line = "%s <%s>" % (author["name"], author["emails"][0])
                 lines.append(line)
@@ -397,11 +413,12 @@ class ExperimentScanner():
                "flow.xml"]
         paths = [self.path+a for a in old]
         code = "b005"
-        deprecated = [path for path in paths if file_cache.exists(path)]
-        if deprecated:
-            msg = "\n".join(deprecated)
+        for path in paths:
+            if not file_cache.exists(path):
+                continue
+            
             description = hmm.get(code,
-                                  deprecated=msg)
+                                  path=path)
             self.add_message(code, description)
 
     def scan_overview_xmls(self):
@@ -766,6 +783,18 @@ class ExperimentScanner():
                                       search=search.strip(),
                                       file_path=path)
                 self.add_message(check_data["code"], description)
+                
+    def scan_declared_files(self):
+        cmcconst=os.path.realpath(os.environ.get("CMCCONST",""))
+        if cmcconst:
+            code="w021"
+            for path in self.declared_files:
+                realpath=file_cache.realpath(path)
+                if realpath.startswith(cmcconst):
+                    description = hmm.get(code,
+                                          path=path,
+                                          cmcconst=cmcconst)
+                    self.add_message(code, description)
 
     def scan_required_files(self):
 
@@ -1018,6 +1047,7 @@ class ExperimentScanner():
         folders = set()
         resource_files = set()
         flow_files = set()
+        declared_files=set()
         rpath = self.path+"resources/"
         mpath = self.path+"modules/"
 
@@ -1027,6 +1057,7 @@ class ExperimentScanner():
             if file_cache.isfile(flow):
                 paths.add(flow)
                 flow_files.add(flow)
+                declared_files.add(flow)
 
         "find maestro files discovered through flow.xml"
         for node_path in self.maestro_experiment.get_node_datas():
@@ -1040,6 +1071,7 @@ class ExperimentScanner():
                 if not file_cache.isfile(path):
                     continue
                 paths.add(path)
+                declared_files.add(path)
                 if prefix == "resource":
                     resource_files.add(path)
                 elif prefix == "flow":
@@ -1061,7 +1093,7 @@ class ExperimentScanner():
                     "also add resource XMLs that were not discovered by using the flow"
                     if path.startswith(rpath) and path.endswith(".xml"):
                         resource_files.add(path)
-
+                        
         "index tsk cfg xml"
         task_files = []
         config_files = []
@@ -1108,6 +1140,9 @@ class ExperimentScanner():
 
         "all xml files"
         self.xml_files = sls(xml_files)
+        
+        "all tsk, cfg, flow, xml files explicitly declared by the main flow"
+        self.declared_files=sls(declared_files)
 
     def get_report_text(self):
         lines = []
