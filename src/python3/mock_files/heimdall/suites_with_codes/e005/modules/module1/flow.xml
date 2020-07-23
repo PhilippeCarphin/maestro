@@ -6,5 +6,7 @@
         <SUBMITS name="task1" type="user"/>
         <TASK name="task1"/>            
     </MODULE>
+    <SUBMITS name="bad-node-name"/>
+    <TASK name="bad-node-name"/>
 </MODULE>
 

@@ -16,7 +16,7 @@ c004	No EntryModule flow.xml	The required EntryModule flow.xml file does not exi
 c005	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to parse as XML: ‘{flow_xml}’		
 e001	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders	
 e002	Bad XML	Failed to parse XML: ‘{xml}’		
-e003	Bad task name	Invalid task name ‘{task_name}’ at path '{task_path}’		
+e003	Invalid node name	Invalid node name ‘{node_name}’ in flow XML ‘{flow_path}’. Node names must be alphanumeric with dot, dash, or underscores. Must match the regex: {regex}	https://regex101.com/	
 e004	Broken symlink	Soft links were found with targets that do not exist:\n{broken_links}		
 e005	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML:\n{flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290	
 i005	Unknown nodelogger signal	The executable ‘nodelogger’ was given unknown signals for its ‘-s’ argument. This message won’t appear in the message center.\n{details}	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
@@ -50,7 +50,7 @@ w013	Misplaced dissemination variables	The variables {variables} belong only in 
 w014	Hub pairs have dissimilar targets	The hub folder links ‘{folder1}’ and ‘{folder2}’ are expected to have similar targets. Instead they are very different:\n{target1}\n{target2}		
 w015	Git repo has uncommited changes	There are uncommited changes in the git repo. Experiments with the ‘{context}’ context should always have nothing to commit and a clean working tree from ‘git status’.		
 b009	Deprecated attribute in SUBMITS element	The attribute ‘type’ in <SUBMITS> elements is deprecated and can be removed. Found in files:\n{xml_paths}		
-b010	Non-standard characters in executable name	Executable names have non-standard characters that do not match regex ‘{regex}’. This can cause bugs with tools, operating systems, and parsers. Consider renaming them:\n{details}		
+b010	Non-standard characters in executable name	Executable names have non-standard characters that do not match regex ‘{regex}’. This can cause bugs with tools, operating systems, and parsers. Consider renaming them:\n{details}	https://regex101.com/	
 b011	Top-level file or folder in CMCCONST	There are references to files or folders in the root level of the CMCCONST folder. It is recommended instead to use folders in CMCCONST instead. The {search} was found in file: ‘{file_path}’	https://gitlab.science.gc.ca/CMOI/best-practices/blob/master/en/constants.md	
 i006	Lead developers from git history	Based on the git history for this project (commit frequency, recency, continuity) these seem to be the lead developers:\n{developers}		
 w016	The task run_orji is disabled	The task resource ‘{resource_path}’ has a catchup value of ‘{catchup}’ but ‘run_orji’ tasks should always be enabled. This way, users get to decide whether to subscribe or unsubscribe.	https://wiki.cmc.ec.gc.ca/wiki/orji	
@@ -61,3 +61,4 @@ w019	Missing items in gitignore	The gitignore file ‘{gitignore_path}’ should
 w020	No gitignore	There should be a gitignore file here: ‘{gitignore_path}’. No gitignore means large amounts of unimportant files may be accidentally shared or added to the project.		
 w021	Suite file in $CMCCONST	The realpath for file ‘{path}’ is in the $CMCCONST folder ‘{cmcconst}’. Task, config, flow, and resource XML files used in a suite should not be in the $CMCCONST folder.	https://gitlab.science.gc.ca/CMOI/best-practices/blob/master/en/constants.md	
 b013	Unclear folder name	The folder ‘{unclear}’ should have a descriptive soft link next to it. For example ‘forecast -> e1’. This gives newbies one less thing to memorize when getting started.	https://wiki.cmc.ec.gc.ca/wiki/Obfuscation	
+b014	Bad node name	Bad node name ‘{node_name}’ in flow XML ‘{flow_path}’. This name works, but the recommendation is to match this regex: {regex}	https://regex101.com/	

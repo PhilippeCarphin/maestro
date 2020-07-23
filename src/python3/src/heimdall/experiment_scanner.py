@@ -202,7 +202,6 @@ class ExperimentScanner():
         """
         recommend the creation of 'forecast' soft link for folders like 'e1'
         """
-
                 
         links=get_links_source_and_target(self.path,max_depth=1)
         target_basenames=[os.path.basename(link["target"]) for link in links]
@@ -969,13 +968,40 @@ class ExperimentScanner():
             description = hmm.get(code, broken_links=broken_links)
             self.add_message(code, description)
 
-    def scan_node_names(self):
-        code = "e003"
-        r = re.compile(r"[a-zA-Z_]+[a-zA-Z0-9_]+")
-        for task_path in self.task_files:
-            task_name = task_path.split("/")[-1]
-            if not r.match(task_name):
-                description = hmm.get(code, task_name=task_name, task_path=task_path)
+    def scan_node_names(self):        
+        required_regex = re.compile(r"^(?:[a-zA-Z0-9]+[._-]?)*[a-zA-Z0-9]+$")
+        recommended_regex=re.compile(r"^(?:[a-zA-Z0-9]+[._]?)*[a-zA-Z0-9]+$")
+        
+        required_regex = re.compile(r"^(?i)[a-z](?:[a-z0-9]+[._-]?)*[a-z0-9]+$")
+        recommended_regex = re.compile(r"^(?i)[a-z](?:[a-z0-9]+[._]?)*[a-z0-9]+$")
+        
+        for node_path in self.maestro_experiment.get_node_paths():
+            node_data=self.maestro_experiment.get_node_data(node_path)
+            
+            """
+            switch items which have names like '00' and '12'
+            can be ignored in this check, as they are only used internally.
+            """
+            if node_data["type"] == NODE_TYPE.SWITCH_ITEM:
+                continue
+            
+            flow_path=node_data["flow_path"]
+            node_name = node_path.split("/")[-1]
+            
+            if required_regex.match(node_name):
+                if not recommended_regex.match(node_name):
+                    code = "b014"
+                    description = hmm.get(code,
+                                          node_name=node_name,
+                                          flow_path=flow_path,
+                                          regex=recommended_regex.pattern)
+                    self.add_message(code, description)
+            else:
+                code = "e003"
+                description = hmm.get(code,
+                                      node_name=node_name,
+                                      flow_path=flow_path,
+                                      regex=required_regex.pattern)
                 self.add_message(code, description)
 
     def scan_exp_options(self):
