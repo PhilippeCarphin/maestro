@@ -969,9 +969,6 @@ class ExperimentScanner():
             self.add_message(code, description)
 
     def scan_node_names(self):        
-        required_regex = re.compile(r"^(?:[a-zA-Z0-9]+[._-]?)*[a-zA-Z0-9]+$")
-        recommended_regex=re.compile(r"^(?:[a-zA-Z0-9]+[._]?)*[a-zA-Z0-9]+$")
-        
         required_regex = re.compile(r"^(?i)[a-z](?:[a-z0-9]+[._-]?)*[a-z0-9]+$")
         recommended_regex = re.compile(r"^(?i)[a-z](?:[a-z0-9]+[._]?)*[a-z0-9]+$")
         
