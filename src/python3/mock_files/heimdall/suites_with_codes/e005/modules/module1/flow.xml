@@ -8,7 +8,7 @@
         <SUBMITS name="task1" type="user"/>
         <TASK name="task1"/>
     </MODULE>
-    <SUBMITS name="bad-node-name"/>
-    <TASK name="bad-node-name"/>
+    <SUBMITS sub_name="bad-node-name" name="bad-attribute"/>
+    <TASK name="bad-node-name" sub_name="bad-attribute"/>
 </MODULE>
 

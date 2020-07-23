@@ -63,3 +63,5 @@ w021	Suite file in $CMCCONST	The realpath for file ‘{path}’ is in the $CMCCO
 b013	Unclear folder name	The folder ‘{unclear}’ should have a descriptive soft link next to it. For example ‘forecast -> e1’. This gives newbies one less thing to memorize when getting started.	https://wiki.cmc.ec.gc.ca/wiki/Obfuscation	
 b014	Bad node name	Bad node name ‘{node_name}’ in flow XML ‘{flow_path}’. This name works, but the recommendation is to match this regex: {regex}	https://regex101.com/	
 e017	Duplicate name in flow container	The container ‘{container_name}’ in a flow XML has more than one element with the name or subname ‘{duplicate_name}’. All direct children in a container must have a unique name or subname.		
+e018	Submits element has name attribute	All SUBMITS elements should have a ‘sub_name’ attribute not a ‘name’ attribute. The file ‘{file_path}’ contains: ‘{matching_string}’		
+e019	Non-submits element has sub_name attribute	Only SUBMITS elements should have a ‘sub_name’ attribute. You may need to use the ‘name’ attribute instead. The file ‘{file_path}’ contains: ‘{matching_string}’		

@@ -167,7 +167,7 @@ class ExperimentScanner():
         path = HEIMDALL_CONTENT_CHECKS_CSV
 
         "filetype must be one of these"
-        valid_filetypes = ["tsk", "cfg", "xml", "resource_xml"]
+        valid_filetypes = ["tsk", "cfg", "xml", "flow_xml", "resource_xml"]
 
         "list of check data, each row of CSV is a check data"
         self.file_content_checks = get_dictionary_list_from_csv(path)
@@ -779,6 +779,8 @@ class ExperimentScanner():
                 break
         if path.startswith(rpath) and path.endswith(".xml"):
             filetype = "resource_xml"
+        if path.endswith("flow.xml"):
+            filetype = "flow_xml"
 
         if not filetype:
             "files of unknown type are not content scanned"
@@ -902,11 +904,11 @@ class ExperimentScanner():
             if name:
                 names.append(name)
                 
-            subname=child.attrib.get("subname","")
-            if subname:
-                subnames.append(subname)
+            subname=child.attrib.get("sub_name","")
             if subname in subnames:
                 duplicates.append(name)
+            if subname:
+                subnames.append(subname)
         
         duplicates=sorted(list(set(duplicates)))
         code="e017"
