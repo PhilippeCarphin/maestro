@@ -788,19 +788,29 @@ class ExperimentScanner():
         for check_data in self.filetype_to_check_datas[filetype]:
 
             content = content_without_comments if check_data["strip_comments"] else content_with_comments
+            
+            matching_strings=[]
+            
+            "find all strings that match either the regex or simple substring"
+            
             found_substring = bool(check_data["substring"]) and check_data["substring"] in content
-            found_regex = check_data.get("regex") and bool(check_data.get("regex").search(content))
-
-            "describe what was found"
-            search = "search"
-            if found_regex:
-                search = "regex '%s'" % check_data["regex_string"]
             if found_substring:
-                search = "substring '%s'" % check_data["substring"]
-
-            if found_substring or found_regex:
+                matching_strings.append(check_data["substring"])            
+            if check_data.get("regex"):
+                matches=check_data.get("regex").finditer(content)
+                for match in matches:
+                    
+                    """If there are regex groups (parentheses in the regex), 
+                    use the first one. Otherwise, use the whole match.
+                    """
+                    if len(match.groups())>1:
+                        matching_strings.append(match.group(1))
+                    else:
+                        matching_strings.append(match.group(0))                
+            
+            for matching_string in matching_strings:
                 description = hmm.get(check_data["code"],
-                                      search=search.strip(),
+                                      matching_string=matching_string.strip(),
                                       file_path=path)
                 self.add_message(check_data["code"], description)
                 
