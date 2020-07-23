@@ -111,6 +111,7 @@ class ExperimentScanner():
         self.scan_config_files()
         self.scan_home_soft_links()
         self.scan_modules()
+        self.scan_containers()
         self.scan_all_task_content()
         self.scan_node_names()
         self.scan_broken_symlinks()
@@ -880,6 +881,39 @@ class ExperimentScanner():
             code = "i005"
             description = hmm.get(code,
                                   details="\n".join(msg_lines))
+            self.add_message(code, description)
+            
+    def scan_containers(self):
+        for container in self.maestro_experiment.container_elements:
+            self.scan_container(container)
+    
+    def scan_container(self,container):
+        container_name=container.attrib.get("name",container.tag)
+        
+        "find children in containers with duplicate name/subname"
+        names=[]
+        subnames=[]
+        duplicates=[]
+        
+        for child in container.getchildren():
+            name=child.attrib.get("name","")
+            if name in names:
+                duplicates.append(name)
+            if name:
+                names.append(name)
+                
+            subname=child.attrib.get("subname","")
+            if subname:
+                subnames.append(subname)
+            if subname in subnames:
+                duplicates.append(name)
+        
+        duplicates=sorted(list(set(duplicates)))
+        code="e017"
+        for d in duplicates:
+            description = hmm.get(code,
+                                  container_name=container_name,
+                                  duplicate_name=d)
             self.add_message(code, description)
 
     def scan_modules(self):

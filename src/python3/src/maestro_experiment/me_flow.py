@@ -11,7 +11,7 @@ import lxml
 from utilities.maestro.datestamp import get_day_of_week
 from constants import NODE_TYPE, SWITCH_TYPE
 from utilities.maestro.xml import get_combined_flow_for_experiment_path, get_node_type_from_element, get_submits_from_flow_element, \
-    get_flow_children_from_flow_element, get_module_name_from_flow_xml, get_paths_from_element, get_module_name_for_element
+    get_flow_children_from_flow_element, get_module_name_from_flow_xml, get_paths_from_element, get_module_name_for_element, is_container
 from utilities.pretty import pretty_kwargs
 from utilities.generic import superstrip
 from home_logger import logger
@@ -50,6 +50,12 @@ class ME_Flow():
         key is node_path, value is NODE_TYPE
         """
         self.node_types = {}
+        
+        """
+        list of all container elements in the flow which are containers
+        like loop, switch, family, module
+        """
+        self.container_elements=[]
 
         """
         key is node_path of child, value is node_path of parent in the visual flow
@@ -92,6 +98,8 @@ class ME_Flow():
             logger.warning("Failed to find root flow element in flow.xml: '%s'" % entry_flow)
             return
 
+        self.container_elements.append(self.root_flow)
+        
         "exclude non-elements in document, like comments"
         children = [child for child in self.root_flow.iter() if type(child) is lxml.etree._Element]
 
@@ -111,6 +119,9 @@ class ME_Flow():
 
         flow_branch, node_path, no_index_node_path, module_path = get_paths_from_element(element)
         node_type = get_node_type_from_element(element)
+        
+        if is_container(element):
+            self.container_elements.append(element)
 
         self.node_path_to_no_index_node_path[node_path] = no_index_node_path
 
