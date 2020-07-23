@@ -65,3 +65,4 @@ b014	Bad node name	Bad node name ‘{node_name}’ in flow XML ‘{flow_path}’
 e017	Duplicate name in flow container	The container ‘{container_name}’ in a flow XML has more than one element with the name or subname ‘{duplicate_name}’. All direct children in a container must have a unique name or subname.		
 e018	Submits element has name attribute	All SUBMITS elements should have a ‘sub_name’ attribute not a ‘name’ attribute. The file ‘{file_path}’ contains: ‘{matching_string}’		
 e019	Non-submits element has sub_name attribute	Only SUBMITS elements should have a ‘sub_name’ attribute. You may need to use the ‘name’ attribute instead. The file ‘{file_path}’ contains: ‘{matching_string}’		
+w022	Machine resource is hard coded	The experiment seems to have the ‘{context}’ context but the value ‘{machine_value}’ of ‘machine’ in ‘{resource_path}’ is hard coded. A switchover may break this suite. Use a variable like $FRONTEND instead.		

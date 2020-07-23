@@ -79,8 +79,7 @@ class ExperimentScanner():
             
         critical_errors = find_critical_errors(path)
         for code, kwargs in critical_errors.items():
-            description = hmm.get(code, **kwargs)
-            self.add_message(code, description)
+            self.add_message(code, **kwargs)
         if critical_errors:
             if critical_error_is_exception:
                 raise ValueError("Experiment path:\n'%s'\nhas critical errors:\n%s" % (path, str(critical_errors)))
@@ -94,28 +93,28 @@ class ExperimentScanner():
             context = guess_scanner_context_from_path(self.path)
         self.context = context
 
-        self.scan_required_folders()
-        self.scan_required_files()
-        self.scan_declared_files()
-        self.scan_extra_files()
         self.scan_all_file_content()
-        self.scan_exp_options()
-        self.scan_xmls()
-        self.scan_hub()
-        self.scan_gitignore()
-        self.scan_git_repo()
+        self.scan_all_task_content()
+        self.scan_broken_symlinks()
+        self.scan_config_files()
+        self.scan_containers()
+        self.scan_declared_files()
         self.scan_deprecated_files_folders()
+        self.scan_exp_options()
+        self.scan_extra_files()
+        self.scan_git_repo()
+        self.scan_gitignore()
+        self.scan_home_soft_links()
+        self.scan_hub()
+        self.scan_modules()
+        self.scan_node_names()
+        self.scan_overview_xmls()
+        self.scan_required_files()
+        self.scan_required_folders()
         self.scan_resource_files()
         self.scan_resource_queues()
-        self.scan_overview_xmls()
-        self.scan_config_files()
-        self.scan_home_soft_links()
-        self.scan_modules()
-        self.scan_containers()
-        self.scan_all_task_content()
-        self.scan_node_names()
-        self.scan_broken_symlinks()
         self.scan_root_links()
+        self.scan_xmls()
 
         self.sort_messages()
 
@@ -136,14 +135,14 @@ class ExperimentScanner():
                                 SCANNER_CONTEXT.PREOPERATIONAL,
                                 SCANNER_CONTEXT.PARALLEL)
 
-    def add_message(self, code, description, url=""):
+    def add_message(self, code, **kwargs):
 
         if not CODE_REGEX.match(code):
             raise ValueError("ExperimentScanner code '%s' does not match regex code regex:\n    %s" % (code, CODE_REGEX.pattern))
 
         label = hmm.get_label(code)
-        if not url:
-            url = hmm.get_url(code)
+        url = hmm.get_url(code)
+        description = hmm.get(code,**kwargs)
 
         message = {"code": code, "label": label, "description": description, "url": url}
         self.codes.add(code)
@@ -212,11 +211,8 @@ class ExperimentScanner():
         r=re.compile("[a-z][0-9]")
         for folder in file_cache.listdir(self.path):
             if r.match(folder) and folder not in link_basenames:
-                code = "b013"
                 unclear=self.path+folder
-                description = hmm.get(code,
-                                      unclear=unclear)
-                self.add_message(code, description)
+                self.add_message("b013", unclear=unclear)
                 
     def scan_gitignore(self):
         
@@ -228,10 +224,7 @@ class ExperimentScanner():
 
         "no gitignore"
         if not file_cache.isfile(gitignore_path):
-            code = "w020"
-            description = hmm.get(code,
-                                  gitignore_path=gitignore_path)
-            self.add_message(code, description)
+            self.add_message("w020", gitignore_path=gitignore_path)
             return
         
         content=file_cache.open(gitignore_path)
@@ -246,20 +239,16 @@ class ExperimentScanner():
             
             for bad in must_not_have:
                 if line==bad or line=="/"+bad:
-                    code="w018"
-                    description = hmm.get(code,
+                    self.add_message("w018",
                                           line=line,
                                           gitignore_path=gitignore_path)
-                    self.add_message(code, description)
         
         "required lines were not found"
         if must_have:
             content="'"+"', '".join(must_have)+"'"
-            code="w019"
-            description = hmm.get(code,
+            self.add_message("w019",
                                   content=content,
                                   gitignore_path=gitignore_path)
-            self.add_message(code, description)
 
     def scan_git_repo(self):
 
@@ -273,21 +262,17 @@ class ExperimentScanner():
         
         "no repo"
         if must_have_repo and not has_repo:
-            code = "e016"
-            description = hmm.get(code,
-                                  context=self.context)
-            self.add_message(code, description)
+            self.add_message("e016", context=self.context)
 
         "are there uncommited changes"
         if has_repo and output:
             if must_be_clean:
                 code = "w015"
-                description = hmm.get(code,
-                                      context=self.context)
+                kwargs={"context":self.context}
             else:
                 code = "i004"
-                description = hmm.get(code)
-            self.add_message(code, description)
+                kwargs={}
+            self.add_message(code, **kwargs)
 
         if has_repo:
             lines = []
@@ -301,10 +286,7 @@ class ExperimentScanner():
             developers = "    "+"\n    ".join(lines[:dev_count])
 
             if developers:
-                code = "i006"
-                description = hmm.get(code,
-                                      developers=developers)
-                self.add_message(code, description)
+                self.add_message("i006", developers=developers)
 
     def scan_extra_files(self):
         """
@@ -314,11 +296,8 @@ class ExperimentScanner():
         "text editor swap files"
         swaps = [path for path in self.files if is_editor_swapfile(path)]
         if swaps:
-            code = "i003"
             filenames = "\n".join(swaps)
-            description = hmm.get(code,
-                                  swaps=filenames)
-            self.add_message(code, description)
+            self.add_message("i003", swaps=filenames)
 
         "Random files should not be adjacent to any maestro files like tsk, cfg, resource xml"
         maestro_files = self.task_files+self.config_files+self.resource_files+self.flow_files
@@ -345,12 +324,10 @@ class ExperimentScanner():
                     extra.append(path)
 
             if extra:
-                code = "b006"
                 filenames = "\n".join(extra)
-                description = hmm.get(code,
+                self.add_message("b006",
                                       folder=folder,
                                       filenames=filenames)
-                self.add_message(code, description)
 
     def scan_hub(self):
         "scan links and targets of hub folder"
@@ -366,29 +343,21 @@ class ExperimentScanner():
                 if not file_cache.islink(path):
                     bad.append(path)
             if bad:
-                code = "e014"
                 msg = "\n".join(bad)
-                description = hmm.get(code,
+                self.add_message("e014",
                                       context=self.context,
                                       bad=msg)
-                self.add_message(code, description)
                 
         "bad archive and protocol files"
         for path in self.hub_files:
             basename=os.path.basename(path)
             
             if basename==".protocole":
-                code = "b012"
-                description = hmm.get(code,
-                                      bad=path)
-                self.add_message(code, description)
+                self.add_message("b012", bad=path)
             
             if basename.startswith(".protocole_") or basename.startswith(".archive_monitor_"):
                 if not file_cache.islink(path):
-                    code = "w017"
-                    description = hmm.get(code,
-                                          bad=path)
-                    self.add_message(code, description)
+                    self.add_message("w017", bad=path)
         
         """
         dissimilar targets
@@ -416,13 +385,11 @@ class ExperimentScanner():
             if target_d > max_levenshtein_distance:
                 folder1 = os.path.basename(target1)
                 folder2 = os.path.basename(target2)
-                code = "w014"
-                description = hmm.get(code,
+                self.add_message("w014",
                                       folder1=folder1,
                                       folder2=folder2,
                                       target1=target1,
                                       target2=target2)
-                self.add_message(code, description)
 
     def scan_deprecated_files_folders(self):
         old = ["hub/hare",
@@ -433,14 +400,11 @@ class ExperimentScanner():
                "ExpTimings",
                "flow.xml"]
         paths = [self.path+a for a in old]
-        code = "b005"
         for path in paths:
             if not file_cache.exists(path):
                 continue
             
-            description = hmm.get(code,
-                                  path=path)
-            self.add_message(code, description)
+            self.add_message("b005", path=path)
 
     def scan_overview_xmls(self):
         """
@@ -474,21 +438,17 @@ class ExperimentScanner():
             should_be_in_xml = self.context == context
 
             if should_be_in_xml and realpath not in experiments:
-                code = "w011"
-                description = hmm.get(code,
+                self.add_message("w011",
                                       context=self.context,
                                       exp_count=len(experiments),
                                       xml_path=xml_path)
-                self.add_message(code, description)
 
             if not should_be_in_xml and realpath in experiments:
-                code = "w012"
-                description = hmm.get(code,
+                self.add_message("w012",
                                       context=self.context,
                                       exp_count=len(experiments),
                                       xml_path=xml_path,
                                       xml_context=context)
-                self.add_message(code, description)
 
     def scan_resource_limits_for_resource_xml(self, xml_path):
 
@@ -518,14 +478,13 @@ class ExperimentScanner():
 
                 if not maximum or value <= maximum:
                     continue
-                code = "e015"
-                description = hmm.get(code,
+                
+                self.add_message("e015",
                                       value=xml_value,
                                       attribute=attribute,
                                       maximum=maximum,
                                       xml_path=xml_path,
                                       queue=queue)
-                self.add_message(code, description)
 
     def scan_resource_queues(self):
         """
@@ -559,11 +518,10 @@ class ExperimentScanner():
             value = self.maestro_experiment.get_resource_value_from_key(name)
             if value and value not in queues:
                 code = "b008" if value in aliases else "w010"
-                description = hmm.get(code,
+                self.add_message(code,
                                       value=value,
                                       name=name,
                                       queues=str(queues))
-                self.add_message(code, description)
 
     def scan_config_files(self):
 
@@ -573,12 +531,10 @@ class ExperimentScanner():
             self.scan_config_file(path)
 
         if self.non_standard_character_lines:
-            code = "b010"
             details = "\n".join(self.non_standard_character_lines)
-            description = hmm.get(code,
+            self.add_message("b010",
                                   regex=EXECUTABLE_NAME_REGEX.pattern,
                                   details=details)
-            self.add_message(code, description)
 
     def scan_config_file(self, path):
         "scan the content of config files (see scan_file_content for CSV content scan)"
@@ -593,10 +549,9 @@ class ExperimentScanner():
         for section, d in weird_data.items():
             for key, value in d.items():
                 if value.startswith("/"):
-                    description = hmm.get(code,
+                    self.add_message(code,
                                           config_path=path,
                                           bad_path=value)
-                    self.add_message(code, description)
 
         "find non-standard characters in names"
         for section, d in weird_data.items():
@@ -610,12 +565,10 @@ class ExperimentScanner():
             only_in_exp_config = ["DISSEM_STATE", "PREOP_STATE"]
             unexpected = [key for key in only_in_exp_config if key in key_values]
             if unexpected:
-                code = "w013"
                 variables = ", ".join(unexpected)
-                description = hmm.get(code,
+                self.add_message("w013",
                                       cfg_path=path,
                                       variables=variables)
-                self.add_message(code, description)
 
         "bad variable values"
         for key, expected_value in expected_config.items():
@@ -626,41 +579,29 @@ class ExperimentScanner():
                     unexpected.append(line)
         if unexpected:
             msg = "\n".join(unexpected)
-            code = "e013"
-            description = hmm.get(code,
+            self.add_message("e013",
                                   context=self.context,
                                   cfg_path=path,
                                   unexpected=msg)
-            self.add_message(code, description)
 
         commented_lines = get_commented_pseudo_xml_lines(content)
         if commented_lines:
-            code = "b007"
-            description = hmm.get(code,
+            self.add_message("b007",
                                   file_path=path,
                                   count=len(commented_lines))
-            self.add_message(code, description)
 
     def scan_resource_files(self):
         "scan the content of resource files (see scan_file_content for CSV content scan)"
 
-        """
-        this regex matches strings like:
-            machine="${FRONTEND}"
-        where group 1 is the value between double quotes.
-        """
-        attribute_regex = re.compile(r"""[a-zA-Z_]+[ ]*=[ ]*["']([^'"]+)["']""")
         me = self.maestro_experiment
 
         "undefined variables"
         d = me.undefined_resource_variables
         if d:
             for path, variables in d.items():
-                code = "e012"
-                description = hmm.get(code,
+                self.add_message("e012",
                                       resource_path=path,
                                       variable_names=str(variables))
-                self.add_message(code, description)
 
         "run_orji must be enabled"
         for path in self.resource_files:
@@ -674,11 +615,9 @@ class ExperimentScanner():
             except:
                 continue
             if catchup > 4:
-                code = "w016"
-                description = hmm.get(code,
+                self.add_message("w016",
                                       resource_path=path,
                                       catchup=catchup)
-                self.add_message(code, description)
 
         "resources.def variable name typo"
         standard_resource_defines = ["FRONTEND",
@@ -696,25 +635,43 @@ class ExperimentScanner():
                 for maybe_typo in declares:
                     d = Levenshtein.distance(name, maybe_typo)
                     if d == 1:
-                        code = "w009"
-                        description = hmm.get(code,
+                        self.add_message("w009",
                                               maybe_typo=maybe_typo,
                                               expected=name)
-                        self.add_message(code, description)
 
+        """
+        this regex matches strings like:
+            machine="${FRONTEND}"
+        where:
+            group 1 is attribute name
+            group 2 is the value between double quotes.
+        """
+        attribute_regex = re.compile(r"""([a-zA-Z_]+)[ ]*=[ ]*["']([^'"]+)["']""")
+        
         for path in self.resource_files:
-            "unbalanced parentheses"
-            code = "e009"
             content = file_cache.open(path)
             for match in attribute_regex.finditer(content):
-                attribute_value = match.group(1)
+                
+                attribute_name = match.group(1)
+                attribute_value = match.group(2)
+
+                "unbalanced parentheses"                
                 if attribute_value.count("{") != attribute_value.count("}"):
-                    description = hmm.get(code,
+                    self.add_message("e009",
                                           attribute_value=attribute_value,
                                           file_path=path)
-                    self.add_message(code, description)
 
-            "dependency codes"
+                "hard coded machine resource in operations"                    
+                if (attribute_name == "machine" and 
+                    not attribute_value.startswith("$") and
+                    self.is_context_monitored()):
+                    self.add_message("w022",
+                                          context=self.context,
+                                          machine_value=attribute_value,
+                                          resource_path=path)
+
+        "dependency codes"
+        for path in self.resource_files:
             etree = file_cache.etree_parse(path)
             elements = etree.xpath("//DEPENDS_ON")
             for d_element in elements:
@@ -728,10 +685,9 @@ class ExperimentScanner():
                     else:
                         code = "e011"
 
-                    description = hmm.get(code,
+                    self.add_message(code,
                                           exp_value=exp,
                                           resource_path=path)
-                    self.add_message(code, description)
 
     def scan_home_soft_links(self):
         """
@@ -750,10 +706,9 @@ class ExperimentScanner():
             is_op = self.is_context_operational()
             code = "w005" if is_op else "i001"
             msg = "\n".join(bad_links)
-            description = hmm.get(code,
+            self.add_message(code,
                                   real_home=home_root,
                                   bad_links=msg)
-            self.add_message(code, description)
 
     def scan_all_file_content(self):
         """
@@ -812,22 +767,21 @@ class ExperimentScanner():
                         matching_strings.append(match.group(0))                
             
             for matching_string in matching_strings:
-                description = hmm.get(check_data["code"],
+                self.add_message(check_data["code"],
                                       matching_string=matching_string.strip(),
                                       file_path=path)
-                self.add_message(check_data["code"], description)
                 
     def scan_declared_files(self):
         cmcconst=os.path.realpath(os.environ.get("CMCCONST",""))
-        if cmcconst:
-            code="w021"
-            for path in self.declared_files:
-                realpath=file_cache.realpath(path)
-                if realpath.startswith(cmcconst):
-                    description = hmm.get(code,
-                                          path=path,
-                                          cmcconst=cmcconst)
-                    self.add_message(code, description)
+        if not cmcconst:
+            return
+        
+        for path in self.declared_files:
+            realpath=file_cache.realpath(path)
+            if realpath.startswith(cmcconst):
+                self.add_message("w021",
+                                      path=path,
+                                      cmcconst=cmcconst)
 
     def scan_required_files(self):
 
@@ -851,15 +805,12 @@ class ExperimentScanner():
                 else:
                     code = "w001"
 
-                description = hmm.get(code, **kwargs)
-                self.add_message(code, description)
+                self.add_message(code, **kwargs)
 
             elif node_type == NODE_TYPE.LOOP:
-                code = "w002"
-                description = hmm.get(code,
+                self.add_message("w002",
                                       node_path=node_path,
                                       resource_path=resource_path)
-                self.add_message(code, description)
 
     def scan_all_task_content(self):
         for task_path in self.task_files:
@@ -880,10 +831,7 @@ class ExperimentScanner():
                 msg_lines.append(line)
 
         if msg_lines:
-            code = "i005"
-            description = hmm.get(code,
-                                  details="\n".join(msg_lines))
-            self.add_message(code, description)
+            self.add_message("i005", details="\n".join(msg_lines))
             
     def scan_containers(self):
         for container in self.maestro_experiment.container_elements:
@@ -911,12 +859,10 @@ class ExperimentScanner():
                 subnames.append(subname)
         
         duplicates=sorted(list(set(duplicates)))
-        code="e017"
         for d in duplicates:
-            description = hmm.get(code,
+            self.add_message("e017",
                                   container_name=container_name,
                                   duplicate_name=d)
-            self.add_message(code, description)
 
     def scan_modules(self):
         """
@@ -972,12 +918,10 @@ class ExperimentScanner():
 
         for module_name, flow_paths in module_declares.items():
             if len(flow_paths) > 1:
-                code = "e005"
                 flow_xmls = "\n".join(flow_paths)
-                description = hmm.get(code,
+                self.add_message("e005",
                                       module_name=module_name,
                                       flow_xmls=flow_xmls)
-                self.add_message(code, description)
 
         """
         find cases where the root element in modules/module1/flow.xml 
@@ -987,12 +931,10 @@ class ExperimentScanner():
             attribute_name = element.attrib.get("name")
             folder_name = os.path.basename(os.path.dirname(path))
             if attribute_name != folder_name:
-                code = "i002"
-                description = hmm.get(code,
+                self.add_message("i002",
                                       folder_name=folder_name,
                                       xml_path=path,
                                       attribute_name=attribute_name)
-                self.add_message(code, description)
 
     def scan_required_folders(self):
         required_folders = ("listings", "sequencing", "stats", "logs")
@@ -1002,17 +944,13 @@ class ExperimentScanner():
                 missing.append(folder)
         if missing:
             folders_msg = ", ".join(missing)
-            code = "e001"
-            description = hmm.get(code, folders=folders_msg)
-            self.add_message(code, description)
+            self.add_message("e001", folders=folders_msg)
 
     def scan_broken_symlinks(self):
-        code = "e004"
         broken = [path for path in self.files if file_cache.is_broken_symlink(path)]
         if broken:
-            broken_links = "\n".join(broken)
-            description = hmm.get(code, broken_links=broken_links)
-            self.add_message(code, description)
+            self.add_message("e004",
+                             broken_links="\n".join(broken))
 
     def scan_node_names(self):        
         required_regex = re.compile(r"^(?i)[a-z](?:[a-z0-9]+[._-]?)*[a-z0-9]+$")
@@ -1033,19 +971,15 @@ class ExperimentScanner():
             
             if required_regex.match(node_name):
                 if not recommended_regex.match(node_name):
-                    code = "b014"
-                    description = hmm.get(code,
-                                          node_name=node_name,
-                                          flow_path=flow_path,
-                                          regex=recommended_regex.pattern)
-                    self.add_message(code, description)
+                    self.add_message("b014", 
+                                     node_name=node_name,
+                                     flow_path=flow_path,
+                                     regex=recommended_regex.pattern)
             else:
-                code = "e003"
-                description = hmm.get(code,
-                                      node_name=node_name,
-                                      flow_path=flow_path,
-                                      regex=required_regex.pattern)
-                self.add_message(code, description)
+                self.add_message("e003",
+                                 node_name=node_name,
+                                 flow_path=flow_path,
+                                 regex=required_regex.pattern)
 
     def scan_exp_options(self):
         xml_path = self.maestro_experiment.path+"ExpOptions.xml"
@@ -1057,29 +991,21 @@ class ExperimentScanner():
         if root is not None:
             support_infos = root.xpath("//SupportInfo")
             if len(support_infos) > 1:
-                code = "w008"
-                description = hmm.get(code,
-                                      xml_path=xml_path)
-                self.add_message(code, description)
+                self.add_message("w008", xml_path=xml_path)
 
         if support_status:
 
             "max length"
             max_chars = 50
             if len(support_status) > max_chars:
-                code = "b002"
-                description = hmm.get(code,
-                                      xml_path=xml_path,
-                                      char_count=len(support_status),
-                                      max_chars=max_chars)
-                self.add_message(code, description)
+                self.add_message("b002",
+                                 xml_path=xml_path,
+                                 char_count=len(support_status),
+                                 max_chars=max_chars)
 
             "has url"
             if not url_regex.search(support_status):
-                code = "b003"
-                description = hmm.get(code,
-                                      xml_path=xml_path)
-                self.add_message(code, description)
+                self.add_message("b003", xml_path=xml_path)
 
             "reasonable start string like 'full support' "
             found_substring = False
@@ -1090,26 +1016,20 @@ class ExperimentScanner():
                     found_substring = True
                     break
             if not found_substring:
-                code = "b004"
-                description = hmm.get(code,
-                                      xml_path=xml_path,
-                                      substrings=str(substrings))
-                self.add_message(code, description)
+                self.add_message("b004", 
+                                 xml_path=xml_path, 
+                                 substrings=str(substrings))
 
         "no support status in op"
         is_op = self.is_context_operational()
         if not support_status and is_op:
-            code = "w007"
-            description = hmm.get(code,
-                                  xml_path=xml_path)
-            self.add_message(code, description)
+            self.add_message("w007", xml_path=xml_path)
 
     def scan_xmls(self):
         code = "e002"
         for path in self.xml_files:
             if file_cache.etree_parse(path) is None:
-                description = hmm.get(code, xml=path)
-                self.add_message(code, description)
+                self.add_message(code, xml=path)
 
         deprecated_attribute_xmls = []
         for path in self.flow_files:
@@ -1120,9 +1040,8 @@ class ExperimentScanner():
             if elements:
                 deprecated_attribute_xmls.append(path)
         if deprecated_attribute_xmls:
-            code = "b009"
-            description = hmm.get(code, xml_paths="\n".join(deprecated_attribute_xmls))
-            self.add_message(code, description)
+            xml_paths="\n".join(deprecated_attribute_xmls)
+            self.add_message("b009", xml_paths=xml_paths)
 
     def index_experiment_files(self):
         """
