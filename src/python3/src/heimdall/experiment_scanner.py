@@ -373,7 +373,7 @@ class ExperimentScanner():
             dev_count = 5
             developers = "    "+"\n    ".join(lines[:dev_count])
 
-            if developers:
+            if authors:
                 self.add_message("i006", developers=developers)
 
     def scan_extra_files(self):
@@ -946,7 +946,9 @@ class ExperimentScanner():
                 msg_lines.append(line)
 
         if msg_lines:
-            self.add_message("i005", details="\n".join(msg_lines))
+            self.add_message("i005", 
+                             details="\n".join(msg_lines),
+                             signals=str(NODELOGGER_SIGNALS))
             
     def scan_containers(self):
         for container in self.maestro_experiment.container_elements:
@@ -1154,9 +1156,8 @@ class ExperimentScanner():
             elements = root.xpath("//SUBMITS[@type]")
             if elements:
                 deprecated_attribute_xmls.append(path)
-        if deprecated_attribute_xmls:
-            xml_paths="\n".join(deprecated_attribute_xmls)
-            self.add_message("b009", xml_paths=xml_paths)
+        for xml_path in deprecated_attribute_xmls:
+            self.add_message("b009", xml_path=xml_path)
 
     def index_experiment_files(self):
         """

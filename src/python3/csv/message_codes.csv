@@ -2,7 +2,7 @@
 # The message levels are best practice (b), info (i), warning (w), error (e), and critical (c).				
 code	label	description	url	notes
 b001	Hard coded dependency path	The ‘exp’ attribute ‘{exp_value}’ in the resources file ‘{resource_path}’ is hard coded. This is less portable and more fragile. Consider using a variable instead.		
-b002	SupportInfo is too long	The SupportInfo attribute in the XML ‘{xml_path}’ is ‘{char_count}’ characters long but it should be shorter. The recommended maximum is {max_chars}. characters.		
+b002	SupportInfo is too long	The SupportInfo attribute in the XML ‘{xml_path}’ is ‘{char_count}’ characters long but it should be shorter. The recommended maximum is {max_chars} characters.		
 b003	SupportInfo has no URL	The SupportInfo attribute in the XML ‘{xml_path}’ should contain a URL. This is the recommended way to provide detailed support status info and troubleshooting steps.		
 b004	SupportInfo missing standard substring	The SupportInfo attribute in the XML ‘{xml_path}’ should start with a value like ‘Full Support’. Recommended start strings:\n{substrings}		
 b005	Deprecated file or folder	The file or folder ‘{path}’ is deprecated and should be deleted.		
@@ -19,7 +19,7 @@ e002	Bad XML	Failed to parse XML: ‘{xml}’
 e003	Invalid node name	Invalid node name ‘{node_name}’ in flow XML ‘{flow_path}’. Node names must be alphanumeric with dot, dash, or underscores. Must match the regex: {regex}	https://regex101.com/	
 e004	Broken symlink	Soft links were found with targets that do not exist:\n{broken_links}		
 e005	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML:\n{flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290	
-i005	Unknown nodelogger signal	The executable ‘nodelogger’ was given unknown signals for its ‘-s’ argument. This message won’t appear in the message center.\n{details}	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
+i005	Unknown nodelogger signal	The executable ‘nodelogger’ was given a signal for its ‘-s’ argument that is a known signal: {signals}. This message won’t appear in the message center.\n{details}	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
 e007	Missing required resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. This is required for the ‘{context}’ context.		
 e008	Missing curly brackets in resource xml	Variables in resource XMLs must use curly brackets like ‘${{ABC}}’ not ‘$ABC’. The file ‘{file_path}’ contains:\n{matching_string}		
 e009	Unbalanced curly brackets in resource xml	Found an uneven number of curly brackets ‘{attribute_value}’ in a resource file: ‘{file_path}’		
@@ -38,7 +38,7 @@ w001	Missing resource file	The task ‘{task_path}’ has no resource file at �
 w002	Missing loop resource file	The loop ‘{node_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
 w003	Deprecated site1/site2	The paths site1 and site2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains:\n{matching_string}		
 w004	Deprecated hall1/hall2	The paths hall1 and hall2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains:\n{matching_string}		
-w005	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable and cannot be installed operationally. Links:\n{bad_links}		
+w005	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be considered too unstable to install operationally. Run realpath on these links:\n{bad_links}		
 w006	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a less portable and more fragile way to configure an experiment.		
 w007	No support status in operational experiment	There is no SupportInfo attribute in the XML ‘{xml_path}’ or the XML does not exist. This is required for operational experiments.		
 w008	Multiple support statuses	The XML ‘{xml_path}’ has more than one SupportInfo element.		
@@ -49,7 +49,7 @@ w012	Experiment in unexpected overview XML	The experiment seems to have the ‘{
 w013	Misplaced dissemination variables	The variables {variables} belong only in ‘experiment.cfg’ files but were found in: ‘{cfg_path}’		
 w014	Hub pairs have dissimilar targets	The hub folder links ‘{folder1}’ and ‘{folder2}’ are expected to have similar targets. Instead they are very different:\n{target1}\n{target2}		
 w015	Git repo has uncommited changes	There are uncommited changes in the git repo. Experiments with the ‘{context}’ context should always have nothing to commit and a clean working tree from ‘git status’.		
-b009	Deprecated attribute in SUBMITS element	The attribute ‘type’ in <SUBMITS> elements is deprecated and can be removed. Found in files:\n{xml_paths}		
+b009	Deprecated attribute in SUBMITS element	The file ‘{xml_path}’ has the attribute ‘type’ in a SUBMITS element. This is deprecated and can be removed.		
 b010	Non-standard characters in executable name	The config path ‘{bad}’ in ‘{config_path}’ has non-standard characters that do not match regex ‘{regex}’. This can cause bugs with tools, operating systems, and parsers. Consider renaming them. {dollar_msg}	https://regex101.com/	
 b011	Top-level file or folder in CMCCONST	There are references to files or folders in the root level of the CMCCONST folder. It is recommended instead to use folders in CMCCONST. The file ‘{file_path}’ contains:\n{matching_string}	https://gitlab.science.gc.ca/CMOI/best-practices/blob/master/en/constants.md	
 i006	Lead developers from git history	Based on the git history for this project (commit frequency, recency, continuity) these seem to be the lead developers:\n{developers}		
@@ -69,4 +69,4 @@ w022	Machine resource is hard coded	The experiment seems to have the ‘{context
 b015	Non-standard variables in batch resource	The BATCH attribute ‘{attribute_name}’ in ‘{resource_path}’ uses a non-standard variable ‘{attribute_value}’. Consider using a standard variable instead so configuration is easier to track and change: {recommended}		
 b016	Inconsistent file owners or permissions	The file ‘{path}’ has ownership and permissions ‘{ugp}’ but most experiment files have ‘{expected}’. The owner, group, and permissions of permanent experiment files should be the same.		
 e020	Inconsistent log folder owners or permissions	The log folder ‘{path}’ has ownership and permissions ‘{ugp}’ which is different from the other log folders. The permissions of the temporary log folders should be the same: {folders}		
-w023	Operational user can overwrite experiment	The operational user ‘{user}’ has write permissions on the permanent project file ‘{path}’. For safety during operational runs, ‘{user}’ should only have read and execution permission to experiment files.		
+w023	Operational user can overwrite experiment	The operational user ‘{user}’ has write permissions on the permanent project file ‘{path}’. For safety during operational runs, ‘{user}’ should only have read and execution permissions for permanent project files.		
