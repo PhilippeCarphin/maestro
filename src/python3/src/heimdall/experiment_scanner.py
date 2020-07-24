@@ -26,9 +26,9 @@ Matches codes like 'e001' and 'c010'
 CODE_REGEX = re.compile("[cewib][0-9]{3}")
 
 """
-Matches executables that are named reasonbly, without characters like "+"
+Matches Linux paths that are named reasonbly, without characters like "+"
 """
-EXECUTABLE_NAME_REGEX = re.compile("^[a-zA-Z0-9-_.]+$")
+DECENT_LINUX_PATH_REGEX = re.compile("^\/?([a-zA-Z0-9-_.]\/?)+$")
 
 
 class ExperimentScanner():
@@ -612,17 +612,8 @@ class ExperimentScanner():
                                       queues=str(queues))
 
     def scan_config_files(self):
-
-        self.non_standard_character_lines = []
-
         for path in self.config_files:
             self.scan_config_file(path)
-
-        if self.non_standard_character_lines:
-            details = "\n".join(self.non_standard_character_lines)
-            self.add_message("b010",
-                                  regex=EXECUTABLE_NAME_REGEX.pattern,
-                                  details=details)
 
     def scan_config_file(self, path):
         "scan the content of config files (see scan_file_content for CSV content scan)"
@@ -645,13 +636,15 @@ class ExperimentScanner():
         for section, d in weird_data.items():
             for key, value in d.items():
 
-                name=get_equivalent_name_from_cfg_name(key)
+                name=replace_bash_variables(key)
                 
-                if not EXECUTABLE_NAME_REGEX.match(name):
-                    line = "'%s' in '%s'" % (key, path)
-                    if "$" in key:
-                        line+" (excluding ${})"
-                    self.non_standard_character_lines.append(line)
+                if not DECENT_LINUX_PATH_REGEX.match(name):
+                    dollar_msg="(using ${} is not what caused this error)" if "$" in key else ""
+                    self.add_message("b010",
+                                     bad=key,
+                                     config_path=path,
+                                     regex=DECENT_LINUX_PATH_REGEX.pattern,
+                                     dollar_msg=dollar_msg)
 
         "variables that should only be in experiment.cfg"
         if not path.endswith("experiment.cfg"):
@@ -1376,21 +1369,16 @@ def get_ugp_string(path):
     return "%s:%s:%s"%(name,group,permissions)
 
 BASH_VARIABLE_REGEX=re.compile("\\${[\\w]+}")
-def get_equivalent_name_from_cfg_name(cfg_name):
+def replace_bash_variables(text):
     """
     Some source paths in CFG files may be complex.
     Given:
-        folder1/file1${ABC}.sh
+        folder${XYZ}1/file1${ABC}.sh
     basename is:
-        file1a.sh
+        foldera1/file1a.sh
     which is useful for non-standard character verification.
     """
     
-    basename=os.path.basename(cfg_name)
-    
-    if basename.endswith("/"):
-        basename=basename[:-1]
-        
-    return BASH_VARIABLE_REGEX.sub("a",basename)
+    return BASH_VARIABLE_REGEX.sub("a",text)
                 
                 
