@@ -1387,6 +1387,10 @@ def get_equivalent_name_from_cfg_name(cfg_name):
     """
     
     basename=os.path.basename(cfg_name)
+    
+    if basename.endswith("/"):
+        basename=basename[:-1]
+        
     return BASH_VARIABLE_REGEX.sub("a",basename)
                 
                 
