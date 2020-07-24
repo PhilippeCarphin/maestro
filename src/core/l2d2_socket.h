@@ -42,6 +42,8 @@
 
 /* size of socket buffers in KiloBytes */
 #define SOCK_BUF_SIZE 10
+
+/* default timeout for connections from client to mserver, overwritable with SEQ_TIMEOUT_CLIENT env var */ 
 #define SOCK_TIMEOUT_CLIENT 65
 
 /* prototype */

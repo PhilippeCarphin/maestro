@@ -234,7 +234,7 @@ FILE * fopen_svr ( const char * filename , int sock )
 
   /* build command */
   snprintf(tmp,sizeof(tmp),"Z %s",filename);
-  if ( (bytes_sent=send_socket(sock , tmp , sizeof(tmp) , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+  if ( (bytes_sent=send_socket(sock , tmp , sizeof(tmp) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
 	    SeqUtil_TRACE(TL_MEDIUM,"fopen_svr(): socket closed at send\n");
             SeqUtil_TRACE(TL_MEDIUM,"fopen_svr(): Reverting to nfs Routines\n");
 	    fp=fopen_nfs(filename , sock);
@@ -242,7 +242,7 @@ FILE * fopen_svr ( const char * filename , int sock )
   }
 
   /* read (get) size of file */
-  if ( (bytes_read=recv_socket(sock, csize, sizeof(csize), SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+  if ( (bytes_read=recv_socket(sock, csize, sizeof(csize), SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
              /* should revert to nfs routine */
              SeqUtil_TRACE(TL_MEDIUM,"fopen_svr(): Could not receive size of waited file ... Reverting to nfs Routines\n");
              fp=fopen_nfs(filename , sock);

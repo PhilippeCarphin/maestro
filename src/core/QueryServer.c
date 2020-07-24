@@ -93,7 +93,7 @@ int Query_L2D2_Server ( int sock , ServerActions action , const char *buf , cons
                             break;
     }
 
-    if ( (bytes_sent=send_socket(sock , buffer , sizeof(buffer) , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+    if ( (bytes_sent=send_socket(sock , buffer , sizeof(buffer) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
            fprintf(stderr,"%%%%%%%%%%%% Query_L2D2_Server: socket closed at send  %%%%%%%%%%%%%%\n");
 	   fprintf(stderr, "====== Reverting to Nfs Routines ====== \n");
 	   ret_nfs=revert_nfs ( buf , action , buf2 , _seq_exp_home);
@@ -101,7 +101,7 @@ int Query_L2D2_Server ( int sock , ServerActions action , const char *buf , cons
     }
     
     memset(Rbuffer,'\0', sizeof(Rbuffer));
-    if ( (bytes_read=recv_socket (sock , Rbuffer , sizeof(Rbuffer) , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+    if ( (bytes_read=recv_socket (sock , Rbuffer , sizeof(Rbuffer) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
            fprintf(stderr,"%%%%%%%%%%%% Query_L2D2_Server: socket closed at recv   %%%%%%%%%%%%%%\n");
 	   fprintf(stderr, "====== Reverting to Nfs Routines ====== \n");
 	   ret_nfs=revert_nfs ( buf , action , buf2 , _seq_exp_home);
@@ -286,7 +286,7 @@ void CloseConnectionWithMLLServer ( int con )
       /* int ret; */
       int bytes_sent;
       
-      if ( (bytes_sent=send_socket(con , "S \0" , 3 , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+      if ( (bytes_sent=send_socket(con , "S \0" , 3 , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
            fprintf(stderr,"%%%%%%%%%%%% CloseConnectionWithMLLServer: socket closed at send %%%%%%%%%%%%%%\n");
       } else close(con);
 
