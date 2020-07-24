@@ -10,8 +10,8 @@ same-name functions instead.
 
 import os
 import os.path
-from pwd import getpwuid
-from grp import getgrgid
+from pwd import getpwuid, getpwnam
+from grp import getgrgid, getgrall
 from lxml import etree
 
 from constants import ENCODINGS
@@ -74,14 +74,47 @@ class FileCache():
         if not self.exists(realpath):
             return "","","",""
         os_stat=os.stat(realpath)
-        name=getpwuid(os_stat.st_uid).pw_name
+        owner=getpwuid(os_stat.st_uid).pw_name
         group=getgrgid(os_stat.st_gid).gr_name
         
         "convert '0o100644' to '100644'  "
         long_permissions=oct(os_stat.st_mode)[2:]
         
         permissions=long_permissions[-3:]
-        return (name,group,permissions,long_permissions)
+        return (owner,group,permissions,long_permissions)
+    
+    def can_user_write_to_path(self,user,path):
+        realpath = self.realpath(path)
+        return self.can_user_write_to_realpath(user,realpath)
+    
+    @cache
+    def can_user_write_to_realpath(self,user,realpath):
+        """
+        This function is not written exceptionally well, but at least it uses
+        existing caching instead of heavy system IO calls.
+        """
+        
+        owner,group,permissions,_=self.get_user_group_permissions_from_realpath(realpath)
+        
+        if not owner or not group or not permissions:
+            return False
+        
+        assert len(permissions)==3
+        
+        write_digits="2367"
+        
+        if user==owner:
+            return permissions[0] in write_digits
+        
+        try:
+            user_group_id = getpwnam(user).pw_gid
+            user_group=getgrgid(user_group_id).gr_name
+            if user_group == group:
+                return permissions[1] in write_digits
+        except KeyError:
+            pass
+
+        return permissions[2] in write_digits
 
     @cache
     def open_without_comments(self, path):

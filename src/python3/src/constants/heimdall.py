@@ -34,3 +34,5 @@ These pairs in $EXPERIMENT/hub should have nearly identical targets.
 """
 HUB_PAIRS = [["banting", "daley"],
              ["hare", "brooks"]]
+
+OPERATIONAL_USERNAME="smco500"

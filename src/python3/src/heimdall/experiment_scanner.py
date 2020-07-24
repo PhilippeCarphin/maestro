@@ -3,7 +3,7 @@ import re
 from collections import OrderedDict
 import Levenshtein
 
-from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS, EXPERIMENT_LOG_FOLDERS
+from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS, EXPERIMENT_LOG_FOLDERS, OPERATIONAL_USERNAME
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
@@ -39,7 +39,8 @@ class ExperimentScanner():
                  parallel_home=None,
                  critical_error_is_exception=True,
                  debug_qstat_output_override="",
-                 debug_cmcconst_override=""):
+                 debug_cmcconst_override="",
+                 debug_op_username_override=""):
 
         if not path.endswith("/"):
             path += "/"
@@ -76,6 +77,12 @@ class ExperimentScanner():
         """
         if debug_cmcconst_override:
             os.environ["CMCCONST"]=debug_cmcconst_override
+        
+        """
+        Instead of the operational username like 'smco500', use this instead.
+        Useful for debugging/tests.
+        """
+        self.operational_username=debug_op_username_override if debug_op_username_override else OPERATIONAL_USERNAME
             
         critical_errors = find_critical_errors(path)
         for code, kwargs in critical_errors.items():
@@ -110,6 +117,7 @@ class ExperimentScanner():
         self.scan_log_folder_permissions()
         self.scan_modules()
         self.scan_node_names()
+        self.scan_operational_file_permissions()
         self.scan_overview_xmls()
         self.scan_required_files()
         self.scan_required_folders()
@@ -231,7 +239,7 @@ class ExperimentScanner():
                                  ugp=ugp,
                                  folders=", ".join(EXPERIMENT_LOG_FOLDERS))
     
-    def scan_file_permissions(self):    
+    def scan_file_permissions(self):        
         "experiment files with inconsistent user/group/permissions"
         ugp_to_paths={}
         for path in self.files:
@@ -265,6 +273,18 @@ class ExperimentScanner():
                                  path=path,
                                  ugp=ugp,
                                  expected=most_common_ugp)
+    
+    def scan_operational_file_permissions(self):
+        "operational users should not be able to overwrite their maestro files"
+        
+        if not self.is_context_operational():
+            return
+        
+        for path in self.files:
+            if file_cache.can_user_write_to_path(self.operational_username,path):
+                self.add_message("w023",
+                                 user=self.operational_username,
+                                 path=path)
     
     def scan_root_links(self):
         """
