@@ -15,7 +15,7 @@ from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, ge
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile
 from utilities.heimdall.git import scan_git_authors
-from utilities import print_red, print_orange, print_yellow, print_green, print_blue
+from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target, iterative_deepening_search
 from utilities.qstat import get_qstat_data_from_text, get_qstat_data, get_resource_limits_from_qstat_data
 from utilities.shell import safe_check_output_with_status
@@ -669,8 +669,8 @@ class ExperimentScanner():
                                           context=self.context,
                                           machine_value=attribute_value,
                                           resource_path=path)
-
-        "dependency codes"
+                    
+        "DEPENDS_ON element"
         for path in self.resource_files:
             etree = file_cache.etree_parse(path)
             elements = etree.xpath("//DEPENDS_ON")
@@ -688,6 +688,35 @@ class ExperimentScanner():
                     self.add_message(code,
                                           exp_value=exp,
                                           resource_path=path)
+            
+        "recommended bash variables used in BATCH attributes"
+        recommended_variables={}
+        recommended_variables["machine"]=["FRONTEND","BACKEND"]
+        is_radar=os.path.basename(self.path).startswith("radar")
+        if is_radar:
+            recommended_variables["machine"]+=["RADAR_FRONTEND_HALL3",
+                                            "RADAR_FRONTEND_HALL4"]
+        recommended_variables["queue"]=["BACKEND_DEFAULT_Q",
+                                     "BACKEND_XFER_Q",
+                                     "FRONTEND_DAEMON_Q",
+                                     "FRONTEND_DEFAULT_Q",
+                                     "FRONTEND_HPNLS_Q",
+                                     "FRONTEND_XFER_Q"]            
+        for path in self.resource_files:
+            etree = file_cache.etree_parse(path)        
+            batches = etree.xpath("//BATCH")
+            for batch in batches:
+                for attribute_name,variables in recommended_variables.items():
+                    attribute_value=batch.attrib.get(attribute_name)
+                    stripped_value,is_one_variable=strip_batch_variable(attribute_value)
+                    recommended=recommended_variables[attribute_name]
+                    if is_one_variable and stripped_value not in recommended:
+                        self.add_message("b015",
+                                         attribute_name=attribute_name,
+                                         resource_path=path,
+                                         attribute_value=attribute_value,
+                                         recommended=", ".join(recommended))
+            
 
     def scan_home_soft_links(self):
         """
@@ -1219,3 +1248,29 @@ class ExperimentScanner():
             print(msg[:-2]+".")
 
         print("\nHeimdall found %s items to report for maestro suite:\n    %s" % (len(self.messages), self.path))
+
+def strip_batch_variable(variable):
+    """
+    Given:
+        $ABC
+        ${ABC}
+        XYZ
+        $ABC$XYZ
+    returns (stripped, is_one_variable):
+        ABC, True
+        ABC, True
+        XYZ, False
+        $ABC$XYZ, False
+    """
+    if not variable:
+        return "",False
+    
+    is_one=False
+    if variable.startswith("$") and variable.count("$")==1:
+        is_one=True
+        variable=superstrip(variable,"${}")
+    return variable,is_one
+
+
+
+

@@ -25,7 +25,7 @@ def get_dictionary_list_from_csv(path,
         lines = f.readlines()
 
     if ignore_hash_lines:
-        lines = [line for line in lines if not line.startswith("#")]
+        lines = [line for line in lines if not line.strip().startswith("#")]
 
     results = []
     keys = lines[key_row_index].strip().split(delimiter)

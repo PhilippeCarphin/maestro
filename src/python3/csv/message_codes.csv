@@ -66,3 +66,4 @@ e017	Duplicate name in flow container	The container ‘{container_name}’ in a 
 e018	Submits element has name attribute	All SUBMITS elements should have a ‘sub_name’ attribute not a ‘name’ attribute. The file ‘{file_path}’ contains: ‘{matching_string}’		
 e019	Non-submits element has sub_name attribute	Only SUBMITS elements should have a ‘sub_name’ attribute. You may need to use the ‘name’ attribute instead. The file ‘{file_path}’ contains: ‘{matching_string}’		
 w022	Machine resource is hard coded	The experiment seems to have the ‘{context}’ context but the value ‘{machine_value}’ of ‘machine’ in ‘{resource_path}’ is hard coded. A switchover may break this suite. Use a variable like $FRONTEND instead.		
+b015	Non-standard variables in batch resources	The BATCH attribute ‘{attribute_name}’ in ‘{resource_path}’ uses a non-standard variable ‘{attribute_value}’. Consider using a standard variable instead so configuration is easier to track and change: {recommended}		
