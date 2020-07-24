@@ -21,7 +21,7 @@ e004	Broken symlink	Soft links were found with targets that do not exist:\n{brok
 e005	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML:\n{flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290	
 i005	Unknown nodelogger signal	The executable ‘nodelogger’ was given unknown signals for its ‘-s’ argument. This message won’t appear in the message center.\n{details}	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
 e007	Missing required resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. This is required for the ‘{context}’ context.		
-e008	Missing curly brackets in resource xml	Variables in resource XMLs must use curly brackets like ‘${{ABC}}’ not ‘$ABC’. The file ‘{file_path}’ contains: ‘{matching_string}’		
+e008	Missing curly brackets in resource xml	Variables in resource XMLs must use curly brackets like ‘${{ABC}}’ not ‘$ABC’. The file ‘{file_path}’ contains:\n{matching_string}		
 e009	Unbalanced curly brackets in resource xml	Found an uneven number of curly brackets ‘{attribute_value}’ in a resource file: ‘{file_path}’		
 e010	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a less portable and more fragile way to configure an experiment.		
 e011	Dependency experiment does not exist	The ‘exp’ attribute ‘{exp_value}’ in the resources file ‘{resource_path}’ is not a path to a folder that exists.		
@@ -36,8 +36,8 @@ i003	Text editor swap files	Text editor swap files were found, for example for v
 i004	Git repo has uncommited changes	There are uncommited changes in the git repo.		
 w001	Missing resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
 w002	Missing loop resource file	The loop ‘{node_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
-w003	Deprecated site1/site2	The paths site1 and site2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains: ‘{matching_string}’		
-w004	Deprecated hall1/hall2	The paths hall1 and hall2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains: ‘{matching_string}’		
+w003	Deprecated site1/site2	The paths site1 and site2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains:\n{matching_string}		
+w004	Deprecated hall1/hall2	The paths hall1 and hall2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains:\n{matching_string}		
 w005	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable and cannot be installed operationally. Links:\n{bad_links}		
 w006	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a less portable and more fragile way to configure an experiment.		
 w007	No support status in operational experiment	There is no SupportInfo attribute in the XML ‘{xml_path}’ or the XML does not exist. This is required for operational experiments.		
@@ -51,7 +51,7 @@ w014	Hub pairs have dissimilar targets	The hub folder links ‘{folder1}’ and 
 w015	Git repo has uncommited changes	There are uncommited changes in the git repo. Experiments with the ‘{context}’ context should always have nothing to commit and a clean working tree from ‘git status’.		
 b009	Deprecated attribute in SUBMITS element	The attribute ‘type’ in <SUBMITS> elements is deprecated and can be removed. Found in files:\n{xml_paths}		
 b010	Non-standard characters in executable name	Executable names have non-standard characters that do not match regex ‘{regex}’. This can cause bugs with tools, operating systems, and parsers. Consider renaming them:\n{details}	https://regex101.com/	
-b011	Top-level file or folder in CMCCONST	There are references to files or folders in the root level of the CMCCONST folder. It is recommended instead to use folders in CMCCONST instead. The file ‘{file_path}’ contains: ‘{matching_string}’	https://gitlab.science.gc.ca/CMOI/best-practices/blob/master/en/constants.md	
+b011	Top-level file or folder in CMCCONST	There are references to files or folders in the root level of the CMCCONST folder. It is recommended instead to use folders in CMCCONST. The file ‘{file_path}’ contains:\n{matching_string}	https://gitlab.science.gc.ca/CMOI/best-practices/blob/master/en/constants.md	
 i006	Lead developers from git history	Based on the git history for this project (commit frequency, recency, continuity) these seem to be the lead developers:\n{developers}		
 w016	The task run_orji is disabled	The task resource ‘{resource_path}’ has a catchup value of ‘{catchup}’ but ‘run_orji’ tasks should always be enabled. This way, users get to decide whether to subscribe or unsubscribe.	https://wiki.cmc.ec.gc.ca/wiki/orji	
 w017	Archive file is not a link	The archive file ‘{bad}’ is not a link. Files named ‘.protocole_*’ or ‘.archive_monitor_*’ must be links so that the maintainers of the archive system can more easily manage its settings.		
@@ -63,8 +63,8 @@ w021	Suite file in $CMCCONST	The realpath for file ‘{path}’ is in the $CMCCO
 b013	Unclear folder name	The folder ‘{unclear}’ should have a descriptive soft link next to it. For example ‘forecast -> e1’. This gives newbies one less thing to memorize when getting started.	https://wiki.cmc.ec.gc.ca/wiki/Obfuscation	
 b014	Bad node name	Bad node name ‘{node_name}’ in flow XML ‘{flow_path}’. This name works, but the recommendation is to match this regex: {regex}	https://regex101.com/	
 e017	Duplicate name in flow container	The container ‘{container_name}’ in a flow XML has more than one element with the name or subname ‘{duplicate_name}’. All direct children in a container must have a unique name or subname.		
-e018	Submits element has name attribute	All SUBMITS elements should have a ‘sub_name’ attribute not a ‘name’ attribute. The file ‘{file_path}’ contains: ‘{matching_string}’		
-e019	Non-submits element has sub_name attribute	Only SUBMITS elements should have a ‘sub_name’ attribute. You may need to use the ‘name’ attribute instead. The file ‘{file_path}’ contains: ‘{matching_string}’		
+e018	Submits element has name attribute	All SUBMITS elements should have a ‘sub_name’ attribute not a ‘name’ attribute. The file ‘{file_path}’ contains:\n{matching_string}		
+e019	Non-submits element has sub_name attribute	Only SUBMITS elements should have a ‘sub_name’ attribute. You may need to use the ‘name’ attribute instead. The file ‘{file_path}’ contains:\n{matching_string}		
 w022	Machine resource is hard coded	The experiment seems to have the ‘{context}’ context but the value ‘{machine_value}’ of ‘machine’ in ‘{resource_path}’ is hard coded. A switchover may break this suite. Use a variable like $FRONTEND instead.		
 b015	Non-standard variables in batch resource	The BATCH attribute ‘{attribute_name}’ in ‘{resource_path}’ uses a non-standard variable ‘{attribute_value}’. Consider using a standard variable instead so configuration is easier to track and change: {recommended}		
 b016	Inconsistent file owners or permissions	The file ‘{path}’ has ownership and permissions ‘{ugp}’ but most experiment files have ‘{expected}’. The owner, group, and permissions of permanent experiment files should be the same.		

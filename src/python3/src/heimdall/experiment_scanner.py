@@ -15,7 +15,7 @@ from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, ge
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile
 from utilities.heimdall.git import scan_git_authors
-from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip
+from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip, remove_chars_in_text
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target, iterative_deepening_search
 from utilities.qstat import get_qstat_data_from_text, get_qstat_data, get_resource_limits_from_qstat_data
 from utilities.shell import safe_check_output_with_status
@@ -644,8 +644,13 @@ class ExperimentScanner():
         "find non-standard characters in names"
         for section, d in weird_data.items():
             for key, value in d.items():
-                if not EXECUTABLE_NAME_REGEX.match(key):
+
+                name=get_equivalent_name_from_cfg_name(key)
+                
+                if not EXECUTABLE_NAME_REGEX.match(name):
                     line = "'%s' in '%s'" % (key, path)
+                    if "$" in key:
+                        line+" (excluding ${})"
                     self.non_standard_character_lines.append(line)
 
         "variables that should only be in experiment.cfg"
@@ -1328,7 +1333,7 @@ class ExperimentScanner():
                 print(message["description"])
 
         if max(hidden_code_counts_by_char.values()):
-            msg = "\nSkipped showing %s codes because of repeat/whitelist/blacklist: " % sum(hidden_code_counts_by_char.values())
+            msg = "\nSkipped showing %s codes because of repeat, whitelist, or blacklist: " % sum(hidden_code_counts_by_char.values())
             for c in levels:
                 count = hidden_code_counts_by_char[c]
                 if count:
@@ -1360,9 +1365,28 @@ def strip_batch_variable(variable):
     return variable,is_one
 
 def get_ugp_string(path):
+    """
+    Returns a string like:
+        zulban:zulban:755
+    for the user, group, and permissions of this file.
+    """
     name,group,permissions,long_permissions=file_cache.get_user_group_permissions(path)
     if not name or not group or not permissions or not long_permissions:
         return ""
     return "%s:%s:%s"%(name,group,permissions)
 
-
+BASH_VARIABLE_REGEX=re.compile("\\${[\\w]+}")
+def get_equivalent_name_from_cfg_name(cfg_name):
+    """
+    Some source paths in CFG files may be complex.
+    Given:
+        folder1/file1${ABC}.sh
+    basename is:
+        file1a.sh
+    which is useful for non-standard character verification.
+    """
+    
+    basename=os.path.basename(cfg_name)
+    return BASH_VARIABLE_REGEX.sub("a",basename)
+                
+                

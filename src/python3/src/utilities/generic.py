@@ -162,6 +162,14 @@ def get_variable_value_from_file(path, name):
     return ""
 
 
+def remove_chars_in_text(chars,text):
+    """
+    Return text where all chars have been removed.
+    """
+    for c in chars:
+        text=text.replace(c,"")
+    return text
+
 def superstrip(text, chars):
     """
     Like Python strip, except uses the characters in the

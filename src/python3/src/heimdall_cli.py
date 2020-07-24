@@ -3,8 +3,13 @@
 """
 Heimdall is a maestro suite scanner. Scan for errors, warnings, recommendations, and installation issues. Version %s.
 
+Running just "heimdall" scans a maestro experiment.
+
+"heimdall blame" examines the git history of a project to find its lead authors. It awards points based on commit frequency, recency, and consistency.
+
 Usage:
     heimdall [options]
+    heimdall blame <path-to-git-repo> [--count=<count>]
 
 Options:
     --exp=<experiment-path>      The path to a maestro experiment. By default, look in $PWD. [default: %s]
@@ -17,20 +22,37 @@ Options:
     --op-home=<path>             Path to the home of the operational user. [default: /home/smco500]
     --par-home=<path>            Path to the home of the parallel user. [default: /home/smco501]
     
+    --count=<count>              How many top maintainers to show in heimdall blame. [default: 5]
+    
     --verbose                    Enable verbose debug logging in the "$HOME/logs/mflow" files.
     -h --help   Show this description.
 """
-from utilities import clamp
 from utilities.docopt import docopt
 import os
 
 from constants import SCANNER_CONTEXTS
-from heimdall import ExperimentScanner
+from heimdall import ExperimentScanner, run_heimdall_blame
 from utilities.heimdall.docstring import adjust_docstring
 __doc__ = adjust_docstring(__doc__)
 
+def blame_cli(args):
+    """
+    Parse and validate the commandline options before running blame.
+    """
+    
+    try:
+        count=args["--count"]
+        if not count:
+            count=0
+        count=int(count)
+    except:
+        print("--count '%s' must be integer."%args["--count"])
+        return
+    
+    run_heimdall_blame(args["<path-to-git-repo>"],
+                       count=count)
 
-def main(args):
+def scan_cli(args):
     """
     Parse and validate the commandline options before proceeding to run the scan.
     """
@@ -73,6 +95,13 @@ def main(args):
                          whitelist=whitelist,
                          blacklist=blacklist)
 
+
+def main(args):
+    
+    if args["blame"]:
+        return blame_cli(args)
+    
+    return scan_cli(args)
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="1.0")

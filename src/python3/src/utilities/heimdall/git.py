@@ -67,7 +67,7 @@ class GitUserTracker():
 def scan_git_authors(path, include_current_branch=True):
     """
     Return a list of all authors in this repo, with scores [0,1] according to
-    their contributions. Users get points for recency, frequency, continuity.
+    their contributions. Users get points for recency, frequency, consistency.
     Sorted with highest scores first.
 
         [
