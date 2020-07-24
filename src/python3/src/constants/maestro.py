@@ -1,4 +1,3 @@
-import re
 
 class NODE_TYPE:
     TASK = "task"
@@ -29,4 +28,6 @@ class SWITCH_TYPE():
     HOUR = "datestamp_hour"
     DAY_OF_WEEK = "day_of_week"
 
-CONTAINER_TAGS = ["loop", "switch", "family", "module"]
+CONTAINER_TAGS = ("loop", "switch", "family", "module")
+
+EXPERIMENT_LOG_FOLDERS = ("listings", "logs", "sequencing", "stats")

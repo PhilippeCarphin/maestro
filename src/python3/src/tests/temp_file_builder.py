@@ -110,5 +110,13 @@ def setup_tmp_experiment1():
     cmd = "cd %s ; git init ; sleep 0.1" % target
     output, status = safe_check_output_with_status(cmd)
     assert status == 0
+    
+    "permissions"
+    cmd = "cd %s ; chmod 700 modules/module1/task1.cfg" % target
+    output, status = safe_check_output_with_status(cmd)
+    assert status == 0
+    cmd = "cd %s ; chmod 700 listings" % target
+    output, status = safe_check_output_with_status(cmd)
+    assert status == 0
 
     return target

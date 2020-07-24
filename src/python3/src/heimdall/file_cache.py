@@ -10,6 +10,8 @@ same-name functions instead.
 
 import os
 import os.path
+from pwd import getpwuid
+from grp import getgrgid
 from lxml import etree
 
 from constants import ENCODINGS
@@ -49,6 +51,37 @@ class FileCache():
             return tree.getroot()
         except:
             return None
+    
+    def os_stat(self,path):
+        realpath = self.realpath(path)
+        return self.os_stat_from_realpath(realpath)
+    
+    @cache
+    def os_stat_from_realpath(self, realpath):
+        return os.stat(realpath)
+    
+    def get_user_group_permissions(self,path):
+        """
+        Return a tuple like:
+            ("zulban", "zulban", "644", "100644")
+        for user, group, rwx, complete rwx
+        """
+        realpath = self.realpath(path)
+        return self.get_user_group_permissions_from_realpath(realpath)
+    
+    @cache
+    def get_user_group_permissions_from_realpath(self,realpath):
+        if not self.exists(realpath):
+            return "","","",""
+        os_stat=os.stat(realpath)
+        name=getpwuid(os_stat.st_uid).pw_name
+        group=getgrgid(os_stat.st_gid).gr_name
+        
+        "convert '0o100644' to '100644'  "
+        long_permissions=oct(os_stat.st_mode)[2:]
+        
+        permissions=long_permissions[-3:]
+        return (name,group,permissions,long_permissions)
 
     @cache
     def open_without_comments(self, path):

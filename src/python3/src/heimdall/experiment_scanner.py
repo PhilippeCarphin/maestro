@@ -3,7 +3,7 @@ import re
 from collections import OrderedDict
 import Levenshtein
 
-from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS
+from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS, EXPERIMENT_LOG_FOLDERS
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
@@ -102,10 +102,12 @@ class ExperimentScanner():
         self.scan_deprecated_files_folders()
         self.scan_exp_options()
         self.scan_extra_files()
+        self.scan_file_permissions()
         self.scan_git_repo()
         self.scan_gitignore()
         self.scan_home_soft_links()
         self.scan_hub()
+        self.scan_log_folder_permissions()
         self.scan_modules()
         self.scan_node_names()
         self.scan_overview_xmls()
@@ -136,6 +138,13 @@ class ExperimentScanner():
                                 SCANNER_CONTEXT.PARALLEL)
 
     def add_message(self, code, **kwargs):
+        """
+        Call this function when the scanner has detected a specific scenario.
+        code is a message code like 'b001'.
+        kwargs is all the curly bracket arguments found in the message_codes.csv file.
+        If there is a missing or extra key in kwargs, raises an exception.
+        This prevents showing the user messages with incomplete string insertions.
+        """
 
         if not CODE_REGEX.match(code):
             raise ValueError("ExperimentScanner code '%s' does not match regex code regex:\n    %s" % (code, CODE_REGEX.pattern))
@@ -197,6 +206,65 @@ class ExperimentScanner():
 
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+            
+    def scan_log_folder_permissions(self):        
+        "log folders with inconsistent user/group/permissions"
+        ugp_to_paths={}
+        for folder in EXPERIMENT_LOG_FOLDERS:
+            path=self.path+folder
+            ugp=get_ugp_string(path)
+            
+            if not ugp:
+                continue
+            
+            if ugp not in ugp_to_paths:
+                ugp_to_paths[ugp]=[]
+            ugp_to_paths[ugp].append(path)
+            
+        if len(ugp_to_paths)==1:
+            return
+        
+        for ugp,paths in ugp_to_paths.items():
+            for path in paths:
+                self.add_message("e020",
+                                 path=path,
+                                 ugp=ugp,
+                                 folders=", ".join(EXPERIMENT_LOG_FOLDERS))
+    
+    def scan_file_permissions(self):    
+        "experiment files with inconsistent user/group/permissions"
+        ugp_to_paths={}
+        for path in self.files:
+            ugp=get_ugp_string(path)
+            
+            if not ugp:
+                continue
+            
+            if ugp not in ugp_to_paths:
+                ugp_to_paths[ugp]=[]
+            ugp_to_paths[ugp].append(path)
+            
+        if len(ugp_to_paths)==1:
+            return
+            
+        highest=0
+        most_common_ugp=None
+        for ugp,paths in ugp_to_paths.items():
+            if len(paths)>highest:
+                highest=len(paths)
+                most_common_ugp=ugp
+        
+        if not most_common_ugp:
+            return
+        
+        for ugp,paths in ugp_to_paths.items():
+            if ugp==most_common_ugp:
+                continue
+            for path in paths:
+                self.add_message("b016",
+                                 path=path,
+                                 ugp=ugp,
+                                 expected=most_common_ugp)
     
     def scan_root_links(self):
         """
@@ -229,7 +297,7 @@ class ExperimentScanner():
         
         content=file_cache.open(gitignore_path)
         lines=[line.strip() for line in content.split("\n") if line.strip()]            
-        must_have=["sequencing","stats","logs","listings"]
+        must_have=list(EXPERIMENT_LOG_FOLDERS)
         must_not_have=["hub","EntryModule","modules","flow.xml"]
         
         "gitignore must contain, and must not contain"
@@ -701,7 +769,7 @@ class ExperimentScanner():
                                      "FRONTEND_DAEMON_Q",
                                      "FRONTEND_DEFAULT_Q",
                                      "FRONTEND_HPNLS_Q",
-                                     "FRONTEND_XFER_Q"]            
+                                     "FRONTEND_XFER_Q"]
         for path in self.resource_files:
             etree = file_cache.etree_parse(path)        
             batches = etree.xpath("//BATCH")
@@ -709,7 +777,7 @@ class ExperimentScanner():
                 for attribute_name,variables in recommended_variables.items():
                     attribute_value=batch.attrib.get(attribute_name)
                     stripped_value,is_one_variable=strip_batch_variable(attribute_value)
-                    recommended=recommended_variables[attribute_name]
+                    recommended=sorted(recommended_variables[attribute_name])
                     if is_one_variable and stripped_value not in recommended:
                         self.add_message("b015",
                                          attribute_name=attribute_name,
@@ -966,7 +1034,7 @@ class ExperimentScanner():
                                       attribute_name=attribute_name)
 
     def scan_required_folders(self):
-        required_folders = ("listings", "sequencing", "stats", "logs")
+        required_folders = EXPERIMENT_LOG_FOLDERS
         missing = []
         for folder in required_folders:
             if not file_cache.isdir(self.path+folder):
@@ -1271,6 +1339,10 @@ def strip_batch_variable(variable):
         variable=superstrip(variable,"${}")
     return variable,is_one
 
-
+def get_ugp_string(path):
+    name,group,permissions,long_permissions=file_cache.get_user_group_permissions(path)
+    if not name or not group or not permissions or not long_permissions:
+        return ""
+    return "%s:%s:%s"%(name,group,permissions)
 
 
