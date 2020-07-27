@@ -1593,3 +1593,17 @@ const char *SeqUtil_popenGetScriptOutput(const char * script_path, size_t buffer
 err:
    return NULL;
 }
+
+/*
+* Returns the environment variable's integer value if it is defined, or the default value if not. 
+*/
+
+int SeqUtil_getEnvOrDefaultI (char* env_var, int default_value ){
+   char *value = NULL ;  
+   if (NULL != (value = getenv(env_var))) { 
+      return atoi(value); 
+   } else { 
+      return default_value; 
+   } 
+} 
+

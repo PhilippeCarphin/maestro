@@ -95,7 +95,7 @@ char *SeqUtil_getTraceLevelString();
 int SeqUtil_sprintStatusFile(char *dst,const char * exp_home, const char *node_name, const char *datestamp, const char * extension, const char *status);
 int SeqUtil_getmappedfile(const char *filename, char ** filestart , char** fileend);
 void SeqUtil_unmapfiles(); 
-
+int SeqUtil_getEnvOrDefaultI (char* env_var, int default_value); 
 
 
 #endif
