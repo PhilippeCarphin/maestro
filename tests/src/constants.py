@@ -28,8 +28,7 @@ def create_config_py_if_missing():
     template="""# This is an automatically generated template for config. You may want to change the values in this file. See also "tests/constants.py
     
 # the option given to mserver for machine, for example "maestro2" or "eccc-ppp4"
-MSERVER_MACHINE=os.environ.get("TRUE_HOST","eccc-ppp4")
-"""
+MSERVER_MACHINE="""+os.environ.get("TRUE_HOST","eccc-ppp4")
     config_path=os.path.dirname(os.path.realpath(__file__))+"/config.py"
     if not os.path.isfile(config_path):
         with open(config_path,"w") as f:
