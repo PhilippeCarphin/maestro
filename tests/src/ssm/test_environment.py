@@ -33,8 +33,9 @@ class TestEnvironment(unittest.TestCase):
             cmd="which "+executable
             output,status = get_output(cmd)
             self.assertNotEqual(status,0)
-            output,status = get_output(SSM_USE_COMMAND+cmd)
-            msg="cmd = %s\noutput =\n\n"+output
+            cmd=SSM_USE_COMMAND+cmd
+            output,status = get_output(cmd)
+            msg="cmd = "+cmd+"\noutput =\n\n"+output
             self.assertEqual(status,0,msg=msg)
     
     def test_ssm_folders(self):
