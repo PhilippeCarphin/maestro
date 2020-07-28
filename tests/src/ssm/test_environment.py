@@ -34,7 +34,8 @@ class TestEnvironment(unittest.TestCase):
             output,status = get_output(cmd)
             self.assertNotEqual(status,0)
             output,status = get_output(SSM_USE_COMMAND+cmd)
-            self.assertEqual(status,0,msg=cmd)
+            msg="cmd = %s\noutput =\n\n"+output
+            self.assertEqual(status,0,msg=msg)
     
     def test_ssm_folders(self):
         # wrappers folder exists

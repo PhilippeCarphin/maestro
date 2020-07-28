@@ -16,6 +16,9 @@ from tests.path import MOCK_FILES, TMP_FOLDER, TURTLE_ME_PATH
 
 
 def setup_tmp_git_author_repo(always_recreate=False):
+    """
+    It
+    """
     path = TMP_FOLDER+"git-author-repo"
     if not always_recreate and os.path.exists(path):
         return path
