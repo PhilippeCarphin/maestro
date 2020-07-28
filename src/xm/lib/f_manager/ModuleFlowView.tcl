@@ -1,22 +1,4 @@
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
+
 
 
 #######################################################################
@@ -24,7 +6,6 @@
 # The code in this file contains logic to build the GUI aspect of an
 # a module flow. It reads the data from the ModuleFlow tree
 # structure to build the GUI of the module flow.
-#
 #######################################################################
 #######################################################################
 package require BWidget 1.9
@@ -108,7 +89,7 @@ proc ModuleFlowView_createWidgets { _expPath _moduleNode } {
    # create statusbar
    set statusBar [ModuleFlowView_addStatusBar ${_expPath} ${_moduleNode} ${topWidget}]
 
-   # grid ${flowCanvas} -row 0 -column 0 -sticky nsew
+   
    grid ${topFrame} -row 0 -column 0 -sticky w
    grid ${toolbar} -row 1 -sticky w
    grid ${scrolledW} -row 2 -sticky nsew
@@ -116,7 +97,7 @@ proc ModuleFlowView_createWidgets { _expPath _moduleNode } {
 
    grid rowconfigure ${topWidget} 2 -weight 1
    grid columnconfigure ${topWidget} 0 -weight 1
-   #grid columnconfigure ${topWidget} 1 -weight 1
+   
 
    # make sure we have a clean working dir
    ModuleLayout_clearWorkingDir ${_expPath} ${_moduleNode}
@@ -167,7 +148,7 @@ proc ModuleFlowView_addToolbar { _expPath _moduleNode _topWidget } {
       set imageDir [SharedData_getMiscData IMAGE_DIR]
       set cvsImage [image create photo ${toolbarW}.mod_cvs_image -file ${imageDir}/version_sys.png]
       set saveImage [image create photo ${toolbarW}.mod_save_image -file ${imageDir}/save.png]
-      # set undoImage [image create photo ${toolbarW}.mod_undo_image -file ${imageDir}/undo.gif]
+      
       set reloadImage [image create photo ${toolbarW}.mod_refresh_image -file ${imageDir}/reload.png]
       set quitImage [image create photo ${toolbarW}.quit_image -file ${imageDir}/stop.png]
 
@@ -175,23 +156,23 @@ proc ModuleFlowView_addToolbar { _expPath _moduleNode _topWidget } {
          -command [list ModuleFlowControl_saveSelected ${_expPath} ${_moduleNode} ${_topWidget}]]
       bind ${saveButton} <KeyPress-Return> [list ModuleFlowControl_saveSelected ${_expPath} ${_moduleNode} ${_topWidget}]
 
-      # set undoButton [button ${toolbarW}.undo_button -image ${undoImage} -relief flat -state disabled]
+      
 
       set refreshButton [button ${toolbarW}.refresh_button -image ${reloadImage} -relief flat \
          -command [list ModuleFlowControl_refreshSelected ${_expPath} ${_moduleNode} ${_topWidget}]]
       bind ${refreshButton} <KeyPress-Return> [list ModuleFlowControl_refreshSelected ${_expPath} ${_moduleNode} ${_topWidget}]
 
       set vcsButton [button ${toolbarW}.vcs_button -image ${cvsImage} -relief flat  -state disabled]
-      # bind ${vcsButton} <KeyPress-Return>
+      
 
       set closeButton [button ${toolbarW}.close_button -image ${quitImage} -relief flat \
             -command [list ModuleFlowView_closeWindow ${_expPath} ${_moduleNode}]]
       bind ${closeButton} <KeyPress-Return> [list ModuleFlowView_closeWindow ${_expPath} ${_moduleNode}]
       grid ${saveButton} ${refreshButton} ${vcsButton} ${closeButton} -padx 2 -sticky w
 
-      # ${_canvas} create window 25 30 -window ${expCanvasBar} -anchor n
+      
       ::tooltip::tooltip ${saveButton} "Save modified flow."
-      # ::tooltip::tooltip ${toolbarW}.undo_button "Undo last flow change."
+      
       ::tooltip::tooltip ${refreshButton} "Reload current flow, undo all changes."
       ::tooltip::tooltip ${vcsButton} "version control system - gui"
       ::tooltip::tooltip ${closeButton} "Close module flow window."
@@ -359,7 +340,7 @@ proc ModuleFlowView_getTopLevel { _expPath _moduleNode } {
 
 proc ModuleFlowView_getCanvas { _expPath _moduleNode } {
    set topWidget [ModuleFlowView_getTopLevel ${_expPath} ${_moduleNode}]
-   # set flowCanvas ${topWidget}.flow_canvas
+   
    set flowCanvas ${topWidget}.canvas_frame.flow_canvas
    return ${flowCanvas}
 }
@@ -496,7 +477,7 @@ proc ModuleFlowView_drawNode { _canvas _flowNodeRecord _position { _isRootNode f
 
       if { ${_position} == 0 } {
          set linex1 [expr $px2 + [SharedData_getMiscData CANVAS_SHADOW_OFFSET] - 1]
-         #set linex1 $px2
+         
          set liney1 [expr $py1 + ($py2 - $py1) / 2 + $deltaY]
          set liney2 $liney1
          set linex2 [expr $linex1 + $boxW/2]
@@ -611,7 +592,6 @@ proc ModuleFlowView_getLineDeltaSpace { _flowNodeRecord {_deltaValue 0} } {
 #                    modified x is start_x + width of created img
 #                    y is startY
 # else returns startX and startY
-# 
 proc ModuleFlowView_addWorkUnitIndicator { _canvas _flowNodeRecord _startX _startY } {
    global SingleReservImg
    if { [${_flowNodeRecord} cget -work_unit] == true } {
@@ -691,7 +671,7 @@ proc ModuleFlowView_nodeMenu { _canvas _flowNodeRecord x y } {
    ModuleFlowView_addMenuDelete ${popMenu} ${_canvas} ${_flowNodeRecord}
    ModuleFlowView_addMenuEdit ${popMenu} ${_canvas} ${_flowNodeRecord}
    ModuleFlowView_addMenuRename ${popMenu} ${_canvas} ${_flowNodeRecord}
-   # ${popMenu} add command -label "Edit" -underline 0 -state disabled
+   
    ${popMenu} add separator
    ModuleFlowView_addMenuOpen ${popMenu} ${_canvas} ${_flowNodeRecord}
 
@@ -726,8 +706,8 @@ proc ModuleFlowView_addMenuConfig { _menu _canvas _flowNodeRecord } {
       ${_menu} add command -label "Config" -underline 0 -state ${state} -command \
       [list ModuleFlowControl_configSelected [ModuleFlowView_getExpPath ${_canvas}] ${_flowNodeRecord}]
    }
-   #${_menu} add command -label "Config" -underline 0 -state ${state} -command \
-   #   [list ModuleFlowControl_configSelected [ModuleFlowView_getExpPath ${_canvas}] ${_flowNodeRecord}]
+   
+   
 }
 
 proc ModuleFlowView_addMenuSource { _menu _canvas _flowNodeRecord } {
@@ -864,14 +844,6 @@ proc ModuleFlowView_addMenuRename { _menu _canvas _flowNodeRecord } {
          if { [${_flowNodeRecord} cget -type] == "ModuleNode" && [ExpModTree_getModInstances ${expPath} ${flowNode}] > 1 } {
             ${_menu} add command -label "Rename" -underline 2 -command \
             [list ModuleFlowView_renameNodeWidgets ${moduleNode} ${_canvas} ${_flowNodeRecord} ]
-            # same module used more than once
-            # add rename submenu
-            # set renameMenu ${_menu}.rename_menu
-            # ${_menu} add cascade -label "Rename" -underline 2 -menu [menu ${renameMenu}]
-            # ${renameMenu} add command -label "Current ${flowNodeName}" -underline 0 \
-            #   -command [list ModuleFlowView_renameNodeWidgets ${moduleNode} ${_canvas} ${_flowNodeRecord}]
-            # ${renameMenu} add command -label "All ${flowNodeName}" -underline 0 \
-            #   -command [list ModuleFlowView_renameNodeWidgets ${moduleNode} ${_canvas} ${_flowNodeRecord} true]
          } else {
             ${_menu} add command -label "Rename" -underline 2 -command \
                [list ModuleFlowView_renameNodeWidgets ${moduleNode} ${_canvas} ${_flowNodeRecord}]
@@ -1264,7 +1236,7 @@ proc ModuleFlowView_cleanPreviousWidgets { _expPath _moduleNode } {
 
    grid remove ${refLabel} ${refEntry} ${refButton}
    grid remove ${useModLinkLabel} ${useModLinkCb}
-   # puts "nodeType: ${nodeType}"
+   
    if { ${nodeType} == "SwitchNode" } {
       ModuleFlowView_removeSwitchNodeExtraWidget ${_expPath} ${_moduleNode}
    }
@@ -1278,7 +1250,7 @@ proc ModuleFlowView_removeSwitchNodeExtraWidget { _expPath _moduleNode } {
    set switchModeOption [ModuleFlowView_getWidgetName ${_expPath} ${_moduleNode} addnode_switchmode_option] 
    set switchValuesFrame [ModuleFlowView_getWidgetName ${_expPath} ${_moduleNode} addnode_switchvalues_frame]
    destroy ${switchModeLabel} ${switchModeOption} ${switchValuesFrame}
-   # grid remove ${switchModeLabel} ${switchModeOption} ${switchValuesFrame}
+   
 }
 
 proc ModuleFlowView_addSwitchNodeExtraWidget { _expPath _moduleNode } {
@@ -1387,7 +1359,7 @@ proc ModuleFlowView_addSwitchNodeAddItem { _valueListW _itemEntryW _switchMode _
 proc ModuleFlowView_selectSwitchNodeAddItem { _valueListW _itemEntryW } {
    set currentSelection [${_valueListW} curselection]
    if { ${currentSelection} != "" } {
-      # puts "ModuleFlowView_selectSwitchNodeAddItem currentSelection:${currentSelection}"
+      
       ${_itemEntryW} delete 0 end
       ${_itemEntryW} insert 0 [${_valueListW} get ${currentSelection}]
    }
@@ -1431,7 +1403,7 @@ proc ModuleFlowView_getCurrentSwitchItem {  _expPath _flowNodeRecord _canvas} {
    ::log::log debug "ModuleFlowView_getCurrentSwitchItem _expPath:${_expPath} _flowNodeRecord:${_flowNodeRecord}"
    set value ""
    set switchModeValue [${_flowNodeRecord} cget -switch_mode]
-   # set flowNode [ModuleFlow_record2NodeName ${_flowNodeRecord}]
+   
    if { ${switchModeValue} == "DatestampHour" || ${switchModeValue} == "DayOfWeek" } {
       set comboBoxWidget [DrawUtils_getIndexWidgetName ${_flowNodeRecord} ${_canvas}]
       # check if the current value of the combobox matches a valid entry in the list
@@ -1451,7 +1423,6 @@ proc ModuleFlowView_newNodeRefEntryCallback { _expPath _moduleNode _refEntry } {
 
 # called when the user has typed a module path in the "Module path" entry field or
 # from the module selection dialog
-# 
 # _moduleNode is the node of the module we are editing
 # _newModPath is the path to the new module node we are adding to the current module
 proc ModuleFlowView_newNodeModSelected { _expPath _moduleNode _newModPath _sourceWidget } {
@@ -1588,7 +1559,7 @@ proc ModuleFlowView_renameNodeWidgets { _moduleNode _canvas _flowNodeRecord {_al
       grid ${newNameLabel} -row 1 -column 0 -sticky w -padx 2 -pady 2 -sticky w
       grid ${newNameEntry} -row 1 -column 1 -sticky w -padx 2 -pady 2 -sticky ew
 
-      #grid columnconfigure ${entryFrame} {0 1} -weight 1
+      
       grid columnconfigure ${entryFrame} 1 -weight 1
       grid rowconfigure ${entryFrame} {0 1} -weight 1
    }
@@ -1604,13 +1575,13 @@ proc ModuleFlowView_renameNodeWidgets { _moduleNode _canvas _flowNodeRecord {_al
    button ${cancelButton} -text Cancel
    grid ${okButton} ${cancelButton} -padx 2
 
-   #grid ${entryFrame} -row 0 -padx 5 -pady {5 2} -sticky nsew
+   
    grid ${entryFrame} -row 0 -padx 5 -pady {5 2} -sticky ew
    grid ${buttonFrame} -row 1 -padx 5 -pady {5} -sticky e
 
    grid columnconfigure ${topWidget} 0 -weight 1
    grid rowconfigure ${topWidget} 0 -weight 1
-   #grid rowconfigure ${topWidget} 1 -weight 1
+   
 
    wm title ${topWidget} "Rename ${nodeType} [${_flowNodeRecord} cget -name]"
    wm minsize ${topWidget} 300 100
@@ -1704,11 +1675,9 @@ proc ModuleFlowView_getNodeCoord { _flowNodeRecord _context } {
    return [list ${x1} ${y1} ${x2} ${y2}]
 }
 
-#
 # the context is used to build the visual record of the node
 # it is mainly used to avoid clashing between module nodes because they
 # appear visually in their own flow and in the flow of the calling module as well
-#
 # The context is the value of the module node name withing the experiment tree
 # for instance when we display the module /enkf_mod/anal_mod, all the
 # nodes within the anal_mod module will be prefixed with /enkf_mod/anal_mod 
@@ -1772,7 +1741,7 @@ proc ModuleFlowView_getWidgetName { _expPath _moduleNode _key } {
 proc ModuleFlowView_setWidgetNames { _expPath _moduleNode } {
    ::log::log debug "ModuleFlowView_setWidgetNames _expPath:${_expPath} _moduleNode:${_moduleNode}"
    set moduleId [ExpLayout_getModuleChecksum ${_expPath} ${_moduleNode}]
-   #global array ${moduleId}_ModuleFlowWidgetNames
+   
    global ${moduleId}_ModuleFlowWidgetNames
    if { ! [info exists ${moduleId}_ModuleFlowWidgetNames] } {
       set topWidget [ModuleFlowView_getTopLevel ${_expPath} ${_moduleNode}]
@@ -1837,7 +1806,6 @@ proc ModuleFlowView_genericCloseToplevel { _expPath _moduleNode _topLevelW } {
 
 # allows child toplevel windows to register with the module flow view so that
 # when the user closes the module view, the child toplevels are closed as well...
-#
 # _args is command to be called when the _topLevelW is destroyed
 proc ModuleFlowView_registerToplevel { _expPath _moduleNode _topLevelW {_args ""} } {
    set moduleId [ExpLayout_getModuleChecksum ${_expPath} ${_moduleNode}]

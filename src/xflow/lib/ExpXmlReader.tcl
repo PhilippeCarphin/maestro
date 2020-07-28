@@ -13,7 +13,7 @@ proc ExpXmlReader_readExperiments { xml_file } {
    }
 
    # First you parse the XML, the result is held in token d.
-   set xmlSrc [string trim $xmlSrc] ;# v2.6 barfed w/o this
+   set xmlSrc [string trim $xmlSrc] ;
    set d [dom parse $xmlSrc]
 
    # point to the root element
@@ -63,15 +63,15 @@ proc ExpXmlReader_readGroup { xml_node parent_name level} {
 
       set childs [$xml_node childNodes]
       if { $childs == "" } {
-         # puts "ExpXmlReader_readGroup group name:$groupName no child"
-         # DisplayGroup $groupName -dname $groupName -level $newLevel
+         
+         
       } else {
          foreach child $childs {
             set childName [$child nodeName]
             if { $childName == "Exp" } {
                set firstChild [$child firstChild]
                set expPath [$firstChild nodeValue]
-               # ExpXmlReader_addExp $groupRecordName [exec true_path $expPath]
+               
                ExpXmlReader_addExp $groupRecordName $expPath
                ::log::log debug "exp:$expPath"
             } elseif { $childName == "Group" } {
@@ -111,6 +111,6 @@ proc ExpXmlReader_getExpList {} {
 
 global env
 if { ! [record exists record DisplayGroup] } {
-   # puts "ExpXmlReader sourcing DisplayGrp.tcl"
+   
    source ${lib_dir}/DisplayGrp.tcl
 }

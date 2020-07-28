@@ -1,22 +1,4 @@
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
+
 
 package require Thread
 
@@ -129,7 +111,7 @@ proc SharedData_setEntryFonts { {_family fixed} {_size 12} {_slant roman} {_unde
 proc SharedData_init {} {
    SharedData_initColors
 
-   #SharedData_setMiscData CANVAS_BOX_WIDTH 90
+
    SharedData_setMiscData CANVAS_BOX_WIDTH 75
    SharedData_setMiscData CANVAS_LINE_WIDTH 15
    SharedData_setMiscData CANVAS_X_START 60
@@ -194,9 +176,9 @@ proc SharedData_readProperties {} {
       set propertiesFile [open ${fileName} r]
 
       while {[gets ${propertiesFile} line] >= 0 && ${errorMsg} == "" } {
-         #::log::log debug "SharedData_readProperties processing line: ${line}"
+
          if { [string index ${line} 0] != "#" && [string length ${line}] > 0 } {
-            #puts "SharedData_readProperties found data line: ${line}"
+
             # the = sign is used to separate between the key and the value.
             # spaces around the values are trimmed
             set splittedList [split ${line} =]
@@ -204,7 +186,7 @@ proc SharedData_readProperties {} {
             # if the list does not contain 2 elements, something's not right
             # output the error message
             if { [llength ${splittedList}] != 2 } {
-               # error "ERROR: While reading ${fileName}\nInvalid property syntax: ${line}"
+
                set errorMsg "While reading ${fileName}\n\nInvalid property syntax: ${line}.\n"
             } else {
                set keyFound [string toupper [string trim [lindex $splittedList 0]]]

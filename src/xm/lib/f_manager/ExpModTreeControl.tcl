@@ -1,22 +1,4 @@
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
+
 
 
 package require BWidget 1.9
@@ -27,8 +9,8 @@ SharedData_init
 SharedData_setMiscData IMAGE_DIR $env(SEQ_SRC)/xm/etc/images
 SharedData_setMiscData BG_TEMPLATES_DIR $env(SEQ_SRC)/xm/etc/bg_templates
 
-#option add *activeBackground [SharedData_getColor ACTIVE_BG]
-#option add *selectBackground [SharedData_getColor SELECT_BG]
+
+
  
 MaestroConsole_init
 
@@ -83,7 +65,7 @@ proc ExpModTreeControl_init { _sourceWidget _expPath } {
 
          set expChecksum [ExpLayout_getExpChecksum ${_expPath}]
          global ${expChecksum}_DebugOn
-         #set ${expChecksum}_DebugOn true
+         
          set ${expChecksum}_DebugOn false
          ExpModTreeControl_debugChanged ${_expPath}
          # recursive read of all module flow.xml
@@ -109,10 +91,8 @@ proc ExpModTreeControl_init { _sourceWidget _expPath } {
    }
 }
 
-#
 # _moduleNode is experiment tree node name of the module
 #             i.e. /enkf_mod/anal_mod/gem_mod
-#
 proc ExpModTreeControl_moduleSelection { _expPath _moduleNode {_sourceW .} } {
    ::log::log debug "ExpModTreeControl_moduleSelection _expPath:${_expPath} _moduleNode:${_moduleNode}"
    MiscTkUtils_busyCursor [winfo toplevel ${_sourceW}]

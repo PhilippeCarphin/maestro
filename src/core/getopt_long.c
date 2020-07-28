@@ -54,7 +54,7 @@ char    *optarg;		/* argument associated with option */
 				      || (IGNORE_FIRST && options[1] != ':')))
 #define IS_POSIXLY_CORRECT (getenv("POSIXLY_CORRECT") != NULL)
 #define PERMUTE         (!IS_POSIXLY_CORRECT && !IGNORE_FIRST)
-/* XXX: GNU ignores PC if *options == '-' */
+
 #define IN_ORDER        (!IS_POSIXLY_CORRECT && *options == '-')
 
 /* return values */
@@ -71,7 +71,7 @@ static void xwarnx(const char *, ...);
 
 static char *place = EMSG; /* option letter processing */
 
-/* XXX: set optreset to 1 rather than these two */
+
 static int nonopt_start = -1; /* first non option argument (for permute) */
 static int nonopt_end = -1;   /* first option after non options (for permute) */
 
@@ -145,9 +145,9 @@ permute_args(int nonopt_start, int nonopt_end, int opt_end, char * const *nargv)
 			else
 				pos += nopts;
 			swap = nargv[pos];
-			/* LINTED const cast */
+			
 			((char **) nargv)[pos] = nargv[cstart];
-			/* LINTED const cast */
+			
 			((char **)nargv)[cstart] = swap;
 		}
 	}
@@ -169,11 +169,7 @@ getopt_internal(int nargc, char * const *nargv, const char *options)
 
 	optarg = NULL;
 
-	/*
-	 * XXX Some programs (like rsyncd) expect to be able to
-	 * XXX re-initialize optind to 0 and have getopt_long(3)
-	 * XXX properly function again.  Work around this braindamage.
-	 */
+	
 	if (optind == 0)
 		optind = 1;
 
@@ -249,7 +245,7 @@ start:
 		return BADCH;
 	}
 	if (optchar == 'W' && oli[1] == ';') {		/* -W long-option */
-		/* XXX: what if no long options provided (called by getopt)? */
+		
 		if (*place)
 			return -2;
 
@@ -258,7 +254,7 @@ start:
 			if (PRINT_ERROR)
 				xwarnx(recargchar, optchar);
 			optopt = optchar;
-			/* XXX: GNU returns '?' if options[0] != ':' */
+			
 			return BADARG;
 		} else				/* white space */
 			place = nargv[optind];
@@ -275,14 +271,14 @@ start:
 		optarg = NULL;
 		if (*place)			/* no white space */
 			optarg = place;
-		/* XXX: disable test for :: if PC? (GNU doesn't) */
+		
 		else if (oli[1] != ':') {	/* arg not optional */
 			if (++optind >= nargc) {	/* no arg */
 				place = EMSG;
 				if (PRINT_ERROR)
 					xwarnx(recargchar, optchar);
 				optopt = optchar;
-				/* XXX: GNU returns '?' if options[0] != ':' */
+				
 				return BADARG;
 			} else
 				optarg = nargv[optind];
@@ -404,15 +400,12 @@ getopt_long(int nargc,
 				if (PRINT_ERROR)
 					xwarnx(noarg, (int)current_argv_len,
 					     current_argv);
-				/*
-				 * XXX: GNU sets optopt to val regardless of
-				 * flag
-				 */
+				
 				if (long_options[match].flag == NULL)
 					optopt = long_options[match].val;
 				else
 					optopt = 0;
-				/* XXX: GNU returns '?' if options[0] != ':' */
+				
 				return BADARG;
 			}
 			if (long_options[match].has_arg == required_argument ||
@@ -436,15 +429,12 @@ getopt_long(int nargc,
 				 */
 				if (PRINT_ERROR)
 					xwarnx(recargstring, current_argv);
-				/*
-				 * XXX: GNU sets optopt to val regardless
-				 * of flag
-				 */
+				
 				if (long_options[match].flag == NULL)
 					optopt = long_options[match].val;
 				else
 					optopt = 0;
-				/* XXX: GNU returns '?' if options[0] != ':' */
+				
 				--optind;
 				return BADARG;
 			}

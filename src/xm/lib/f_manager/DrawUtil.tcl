@@ -1,22 +1,4 @@
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
+
 
 
 # the context is a generic value that binds
@@ -34,7 +16,7 @@ record define FlowVisualNode {
 
 proc DrawUtil_drawline { canvas x1 y1 x2 y2 arrow fill drawshadow shadowColor {tag_name ""} } {
 
-    #set width 0.5
+
     set width 1.0
     if { $x1 < $x2 } {
       set x2 [expr $x2 - 2 ]
@@ -106,7 +88,7 @@ proc DrawUtil_drawdashline { canvas x1 y1 x2 y2 arrow fill drawshadow shadowColo
 }
 
 proc DrawUtil_drawBox { canvas tx1 ty1 text maxtext textfill outline fill binder drawshadow shadowColor } {
-   # ::log::log debug "drawBox canvas:$canvas tx1:$tx1 ty1:$ty1 text:$text textfill=$textfill outline=$outline fill=$fill binder:$binder"
+
    $canvas create text ${tx1} ${ty1} -text $maxtext -fill $textfill \
       -justify center -anchor w -tags "FlowItems $binder ${binder}.text"
    set shadowOffset [SharedData_getMiscData CANVAS_SHADOW_OFFSET]
@@ -136,7 +118,7 @@ proc DrawUtil_drawBox { canvas tx1 ty1 text maxtext textfill outline fill binder
 }
 
 proc DrawUtil_drawRoundBox { canvas tx1 ty1 text maxtext textfill outline fill binder drawshadow shadowColor } {
-   # ::log::log debug "DrawUtil_drawRoundBox canvas:$canvas tx1:$tx1 ty1:$ty1 text:$text textfill=$textfill outline=$outline fill=$fill binder:$binder"
+
    $canvas create text ${tx1} ${ty1} -text $maxtext -fill $textfill \
       -justify center -anchor w -tags "FlowItems $binder ${binder}.text"
    set shadowOffset [SharedData_getMiscData CANVAS_SHADOW_OFFSET]
@@ -213,7 +195,7 @@ proc DrawUtil_roundRect { w x0 y0 x3 y3 radius args } {
 proc DrawUtil_drawOval { canvas tx1 ty1 txt maxtext textfill outline fill binder drawshadow shadowColor } {
    set newtx1 [expr ${tx1} + 10]
    set newty1 $ty1
-   #set newty1 [expr ${ty1} + 5]
+
    $canvas create text ${newtx1} ${newty1} -text $maxtext -fill $textfill \
       -justify center -anchor w -tags "FlowItems $binder ${binder}.text"
 
@@ -287,7 +269,7 @@ proc DrawUtil_drawLosange { canvas tx1 ty1 text maxtext textfill outline fill bi
    }
    ${indexListW} clearvalue
    pack ${indexListW} -fill both
-   # puts "DrawUtil_drawLosange ${binder} cget -switch_items [${binder} cget -switch_items]"
+
    ${indexListW} configure -values ""
    set switchItems [${binder} cget -switch_items]
    if { ${switchItems} != "" } {
@@ -325,7 +307,7 @@ proc DrawUtil_highLightNode { _binder _canvas _restoreCmd } {
 }
 
 proc DrawUtil_resetHighLightNode { _restoreCmd } {
-   # ::log::log debug "DrawUtil_resetHighLightNode _restoreCmd:${_restoreCmd}"
+
    catch { eval ${_restoreCmd} }
 }
 
@@ -348,7 +330,7 @@ proc DrawUtil_clearCanvas { _canvas } {
 proc DrawUtil_AddCanvasBg { _canvas _imageFile } {
    package require img::png
    if { [${_canvas} find withtag CanvasBgImage] == "" } {
-      #set imageFileName [SharedData_getMiscData IMAGE_DIR]/artist_canvas_center.png
+
       set sourceImage [image create photo -file ${_imageFile}]
       set tiledImage [image create photo]
 
