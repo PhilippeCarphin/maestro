@@ -1,6 +1,7 @@
 import os
 import unittest
 from utilities import *
+from constants import MSERVER_MACHINE
 from config import *
 
 class TestMServer(unittest.TestCase):

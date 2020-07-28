@@ -98,4 +98,4 @@ echo "To use the new SSM package:
 
 You may also want to start the mserver with the new maestro version:
 
-     . ssmuse-sh -d $SSM_DOMAIN_PATH ; mserver_check -m maestro1"
+     . ssmuse-sh -d $SSM_DOMAIN_PATH ; mserver_check -m $TRUE_HOST"
