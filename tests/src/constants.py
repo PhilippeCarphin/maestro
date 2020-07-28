@@ -8,7 +8,7 @@ import os
 d=os.path.dirname
 class PATH:
     MOCK_FILES=d(d(os.path.realpath(__file__)))+"/mock_files"
-    SSM_DOMAIN=os.environ["SSM_DOMAIN_PATH"]
+    SSM_DOMAIN=os.environ["MAESTRO_TEST_SSM_DOMAIN_PATH"]
 PATH.SAMPLE_EXP1=PATH.MOCK_FILES+"/sample_experiment1"
 
 SSM_USE_COMMAND=". ssmuse-sh -d %s ; "%PATH.SSM_DOMAIN

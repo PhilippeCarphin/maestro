@@ -17,7 +17,7 @@ if [[ $(which maestro) ]] ; then
     exit 1
 fi
 
-SSM_DOMAIN_PATH=$1
+MAESTRO_TEST_SSM_DOMAIN_PATH=$1
 
 set -eu
 
@@ -25,12 +25,12 @@ PROJECT_PATH=$(git rev-parse --show-toplevel)
 VERSION=unittest
 PROJECT_NAME=$(basename $PROJECT_PATH)
 
-if [[ -z $SSM_DOMAIN_PATH ]]; then
+if [[ -z $MAESTRO_TEST_SSM_DOMAIN_PATH ]]; then
     echo "No SSM path provided. Therefore, building and installing a temporary SSM as the test target."
 
     SSM_ROOT=$HOME/tmp/ssm
     INSTALLED_MAESTRO_PATH=$SSM_ROOT/$PROJECT_NAME
-    SSM_DOMAIN_PATH=$INSTALLED_MAESTRO_PATH/$VERSION
+    MAESTRO_TEST_SSM_DOMAIN_PATH=$INSTALLED_MAESTRO_PATH/$VERSION
     
     rm -rf $SSM_ROOT
     mkdir -p $INSTALLED_MAESTRO_PATH
@@ -41,7 +41,7 @@ if [[ -z $SSM_DOMAIN_PATH ]]; then
     ssm/install_ssm.sh $VERSION --ssm-root=$SSM_ROOT
 fi
 
-if [[ ! -d $SSM_DOMAIN_PATH ]]; then
+if [[ ! -d $MAESTRO_TEST_SSM_DOMAIN_PATH ]]; then
     echo "
     
 $USAGE
@@ -54,6 +54,6 @@ echo "
 RUNNING PYTHON TESTS
 "
 
-export SSM_DOMAIN_PATH
+export MAESTRO_TEST_SSM_DOMAIN_PATH
 cd ${PROJECT_PATH}/tests/src
 ./run_ssm_tests.py
