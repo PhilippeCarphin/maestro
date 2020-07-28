@@ -1,8 +1,7 @@
 import os
 import unittest
-from utilities import *
-from constants import MSERVER_MACHINE
-from config import *
+from utilities import get_output
+from constants import MSERVER_MACHINE, SSM_USE_COMMAND, MAESTRO_PARAMETERS_FILE
 
 class TestMServer(unittest.TestCase):
     
@@ -22,7 +21,8 @@ class TestMServer(unittest.TestCase):
         cmd=SSM_USE_COMMAND+mcheck+"madmin -i"
         output,status = get_output(cmd)
         self.assertIn("Server is Alive", output)
-        self.assertEqual(status,0)
+        msg="output=\n\n"+output
+        self.assertEqual(status,0,msg=msg)
 
 def delete_parameters_file():
     try:
