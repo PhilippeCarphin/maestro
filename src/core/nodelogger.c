@@ -229,9 +229,9 @@ static int write_line(int sock, int top, const char* type)
 
 
    memset(bf, '\0', sizeof(bf));
-   
+
    if (top == 0) {
-     if ( ((bytes_sent=send_socket(sock , nodelogger_buf , sizeof(nodelogger_buf) , SOCK_TIMEOUT_CLIENT)) <= 0)) {
+     if ( ((bytes_sent=send_socket(sock , nodelogger_buf , sizeof(nodelogger_buf) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0)) {
         fprintf(stderr,"%%%%%%%%%%%% NODELOGGER: socket closed at send  %%%%%%%%%%%%%%\n");
         return(-1);
      }
@@ -242,13 +242,13 @@ static int write_line(int sock, int top, const char* type)
 			
      }
 
-     if ( ((bytes_sent=send_socket(sock , nodelogger_buf_top , sizeof(nodelogger_buf_top) , SOCK_TIMEOUT_CLIENT)) <= 0)) {
+     if ( ((bytes_sent=send_socket(sock , nodelogger_buf_top , sizeof(nodelogger_buf_top) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0)) {
        fprintf(stderr,"%%%%%%%%%%%% NODELOGGER: socket closed at send  %%%%%%%%%%%%%%\n");
        return(-1);
      }
    }
 
-   if ( (bytes_read=recv_socket (sock , bf , sizeof(bf) , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+   if ( (bytes_read=recv_socket (sock , bf , sizeof(bf) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
      fprintf(stderr,"%%%%%%%%%%%% NODELOGGER: socket closed at recv   %%%%%%%%%%%%%%\n");
      return(-1);
    }
@@ -549,11 +549,11 @@ static void NotifyUser (int sock , int top , char mode, const char * _seq_exp_ho
 		        case 'S': /* mserver is up but logging mechanism is through NFS */
 			         strcat(nodelogger_buf_notify,"Please initialize SEQ_LOGGING_MECH=server in ~/.maestrorc file\n");
 	                         if ( strcmp(lmech,"nfs") == 0 ) {
-                                     if ( ((bytes_sent=send_socket(sock , nodelogger_buf_notify , sizeof(nodelogger_buf_notify) , SOCK_TIMEOUT_CLIENT)) <= 0)) {
+                                     if ( ((bytes_sent=send_socket(sock , nodelogger_buf_notify , sizeof(nodelogger_buf_notify) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0)) {
 	                                     free(rcfile);free(lmech);
                                              return;
                                      }
-                                     if ( (bytes_read=recv_socket (sock , bf , sizeof(bf) , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+                                     if ( (bytes_read=recv_socket (sock , bf , sizeof(bf) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
 	                                     free(rcfile);free(lmech);
                                              return;
                                      }

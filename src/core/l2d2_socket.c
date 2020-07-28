@@ -490,14 +490,14 @@ int do_Login( int sock , unsigned int pid , char *node, char *xpname , char *sig
     }
 
     snprintf(bLogin,sizeof(bLogin),"I %u %ld %s %s %s %s %s %s", pid, (long) fileStat.st_ino, xpname, node , signl , host, username, *m5);
-    if ( (bytes_sent=send_socket (sock , bLogin , sizeof(bLogin) , SOCK_TIMEOUT_CLIENT)) <= 0 ) { 
+    if ( (bytes_sent=send_socket (sock , bLogin , sizeof(bLogin) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) { 
                 fprintf(stderr,"LOGIN FAILED (Timeout sending) with %s Maestro server from host=%s node=%s signal=%s\n",username, host, node, signl );
     	        return(1);
     } 
    
     
 	    
-    if ( (bytes_read=recv_socket (sock , buffer , sizeof(buffer) , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+    if ( (bytes_read=recv_socket (sock , buffer , sizeof(buffer) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
                 fprintf(stderr,"LOGIN FAILED (Timeout receiving) with %s Maestro server from host=%s node=%s signal=%s\n",username, host, node, signl );
                 return(1);
     }
