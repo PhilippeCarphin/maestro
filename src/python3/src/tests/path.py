@@ -18,7 +18,7 @@ G0_MINI_ME_PATH = GDPS_MINI_ME_PATH+"g0/"
 G1_MINI_ME_PATH = GDPS_MINI_ME_PATH+"g1/"
 GV_MINI_ME_PATH = GDPS_MINI_ME_PATH+"verification/"
 SWITCH_HOUR_ME_PATH = MOCK_FILES+"switch-datestamp-hour/"
-FILE_INDEX_ME_PATH = MOCK_FILES+"heimdall/file_index/"
+FILE_INDEX_ME_PATH = MOCK_FILES+"file_index/"
 
 
 def get_lines_from_file(path, remove_prefix_slash=True):
@@ -41,15 +41,15 @@ RESOURCES_HOME1 = MOCK_FILES+"resources-home1/"
 RESOURCES_HOME2 = MOCK_FILES+"resources-home2/"
 RESOURCES_HOME3 = MOCK_FILES+"resources-home3/"
 
-CONTEXT_GUESS_HOMES = MOCK_FILES+"heimdall/homes/"
+CONTEXT_GUESS_HOMES = MOCK_FILES+"homes/"
 OPERATIONAL_HOME = CONTEXT_GUESS_HOMES+"smco500"
 PARALLEL_HOME = CONTEXT_GUESS_HOMES+"smco501"
 
 QSTAT_OUTPUT1_PATH = MOCK_FILES+"qstat-output1"
-CMCCONST_OVERRIDE=MOCK_FILES+"heimdall/cmcconst/"
+CMCCONST_OVERRIDE=MOCK_FILES+"cmcconst/"
 
 TURTLE_DATESTAMP1 = "2020040100"
 
-SUITES_WITH_CODES = MOCK_FILES+"heimdall/suites_with_codes/"
-SUITES_WITHOUT_CODES = MOCK_FILES+"heimdall/suites_without_codes/"
+SUITES_WITH_CODES = MOCK_FILES+"suites_with_codes/"
+SUITES_WITHOUT_CODES = MOCK_FILES+"suites_without_codes/"
 CSV_DICTIONARY = MOCK_FILES+"csv_dictionary.csv"

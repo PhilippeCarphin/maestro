@@ -16,6 +16,8 @@ class TestSuiteScan(unittest.TestCase):
         Test all experiments in 'suites_with_codes' folder.
 
         For example, 'suites_with_codes/e007' experiment has 'e7' code
+        
+        Also, almost all codes must have an example suite in this folder.
         """
 
         setup_tmp_experiment1()

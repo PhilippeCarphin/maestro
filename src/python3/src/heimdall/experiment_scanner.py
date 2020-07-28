@@ -1064,10 +1064,10 @@ class ExperimentScanner():
             self.add_message("e001", folders=folders_msg)
 
     def scan_broken_symlinks(self):
-        broken = [path for path in self.files if file_cache.is_broken_symlink(path)]
-        if broken:
-            self.add_message("e004",
-                             broken_links="\n".join(broken))
+        for path in self.files:
+            if file_cache.is_broken_symlink(path):
+                self.add_message("e004",
+                                 link=path)
 
     def scan_node_names(self):        
         required_regex = re.compile(r"^(?i)[a-z](?:[a-z0-9]+[._-]?)*[a-z0-9]+$")

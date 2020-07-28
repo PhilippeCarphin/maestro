@@ -23,11 +23,11 @@ from heimdall.file_cache import file_cache
 class TestUtilities(unittest.TestCase):
 
     def test_file_cache(self):
-        path = MOCK_FILES+"heimdall/suites_without_codes/w003/modules/module1/link-to-task1.tsk"
+        path = MOCK_FILES+"suites_without_codes/w003/modules/module1/link-to-task1.tsk"
         result = file_cache.is_broken_symlink(path)
         self.assertFalse(result)
 
-        path = MOCK_FILES+"heimdall/suites_with_codes/e004/modules/main/broken-symlink"
+        path = MOCK_FILES+"suites_with_codes/e004/modules/main/broken-symlink"
         result = file_cache.is_broken_symlink(path)
         self.assertTrue(result)
 
@@ -108,14 +108,14 @@ class TestUtilities(unittest.TestCase):
         def r(path):
             return os.path.realpath(path)+"/"
 
-        path = MOCK_FILES+"/heimdall/homes/smco500/maestro_suites/preop_zdps/"
-        expected = r(MOCK_FILES+"/heimdall/homes/smco502/")
+        path = MOCK_FILES+"homes/smco500/maestro_suites/preop_zdps/"
+        expected = r(MOCK_FILES+"homes/smco502/")
         result = guess_user_home_from_path(path)
         self.assertEqual(result, expected)
 
         "use realpath to explore parent folders for home tests"
-        path = MOCK_FILES+"/heimdall/suites_with_codes/w005/"
-        expected = r(MOCK_FILES+"/heimdall/homes/smco502/")
+        path = MOCK_FILES+"suites_with_codes/w005/"
+        expected = r(MOCK_FILES+"homes/smco502/")
         result = guess_user_home_from_path(path)
         self.assertEqual(result, expected)
 

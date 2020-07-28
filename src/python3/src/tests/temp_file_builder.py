@@ -56,7 +56,7 @@ def setup_tmp_smco501_home():
         does produce w012
     """
 
-    source = MOCK_FILES+"heimdall/homes/smco501"
+    source = MOCK_FILES+"homes/smco501"
     target = TMP_FOLDER+"smco501"
 
     if os.path.exists(target):
@@ -67,10 +67,10 @@ def setup_tmp_smco501_home():
 
     root = xml_cache.get(xml_path)
 
-    exp = MOCK_FILES+"heimdall/suites_without_codes/w011"
+    exp = MOCK_FILES+"suites_without_codes/w011"
     root.xpath("//Exp")[0].text = exp
 
-    exp = MOCK_FILES+"heimdall/suites_with_codes/w012"
+    exp = MOCK_FILES+"suites_with_codes/w012"
     root.xpath("//Exp")[1].text = exp
 
     with open(xml_path, "w") as f:
@@ -85,7 +85,7 @@ def setup_tmp_experiment1():
     Returns a path to an experiment that produces the b001, w015 codes.
     """
 
-    source = MOCK_FILES+"heimdall/suites_with_codes/e005"
+    source = MOCK_FILES+"suites_with_codes/e005"
     target = TMP_FOLDER+"b001"
 
     if os.path.exists(target):
@@ -97,7 +97,7 @@ def setup_tmp_experiment1():
     root = xml_cache.get(xml_path)
 
     "this is the dynamic value to insert, which changes depending on who runs the test suite where"
-    exp = MOCK_FILES+"heimdall/suites_with_codes/w001"
+    exp = MOCK_FILES+"suites_with_codes/w001"
 
     for element in root.xpath("//DEPENDS_ON"):
         element.set("exp", exp)

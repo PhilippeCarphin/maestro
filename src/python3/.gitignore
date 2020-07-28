@@ -9,4 +9,4 @@ tmp
 csv/.~*
 
 # test swap files
-!mock_files/heimdall/file_index/resources/.vim-swap-file.swp
+!mock_files/file_index/resources/.vim-swap-file.swp

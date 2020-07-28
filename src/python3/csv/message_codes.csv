@@ -17,7 +17,7 @@ c005	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to p
 e001	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders	
 e002	Bad XML	Failed to parse XML: ‘{xml}’		
 e003	Invalid node name	Invalid node name ‘{node_name}’ in flow XML ‘{flow_path}’. Node names must be alphanumeric with dot, dash, or underscores. Must match the regex: {regex}	https://regex101.com/	
-e004	Broken symlink	Soft links were found with targets that do not exist:\n{broken_links}		
+e004	Broken symlink	The target of soft link ‘{link}’ does not exist.		
 e005	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML:\n{flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290	
 i005	Unknown nodelogger signal	The executable ‘nodelogger’ was given a signal for its ‘-s’ argument that is a known signal: {signals}. This message won’t appear in the message center.\n{details}	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
 e007	Missing required resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. This is required for the ‘{context}’ context.		
