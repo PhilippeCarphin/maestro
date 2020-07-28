@@ -30,6 +30,10 @@ LIBDIR=lib
 WRAPDIR=src/core/wrappers
 
 all: $(EXECUTABLES)
+	rm -f ${BINDIR}/madmin
+	ln -s l2d2_admin ${BINDIR}/madmin
+	rm -f ${BINDIR}/mserver
+	ln -s l2d2_server ${BINDIR}/mserver
 
 # To avoid automatic deletion of .o files.  Make has implicit rules and
 # if a file is not explicitely as a dependency of something else, it will

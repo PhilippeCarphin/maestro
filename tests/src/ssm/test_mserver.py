@@ -1,7 +1,9 @@
 import os
 import unittest
-from utilities import get_output
+import constants
+print("dir constants = "+str(dir(constants)))
 from constants import MSERVER_MACHINE, SSM_USE_COMMAND, MAESTRO_PARAMETERS_FILE
+from utilities import get_output
 
 class TestMServer(unittest.TestCase):
     
