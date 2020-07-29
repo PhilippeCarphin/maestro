@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="40G" mpi="0" wallclock="30" catchup="4" cpu="8" queue="${FRONTEND_DEFAULT_Q}"/>
+</NODE_RESOURCES>
+

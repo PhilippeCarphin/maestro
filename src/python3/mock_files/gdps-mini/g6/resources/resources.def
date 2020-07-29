@@ -1,0 +1,55 @@
+# Machine definitions
+FRONTEND=eccc-ppp4
+BACKEND=daley
+SEQ_DEFAULT_MACHINE=eccc-ppp4
+
+# Transfer server FRONTEND/BACKEND
+DBASE_SERVER=eccc-ppp4
+
+BACKEND_XFER_Q=xfer
+FRONTEND_XFER_Q=xfer
+BACKEND_DEFAULT_Q=production
+FRONTEND_DEFAULT_Q=production
+
+# QUEUE_TRANSFER=fexfer
+QUEUE_TRANSFER=xfer
+
+# for experiment dependencies on G2
+ASSIM_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+
+## Dependency on the 'intxfer' module from G2
+ASSIM_TRANSFER_DEPEND=/main/intxfer_g2
+AMSR2_TMPFSSIZE=6000
+
+#-------------------
+# CMDW post-processing
+#-------------------
+# This is the part of the G6 that is external to cmdw post-processing
+CMDW_FULL_G6_EXP=/home/smco500/maestro_suites/gdps_20191231/g6
+
+CMDW_POST_PROC_G1_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+
+CMDW_POST_PROC_G2_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+
+CMDW_MEMORY_DEFAULT=500M
+CMDW_WALLCLOCK_DEFAULT=5
+
+# reference experiment used when:
+#   cutoff is not run
+#   validation is done
+SFC_REFERENCE_EXP=/home/smco500/maestro_suites/gdps_20191231/g6
+
+# pour post-traitement cmde
+FULL_G6_EXP=/home/smco500/maestro_suites/gdps_20191231/g6
+
+
+# CMOI post_processing
+CMOI_G6_EXP=/home/smco500/maestro_suites/gdps_20191231/g6
+
+# fasttmp
+TMPFSSIZE=3000
+
+GDPS_DERISFC_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+
+GDPS_DERISFC_MOD=/main/pre_assimcycle/derisfc
+

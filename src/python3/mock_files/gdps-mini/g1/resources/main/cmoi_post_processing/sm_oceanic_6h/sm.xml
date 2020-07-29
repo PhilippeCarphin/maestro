@@ -1,0 +1,6 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="4G" wallclock="30" mpi="0" cpu="1" catchup="4"/>
+   <!-- nemo_xfer -->
+  <DEPENDS_ON dep_name="/main/assimcycle/forecast_coupled/post_nemo" local_index="sm_oceanic_6h=$((x))"  status="end" type="node"/>
+
+</NODE_RESOURCES>

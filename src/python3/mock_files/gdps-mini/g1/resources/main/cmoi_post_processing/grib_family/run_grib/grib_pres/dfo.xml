@@ -1,0 +1,5 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="4G" wallclock="5" catchup="4" cpu="1" />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=144" status="end" type="node" local_index="run_grib=CURRENT_INDEX"   />
+  <DEPENDS_ON exp="${CMOI_R1_EXP}" dep_name="/main/cmoi_post_processing/RunHour/grib_prod_0012_1/gen_GRIB1_files" index="RunHour=$((x)),grib_prod_0012_1=*" status="end" type="node" local_index="run_grib=$((x))"   />
+</NODE_RESOURCES>

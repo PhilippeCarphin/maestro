@@ -1,0 +1,28 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}"/>
+
+  <!-- Add dependencies of scmt1 because this is done by a commun module.
+   some input are shared by scmt1 and scmm1 and others not
+   the inputs not shared are not set optional and the task will abort if the dependencies are not present
+   The best will be to modify the input in scmyy.cfg to make them optional.
+  -->
+
+  <!-- dependencies valid at each run -->
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=72" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=78" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=84" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=90" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=96" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=102" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=108" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=114" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=120" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=126" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=132" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=138" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=144" status="end" type="node"/>
+
+  <!-- umos -->
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_UMOS_DEP}" exp="${SCRIBE_GDPS_EXP}" status="end" type="node"/>
+</NODE_RESOURCES>

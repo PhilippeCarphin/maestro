@@ -1,22 +1,5 @@
 /* nodelogger.c - Log writing functions of the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -37,6 +20,7 @@
 #include "nodelogger.h"
 #include "l2d2_socket.h"
 #include "SeqUtil.h"
+#include "SeqUtilServer.h"
 #include <libgen.h>
 #include <strings.h>
 
@@ -51,7 +35,6 @@ static char nodelogger_buf_top[NODELOG_BUFSIZE];
 static char nodelogger_buf_short[NODELOG_BUFSIZE];
 static char nodelogger_buf_notify[NODELOG_BUFSIZE];
 static char nodelogger_buf_notify_short[NODELOG_BUFSIZE];
-extern int MLLServerConnectionFid;
 extern int OpenConnectionToMLLServer (const char *, const char *, const char *);
 
 static char NODELOG_JOB[NODELOG_BUFSIZE];
@@ -246,9 +229,9 @@ static int write_line(int sock, int top, const char* type)
 
 
    memset(bf, '\0', sizeof(bf));
-   
+
    if (top == 0) {
-     if ( ((bytes_sent=send_socket(sock , nodelogger_buf , sizeof(nodelogger_buf) , SOCK_TIMEOUT_CLIENT)) <= 0)) {
+     if ( ((bytes_sent=send_socket(sock , nodelogger_buf , sizeof(nodelogger_buf) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0)) {
         fprintf(stderr,"%%%%%%%%%%%% NODELOGGER: socket closed at send  %%%%%%%%%%%%%%\n");
         return(-1);
      }
@@ -256,16 +239,16 @@ static int write_line(int sock, int top, const char* type)
      /* create tolog file */
      if ((fileid = open(TOP_LOG_PATH,O_WRONLY|O_CREAT,0755)) < 1 ) {
                         fprintf(stderr,"Nodelogger: could not create toplog:%s\n",TOP_LOG_PATH);
-			/* return something */
+			
      }
 
-     if ( ((bytes_sent=send_socket(sock , nodelogger_buf_top , sizeof(nodelogger_buf_top) , SOCK_TIMEOUT_CLIENT)) <= 0)) {
+     if ( ((bytes_sent=send_socket(sock , nodelogger_buf_top , sizeof(nodelogger_buf_top) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0)) {
        fprintf(stderr,"%%%%%%%%%%%% NODELOGGER: socket closed at send  %%%%%%%%%%%%%%\n");
        return(-1);
      }
    }
 
-   if ( (bytes_read=recv_socket (sock , bf , sizeof(bf) , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+   if ( (bytes_read=recv_socket (sock , bf , sizeof(bf) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
      fprintf(stderr,"%%%%%%%%%%%% NODELOGGER: socket closed at recv   %%%%%%%%%%%%%%\n");
      return(-1);
    }
@@ -274,15 +257,13 @@ static int write_line(int sock, int top, const char* type)
      fprintf(stderr,"Nodelogger::write_line: Error=%s bf=%s nodelogger_buf=%s\n",strerror(errno),bf,nodelogger_buf);
      return(-1);
    }
-   /* Notify user if he is using nfs mode, this will be done at begin and end of root node 
-      Note : we notify user when using inter-dependencies
-   if ( top != 0 && (strcmp(type,"begin") == 0 || strcmp(type,"endx") == 0 ) ) NotifyUser ( sock , top ,'S', _seq_exp_home  );  */
+   
    
 
    return(0);
 }
 
-/* gen_message: write a formatted log message */
+
 
 static void gen_message (const char *node,const char *type,const char* loop_ext, const char* message)
 {
@@ -330,10 +311,7 @@ static void gen_message (const char *node,const char *type,const char* loop_ext,
 	snprintf(nodelogger_buf_notify,sizeof(nodelogger_buf_notify),"L %-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=info:SEQMSG=",username,LOG_PATH,c_year,c_month,c_day,c_hour,c_min,c_sec,node); 
         snprintf(nodelogger_buf_notify_short,sizeof(nodelogger_buf_notify_short),"TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=info:SEQMSG=",c_year,c_month,c_day,c_hour,c_min,c_sec,node); 
     }
-    /* root node is NOT a loop node , no need to duplicate under loop_ext 
-    snprintf(nodelogger_buf_notify,sizeof(nodelogger_buf_notify),"L %-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=info:SEQMSG=",username,LOG_PATH,c_year,c_month,c_day,c_hour,c_min,c_sec,node);
-    snprintf(nodelogger_buf_notify_short,sizeof(nodelogger_buf_notify_short),"TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=info:SEQMSG=",c_year,c_month,c_day,c_hour,c_min,c_sec,node);
-    */
+    
     
 }
 
@@ -478,7 +456,7 @@ static int sync_nodelog_over_nfs (const char *node, const char * type, const cha
  	                 }
  		             if ( (diff_t=difftime(now,st.st_mtime)) > 2 ) {
 						SeqUtil_TRACE(TL_FULL_TRACE, "Removed old token file %s \n",ffilename);
- 		                ret=unlink(ffilename); /* token file should be removed */
+ 		                ret=unlink(ffilename); 
  		             }
  		             my_turn = 0;
  		             break;
@@ -546,10 +524,7 @@ static int sync_nodelog_over_nfs (const char *node, const char * type, const cha
        ret=unlink(flock);
        fprintf(stderr,"Nodelogger NFS_SYNC DID NOT GET the lock Started at:%s Ended at:%s tries=%d\n",Stime,Etime,loop);
     }
-    /* Notify user if server not running  here we are at the level of root node so
-       Only one task (root Node) is running
-       Note : we notify user when using inter-dependencies
-    if ( (strcmp(logtype,"toplog") == 0)  && (strcmp(type,"begin") == 0 || strcmp(type,"endx") == 0 ) ) NotifyUser ( -1 , 1 ,'N', _seq_exp_home); */
+    
     
     SeqUtil_TRACE(TL_FULL_TRACE,"sync_nodelog_over_nfs(): returning\n");
     alarm(0);
@@ -574,11 +549,11 @@ static void NotifyUser (int sock , int top , char mode, const char * _seq_exp_ho
 		        case 'S': /* mserver is up but logging mechanism is through NFS */
 			         strcat(nodelogger_buf_notify,"Please initialize SEQ_LOGGING_MECH=server in ~/.maestrorc file\n");
 	                         if ( strcmp(lmech,"nfs") == 0 ) {
-                                     if ( ((bytes_sent=send_socket(sock , nodelogger_buf_notify , sizeof(nodelogger_buf_notify) , SOCK_TIMEOUT_CLIENT)) <= 0)) {
+                                     if ( ((bytes_sent=send_socket(sock , nodelogger_buf_notify , sizeof(nodelogger_buf_notify) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0)) {
 	                                     free(rcfile);free(lmech);
                                              return;
                                      }
-                                     if ( (bytes_read=recv_socket (sock , bf , sizeof(bf) , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+                                     if ( (bytes_read=recv_socket (sock , bf , sizeof(bf) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
 	                                     free(rcfile);free(lmech);
                                              return;
                                      }

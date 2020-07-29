@@ -2,6 +2,6 @@
 
 import string
 
-a=""
-while len(a)<10**12:
-    a+=string.ascii_lowercase
+a = ""
+while len(a) < 10**12:
+    a += string.ascii_lowercase

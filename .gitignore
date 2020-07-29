@@ -1,4 +1,6 @@
 /bin
+/src/core/bin/*
+/src/core/include/*
 /build
 build.cfg
 _*
@@ -17,11 +19,15 @@ src/python3/mflow-debug.sh
 /man/.offline_man_backup
 .ssm.d/control*
 tests/src/config.py
+/src/python3/tmp
+tests/config.py
 
 # git
 *.orig
 
 # Python
+/venv
+/python_venv
 !__init__.py
 venv/
 

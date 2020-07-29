@@ -1,0 +1,3 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+  <LOOP end="${PST_LOOP_MAX_GRID}" set="${PST_LOOP_MAX_GRID}" start="1" step="1"/>
+</NODE_RESOURCES>

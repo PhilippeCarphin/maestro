@@ -64,7 +64,7 @@ proc ::DrawUtils::getBoxLabelFont { _canvas } {
          -weight [font actual ${_canvas} -weight] \
          -slant  [font actual ${_canvas} -slant ]
 
-      # font configure ${newFont} -weight bold -size 11
+      
       font configure ${newFont} -weight bold -size [expr  [font actual ${_canvas} -size] - 2 ]
    } else {
       font configure ${labelFont} -family [SharedData_getMiscData FONT_TASK] \
@@ -142,16 +142,16 @@ proc ::DrawUtils::clearBranch { exp_path node datestamp canvas { cmd_list "" } }
 
    # delete submit arrows
    set lineTagName ${node}.submit_tag
-   #${canvas} delete ${lineTagName}
+   
    append evalCmdList "${canvas} delete ${lineTagName};"
 
    foreach submitName ${submits} {
       ::DrawUtils::clearBranch ${exp_path} ${node}/${submitName} ${datestamp} ${canvas}  ${cmd_list}
    }
 
-   #${canvas} delete ${node}
+   
    append evalCmdList "${canvas} delete ${node};"
-   # puts "--------------------------------------------- ::DrawUtils::clearBranch end of node:$node ${evalCmdList}"
+   
 }
 
 proc ::DrawUtils::getIndexWidgetTag { node } {
@@ -194,7 +194,7 @@ proc ::DrawUtils::drawNodeStatus { exp_path node datestamp canvas {shadow_status
    catch { set colors [::DrawUtils::getStatusColor $status] }
 
    ::log::log debug "::DrawUtils::drawNodeStatus node=$node canvasTag=$canvasTag canvasTextTag=$canvasTextTag status=$status font=[lindex $colors 0] fill=[lindex $colors 1]"
-   # puts "::DrawUtils::drawNodeStatus node=$node canvasTag=$canvasTag canvasTextTag=$canvasTextTag status=$status font=[lindex $colors 0] fill=[lindex $colors 1]"
+   
 
    # get the list of all canvases where the node appears
       if { [winfo exists $canvas] } {
@@ -226,8 +226,8 @@ proc ::DrawUtils::drawFamily { node canvas } {
       set y1 [expr [lindex $displayInfo 2] - 5]
       set y2 [expr [lindex $displayInfo 6] + 5]
       set color [getNextColor]
-      #$canvas create rectangle $x1 $y1 $x2 $y2 \
-      #   -dash . -outline "#9eacb3" -fill $color -width 2 -tags "box.$node"
+      
+      
       $canvas create rectangle $x1 $y1 $x2 $y2 \
          -outline "#9eacb3" -fill $color -width 2 -tags "box.$node"
       $canvas lower box.$node
@@ -276,7 +276,7 @@ proc ::DrawUtils::drawLosange { exp_path datestamp canvas tx1 ty1 text textfill 
 
    set newtx1 [expr ${tx1} + 30/${flowScale}]
    set newty1 [expr ${ty1} - 5]
-  # $canvas delete ${binder}.rect
+  
    set l_txt [split $text "\n"]
    set size   6
    set color  "normal" 
@@ -305,15 +305,13 @@ proc ::DrawUtils::drawLosange { exp_path datestamp canvas tx1 ty1 text textfill 
               -outline black -tags "flow_element $binder ${binder}.rect"
    }
 
-   #    
-   #
-   #        x2,y2     x3,y3
-   #         --------
-   #       /        /
-   #      /        /
-   #      ---------
+   
+       x2,y2     x3,y3
+        --------
+      /        /
+     /        /
+     ---------
    #   x1,y1      x4,y4
-   #
    set boxArea [$canvas bbox ${binder}.text]
    set nx1 [expr [lindex $boxArea 0] -30/${flowScale}]
    set nx2 [lindex $boxArea 0]
@@ -426,7 +424,7 @@ proc ::DrawUtils::drawOval { exp_path datestamp canvas tx1 ty1 txt maxtext textf
              -outline black -tags "flow_element $binder ${binder}.rect"
    }
    set boxArea [$canvas bbox ${binder}.text]
-   #$canvas itemconfigure ${binder}.text -text $txt
+   
 
    set ovalSize [SharedData_getMiscData LOOP_OVAL_SIZE]
    set nx1 [expr [lindex $boxArea 0] - ${ovalSize}]
@@ -534,7 +532,7 @@ proc ::DrawUtils::setIndexWidgetStatuses { exp_path node datestamp index_widget 
    bind ${listboxW}  <4> [list ${listboxW} yview scroll -1 units]
    bind ${listboxW}  <5> [list ${listboxW} yview scroll +1 units]
 
-   # Utils_bindMouseWheel ${listboxW} 3
+   
    set maxItemLength [string length latest]
 
    set index 0
@@ -1014,11 +1012,11 @@ proc ::DrawUtils::getLineDeltaSpace { exp_path node datestamp display_pref {delt
 
 proc ::DrawUtils::getNodeDeltaX { exp_path node datestamp canvas } {
    set deltax 0
-   # puts "::DrawUtils::getNodeDeltaX SharedFlowNode_getNodeType ${exp_path} ${node}"
+   
    if { [SharedFlowNode_getNodeType ${exp_path} ${node} ${datestamp}] == "npass_task" } {
       set indexListW [::DrawUtils::getIndexWidgetName ${node} ${canvas}]
       foreach { px1 py1 px2 py2 } [SharedFlowNode_getDisplayCoords ${exp_path} ${node} ${datestamp}] {break}
-      # foreach { nx1 ny1 nx2 ny2 } [${canvas} bbox ${node}.index_widget] { break }
+      
       foreach { nx1 ny1 nx2 ny2 } [${canvas} bbox index_widget_${node}] { break }
       if { ${nx2} > ${px2} } {
          set deltax [expr ${nx2} - ${px2}]
@@ -1123,8 +1121,8 @@ proc ::DrawUtils::getCanvasViewArea { _canvas } {
 # visible within the current scroll area
 proc ::DrawUtils::viewCanvasItem { _canvas _tag } {
    foreach {x1 y1 x2 y2} [${_canvas} bbox ${_tag}] break
-   #set y1 [expr $y1 - 10]
-   #set x1 [expr $x1 - 10]
+   
+   
 
    if { ${y1} < 0 } {
       set y1 0

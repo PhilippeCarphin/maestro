@@ -14,7 +14,9 @@ TCL_BIN_FOLDER=${PACKAGE_HOME}/tcl_bin
 ln -s ${PACKAGE_HOME}/src/core/bin/* ${BIN_FOLDER}/
 ln -s ${PACKAGE_HOME}/src/utilities/bin/* ${BIN_FOLDER}/
 ln -s ${PACKAGE_HOME}/src/xflow/bin/* ${BIN_FOLDER}/
-ln -s ${PACKAGE_HOME}/src/mflow/bin/* ${BIN_FOLDER}/
+for executable in heimdall mflow maestro_search ; do
+	ln -s ${PACKAGE_HOME}/src/python3/bin/$executable ${BIN_FOLDER}/
+done
 ln -s ${PACKAGE_HOME}/src/xm/bin/* ${BIN_FOLDER}/
 
 # tcl bins go in a special bins folder, so that they do not clash with a possible system installation of tcl

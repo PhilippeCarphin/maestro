@@ -1,0 +1,4 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+    <DEPENDS_ON dep_name="../../umos/umos_qc" local_index="loop_umos_sscp=0" status="end" type="node"/>
+</NODE_RESOURCES>

@@ -20,17 +20,18 @@ Options:
 from utilities import docopt
 from tests.utilities import run_tests
 
+
 def main(args):
-    
     "if no option, test all"
-    test_all=not args["--mflow"] and not args["--heimdall"]
-    
-    test_filter=args["--filter"]
+    test_all = not args["--mflow"] and not args["--heimdall"]
+
+    test_filter = args["--filter"]
     run_tests(verbose=args["--verbose"],
               test_mflow=args["--mflow"] or test_all,
-              test_heimdall=args["--heimdall"] or test_all,              
-              test_filter=test_filter)    
+              test_heimdall=args["--heimdall"] or test_all,
+              test_filter=test_filter)
     print("Done.")
+
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="1.0")

@@ -29,6 +29,10 @@ def print_color(text, color=0, end="\n"):
     print(prefix + str(text) + "\033[0m", end=end)
 
 
+def print_blue(text, end="\n"):
+    print_color(text, COLORS.BLUE, end=end)
+
+
 def print_orange(text, end="\n"):
     print_color(text, COLORS.ORANGE, end=end)
 

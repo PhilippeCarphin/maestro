@@ -1,0 +1,28 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="4G" wallclock="5" catchup="4" cpu="1" />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=0" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=0"   />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=6" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=3"   />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=6" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=6"   />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=12" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=9"   />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=12" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=12"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=18" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=15"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=18" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=18"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=24" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=21"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=24" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=24"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=30" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=27"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=30" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=30"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=36" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=33"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=36" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=36"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=42" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=39"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=42" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=42"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=48" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=45"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=48" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=48"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=54" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=51"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=54" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=54"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=60" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=57"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=60" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=60"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=66" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=63"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=66" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=66"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=72" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=69"  />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=72" status="end" type="node" local_index="run_grib=12,grib_eta2_000_072=72"  />
+</NODE_RESOURCES>

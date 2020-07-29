@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+    <BATCH catchup="3" cpu="3" machine="${FRONTEND}" memory="2G" queue="${FRONTEND_DEFAULT_Q}" wallclock="20"/>
+    <DEPENDS_ON dep_name="/main/intxfer/intxfer_trial" status="end" type="node"/>
+</NODE_RESOURCES>

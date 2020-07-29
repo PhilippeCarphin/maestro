@@ -1,22 +1,4 @@
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
+
 
 package require BWidget 1.9
 package require cksum
@@ -76,7 +58,7 @@ proc ModuleFlowControl_sourceSelected { _expPath _flowNodeRecord } {
       set sourceFile [ModuleLayout_getNodeSourcePath ${_expPath} ${moduleLayoutNode} ${flowNode} ${nodeType} true]
    } else {
       # get the relative path within the module container
-      #set relativePath [::textutil::trim::trimPrefix ${_flowNodeRecord} ${moduleNodeRecord}]
+      
       set sourceFile [ModuleLayout_getNodeSourcePath ${_expPath} ${moduleLayoutNode} ${flowNode} ${nodeType}]
    }
 
@@ -298,7 +280,7 @@ proc ModuleFlowControl_renameNodeOk { _topWidget _expPath _moduleNode _flowNodeR
          [list ModuleLayout_renameModule ${_expPath} ${flowNode} ${newNodeName} ${useCopy}]
 
       # save flow xml file of referenced node at save time
-      # note: this is temporary... we should remove the name attribute of the module node tag
+      
       # from the module flow.xml
       set newModuleNode [file dirname ${flowNode}]/${newNodeName}
       set moduleFlowXml [ModuleLayout_getFlowXml ${_expPath} ${newModuleNode}]
@@ -610,9 +592,7 @@ proc ModuleFlowControl_clearPostSaveCmd { _expPath _moduleNode } {
 # found in that depot...
 # any directory containing a flow.xml file will be collected
 # as a module
-#
 # returns a list containing the path of each module
-#
 proc ModuleFlowControl_getDepotModules {} {
    set modules {}
    set modDepotConfig [ModuleFlowControl_getModDefaultDepot]

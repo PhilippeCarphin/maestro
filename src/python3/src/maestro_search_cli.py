@@ -16,8 +16,10 @@ Options:
 """
 import os
 __doc__=__doc__.replace("$PWD",os.environ["PWD"])
-import re
 import sys
+import re
+import os
+__doc__ = __doc__.replace("$PWD", os.environ["PWD"])
 import logging
 
 from maestro_experiment import MaestroExperiment
@@ -29,57 +31,57 @@ def node_path_search(path,substring,regex_string,verbose=False):
     """
     Print node paths matching this search.
     """
-    
+
     if verbose and regex_string:
         print("Node path search is using regular expression:\n"+regex_string+"\n")
-    
-    me=MaestroExperiment(path)
-    
-    regex=None if not regex_string else re.compile(regex_string)
-    
+
+    me = MaestroExperiment(path)
+
+    regex = None if not regex_string else re.compile(regex_string)
+
     for node_data in me.get_node_datas():
-        node_path=node_data["path"]
+        node_path = node_data["path"]
         if substring and substring in node_path:
             print(node_path)
         elif regex and regex.findall(node_path):
             print(node_path)
 
+
 def main(args):
-    
-    verbose=args["--verbose"]
-    
-    experiment_path=args["--exp"]    
+
+    verbose = args["--verbose"]
+
+    experiment_path = args["--exp"]
     if experiment_path.startswith("~"):
-        experiment_path=os.path.expanduser(experiment_path)
-        
+        experiment_path = os.path.expanduser(experiment_path)
+
     if args["node_path"]:
-        substring=args["--substring"]
-        regex_string=args["--regex"]
-        
+        substring = args["--substring"]
+        regex_string = args["--regex"]
+
         if regex_string:
             try:
                 re.compile(regex_string)
             except re.error:
-                print("Aborted. Not a valid regex: '%s'"%regex_string)
+                print("Aborted. Not a valid regex: '%s'" % regex_string)
                 sys.exit(1)
-                
+
         if not substring and not regex_string:
             print("Aborted. Node path search requires '--substring' or '--regex'.")
             sys.exit(1)
 
         if verbose:
             set_log_level(logging.DEBUG)
-        
+
         node_path_search(experiment_path,
                          substring,
                          regex_string,
                          verbose=verbose)
-    
+
     if verbose:
         print("Done.")
+
 
 if __name__ == "__main__":
     args = docopt(__doc__, version="1.0")
     main(args)
-
-

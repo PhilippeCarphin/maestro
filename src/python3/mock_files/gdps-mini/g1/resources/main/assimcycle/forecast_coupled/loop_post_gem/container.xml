@@ -1,0 +1,51 @@
+<!-- This file has been produced with the command
+   resources/make_depend_npass_task.ksh 'resources/main/assimcycle/forecast_coupled/loop_post_gem/container.xml' '24' '48' '1920' '' './gem_nemo/gem4nemo/Sortie' 'Sortie=S01_'
+   (we were in directory '/home/erv000/.suites/GDPS' when running the above command)
+   The version used is:
+      ae83a4ac7df3e274e508040123c7ddfd99449051
+-->
+
+<NODE_RESOURCES>
+  <LOOP expression="24:1896:48:40,1920:1920:1:1" />
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000024" status="end" type="node" local_index="loop_prog=24"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000072" status="end" type="node" local_index="loop_prog=72"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000120" status="end" type="node" local_index="loop_prog=120"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000168" status="end" type="node" local_index="loop_prog=168"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000216" status="end" type="node" local_index="loop_prog=216"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000264" status="end" type="node" local_index="loop_prog=264"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000312" status="end" type="node" local_index="loop_prog=312"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000360" status="end" type="node" local_index="loop_prog=360"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000408" status="end" type="node" local_index="loop_prog=408"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000456" status="end" type="node" local_index="loop_prog=456"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000504" status="end" type="node" local_index="loop_prog=504"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000552" status="end" type="node" local_index="loop_prog=552"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000600" status="end" type="node" local_index="loop_prog=600"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000648" status="end" type="node" local_index="loop_prog=648"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000696" status="end" type="node" local_index="loop_prog=696"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000744" status="end" type="node" local_index="loop_prog=744"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000792" status="end" type="node" local_index="loop_prog=792"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000840" status="end" type="node" local_index="loop_prog=840"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000888" status="end" type="node" local_index="loop_prog=888"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000936" status="end" type="node" local_index="loop_prog=936"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000000984" status="end" type="node" local_index="loop_prog=984"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001032" status="end" type="node" local_index="loop_prog=1032"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001080" status="end" type="node" local_index="loop_prog=1080"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001128" status="end" type="node" local_index="loop_prog=1128"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001176" status="end" type="node" local_index="loop_prog=1176"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001224" status="end" type="node" local_index="loop_prog=1224"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001272" status="end" type="node" local_index="loop_prog=1272"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001320" status="end" type="node" local_index="loop_prog=1320"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001368" status="end" type="node" local_index="loop_prog=1368"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001416" status="end" type="node" local_index="loop_prog=1416"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001464" status="end" type="node" local_index="loop_prog=1464"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001512" status="end" type="node" local_index="loop_prog=1512"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001560" status="end" type="node" local_index="loop_prog=1560"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001608" status="end" type="node" local_index="loop_prog=1608"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001656" status="end" type="node" local_index="loop_prog=1656"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001704" status="end" type="node" local_index="loop_prog=1704"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001752" status="end" type="node" local_index="loop_prog=1752"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001800" status="end" type="node" local_index="loop_prog=1800"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001848" status="end" type="node" local_index="loop_prog=1848"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001896" status="end" type="node" local_index="loop_prog=1896"/>
+  <DEPENDS_ON dep_name="./gem_nemo/gem4nemo/Sortie" index="Sortie=S01_0000001920" status="end" type="node" local_index="loop_prog=1920"/>
+</NODE_RESOURCES>

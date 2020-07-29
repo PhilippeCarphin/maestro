@@ -1,0 +1,5 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="1G" wallclock="10" catchup="${CMOI_COMP_CLASSIC2DM_CATCHUP}" cpu="1"/>
+  <DEPENDS_ON dep_name="/main/intxfer_g2" status="end" type="node" exp="${CMOI_OPS_G2_EXP}"/>
+
+</NODE_RESOURCES>

@@ -1,0 +1,50 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="1G" mpi="0" wallclock="10" catchup="4" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+
+  <!-- Dependances sur la job de precip 'pcpn_interval' -->
+  
+  <!-- dfx22 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" index="loop_on_hours=12" local_index="loop_4_pan_classique=12" status="end" type="node"/>
+  <!-- dfx23 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" index="loop_on_hours=24" local_index="loop_4_pan_classique=24" status="end" type="node"/>
+  <!-- dfx25 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" index="loop_on_hours=36" local_index="loop_4_pan_classique=36" status="end" type="node"/>
+  <!-- dfx27 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" index="loop_on_hours=48" local_index="loop_4_pan_classique=48" status="end" type="node"/>
+  <!-- dfx28 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" index="loop_on_hours=60" local_index="loop_4_pan_classique=60" status="end" type="node"/>
+  <!-- dfx29 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" index="loop_on_hours=72" local_index="loop_4_pan_classique=72" status="end" type="node"/>
+  <!-- dfx30 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" index="loop_on_hours=84" local_index="loop_4_pan_classique=84" status="end" type="node"/>
+  <!-- dfx31 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" index="loop_on_hours=96" local_index="loop_4_pan_classique=96" status="end" type="node"/>
+  <!-- dfx32 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" index="loop_on_hours=108" local_index="loop_4_pan_classique=108" status="end" type="node"/>
+  <!-- dfx33 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" index="loop_on_hours=120" local_index="loop_4_pan_classique=120" status="end" type="node"/>
+
+
+  <!-- Dependances additionnelles sur les jobs de transfer -->
+
+  <!-- dfx22 -->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=12" local_index="loop_4_pan_classique=12" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <!-- dfx23 -->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=24" local_index="loop_4_pan_classique=24" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <!-- dfx25 -->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=36" local_index="loop_4_pan_classique=36" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <!-- dfx27 -->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=48" local_index="loop_4_pan_classique=48" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <!-- dfx28 -->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=60" local_index="loop_4_pan_classique=60" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <!-- dfx29 -->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=72" local_index="loop_4_pan_classique=72" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <!-- dfx30 -->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=84" local_index="loop_4_pan_classique=84" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <!-- dfx31 -->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=96" local_index="loop_4_pan_classique=96" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <!-- dfx32 -->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=108" local_index="loop_4_pan_classique=108" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <!-- dfx33 -->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=120" local_index="loop_4_pan_classique=120" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+</NODE_RESOURCES>  

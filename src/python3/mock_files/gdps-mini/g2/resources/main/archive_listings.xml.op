@@ -1,0 +1,10 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="200M" mpi="0" wallclock="35" catchup="5" cpu="1"/>
+  <DEPENDS_ON dep_name="/main/pre_assimcycle" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/assimcycle" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer_g2" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/cmoi_post_processing" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/run_orji" status="end" type="node"/>
+</NODE_RESOURCES>
+

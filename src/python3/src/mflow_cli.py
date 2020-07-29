@@ -28,79 +28,79 @@ Options:
 
 See Also:
     https://gitlab.science.gc.ca/CMOI/maestro
+    https://gitlab.science.gc.ca/CMOI/maestro/issues?label_name%%5B%%5D=component%%3Amflow
 """
 
+from utilities.maestro.datestamp import get_latest_yyyymmddhh_from_experiment_path, get_yyyymmddhh
+from maestro_experiment import MaestroExperiment
+from mflow import TuiManager
+from utilities.mflow.threading import async_set_qstat_data_in_maestro_experiment
+from utilities.mflow import get_mflow_config
+from utilities import print_red
+from utilities.docopt import docopt
 import traceback
 import os.path
 
 from mflow.docstring import adjust_docstring
-__doc__=adjust_docstring(__doc__)
+__doc__ = adjust_docstring(__doc__)
 
-from utilities.docopt import docopt
-from utilities import print_red
-from utilities.mflow import get_mflow_config
-from utilities.mflow.threading import async_set_qstat_data_in_maestro_experiment
-from mflow import TuiManager
-from maestro_experiment import MaestroExperiment
-from utilities.maestro.datestamp import get_latest_yyyymmddhh_from_experiment_path, get_yyyymmddhh
 
 def main(args):
-    
-    experiment_path=args["--exp"]
+
+    experiment_path = args["--exp"]
     if experiment_path.startswith("~"):
-        experiment_path=os.path.expanduser(experiment_path)
-    
-    datestamp=args["--date"]
+        experiment_path = os.path.expanduser(experiment_path)
+
+    datestamp = args["--date"]
     if not datestamp:
-        datestamp=get_latest_yyyymmddhh_from_experiment_path(experiment_path)
+        datestamp = get_latest_yyyymmddhh_from_experiment_path(experiment_path)
     if not datestamp:
-        datestamp=get_yyyymmddhh()
-    
-    print("Reading experiment files for '%s'"%experiment_path)
-    
+        datestamp = get_yyyymmddhh()
+
+    print("Reading experiment files for '%s'" % experiment_path)
+
     try:
-        tui_config=get_mflow_config(args["--config"])
+        tui_config = get_mflow_config(args["--config"])
     except:
-        print_red("Aborted. Failed to open or parse config file '%s'"%args["--config"])
+        print_red("Aborted. Failed to open or parse config file '%s'" % args["--config"])
         traceback.print_exc()
         return
-    
-    interval=tui_config["FLOW_STATUS_REFRESH_SECONDS"]
-    me=MaestroExperiment(experiment_path,
-                         datestamp=datestamp,
-                         user_home=args["--home"],
-                         node_log_refresh_interval=interval)
-    
+
+    interval = tui_config["FLOW_STATUS_REFRESH_SECONDS"]
+    me = MaestroExperiment(experiment_path,
+                           datestamp=datestamp,
+                           user_home=args["--home"],
+                           node_log_refresh_interval=interval)
+
     if me.has_critical_error():
         for error in me.get_critical_error():
             print_red(error)
         return
-    
+
     """
     Launch a different thread to run, parse, and eventually set qstat_data
     Not required, but nice to have for user/queue checks.
     """
     async_set_qstat_data_in_maestro_experiment(me)
-    
-    tui=TuiManager(me,
-                   tui_config=tui_config,
-                   is_debug=args["--debug"],
-                   verbose=args["--verbose"],
-                   tui_id=args["--tui-id"])
-    
+
+    tui = TuiManager(me,
+                     tui_config=tui_config,
+                     is_debug=args["--debug"],
+                     verbose=args["--verbose"],
+                     tui_id=args["--tui-id"])
+
     tui.start()
-    
+
     if tui.curses_setup_fail_message:
         print(tui.curses_setup_fail_message)
         return
-    
+
     if tui.has_scheduled_command:
         print("Pausing mflow to run a command, mflow will resume after the other program finishes.")
     else:
         print("Exiting mflow.")
 
+
 if __name__ == "__main__":
     args = docopt(__doc__, version="1.0")
     main(args)
-
-

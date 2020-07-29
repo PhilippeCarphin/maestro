@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+ <BATCH machine="${FRONTEND}"  queue="${FRONTEND_DEFAULT_Q}" memory="1G" wallclock="20" catchup="5" cpu="1" />
+ <DEPENDS_ON dep_name="/main/intxfer_g2/intxfer_anl/interp_anlpres" status="end" type="node" exp="${GDPS_ASS}"/>
+</NODE_RESOURCES>

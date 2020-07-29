@@ -1,0 +1,36 @@
+export ORDSOUMET_date_started="$(LC_TIME=C date)"
+export ORDSOUMET_date_submitted="Fri Apr 17 18:10:03 UTC 2020"
+export ORDSOUMET_date_begin_ordsoumet="Fri Apr 17 18:10:03 UTC 2020"
+export ORDSOUMET_date_prepared="Fri Apr 17 18:10:03 UTC 2020"
+export ORDSOUMET_date_submit_done=""
+
+echo turtleTask1:0: JOB_ORDSOUMET at "$ORDSOUMET_date_begin_ordsoumet" Name=turtleTask1 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID="${JOB_ID:-${LOADL_STEP_ID%.*}}"
+echo turtleTask1:1: JOB_PREPARED at "$ORDSOUMET_date_prepared" Name=turtleTask1 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID="${JOB_ID:-${LOADL_STEP_ID%.*}}"
+echo turtleTask1:2: JOB_SUBMITTED at "$ORDSOUMET_date_submitted" Name=turtleTask1 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID="${JOB_ID:-${LOADL_STEP_ID%.*}}"
+echo turtleTask1:3: JOB_SUBMIT_DONE at "$ORDSOUMET_date_submit_done" Name=turtleTask1 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID=""
+echo turtleTask1:4: JOB_RUNWRAPPER at "$ORDSOUMET_date_runwrapper" Name=turtleTask1 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID="${JOB_ID:-${LOADL_STEP_ID%.*}}"
+echo turtleTask1:5: JOB_STARTED at "$ORDSOUMET_date_started" Name=turtleTask1 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID="${JOB_ID:-${LOADL_STEP_ID%.*}}"
+
+export JobStartTime=$(date +%s -d "$ORDSOUMET_date_started")
+export JobTimeLimit=300
+export OMP_NUM_THREADS=1
+
+# temporaire tant que je n'aurai pas trouvé de solution homogène...
+if [[ "PBSPro" != "LoadLeveler5" ]]; then
+	((OMP_NUM_THREADS=OMP_NUM_THREADS*1))
+fi
+export BATCH_MPI_CPUS=1
+
+if [ -n "" ]; then
+	export DISPLAY=
+fi
+if [ -n "" ]; then
+	xterm -ls &
+fi
+nodelogger -n ${SEQ_NODE} ${SEQ_LOOP_ARGS} -s info -m "turtleTask1 var='${SEQ_EXP_HOME}' CMCGRIDP='${CMCGRIDP}'"
+
+python3 ${SEQ_EXP_HOME}/turtle_crawl.py
+
+set +x
+ORDSOUMET_date_ended="$(LC_TIME=C date)"
+echo turtleTask1:6: JOB_ENDED at "$ORDSOUMET_date_ended" WallTime=$(echo  $(date +%s -d "$ORDSOUMET_date_ended") - $JobStartTime | bc)s Name=turtleTask1 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID="${JOB_ID:-${LOADL_STEP_ID%.*}}"

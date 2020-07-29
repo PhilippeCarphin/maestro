@@ -1,22 +1,4 @@
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
+
 
 
 array set DirFullName {
@@ -327,7 +309,6 @@ proc NewExp::Next_resume {parent path name entrymod arrloc arrentry} {
 # directory or create a link to another existing directory.
 # In the case of importing, the choices will be the same, but if the experiment
 # has a link, the link target will be shown in the text entry box by default.
-#
 # parent: Parent window calling this function
 # path: target path of the experiment
 # name : name of the new experiment
@@ -602,8 +583,8 @@ proc NewExp::ExpDirectoriesConfig {parent path name entrymod {first_time true} {
       $radlog_local  select
 
       if { $new == true } { $radmod_remote configure -state disabled }
-      #$radlog_remote configure -state disabled
-      #$radseq_remote configure -state disabled 
+
+
       
       
       # -- At Entry Disable All Remote Entry 
@@ -677,7 +658,6 @@ proc NewExp::ValueName {widg} {
 
 #------------------------------------------------------
 # NewExp::FinalCheck
-#
 # Check if remote dirs have values
 # Note : check here if an exp with the same name exist!!!1
 #------------------------------------------------------
@@ -721,7 +701,7 @@ proc NewExp::CreateNew {parent path name entrymod arrloc arrentry} {
        upvar $arrloc arloc 
        upvar $arrentry arentry
     
-       #clock format [clock seconds] -format {%Y%m%d%H0000} 2005 01 10 15 16 55
+
 
        # -- get today's date
        set date    [clock format [clock seconds] -format {%d %b %Y}] 

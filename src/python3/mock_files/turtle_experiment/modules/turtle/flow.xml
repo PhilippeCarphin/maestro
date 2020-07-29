@@ -19,10 +19,10 @@
             <TASK name="donatello"/>
         </LOOP>
         <TASK name="pizza1">
-            <SUBMITS sub_name="pizza2" type="user"/>
+            <SUBMITS sub_name="pizza2"/>
         </TASK>
         <NPASS_TASK name="pizza2">
-            <SUBMITS sub_name="pizza3" type="user"/>
+            <SUBMITS sub_name="pizza3"/>
         </NPASS_TASK>
         <NPASS_TASK name="pizza3"/>
     </LOOP>

@@ -24,7 +24,7 @@
 
 #include "l2d2_roxml-internal.h"
 
-/* #define DEBUG_PARSING */
+
 
 roxml_parser_item_t *roxml_append_parser_item(roxml_parser_item_t *head, char * key, roxml_parse_func func)
 {
@@ -127,7 +127,7 @@ int _func_xpath_ignore(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	return 1;
 }
 
@@ -137,7 +137,7 @@ int _func_xpath_new_node(char * chunk, void * data)
 	roxml_xpath_ctx_t *ctx = (roxml_xpath_ctx_t*)data;
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	if(!ctx->quoted && !ctx->dquoted && !ctx->parenthesys && !ctx->bracket)     {
 		int offset = 0;
 		xpath_node_t * tmp_node = (xpath_node_t*)calloc(1, sizeof(xpath_node_t));
@@ -168,7 +168,7 @@ int _func_xpath_quote(char * chunk, void * data)
 	roxml_xpath_ctx_t *ctx = (roxml_xpath_ctx_t*)data;
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	if(!ctx->dquoted) {
 		if(ctx->quoted && ctx->content_quoted == MODE_COMMENT_QUOTE) {
 			ctx->content_quoted = MODE_COMMENT_NONE;
@@ -185,7 +185,7 @@ int _func_xpath_dquote(char * chunk, void * data)
 	roxml_xpath_ctx_t *ctx = (roxml_xpath_ctx_t*)data;
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	if(!ctx->quoted) {
 		if(ctx->dquoted && ctx->content_quoted == MODE_COMMENT_DQUOTE) {
 			ctx->content_quoted = MODE_COMMENT_NONE;
@@ -202,7 +202,7 @@ int _func_xpath_open_parenthesys(char * chunk, void * data)
 	roxml_xpath_ctx_t *ctx = (roxml_xpath_ctx_t*)data;
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	if(!ctx->quoted && !ctx->dquoted) {
 		ctx->parenthesys = (ctx->parenthesys+1)%2;
 	}
@@ -215,7 +215,7 @@ int _func_xpath_close_parenthesys(char * chunk, void * data)
 	roxml_xpath_ctx_t *ctx = (roxml_xpath_ctx_t*)data;
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	if(!ctx->quoted && !ctx->dquoted) {
 		ctx->parenthesys = (ctx->parenthesys+1)%2;
 	}
@@ -229,7 +229,7 @@ int _func_xpath_open_brackets(char * chunk, void * data)
 	int cur = 0;
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	roxml_xpath_ctx_t *ctx = (roxml_xpath_ctx_t*)data;
 	if(!ctx->quoted && !ctx->dquoted) {
 		ctx->bracket = (ctx->bracket+1)%2;
@@ -253,7 +253,7 @@ int _func_xpath_close_brackets(char * chunk, void * data)
 	roxml_xpath_ctx_t *ctx = (roxml_xpath_ctx_t*)data;
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	if(!ctx->quoted && !ctx->dquoted) {
 		ctx->bracket = (ctx->bracket+1)%2;
 		chunk[0] = '\0';
@@ -282,7 +282,7 @@ int _func_xpath_condition_or(char * chunk, void * data)
 	xpath_cond_t * tmp_cond;
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 
 	len = strlen(ROXML_COND_OR);
 
@@ -326,7 +326,7 @@ int _func_xpath_condition_and(char * chunk, void * data)
 	xpath_cond_t * tmp_cond;
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 
 	len = strlen(ROXML_COND_AND);
 
@@ -368,7 +368,7 @@ int _func_xpath_path_or(char * chunk, void * data)
 	xpath_node_t * tmp_node;
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 
 	if(!ctx->bracket && !ctx->quoted && !ctx->dquoted) {
 		chunk[-1] = '\0';
@@ -464,7 +464,7 @@ int _func_xpath_operator_equal(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	return _func_xpath_operators(chunk, data, ROXML_OPERATOR_EQU, ROXML_OPERATOR_EQU);
 }
 
@@ -472,7 +472,7 @@ int _func_xpath_operator_sup(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	return _func_xpath_operators(chunk, data, ROXML_OPERATOR_SUP, ROXML_OPERATOR_ESUP);
 }
 
@@ -480,7 +480,7 @@ int _func_xpath_operator_inf(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	return _func_xpath_operators(chunk, data, ROXML_OPERATOR_INF, ROXML_OPERATOR_EINF);
 }
 
@@ -488,7 +488,7 @@ int _func_xpath_operator_diff(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	return _func_xpath_operators(chunk, data, ROXML_OPERATOR_DIFF, ROXML_OPERATOR_DIFF);
 }
 
@@ -496,7 +496,7 @@ int _func_xpath_number(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	roxml_xpath_ctx_t *ctx = (roxml_xpath_ctx_t*)data;
 	int cur = 0;
 	if(ctx->bracket && !ctx->quoted && !ctx->dquoted) {
@@ -516,7 +516,7 @@ static int _func_xpath_funcs(char * chunk, void * data, int func, char * name)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	roxml_xpath_ctx_t *ctx = (roxml_xpath_ctx_t*)data;
 	int cur = 0;
 
@@ -534,7 +534,7 @@ int _func_xpath_position(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	return _func_xpath_funcs(chunk, data, ROXML_FUNC_POS, ROXML_FUNC_POS_STR);
 }
 
@@ -542,7 +542,7 @@ int _func_xpath_first(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	return _func_xpath_funcs(chunk, data, ROXML_FUNC_FIRST, ROXML_FUNC_FIRST_STR);
 }
 
@@ -550,7 +550,7 @@ int _func_xpath_last(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	return _func_xpath_funcs(chunk, data, ROXML_FUNC_LAST, ROXML_FUNC_LAST_STR);
 }
 
@@ -558,7 +558,7 @@ int _func_xpath_nsuri(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	return _func_xpath_funcs(chunk, data, ROXML_FUNC_NSURI, ROXML_FUNC_NSURI_STR);
 }
 
@@ -567,7 +567,7 @@ int _func_xpath_operator_add(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	roxml_xpath_ctx_t *ctx = (roxml_xpath_ctx_t*)data;
 	int cur = 0;
 	if(ctx->bracket && !ctx->quoted && !ctx->dquoted) {
@@ -591,7 +591,7 @@ int _func_xpath_operator_subs(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	roxml_xpath_ctx_t *ctx = (roxml_xpath_ctx_t*)data;
 	int cur = 0;
 	if(ctx->bracket && !ctx->quoted && !ctx->dquoted) {
@@ -615,7 +615,7 @@ int _func_xpath_default(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	int cur = 0;
 	roxml_xpath_ctx_t *ctx = (roxml_xpath_ctx_t*)data;
 	
@@ -664,7 +664,7 @@ int _func_load_quoted(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	roxml_load_ctx_t *context = (roxml_load_ctx_t*)data;
 
 	if(context->state != STATE_NODE_CONTENT && context->state != STATE_NODE_COMMENT) {
@@ -682,7 +682,7 @@ int _func_load_dquoted(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	roxml_load_ctx_t *context = (roxml_load_ctx_t*)data;
 
 	if(context->state != STATE_NODE_CONTENT && context->state != STATE_NODE_COMMENT) {
@@ -700,7 +700,7 @@ int _func_load_open_node(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	int cur = 1;
 	roxml_load_ctx_t *context = (roxml_load_ctx_t*)data;
 
@@ -722,7 +722,7 @@ int _func_load_close_node(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	int cur = 1;
 	roxml_load_ctx_t *context = (roxml_load_ctx_t*)data;
 
@@ -803,7 +803,7 @@ int _func_load_open_spec_node(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	int cur = 1;
 
 	roxml_load_ctx_t *context = (roxml_load_ctx_t*)data;
@@ -839,7 +839,7 @@ int _func_load_close_comment(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	int cur = 1;
 	roxml_load_ctx_t *context = (roxml_load_ctx_t*)data;
 
@@ -859,7 +859,7 @@ int _func_load_close_cdata(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	int cur = 1;
 	roxml_load_ctx_t *context = (roxml_load_ctx_t*)data;
 
@@ -880,7 +880,7 @@ int _func_load_close_pi(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	int cur = 1;
 	roxml_load_ctx_t *context = (roxml_load_ctx_t*)data;
 
@@ -890,7 +890,7 @@ int _func_load_close_pi(char * chunk, void * data)
 		context->previous_state = STATE_NODE_PI;
 		roxml_process_begin_node(context, context->pos-1);
 		roxml_set_type(context->candidat_node, ROXML_PI_NODE);
-	/*	while((chunk[cur] != '?')&&(chunk[cur] != '\0')) { cur++; } */
+	
 	} else if(context->state == STATE_NODE_PI)     {
 		if(context->mode == MODE_COMMENT_NONE) {
 			cur = 1;
@@ -908,7 +908,7 @@ int _func_load_end_node(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	int cur = 1;
 	roxml_load_ctx_t *context = (roxml_load_ctx_t*)data;
 
@@ -946,7 +946,7 @@ int _func_load_white(char * chunk, void * data)
 {
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 	int cur = 1;
 	roxml_load_ctx_t *context = (roxml_load_ctx_t*)data;
 
@@ -985,7 +985,7 @@ int _func_load_colon(char * chunk, void * data)
 	roxml_load_ctx_t *context = (roxml_load_ctx_t*)data;
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 
 	if(context->state == STATE_NODE_NAME) {
 		context->state = STATE_NODE_BEG;
@@ -1024,7 +1024,7 @@ int _func_load_default(char * chunk, void * data)
 	roxml_load_ctx_t *context = (roxml_load_ctx_t*)data;
 #ifdef DEBUG_PARSING
 	fprintf(stderr, "calling func %s chunk %c\n",__func__,chunk[0]);
-#endif /* DEBUG_PARSING */
+#endif 
 
 	switch(context->state) {
 		case STATE_NODE_SINGLE:

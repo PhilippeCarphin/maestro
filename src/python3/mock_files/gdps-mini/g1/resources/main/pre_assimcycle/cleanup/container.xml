@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" catchup="2" />
+  <DEPENDS_ON dep_name="./cleanup" status="end" type="node" hour="-6"/>
+</NODE_RESOURCES>

@@ -3,7 +3,6 @@
 # the values returned by the following tcl clock commands:
 # "seconds", "milliseconds", "microseconds"
 # How to use from client:
-#
 # source ClockWrapper.tcl
 # package require ClockWrapper
 # the alias will transfer all clock commands to the ClockWrapper
@@ -11,7 +10,6 @@
 # ::ClockWrapper::setDelta "7 hour"
 # ::ClockWrapper::setDelta "-5 hour"
 # ::ClockWrapper::setDelta "0 second"
-#
 package provide ClockWrapper 1.0
 namespace eval ::ClockWrapper {
    namespace ensemble create
@@ -41,7 +39,7 @@ proc ::ClockWrapper::milliseconds {} {
 
 proc ::ClockWrapper::seconds {} {
    variable deltaTime
-   # puts "::ClockWrapper::seconds"
+   
    set clockNow [eval ::tcl::clock::seconds]
    return [eval ::tcl::clock::add ${clockNow} ${deltaTime}]
 }

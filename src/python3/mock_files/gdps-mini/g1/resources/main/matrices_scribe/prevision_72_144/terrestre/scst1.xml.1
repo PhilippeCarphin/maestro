@@ -1,0 +1,6 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${DEF_QUEUE_POSTPROC}" memory="8G" wallclock="5" catchup="4" />
+  <DEPENDS_ON dep_name="/main/matrices_scribe/loop_member/prevision_72_144/terrestre/sampling" local_index="loop_member=CURRENT_INDEX" index="loop_member=CURRENT_INDEX" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/matrices_scribe/loop_member/prevision_72_144/terrestre/krigging" local_index="loop_member=CURRENT_INDEX" index="loop_member=CURRENT_INDEX" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/matrices_scribe/loop_member/prevision_72_144/terreste/scmt1"     local_index="loop_member=CURRENT_INDEX" index="loop_member=CURRENT_INDEX" status="end" type="node"/>
+</NODE_RESOURCES>

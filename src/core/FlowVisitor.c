@@ -1,23 +1,6 @@
 /* FlowVisitor.c - Visits flow.xml files to assign flow information to a
  * nodeDataPtr.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -138,7 +121,7 @@ int Flow_parsePath(FlowVisitorPtr _flow_visitor, SeqNodeDataPtr _nodeDataPtr,
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parsePath() begin nodePath=%s\n", _nodePath);
    int retval = FLOW_SUCCESS;
-   int totalCount = SeqUtil_tokenCount( _nodePath, "/" ) - 1;/* count is 0-based */
+   int totalCount = SeqUtil_tokenCount( _nodePath, "/" ) - 1;
    int count = 0;
 
    for_tokens(pathToken, _nodePath, "/", sp){
@@ -446,7 +429,7 @@ char *Flow_findSwitchArg(FlowVisitorPtr fv)
       tok_value = strstr(token_pair,"=");
       *tok_value++ = '\0';
       SeqUtil_TRACE(TL_FULL_TRACE,"tok_name=%s, tok_value=%s\n",tok_name, tok_value);
-      /* getchar(); */
+      
       if(strcmp(tok_name,switchName)==0){
          retval = strdup(tok_value);
          goto out_free;
@@ -507,7 +490,7 @@ int Flow_parseSwitchAttributes(FlowVisitorPtr fv,
 
    if(isLast){
       SeqNode_addSpecificData(_nodeDataPtr, "VALUE", switchValue);
-      /* PHIL: do this outside of the while instead of using isLast */
+      
       _nodeDataPtr->type = Switch;
    } else {
       SeqNode_addSpecificData( _nodeDataPtr, "SWITCH_TYPE", switchType );

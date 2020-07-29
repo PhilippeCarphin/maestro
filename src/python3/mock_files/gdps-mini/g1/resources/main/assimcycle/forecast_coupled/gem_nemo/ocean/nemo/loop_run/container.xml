@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" catchup="2" />
+  <LOOP start="1" end="${GEM_NEMO_NLOOPS}" step="1" set="1" />
+</NODE_RESOURCES>

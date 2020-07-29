@@ -1,0 +1,3 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" catchup="9"/>
+</NODE_RESOURCES>

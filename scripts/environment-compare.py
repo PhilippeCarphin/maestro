@@ -8,12 +8,16 @@ Usage:
     environment-compare.py <ssm-domain1> [<ssm-domain2>] [options]
 
 Options:
+    --no-color             Do not print colors, useful for capturing the output into files.
+    --no-colour            See '--no-color'.
+    --loader1=<command>    Use this command to load the package for domain1, like 'ssmuse-sh -d' or 'r.load.dot' [default: ssmuse-sh -d]
+    --loader2=<command>    Use this command to load the package for domain2, like 'ssmuse-sh -d' or 'r.load.dot' [default: ssmuse-sh -d]
+
     -h --help              Show this description.
-    --loader=<command>     Use this command to load the package, like 'ssmuse-sh -d' or 'r.load.dot' [default: ssmuse-sh -d]
 """
 
 from utilities.docopt import docopt
-from utilities.colors import *
+from utilities.colors import print_yellow, print_green
 from utilities.generic import safe_check_output
 import os, sys, subprocess
 
@@ -56,16 +60,26 @@ def compare_lines_from_commands(cmd1,cmd2):
 def main(args):
     domain1=args["<ssm-domain1>"]
     domain2=args["<ssm-domain2>"]
-    loader=args["--loader"]
+    loader1=args["--loader1"]
+    loader2=args["--loader2"]
 
-    cmd1=". %s %s ; env ; compgen -c"%(loader,domain1)
-    cmd2=". %s %s ; env ; compgen -c"%(loader,domain2)
+    if args["--no-color"] or args["--no-colour"]:
+        global print_yellow
+        global print_green
+        print_yellow=print
+        print_green=print
+
+    cmd1=". %s %s ; env ; compgen -c"%(loader1,domain1)
+    cmd2=". %s %s ; env ; compgen -c"%(loader2,domain2)
 
     print_yellow("\nComparing fresh environment to '%s'"%domain1)
     compare_lines_from_commands("env ; compgen -c",cmd1)
     
     if domain2:
-        print_yellow("\nComparing domains '%s' and '%s'"%(domain1,domain2))
+        if loader1==loader2:
+            print_yellow("\nComparing '%s' to '%s'"%(domain1,domain2))
+        else:
+            print_yellow("\nComparing '%s' loaded with '%s' to '%s' loaded with '%s'"%(domain1,loader1,domain2,loader2))
         compare_lines_from_commands(cmd1,cmd2)
 
 

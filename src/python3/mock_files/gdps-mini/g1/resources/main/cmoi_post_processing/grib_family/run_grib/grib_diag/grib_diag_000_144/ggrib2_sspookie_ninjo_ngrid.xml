@@ -1,0 +1,5 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="1G" mpi="0" wallclock="15" catchup="6" cpu="1" />
+  <DEPENDS_ON exp="${CMOI_G1_CMDW_PP_EXP}" dep_name="/main/cmdw_post_processing/temps_violent_ete/calculs/loop_on_hours" index="loop_on_hours=$((x))" local_index="run_grib=CURRENT_INDEX,grib_diag_000_144=$((x))" status="end" type="node"/>
+  <ABORT_ACTION name="rerun"/>
+</NODE_RESOURCES>

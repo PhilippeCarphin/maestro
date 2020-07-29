@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+  <DEPENDS_ON dep_name="./umos_pred_144" status="end" type="node"/>
+
+  <!-- temporaire jusqua ce que la suite rdps soit installee operationnellement sur le ppp
+  <DEPENDS_ON dep_name="/main/post_processing/umos/umos_obs" exp="${UMOS_RDPS_DEP_EXP}" status="end" type="node" />
+    -->
+
+    <LOOP end="${UMOS_LOOP_END_INDEX}" set="${UMOS_LOOP_SET}" start="${UMOS_LOOP_START_INDEX}" step="1"/>
+</NODE_RESOURCES>

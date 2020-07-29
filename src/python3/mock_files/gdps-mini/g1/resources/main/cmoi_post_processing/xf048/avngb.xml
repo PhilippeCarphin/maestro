@@ -1,0 +1,8 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="4G" wallclock="10" catchup="4" cpu="1" soumet_args="-tmpfs ${TMPFSSIZE}"/>
+  <DEPENDS_ON exp="${CMOI_G1_CMDW_PP_EXP}" dep_name="main/cmdw_post_processing/temps_violent_hiver/calculs/loop_edigraf" status="end" type="node"/>
+  <DEPENDS_ON exp="${CMOI_G1_CMDW_PP_EXP}" dep_name="/main/cmdw_post_processing/aviation/cartes/aviation_atlantique_nord/loop_aviation_atlantique_nord" status="end" type="node"/>
+  <DEPENDS_ON exp="${CMOI_R1_EXP}" dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/run/loop_intervalle_6h/viohb" index="run=00,loop_intervalle_6h=48" status="end" type="node" valid_hour="00"/>
+  <DEPENDS_ON exp="${CMOI_R1_EXP}" dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/run/loop_intervalle_6h/viohb" index="run=12,loop_intervalle_6h=48" status="end" type="node" valid_hour="12"/>
+
+</NODE_RESOURCES>

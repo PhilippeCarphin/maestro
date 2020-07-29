@@ -1,0 +1,8 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="4G" wallclock="45" mpi="0" cpu="1" catchup="4"/>
+   <!-- pi06 -->
+  <DEPENDS_ON dep_name="/main/cmoi_post_processing/nato_fl_loop/nato_fl" local_index="sm_intervalle_6h=$((x))"   index="nato_fl_loop=$((x))" status="end" type="node"/>
+  <DEPENDS_ON exp="${CMOI_G1_CMDW_PP_EXP}" dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/loop_on_hours/winter_severe_weather" local_index="sm_intervalle_6h=$((x))"  index="loop_on_hours=$((x))" status="end" type="node"/>
+  <DEPENDS_ON exp="${CMOI_G1_CMDW_PP_EXP}" dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval" local_index="sm_intervalle_6h=$((x))"   index="loop_on_hours=$((x))" status="end" type="node"/>
+
+</NODE_RESOURCES>

@@ -77,23 +77,24 @@ def get_logger():
     https://docs.python-guide.org/writing/logging/
     """
     logger.addHandler(logging.NullHandler())
-    
+
     if config.WRITE_TO_FILE:
         fh = logging.FileHandler(log_file_path)
         fh.setFormatter(config.FORMATTER)
         logger.addHandler(fh)
-        logger.fh=fh
-    
+        logger.fh = fh
+
     if config.WRITE_TO_STDOUT:
-        ch = logging.StreamHandler()    
+        ch = logging.StreamHandler()
         ch.setFormatter(config.FORMATTER)
         logger.addHandler(ch)
-        logger.ch=ch
-    
+        logger.ch = ch
+
     for handler in logger.handlers:
         handler.setLevel(config.LEVEL)
-    
+
     return logger
 
-logger=get_logger()
-LOG_FILE=get_log_file_path()
+
+logger = get_logger()
+LOG_FILE = get_log_file_path()

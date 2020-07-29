@@ -1,0 +1,17 @@
+# Machine stuff
+FRONTEND=eccc-ppp4
+DBASE_SERVER=eccc-ppp4
+SEQ_DEFAULT_MACHINE=eccc-ppp4
+
+BACKEND_XFER_Q=xfer
+FRONTEND_XFER_Q=xfer
+BACKEND_DEFAULT_Q=development
+FRONTEND_DEFAULT_Q=development
+
+# fasttmp
+TMPFSSIZE=4000
+
+GDPS_FCT=/home/smco500/maestro_suites/gdps_20191231/g1
+GDPS_ASS=/home/smco500/maestro_suites/gdps_20191231/g2
+GDPS_SFCF=/home/smco500/maestro_suites/gdps_20191231/g6
+GDPS_SFCE=/home/smco500/maestro_suites/gdps_20191231/g3

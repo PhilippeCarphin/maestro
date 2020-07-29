@@ -1,0 +1,5 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="4G" wallclock="10" catchup="4" cpu="1" />
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=0" status="end" type="node" local_index="run_grib=00"/>
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=0" status="end" type="node" local_index="run_grib=12"/>
+</NODE_RESOURCES>

@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}"/>
+
+  <DEPENDS_ON dep_name="./umos_sscp/umos_sscp" index="loop_umos_sscp=$((x))" local_index="loop_umos_sscp=$((x))" status="end" type="node"/>
+</NODE_RESOURCES>

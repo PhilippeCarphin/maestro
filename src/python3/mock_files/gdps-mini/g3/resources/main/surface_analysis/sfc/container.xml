@@ -1,0 +1,7 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+  <BATCH catchup="2" machine="${FRONTEND}" memory="500M" queue="${FRONTEND_DEFAULT_Q}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" exp="${FORECAST_EXP}" hour="-12" index="loop_prog=12" status="end" type="node" valid_hour="00"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" exp="${FORECAST_EXP}" hour="-6" index="loop_prog=6" status="end" type="node" valid_hour="06"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" exp="${FORECAST_EXP}" hour="-12" index="loop_prog=12" status="end" type="node" valid_hour="12"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" exp="${FORECAST_EXP}" hour="-6" index="loop_prog=6" status="end" type="node" valid_hour="18"/>
+</NODE_RESOURCES>

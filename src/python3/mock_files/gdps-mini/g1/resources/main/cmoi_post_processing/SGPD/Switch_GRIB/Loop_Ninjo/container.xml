@@ -1,0 +1,17 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+    <BATCH catchup="4"/>
+    <LOOP end="168" set="13" start="0" step="6"/>
+    <DEPENDS_ON dep_name="/main/cmoi_post_processing/SGPD/Switch_GRIB/Loop_Hours/Loop_Resol/Gen-GRIB2" index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=$((PROG)),Loop_Resol=1" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Ninjo=$((PROG))" status="end" type="node" />
+
+    <!---
+    Dependencies below added to avoid sending too many files at the same time to Ninjo
+    -->
+    <DEPENDS_ON dep_name="/main/cmoi_post_processing/RunHour/grib_prod_0012_1" exp="${DEPEND_RDPS_EXP}" index="RunHour=$((x))" local_index="Switch_GRIB=$((x))" status="end" type="node" valid_hour="00"/>
+    <DEPENDS_ON dep_name="/main/cmoi_post_processing/RunHour/DEP3_048/ninjo_hybrid_GRIB2_15km"   exp="${DEPEND_RDPS_EXP}" index="RunHour=$((x))" local_index="Switch_GRIB=$((x))" status="end" type="node" valid_hour="00"/>
+    <DEPENDS_ON dep_name="/main/cmoi_post_processing/RunHour/DEP3_048/ninjo_hybrid_GRIB2_10km"   exp="${DEPEND_RDPS_EXP}" index="RunHour=$((x))" local_index="Switch_GRIB=$((x))" status="end" type="node" valid_hour="00"/>
+
+    <DEPENDS_ON dep_name="/main/cmoi_post_processing/RunHour/grib_prod_0012_1" exp="${DEPEND_RDPS_EXP}" index="RunHour=$((x))" local_index="Switch_GRIB=$((x))" status="end" type="node" valid_hour="12"/>
+    <DEPENDS_ON dep_name="/main/cmoi_post_processing/RunHour/DEP3_048/ninjo_hybrid_GRIB2_15km"   exp="${DEPEND_RDPS_EXP}" index="RunHour=$((x))" local_index="Switch_GRIB=$((x))" status="end" type="node" valid_hour="12"/>
+    <DEPENDS_ON dep_name="/main/cmoi_post_processing/RunHour/DEP3_048/ninjo_hybrid_GRIB2_10km"   exp="${DEPEND_RDPS_EXP}" index="RunHour=$((x))" local_index="Switch_GRIB=$((x))" status="end" type="node" valid_hour="12"/>
+
+</NODE_RESOURCES>

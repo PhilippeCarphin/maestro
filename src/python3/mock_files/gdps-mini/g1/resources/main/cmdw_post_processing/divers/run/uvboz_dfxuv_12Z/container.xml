@@ -1,0 +1,3 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}"  memory="${CMDW_MEMORY_DEFAULT}" mpi="0" wallclock="${CMDW_WALLCLOCK_DEFAULT}" catchup="9" queue="${FRONTEND_DEFAULT_Q}"/>
+</NODE_RESOURCES>
