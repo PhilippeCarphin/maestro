@@ -47,6 +47,7 @@ int main (int argc, char * argv[])
    char *node = NULL, *signal = NULL , *message = NULL, *loops = NULL, *datestamp = NULL, *seq_exp_home = NULL, *tmpDate=NULL;
    int hasSignal = 0, hasNode = 0, hasDate = 0, hasLoops=0, dateSize=14; 
    int r,i;
+   int errflg=0;
  
    struct sigaction act;
    memset (&act, '\0', sizeof(act));
