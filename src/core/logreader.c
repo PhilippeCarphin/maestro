@@ -272,7 +272,8 @@ void read_file (char *base)
    int size=0;
    
    regex_t regex;
-   char log[1024];
+   const int log_size=1024;
+   char log[log_size];
 
    if (regcomp(&regex, "^TIMESTAMP=([0-9]){8}.([0-9]){2}:([0-9]){2}:([0-9]){2}:SEQNODE=([^:]+):MSGTYPE=([^:]+):SEQLOOP=(.*)$", REG_EXTENDED | REG_NOSUB)) {
       fprintf(stderr, "Logreader.c: read_file() could not compile regex\n");
@@ -285,6 +286,9 @@ void read_file (char *base)
       if(qq) {
          memset(log, '\0', sizeof(log));
          size = qq - ptr;
+	 if (size>log_size) {
+		 size=log_size;
+	 }
          strncpy(log, ptr, size);
       } else {
          break;
@@ -308,7 +312,7 @@ void read_file (char *base)
       qq = strchr(ptr+28,':');
       size=qq-(ptr+28);
       strncpy(node,ptr+28, size);
-
+      
       /* signal */
       pp = strchr(qq+1,':');
       size=pp-(qq+9);
@@ -341,10 +345,10 @@ void read_file (char *base)
          case 'w': /* [w]ait */
             /* msg */ 
             memset(waitmsg,'\0',sizeof(waitmsg));
-            qq = strchr(qq+1,'=');  
+            qq = strchr(qq+1,'=');
             pp = strchr(ptr,'\n');
             size=pp-qq-1;
-            strncpy(waitmsg,qq+1, size);  
+            strncpy(waitmsg,qq+1, size);
             insert_node('w', &node[9], &loop[8], "",  "", "", "", "", dstamp, "", "", "",waitmsg); 
             break;
          case 'd': /* [d]iscret */

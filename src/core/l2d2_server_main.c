@@ -114,14 +114,13 @@ void DependencyManager (_l2d2server l2d2 ) {
      static DIR *dp=NULL;
      struct dirent *pd;
      struct stat st;
-     sigset_t  newmask, oldmask,zeromask;
      struct sigaction sa;
      struct _depParameters *depXp=NULL;
      time_t current_epoch, start_epoch, start_epoch_cln;
      glob_t g_LogFiles;
      size_t cnt;
      int  g_lres;
-     int datestamp,nb,LoopNumber;
+     int datestamp,nb;
      char underline[2];
      char buf[1024];
      char cmd[2048];
@@ -131,12 +130,10 @@ void DependencyManager (_l2d2server l2d2 ) {
      char ffilename[512], filename[256], linkname[1024],LoopName[64];
      char ControllerAlive[128];
      char DependencyMAlive[128];
-     char rm_key[256];
-     char rm_keyFile[1024];
      char Time[40],tlog[16];
      char *pleaf=NULL;
      char **p;
-     int r, ret, running=0, _ZONE_ = 2, KILL_SERVER = FALSE;
+     int r, ret, running=0, KILL_SERVER = FALSE;
      int fd,epid; 
          
      l2d2.depProcPid=getpid();
@@ -461,17 +458,16 @@ static void l2d2SelectServlet( int listen_sd , TypeOfWorker tworker)
  
   FILE *fp, *mlog;
   fd_set master_set, working_set;
-  int buflen,num,ret;
-  int i,j,k,count,try;
+  int ret;
+  int i,count,try;
   unsigned int pidSent;
   int _ZONE_ = 1, STOP = -1, SelecTimeOut;
   
   char buf[1024],buff[1024];
-  char Astring[1024],inode[128], expName[256], expInode[64], hostname[128]; 
-  char Bigstr[2048];
+  char expName[256], expInode[64], hostname[128];
   char heartbeatFile[1024];
   char node[256], signal[256], username[256];
-  char Stime[25],Etime[25], tlog[10];
+  char Stime[25], tlog[10];
   char m5[40];
   char filename[1024];
 
@@ -481,15 +477,9 @@ static void l2d2SelectServlet( int listen_sd , TypeOfWorker tworker)
   int  desc_ready, end_server = FALSE;
   int  rc, close_conn, got_lock;
   int  mode,ceiling=0;
-  int  fd;           
-  int sent;            
-  struct stat stbuf; 
-  char *ts;
-  char trans;
-
-  key_t log_key;
- 
-  struct sigaction ssa;
+  int  fd;          
+  struct stat stbuf;
+  key_t log_key; 
   struct timeval timeout;   /* Timeout for select */
   struct flock nlock,ilock; /* for Logging we are using fnctl() */
   glob_t g_AliveFiles;
@@ -980,7 +970,7 @@ static void maestro_l2d2_main_process_server (int fserver)
 {
   FILE *smlog, *fp;
   pid_t pid_eworker, kpid;  /* pid_eworker : pid of eternal worker */
-  int ret,status,i=0,j,ew_regenerated=1,dm_regenerated=1;
+  int ret,j,ew_regenerated=1,dm_regenerated=1;
   char *m5sum=NULL, *Auth_token=NULL;
   char authorization_file[1024], filename[1024], isAliveFile[128];
   const char message[256];
@@ -1297,20 +1287,15 @@ static void maestro_l2d2_main_process_server (int fserver)
 
 int main ( int argc , char * argv[] ) 
 {  
-  struct stat st;
   char *Auth_token=NULL, *m5sum=NULL;
-  struct passwd *passwdEnt = getpwuid(getuid());
-  
+  struct passwd *passwdEnt = getpwuid(getuid());  
   char authorization_file[256];
   char hostname[128], hostTken[32], ipTken[32];
-  char buf[1024];
-  
+  char buf[1024];  
   int fserver;
   int server_port;
   int portTken;
-  int ret,status,i;
-
-  char *home = NULL;
+  int ret,status;
   char *ip=NULL;
 
   // mserver has no arguments, so if some are given, assume it is -h or --help or the user needs a usage page.

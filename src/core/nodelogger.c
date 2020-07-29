@@ -482,7 +482,7 @@ static int sync_nodelog_over_nfs (const char *node, const char * type, const cha
                  if ((fileid = open(TOP_LOG_PATH,O_WRONLY|O_CREAT,0755)) < 1 ) {
                     fprintf(stderr,"Nodelogger::could not open toplog:%s\n",TOP_LOG_PATH);
                  } else {
- 	                off_t s_seek=lseek(fileid, 0, SEEK_END);
+ 	                lseek(fileid, 0, SEEK_END);
 		            num = write(fileid, nodelogger_buf_short, strlen(nodelogger_buf_short));
 		            fsync(fileid);
 		            close(fileid);
@@ -496,7 +496,7 @@ static int sync_nodelog_over_nfs (const char *node, const char * type, const cha
                 if ( (fileid = open(LOG_PATH,O_WRONLY|O_CREAT,0755)) < 1 ) {
                     fprintf(stderr,"Nodelogger::could not open filename:%s\n",LOG_PATH);
                 } else {
- 	                off_t s_seek=lseek(fileid, 0, SEEK_END);
+ 	                lseek(fileid, 0, SEEK_END);
 		            num = write(fileid, nodelogger_buf_short, strlen(nodelogger_buf_short));
 		            fsync(fileid);
 		            close(fileid);
@@ -563,7 +563,7 @@ static void NotifyUser (int sock , int top , char mode, const char * _seq_exp_ho
 			         strcat(nodelogger_buf_notify_short,"Please start mserver and initialize SEQ_LOGGING_MECH=server in ~/.maestrorc file\n");
 	                         if ( strcmp(lmech,"nfs") == 0 ) {
                                        if ( (fileid = open(LOG_PATH,O_WRONLY|O_CREAT,0755)) > 0 ) {
- 	                                        off_t s_seek=lseek(fileid, 0, SEEK_END);
+ 	                                        lseek(fileid, 0, SEEK_END);
 		                                num = write(fileid, nodelogger_buf_notify_short, strlen(nodelogger_buf_notify_short));
 		                                fsync(fileid);
 		                                close(fileid);
