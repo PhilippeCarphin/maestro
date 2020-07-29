@@ -305,12 +305,11 @@ proc ::DrawUtils::drawLosange { exp_path datestamp canvas tx1 ty1 text textfill 
               -outline black -tags "flow_element $binder ${binder}.rect"
    }
 
-   
-       x2,y2     x3,y3
-        --------
-      /        /
-     /        /
-     ---------
+   #    x2,y2     x3,y3
+   #     --------
+   #   /        /
+   #  /        /
+   #  ---------
    #   x1,y1      x4,y4
    set boxArea [$canvas bbox ${binder}.text]
    set nx1 [expr [lindex $boxArea 0] -30/${flowScale}]
