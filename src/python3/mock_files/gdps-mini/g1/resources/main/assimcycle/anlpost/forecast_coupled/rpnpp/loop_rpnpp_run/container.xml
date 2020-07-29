@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+    <LOOP start="0" end="${NEMO_CYCLE}" step="1" set="5" />
+    <DEPENDS_ON local_index="loop_rpnpp_run=$((timeslice))" index="nemo_xfer=$((timeslice))" dep_name="../gem_nemo/ocean/nemo/nemo_xfer" status="end" type="node" />
+</NODE_RESOURCES>

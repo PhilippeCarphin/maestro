@@ -1,0 +1,5 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" catchup="2" />
+  <LOOP start="1" end="${GEM_NEMO_NLOOPS}" step="1" set="${GEM_NEMO_NLOOPS}" />
+  <DEPENDS_ON local_index="loop_postproc=$((timeslice))" index="loop_run=$((timeslice))" dep_name="./loop_run/nemo_run" status="end" type="node" />
+</NODE_RESOURCES>

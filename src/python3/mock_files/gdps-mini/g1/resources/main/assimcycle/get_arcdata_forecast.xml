@@ -1,0 +1,7 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+  <BATCH catchup="2" cpu="1" machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" wallclock="10"/>
+  <DEPENDS_ON dep_name="/main/sam/Post_SAM" status="end" type="node" exp="${ASSIM_OCEAN_EXP}" valid_hour="00" />
+  <DEPENDS_ON dep_name="/main/sam/Post_SAM" status="end" type="node" exp="${ASSIM_OCEAN_EXP}" valid_hour="12" hour="-12"/>
+  <ABORT_ACTION name="rerun"/>
+</NODE_RESOURCES>

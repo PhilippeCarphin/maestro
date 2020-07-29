@@ -1,0 +1,8 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+  <BATCH catchup="5" cpu="1" machine="${FRONTEND}" memory="1G" mpi="0" queue="${FRONTEND_DEFAULT_Q}" wallclock="10"/>
+
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/ft123" status="end" type="node"/>
+
+  <!-- Depends sur glbpres et glbeta-->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=60" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+</NODE_RESOURCES> 

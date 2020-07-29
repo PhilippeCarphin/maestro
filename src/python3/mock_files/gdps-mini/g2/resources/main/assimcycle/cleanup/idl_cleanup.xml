@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+  <BATCH catchup="9" cpu="1" machine="idl" wallclock="30"/>
+  <ABORT_ACTION name="rerun"/>
+</NODE_RESOURCES>

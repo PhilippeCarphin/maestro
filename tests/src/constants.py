@@ -8,7 +8,7 @@ import os
 d=os.path.dirname
 class PATH:
     MOCK_FILES=d(d(os.path.realpath(__file__)))+"/mock_files"
-    SSM_DOMAIN=os.environ["SSM_DOMAIN_PATH"]
+    SSM_DOMAIN=os.environ["MAESTRO_TEST_SSM_DOMAIN_PATH"]
 PATH.SAMPLE_EXP1=PATH.MOCK_FILES+"/sample_experiment1"
 
 SSM_USE_COMMAND=". ssmuse-sh -d %s ; "%PATH.SSM_DOMAIN
@@ -28,8 +28,7 @@ def create_config_py_if_missing():
     template="""# This is an automatically generated template for config. You may want to change the values in this file. See also "tests/constants.py
     
 # the option given to mserver for machine, for example "maestro2" or "eccc-ppp4"
-MSERVER_MACHINE="eccc-ppp4"
-"""
+MSERVER_MACHINE="""+os.environ.get("TRUE_HOST","eccc-ppp4")
     config_path=os.path.dirname(os.path.realpath(__file__))+"/config.py"
     if not os.path.isfile(config_path):
         with open(config_path,"w") as f:

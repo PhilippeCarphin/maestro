@@ -1,0 +1,66 @@
+<NODE_RESOURCES>
+
+  <BATCH catchup="5" machine="${FRONTEND}" memory="1G" queue="${FRONTEND_DEFAULT_Q}" wallclock="15"  />
+
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=6" local_index="boudala_loop=3"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=6" local_index="boudala_loop=6"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=12" local_index="boudala_loop=9"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=12" local_index="boudala_loop=12"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=18" local_index="boudala_loop=15"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=18" local_index="boudala_loop=18"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=24" local_index="boudala_loop=21"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=24" local_index="boudala_loop=24"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=30" local_index="boudala_loop=27"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=30" local_index="boudala_loop=30"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=36" local_index="boudala_loop=33"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=36" local_index="boudala_loop=36"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=42" local_index="boudala_loop=39"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=42" local_index="boudala_loop=42"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=48" local_index="boudala_loop=45"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=48" local_index="boudala_loop=48"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=54" local_index="boudala_loop=51"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=54" local_index="boudala_loop=54"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=60" local_index="boudala_loop=57"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=60" local_index="boudala_loop=60"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=66" local_index="boudala_loop=63"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=66" local_index="boudala_loop=66"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=72" local_index="boudala_loop=69"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=72" local_index="boudala_loop=72"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=78" local_index="boudala_loop=75"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=78" local_index="boudala_loop=78"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=84" local_index="boudala_loop=81"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=84" local_index="boudala_loop=84"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=90" local_index="boudala_loop=87"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=90" local_index="boudala_loop=90"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=96" local_index="boudala_loop=93"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=96" local_index="boudala_loop=96"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=102" local_index="boudala_loop=99"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=102" local_index="boudala_loop=102"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=108" local_index="boudala_loop=105"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=108" local_index="boudala_loop=108"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=114" local_index="boudala_loop=111"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=114" local_index="boudala_loop=114"/>
+ 
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=120" local_index="boudala_loop=117"/>
+    <DEPENDS_ON dep_name="${CMDM_G1_PROG_DEPEND}" status="end" type="node"  exp="${CMDM_G1_EXP}" index="loop_prog=120" local_index="boudala_loop=120"/>
+
+
+</NODE_RESOURCES>

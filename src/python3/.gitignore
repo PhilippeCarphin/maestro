@@ -1,0 +1,12 @@
+debug.sh
+src/debug.py
+tmp
+
+# swap files
+*~
+*.swp
+*.swo
+csv/.~*
+
+# test swap files
+!mock_files/file_index/resources/.vim-swap-file.swp

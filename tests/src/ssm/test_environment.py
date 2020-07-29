@@ -1,5 +1,6 @@
-import unittest, os
-from utilities import *
+import unittest
+from utilities import get_output
+from constants import SSM_USE_COMMAND
 
 """
 Maestro should not be in the environment until the SSM use command is run on the test SSM.
@@ -9,7 +10,7 @@ class TestEnvironment(unittest.TestCase):
     def test_before_after_ssm(self):
         
         # required by test suite
-        cmd="echo $SSM_DOMAIN_PATH"
+        cmd="echo $MAESTRO_TEST_SSM_DOMAIN_PATH"
         output,status = get_output(cmd)
         self.assertTrue(output.strip())
         
@@ -32,8 +33,10 @@ class TestEnvironment(unittest.TestCase):
             cmd="which "+executable
             output,status = get_output(cmd)
             self.assertNotEqual(status,0)
-            output,status = get_output(SSM_USE_COMMAND+cmd)
-            self.assertEqual(status,0)
+            cmd=SSM_USE_COMMAND+cmd
+            output,status = get_output(cmd)
+            msg="cmd = "+cmd+"\noutput =\n\n"+output
+            self.assertEqual(status,0,msg=msg)
     
     def test_ssm_folders(self):
         # wrappers folder exists

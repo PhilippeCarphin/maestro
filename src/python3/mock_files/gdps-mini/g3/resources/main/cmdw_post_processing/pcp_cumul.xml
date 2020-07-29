@@ -1,0 +1,8 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="4G" mpi="0" wallclock="${CMDW_WALLCLOCK_DEFAULT}" catchup="4" cpu="1" soumet_args="-tmpfs ${TMPFSSIZE}" queue="${FRONTEND_DEFAULT_Q}"/>
+  <DEPENDS_ON dep_name="/main/surface_analysis/derisfc" status="end" type="node" exp="${CMDW_FULL_G3_EXP}"/>
+  <DEPENDS_ON dep_name="/main/surface_analysis/derisfc" status="end" type="node" hour="-6" exp="${CMDW_FULL_G3_EXP}"/>
+  <DEPENDS_ON dep_name="/main/surface_analysis/derisfc" status="end" type="node" hour="-12" exp="${CMDW_FULL_G3_EXP}"/>
+  <DEPENDS_ON dep_name="/main/surface_analysis/derisfc" status="end" type="node" hour="-18" exp="${CMDW_FULL_G3_EXP}"/>
+</NODE_RESOURCES> 
+

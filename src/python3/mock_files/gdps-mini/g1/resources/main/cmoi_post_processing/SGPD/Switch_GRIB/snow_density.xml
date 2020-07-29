@@ -1,0 +1,5 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+  <BATCH catchup="4" cpu="1" machine="${FRONTEND}" memory="3G" queue="${FRONTEND_DEFAULT_Q}" wallclock="10"/>
+  <DEPENDS_ON dep_name="/main/densite_neige_post" exp="${GDPS_EXP}" status="end" type="node" local_index="Switch_GRIB=CURRENT_INDEX" />
+  <ABORT_ACTION name="cont"/>
+</NODE_RESOURCES>

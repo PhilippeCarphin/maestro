@@ -1,0 +1,8 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="512M" mpi="0" wallclock="25" catchup="4" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+
+  <!-- Ici on depends des input prog hyb.  On ne peut pas vraiment dependre du begin de interp_progeta puisque des que cela roule, le fichier ".begin" disparait ce qui fait qu'on ne peut pas lancer la job plus tard, elle va attendre le begin qui a deja eu lieu. Comme la boucle au complet prends 45 minutes a executer et que chaque iteration prends seulement 2 minutes, nous dependons du "end" sans trop perdre de temps.  Ceci evite de devoir dependre directement de la job qui produit les hyb parce que les indices de boucles sont en pas de temps dont la duree peut varier d'une migration a l'autre.  Ici on demarre donc 2 minutes en retard a chaque iteration.-->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=$((x))" local_index="loop_on_hours=$((x))" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+</NODE_RESOURCES>
+

@@ -1,0 +1,4 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+  <BATCH catchup="3" cpu="1x1x${CPU_MAX_POSTPROC_NETCDF_FOR}" machine="${FRONTEND}" memory="24G" queue="${FRONTEND_DEFAULT_Q}" wallclock="30"/>
+<!--  <ABORT_ACTION name="rerun"/> -->
+</NODE_RESOURCES>

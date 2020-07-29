@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="4G" wallclock="10"/>
+  <DEPENDS_ON dep_name="${CMDM_DEP_G1_MATRICES_SCRIBE_MARINE}" status="end" type="node" exp="${CMDM_G1_EXP}" />
+</NODE_RESOURCES>

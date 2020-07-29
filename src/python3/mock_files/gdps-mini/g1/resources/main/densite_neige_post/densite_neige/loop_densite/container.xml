@@ -1,0 +1,5 @@
+<NODE_RESOURCES>
+    <BATCH machine="${FRONTEND}" memory="8G" wallclock="5" catchup="4" queue="${FRONTEND_DEFAULT_Q}"/>
+    <LOOP start="1" end="${hr_end}" step="${hr_inc}" set="${hr_set}"/>
+</NODE_RESOURCES>
+

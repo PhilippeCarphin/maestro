@@ -1,0 +1,32 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}"/>
+
+  <!-- Add dependencies of scmt1 because this is done by a commun module.
+   some input are shared by scmt1 and scmm1 and others not
+   the inputs not shared are not set optional and the task will abort if the dependencies are not present
+   The best will be to modify the input in scmyy.cfg to make them optional.
+  -->
+
+  <!-- dependencies valid at each run -->
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=0" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=6" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=12" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=18" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=24" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=30" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=36" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=42" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=48" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=54" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=60" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=66" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=72" status="end" type="node"/>
+
+  <!-- uvboz -->
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_CMDW_POST_PROC_UVBOZ_12Z_DEP}" exp="${SCRIBE_GDPS_EXP}" hour="-12" index="run=12" status="end" type="node" valid_hour="00"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_CMDW_POST_PROC_UVBOZ_00Z_DEP}" exp="${SCRIBE_GDPS_EXP}" hour="-12" index="run=00" status="end" type="node" valid_hour="12"/>
+
+  <!-- umos -->
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_UMOS_DEP}" exp="${SCRIBE_GDPS_EXP}" status="end" type="node"/>
+</NODE_RESOURCES>

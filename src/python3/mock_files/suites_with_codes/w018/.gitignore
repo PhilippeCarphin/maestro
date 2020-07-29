@@ -1,0 +1,9 @@
+
+# should not be ignored
+hub
+
+# should be ignored
+listings
+logs
+stats
+# sequencing is missing

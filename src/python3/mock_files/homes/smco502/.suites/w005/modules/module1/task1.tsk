@@ -1,0 +1,16 @@
+
+                    elif [ "${ENVAR_output_mode}" = flat ]; then
+                        rm -f ${destination}/${ENVAR_output_banco_name}/postalt/${outputfile}
+                        cp ${true_subfile} ${destination}/${ENVAR_output_banco_name}.postalt.${outputfile}
+                    fi
+                done
+            fi ## Fin du 'else' relie au 'if [ -f ${TASK_INPUT}/${target} ]'
+        else
+            $SEQ_BIN/nodelogger -n $SEQ_NODE -s infox -m  "Put ${target} in ${destination} (remote copy)"
+            ssh ${destination%%:*} mkdir -p ${destination##*:}
+
+ $SEQ_BIN/nodelogger -n $SEQ_NODE -s bad-signal
+
+            if [ "${ENVAR_output_mode}" = tree ]; then
+                ssh ${destination%%:*} mkdir -p ${destination##*:}/${ENVAR_output_banco_name}/postalt
+            fi

@@ -6,14 +6,20 @@ build.cfg
 _*
 *~
 
+# Debug scripts
+src/python3/mflow-debug.sh
+
 # Generated files
 *.ssm
 *.log
+/venv
+/python_venv
 /man/roff
 /man/man1
 /man/.offline_man_backup
 .ssm.d/control*
 tests/src/config.py
+/src/python3/tmp
 tests/config.py
 
 # git

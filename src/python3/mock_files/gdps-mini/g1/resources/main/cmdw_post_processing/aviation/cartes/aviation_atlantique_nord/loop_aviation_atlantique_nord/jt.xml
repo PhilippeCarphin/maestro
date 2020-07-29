@@ -1,0 +1,7 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="1G" mpi="0" wallclock="10" catchup="4" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+
+  <!-- jt 0,6,12,18,24,30,36,42,48 -->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=$((x))" local_index="loop_aviation_atlantique_nord=$((x))" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+</NODE_RESOURCES>

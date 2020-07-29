@@ -1,0 +1,6 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="4G" mpi="0" wallclock="5" catchup="4" cpu="1" soumet_args="-tmpfs ${TMPFSSIZE}" queue="${FRONTEND_DEFAULT_Q}"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/ft123" status="end" type="node" exp="${CMDW_POST_PROC_G1_EXP}" hour="-6"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/jobs_a_00Z/ft710" index="jobs_a_00Z=00" status="end" type="node" exp="${CMDW_POST_PROC_G1_EXP}" hour="-18"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/run/ymos3" index="run=18" status="end" type="node" exp="${CMDW_POST_PROC_G2_EXP}" hour="-24"/>
+</NODE_RESOURCES>
