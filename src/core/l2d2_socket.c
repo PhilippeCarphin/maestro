@@ -23,6 +23,7 @@
 #include <sys/dir.h>
 #include <sys/param.h>
 #include "l2d2_socket.h" 
+#include "SeqUtil.h" 
 
 
 
