@@ -22,7 +22,8 @@ success_commands={"getdef":"getdef -e %s resources FRONTEND"%PATH.SAMPLE_EXP1,
                   "maestro":"maestro -d 20191102111111 -n /sample/Different_Hosts/IBMTask -s submit -f continue -e "+PATH.SAMPLE_EXP1,
                   "nodesource":"export SEQ_EXP_HOME="+PATH.SAMPLE_EXP1+" ; nodesource -n /sample/Different_Hosts/VAR",
                   "nodelogger":"nodelogger -n /sample/Different_Hosts/IBMTask -s info -m hello -e "+PATH.SAMPLE_EXP1+" -d 20191102111111",
-                  "nodeinfo":"nodeinfo -n /sample/Different_Hosts/IBMTask -e "+PATH.SAMPLE_EXP1}
+                  "nodeinfo":"nodeinfo -n /sample/Different_Hosts/IBMTask -e "+PATH.SAMPLE_EXP1,
+                  "logreader":"logreader -e "+PATH.SAMPLE_EXP1+" -i "+PATH.SAMPLE_EXP1+"/logs/stack_smash_log -o $TMPDIR/test_out -t stats -d 20200429120000"}
 
 def create_config_py_if_missing():
     template="""# This is an automatically generated template for config. You may want to change the values in this file. See also "tests/constants.py

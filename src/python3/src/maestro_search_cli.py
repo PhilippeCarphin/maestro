@@ -14,15 +14,20 @@ Options:
     --verbose                 Enable verbose debug logging in the "$HOME/logs/maestro_search" files.
     -h --help   Show this description.
 """
-from utilities.docopt import docopt
-from maestro_experiment import MaestroExperiment
+import os
+__doc__=__doc__.replace("$PWD",os.environ["PWD"])
 import sys
 import re
 import os
 __doc__ = __doc__.replace("$PWD", os.environ["PWD"])
+import logging
 
+from maestro_experiment import MaestroExperiment
 
-def node_path_search(path, substring, regex_string, verbose=False):
+from home_logger import set_log_level
+from utilities.docopt import docopt
+
+def node_path_search(path,substring,regex_string,verbose=False):
     """
     Print node paths matching this search.
     """
@@ -64,6 +69,9 @@ def main(args):
         if not substring and not regex_string:
             print("Aborted. Node path search requires '--substring' or '--regex'.")
             sys.exit(1)
+
+        if verbose:
+            set_log_level(logging.DEBUG)
 
         node_path_search(experiment_path,
                          substring,
