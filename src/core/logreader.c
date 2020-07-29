@@ -272,7 +272,8 @@ void read_file (char *base)
    int size=0;
    
    regex_t regex;
-   char log[1024];
+   const int log_size=1024;
+   char log[log_size];
 
    if (regcomp(&regex, "^TIMESTAMP=([0-9]){8}.([0-9]){2}:([0-9]){2}:([0-9]){2}:SEQNODE=([^:]+):MSGTYPE=([^:]+):SEQLOOP=(.*)$", REG_EXTENDED | REG_NOSUB)) {
       fprintf(stderr, "Logreader.c: read_file() could not compile regex\n");
@@ -285,6 +286,9 @@ void read_file (char *base)
       if(qq) {
          memset(log, '\0', sizeof(log));
          size = qq - ptr;
+	 if (size>log_size) {
+		 size=log_size;
+	 }
          strncpy(log, ptr, size);
       } else {
          break;
