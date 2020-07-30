@@ -1,0 +1,19 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="1G" mpi="0" wallclock="10" catchup="4" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=72" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=66" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=60" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=54" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=48" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=42" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=36" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=30" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=24" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=18" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=12" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=6" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=0" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+   <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/ym372"  valid_hour="00" status="end" type="node" hour="-12"/>
+   <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/jobs_a_00Z/y3144" index="run=00"  valid_hour="12" status="end" type="node" hour="-12"/>
+</NODE_RESOURCES>

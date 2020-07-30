@@ -1,0 +1,3 @@
+<NODE_RESOURCES>
+  <BATCH machine="${BACKEND}" workq="${GEM_NEMO_SUPERJOB_WORKQ}" queue="${BACKEND_DEFAULT_Q}" memory="${NEMO_MEMORY}" wallclock="${NEMO_CPUTIME}" mpi="1" cpu="${NEMO_NP_TOTAL}" catchup="1" />
+</NODE_RESOURCES>

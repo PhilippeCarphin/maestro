@@ -1,0 +1,8 @@
+<MODULE name="concept_gen">
+    <SUBMITS sub_name="concept_creation"/>
+    <TASK name="concept_creation">
+        <SUBMITS sub_name="transmission"/>
+    </TASK>
+    <TASK name="transmission"/>
+</MODULE>
+

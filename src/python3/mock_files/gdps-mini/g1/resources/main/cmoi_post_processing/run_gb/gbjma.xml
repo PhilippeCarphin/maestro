@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+ <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}"  memory="4G" wallclock="20"  catchup="4" cpu="1"  soumet_args="-tmpfs ${TMPFSSIZE}"/>
+ <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" status="end" type="node"/>
+</NODE_RESOURCES>

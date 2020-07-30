@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="1G" mpi="0" wallclock="10" catchup="4" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/jobs_a_12Z/mupy2_mupy1_12Z/mupy1" local_index="jobs_a_12Z=00" index="jobs_a_12Z=12" status="end" type="node" hour="-12"/>    
+</NODE_RESOURCES> 

@@ -57,14 +57,14 @@ proc DisplayGrp_getGroupLevel { level } {
 proc DisplayGrp_setMaxX { display_group } {
    set expCanvas [Overview_getCanvas]
    set groupCanvas [Overview_getGroupDisplayCanvas]
-   # set groupTag [${groupCanvas} find withtag [DisplayGrp_getTagName ${display_group}]]
+   
    set groupTag [DisplayGrp_getTagName ${display_group}]
 
    set groupBoundaries [${expCanvas} bbox ${groupTag}]
    if { ${groupBoundaries} == "" } {
       set groupBoundaries [${groupCanvas} bbox ${groupTag}]
    }
-   # puts "DisplayGrp_setMaxX:$groupTag groupBoundaries:$groupBoundaries"
+   
 
    catch {
       ${display_group} configure -x [lindex ${groupBoundaries} 0] 
@@ -79,7 +79,7 @@ proc DisplayGrp_getAllGroupMaxX { canvas } {
       set maxX [lindex ${coords} 2]
    }
 
-   # puts "DisplayGrp_getAllGroupMaxX maxX:$maxX"
+   
    return ${maxX}
 }
 
@@ -262,12 +262,11 @@ proc DisplayGrp_getGroupDisplayX { group_display } {
 # group already displayed prior to itself. This function should be useful
 # at startup when we add the display groups one by one
 proc DisplayGrp_getGroupDisplayY { group_display } {
-   # puts "DisplayGrp_getGroupDisplayY ${group_display}"
    global entryStartY expEntryHeight
    set displayGroups [ExpXmlReader_getGroups]
    set myIndex [lsearch -exact ${displayGroups} ${group_display}]
    if { ${myIndex} == -1 || ${myIndex} == 0 } {
-      # puts "DisplayGrp_getGroupDisplayY group_display;$group_display first group"
+      
       # not found or first group, return the start y
       ::log::log debug "DisplayGrp_getGroupDisplayY group_display:${group_display} first group:  value:${entryStartY}" 
       return ${entryStartY}
@@ -284,14 +283,14 @@ proc DisplayGrp_getGroupDisplayY { group_display } {
    if { ${prevGroupLevel} < ${thisGroupLevel} } {
       # we are changing group level
       # the current group will be located just next to the previous one, on the same line to optimize spacing
-      # puts "DisplayGrp_getGroupDisplayY changing group_display;$group_display"
+      
       set thisGroupY [${prevGroup} cget -y]
    } else {
       set thisGroupY [DisplayGrp_getNextSlotY ${prevGroup} ${prevGroupY}]
-      # puts "DisplayGrp_getGroupDisplayY group_display;$group_display prevGroup:$prevGroup prevGroupY:$prevGroupY next slot:$thisGroupY"
+      
    }
 
-   #set thisGroupY [Overview_GroupNextY ${prevGroupY}]
+   
    ::log::log debug "DisplayGrp_getGroupDisplayY group_display:${group_display} value: ${thisGroupY}"
    return ${thisGroupY}
 }

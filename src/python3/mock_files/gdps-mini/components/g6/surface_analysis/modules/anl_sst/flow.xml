@@ -1,0 +1,22 @@
+<MODULE name="anl_sst">
+    <SUBMITS sub_name="derisst"/>
+    <SUBMITS sub_name="satbias"/>
+    <SUBMITS sub_name="ts_wind"/>
+    <FAMILY name="derisst">
+        <SUBMITS sub_name="insitu"/>
+        <TASK name="insitu">
+            <SUBMITS sub_name="sat"/>
+        </TASK>
+        <TASK name="sat"/>
+    </FAMILY>
+    <TASK name="satbias">
+        <DEPENDS_ON dep_name="./derisst/insitu" status="end" type="node"/>
+        <SUBMITS sub_name="sst"/>
+    </TASK>
+    <TASK name="ts_wind"/>
+    <TASK name="sst">
+        <DEPENDS_ON dep_name="./derisst" status="end" type="node"/>
+        <DEPENDS_ON dep_name="./ts_wind" status="end" type="node"/>
+    </TASK>
+</MODULE>
+

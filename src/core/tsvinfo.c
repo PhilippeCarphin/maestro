@@ -6,7 +6,7 @@
 #include "SeqUtil.h"
 #include "SeqLoopsUtil.h"
 #include "SeqNodeCensus.h"
-/* #include "nodeinfo.h" */
+
 #include "ResourceVisitor.h"
 
 static const char *indent = "    ";
@@ -34,9 +34,7 @@ void resource_keylist(SeqNodeDataPtr ndp, FILE * fp, int human_readable)
       fprintf(fp, "%s.memory    = %s\n", doubleIndent, ndp->memory);
       fprintf(fp, "%s.wallclock = %d\n", doubleIndent, ndp->wallclock);
    } else {
-      /*
-       * {resources {{CATCHUP 1} {CPU 8} ... {WALLCLOCK 5}}}
-       */
+      
       fprintf(fp,"{resources ");
 
       fprintf(fp, "{");
@@ -94,9 +92,7 @@ void loop_keylist(SeqNodeDataPtr ndp, FILE *fp, int human_readable)
          fprintf(fp, "%s.expression = %s\n",doubleIndent, expression);
       }
    } else {
-      /*
-       * {loop {{START 8} {END 18} {STEP 2} {SET 2}}}
-       */
+      
       fprintf(fp, "{loop {");
 
       if( expression == NULL ){
@@ -205,7 +201,7 @@ int write_db_file(const char *seq_exp_home, const char *datestamp,
     * Opitionnaly, one can reverse the list using SeqListNodeReverseList (this
     * is possible because I put the nextPtr as the first element of the struct).
     */
-   /* SeqListNode_reverseList(&nodeList); */
+   
 
    /*
     * For each node in the list, write an entry in the file
@@ -213,9 +209,9 @@ int write_db_file(const char *seq_exp_home, const char *datestamp,
    SeqNodeDataPtr ndp = NULL;
    for_pap_list(itr,nodeList){
 
-      /* ndp = nodeinfo(itr->path, NI_RESOURCE_ONLY, NULL, seq_exp_home, NULL, datestamp,NULL ); */
+      
       ndp = SeqNode_createNode(itr->path);
-      /* ndp->datestamp = strdup(datestamp); */
+      
       SeqNode_setDatestamp(ndp,datestamp);
       SeqNode_setSeqExpHome(ndp,seq_exp_home);
       ndp->type = itr->type;

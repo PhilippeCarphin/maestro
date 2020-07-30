@@ -1,0 +1,37 @@
+<MODULE name="cmdm_post_processing">
+    <SUBMITS sub_name="scribe_meteocode"/>
+    <SUBMITS sub_name="boudala"/>
+    <SUBMITS sub_name="tsp_kde"/>
+    <FAMILY name="scribe_meteocode">
+        <SUBMITS sub_name="public"/>
+        <SUBMITS sub_name="marine"/>
+        <SUBMITS sub_name="scribe_cleanup"/>
+        <FAMILY name="public">
+            <SUBMITS sub_name="scribe"/>
+            <MODULE name="scribe"/>
+        </FAMILY>
+        <FAMILY name="marine">
+            <SUBMITS sub_name="scribe"/>
+            <MODULE name="scribe"/>
+        </FAMILY>
+        <MODULE name="scribe_cleanup">
+            <DEPENDS_ON dep_name="./public" status="end" type="node"/>
+            <DEPENDS_ON dep_name="./marine" status="end" type="node"/>
+        </MODULE>
+    </FAMILY>
+    <FAMILY name="boudala">
+        <SUBMITS sub_name="boudala_loop"/>
+        <LOOP name="boudala_loop">
+            <SUBMITS sub_name="boudala"/>
+            <TASK name="boudala"/>
+        </LOOP>
+    </FAMILY>
+    <FAMILY name="tsp_kde">
+        <SUBMITS sub_name="tsp_kde_loop"/>
+        <LOOP name="tsp_kde_loop">
+            <SUBMITS sub_name="tsp_kde"/>
+            <TASK name="tsp_kde"/>
+        </LOOP>
+    </FAMILY>
+</MODULE>
+

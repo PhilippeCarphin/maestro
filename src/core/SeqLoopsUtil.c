@@ -1,22 +1,5 @@
 /* SeqLoopsUtil.c - Utility functions for loops in the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 
 #include <stdio.h>
@@ -125,8 +108,7 @@ int SeqLoops_parseArgs( SeqNameValuesPtr* nameValuesPtr, const char* cmd_args ) 
    int isError = 0, n=0;
    
    SeqUtil_TRACE(TL_FULL_TRACE, "SeqLoops_parseArgs cmd_args:%s\n", cmd_args );
-   /*
-   */
+   
    
    tmp_args = strdup( cmd_args );
    tmpstrtok = (char*) strtok( tmp_args, "," );
@@ -845,7 +827,7 @@ LISTNODEPTR SeqLoops_getLoopContainerExtensions( SeqNodeDataPtr _nodeDataPtr, co
 			} else {
 			   sprintf( tmp, "%s%d", EXT_TOKEN, loopCount );
 			}
-			/*SeqUtil_TRACE(TL_FULL_TRACE, "SeqLoops_getLoopContainerExtensions new extension added based on expression:%s\n", tmp );*/
+			
 			SeqListNode_insertItem( &tmpLoopExts, tmp );
 		     }
 		  }
@@ -1111,7 +1093,7 @@ int SeqLoops_isLastIteration( const SeqNodeDataPtr _nodeDataPtr, SeqNameValuesPt
 ********************************************************************************/
 SeqNameValuesPtr SeqLoops_nextLoopArgs( const SeqNodeDataPtr _nodeDataPtr, SeqNameValuesPtr _loop_args, int* _newDefNumber ) {
 
-	SeqNameValuesPtr nextLoopArgsPtr = NULL; /* Return value */
+	SeqNameValuesPtr nextLoopArgsPtr = NULL; 
 	SeqNameValuesPtr nodeSpecPtr = _nodeDataPtr->data;
 	const int loopCurrent = atoi( SeqLoops_getLoopAttribute( _loop_args, _nodeDataPtr->nodeName ) );
 	char *expression, *token; 
@@ -1155,8 +1137,8 @@ SeqNameValuesPtr SeqLoops_nextLoopArgs( const SeqNodeDataPtr _nodeDataPtr, SeqNa
 				*_newDefNumber = (startIndex/4) + 1;
 				SeqUtil_TRACE(TL_MEDIUM, "SeqLoops_nextLoopArgs():Informing caller of newdefinition, and also returning newdefinition number = %d within expressionArray.\n",*_newDefNumber);
 			}
-		}  /* else nextLoopArgsPtr == NULL and *_newDefNumber == 0 indicating loop is finished */
-	} /* end if ( loop uses expression ) */
+		}  
+	} 
 	else
 	{
 		SeqUtil_TRACE(TL_FULL_TRACE , "SeqLoops_nextLoopArgs(): Running non-expression code \n");
@@ -1178,7 +1160,7 @@ SeqNameValuesPtr SeqLoops_nextLoopArgs( const SeqNodeDataPtr _nodeDataPtr, SeqNa
          SeqUtil_TRACE(TL_FULL_TRACE,"SeqLoops_nextLoopArgs(): setting loop attribure of %s\n", _nodeDataPtr->nodeName);
 			nextLoopArgsPtr = SeqNameValues_clone( _loop_args );
 			SeqLoops_setLoopAttribute( &nextLoopArgsPtr, _nodeDataPtr->nodeName, nextIterStr );
-		} /* else nextLoopArgsPtr == NULL indicating loop is finished */
+		} 
 	}
 
 	return nextLoopArgsPtr;
@@ -1269,7 +1251,7 @@ char* SeqLoops_getExtFromLoopArgs( SeqNameValuesPtr _loop_args ) {
  ********************************************************************************/
 SeqNameValuesPtr SeqLoops_getContainerArgs (const SeqNodeDataPtr _nodeDataPtr, SeqNameValuesPtr _loop_args ) {
    SeqNameValuesPtr current = _loop_args; /* Linked list iterator */
-   SeqNameValuesPtr containerArgs = NULL; /* Return value */
+   SeqNameValuesPtr containerArgs = NULL; 
    char * path = NULL;
    char * token = NULL;
    SeqUtil_TRACE(TL_FULL_TRACE, "SeqLoops_getContainerArgs(): Called for node %s and _loop_args :\n", _nodeDataPtr->taskPath);
@@ -1392,7 +1374,7 @@ SeqNameValuesPtr SeqLoops_getLoopSetArgs( const SeqNodeDataPtr _nodeDataPtr, Seq
 		/* we need to submit only one iteration */
 		newLoopsArgsPtr = SeqNameValues_clone( loopArgsTmpPtr );
 	}
-	/* SeqNameValues_printList( newLoopsArgsPtr); */
+	
 	return newLoopsArgsPtr;
 }
 

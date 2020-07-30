@@ -1,0 +1,5 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="1G" mpi="0" wallclock="10" catchup="4" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/ym372" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/pppcl" status="end" type="node"/>
+</NODE_RESOURCES>

@@ -1,0 +1,9 @@
+<MODULE name="derieval">
+    <SUBMITS sub_name="derivate_sw"/>
+    <SUBMITS sub_name="derivate_ai"/>
+    <SUBMITS sub_name="derivate_ua"/>
+    <TASK name="derivate_sw"/>
+    <TASK name="derivate_ai"/>
+    <TASK name="derivate_ua"/>
+</MODULE>
+

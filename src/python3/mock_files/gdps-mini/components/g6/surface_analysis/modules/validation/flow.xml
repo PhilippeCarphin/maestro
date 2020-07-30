@@ -1,0 +1,4 @@
+<MODULE name="validation" version_number="1.1" date="9 Oct 2015">
+    <SUBMITS sub_name="validate_data"/>
+    <TASK name="validate_data"/>
+</MODULE>

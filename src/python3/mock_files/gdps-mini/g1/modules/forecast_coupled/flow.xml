@@ -1,0 +1,44 @@
+<MODULE name="forecast_coupled">
+    <SUBMITS sub_name="prep"/>
+    <TASK name="prep">
+        <SUBMITS sub_name="gem_nemo"/>
+        <SUBMITS sub_name="rpnpp"/>
+        <SUBMITS sub_name="loop_post_gem"/>
+        <SUBMITS sub_name="post_nemo"/>
+        <SUBMITS sub_name="clean_frontend"/>
+        <SUBMITS sub_name="clean_backend"/>
+    </TASK>
+    <MODULE name="gem_nemo"/>
+    <MODULE name="rpnpp"/>
+    <LOOP name="loop_post_gem">
+        <SUBMITS sub_name="post_gem"/>
+        <TASK name="post_gem"/>
+    </LOOP>
+    <TASK name="post_nemo">
+        <DEPENDS_ON type="node" status="end" dep_name="./rpnpp"/>
+    </TASK>
+    <TASK name="clean_frontend">
+      <DEPENDS_ON dep_name="./post_nemo" status="end" type="node"/>
+      <DEPENDS_ON dep_name="./loop_post_gem" status="end" type="node"/>
+    </TASK>
+    <TASK name="clean_backend">
+      <DEPENDS_ON dep_name="./post_nemo" status="end" type="node"/>
+      <DEPENDS_ON dep_name="./loop_post_gem" status="end" type="node"/>
+    </TASK>
+    
+<!--
+  <SUBMITS sub_name="prep_lbcs"/>
+  <TASK name="prep_lbcs">
+    <DEPENDS_ON dep_name="./prep_anal" status="end" type="node"/>
+  </TASK>
+-->
+
+<!--
+  <SUBMITS sub_name="wait4lbcs"/>
+  <TASK name="wait4lbcs">
+    <DEPENDS_ON dep_name="./prep_anal" status="end" type="node"/>
+  </TASK> 
+-->
+
+</MODULE>
+

@@ -1,0 +1,53 @@
+# Machine stuff
+FRONTEND=eccc-ppp4
+BACKEND=daley
+DBASE_SERVER=eccc-ppp4
+BACKEND_DEFAULT_Q=production
+FRONTEND_DEFAULT_Q=production
+BACKEND_XFER_Q=xfer
+FRONTEND_XFER_Q=xfer
+
+SEQ_DEFAULT_MACHINE=eccc-ppp4
+
+# fasttmp
+TMPFSSIZE=3000
+
+# pre_assimcycle dependencies
+PRE_ASSIM_CUTOFF_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+PRE_ASSIM_EVAL_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+
+# assimcycle  dependencies
+ASSIM_DERIALT_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+ASSIM_TRIAL_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+
+# get TM|LG in 'gridpt/anal/hyb/*_sfc' or 'gridpt/anal/sfc'
+ASSIM_SFC_EXP=/home/smco500/maestro_suites/gdps_20191231/g6
+
+# get 'derisfc' files
+ASSIM_DERISFC_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+
+ASSIM_GEPS_EXP=/home/smco500/maestro_suites/geps_20191231/e2
+
+# intxfer dependencies
+FORECAST_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+INTXFER_ANLPOST_NAME=/main/assimcycle/anlpost/forecast
+INTXFER_GEM_TRANSFER_NAME=/main/assimcycle/forecast/loop_post_gem/post_gem
+
+# post-processing dependencies
+CMDW_FULL_G2_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+CMDW_POST_PROC_R1_EXP=/home/smco500/maestro_suites/rdps_20191231/r1
+
+CMDW_MEMORY_DEFAULT=500M
+CMDW_WALLCLOCK_DEFAULT=5
+
+# used by CMOI post proc
+CMOI_G2_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+CMOI_G1_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+
+# for classic2dm 
+CMOI_OPS_G2_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+
+# put to 9 going ops
+CMOI_COMP_CLASSIC2DM_CATCHUP=9
+# CMOI_COMP_CLASSIC2DM_CATCHUP=5
+

@@ -1,0 +1,4 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+    <LOOP end="${UMOS_LOOP_END_INDEX}" set="${UMOS_LOOP_SET}" start="${UMOS_LOOP_START_INDEX}" step="1"/>
+</NODE_RESOURCES>

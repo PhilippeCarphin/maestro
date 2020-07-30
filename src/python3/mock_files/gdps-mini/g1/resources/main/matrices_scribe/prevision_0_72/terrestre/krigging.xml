@@ -1,0 +1,10 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+  <BATCH catchup="4" cpu="1" machine="${FRONTEND}" memory="8G" mpi="0" queue="${FRONTEND_DEFAULT_Q}" wallclock="30"/>
+<!--   <DEPENDS_ON dep_name="/main/matrices_scribe/loop_member/prevision_0_72/terrestre/sampling"          local_index="loop_member=CURRENT_INDEX" index="loop_member=CURRENT_INDEX" status="end" type="node"/> -->
+<!--   <DEPENDS_ON dep_name="/main/matrices_scribe/loop_member/prevision_0_72/terrestre/umos_mist_station" local_index="loop_member=CURRENT_INDEX" index="loop_member=CURRENT_INDEX" status="end" type="node"/> -->
+
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_UMOS_DEP}" exp="${SCRIBE_GDPS_EXP}" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_CMDW_POST_PROC_MUPY2_00Z_DEP}" exp="${SCRIBE_GDPS_EXP}" index="jobs_a_00Z=00" status="end" type="node" valid_hour="00"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_CMDW_POST_PROC_MUPY2_12Z_DEP}" exp="${SCRIBE_GDPS_EXP}" index="jobs_a_12Z=12" status="end" type="node" valid_hour="12"/>
+</NODE_RESOURCES>

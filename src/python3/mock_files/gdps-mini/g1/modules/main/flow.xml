@@ -1,0 +1,29 @@
+<MODULE name="main">
+    <SUBMITS sub_name="pre_assimcycle"/>
+    <SUBMITS sub_name="assimcycle"/>
+    <SUBMITS sub_name="intxfer"/>
+    <SUBMITS sub_name="cmde_post_processing"/>
+    <SUBMITS sub_name="cmdw_post_processing"/>
+    <SUBMITS sub_name="cmoi_post_processing"/>
+    <SUBMITS sub_name="matrices_scribe"/>
+    <SUBMITS sub_name="cmdm_post_processing"/>
+    <SUBMITS sub_name="umos"/>
+    <SUBMITS sub_name="densite_neige_post"/>
+    <SUBMITS sub_name="run_orji"/>
+    <SUBMITS sub_name="clean_files"/>
+    <SUBMITS sub_name="archive_listings"/>
+    <MODULE name="pre_assimcycle"/>
+    <MODULE name="assimcycle"/>
+    <MODULE name="intxfer"/>
+    <MODULE name="cmde_post_processing"/>
+    <MODULE name="cmdw_post_processing"/>
+    <MODULE name="cmoi_post_processing"/>
+    <MODULE name="matrices_scribe"/>
+    <MODULE name="cmdm_post_processing"/>
+    <MODULE name="densite_neige_post"/>
+    <MODULE name="umos"/>
+    <TASK name="run_orji"/>
+    <TASK name="clean_files"/>   
+    <TASK name="archive_listings"/>
+</MODULE>
+

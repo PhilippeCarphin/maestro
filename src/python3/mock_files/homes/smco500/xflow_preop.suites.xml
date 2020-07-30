@@ -1,0 +1,25 @@
+<?xml version='1.0'?>
+<!DOCTYPE GroupList[]>
+
+<GroupList label="Operational">
+
+<!-- this is a fairly representative example of an overview suites xml from operations -->
+
+  <Group name="default">
+       <Exp>/home/smco500/maestro_suites/default</Exp>
+  </Group>
+
+<!--
+     <Group name="Score">
+         <Exp>/home/smco500/maestro_suites/geps/geps_scores</Exp>
+     </Group>
+-->
+
+   <Group name="GDPS">
+         <Group name="Surface">
+               <Exp>/home/smco500/maestro_suites/gdps_20191231/g3</Exp>
+        </Group>
+   </Group>
+   
+   <!-- commented out end commented out section -->
+</GroupList>

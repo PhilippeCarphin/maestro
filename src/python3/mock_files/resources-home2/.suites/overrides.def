@@ -1,0 +1,12 @@
+# Machine stuff
+FRONTEND=overrides-home2-frontend
+DBASE_SERVER=eccc-ppp3
+SEQ_DEFAULT_MACHINE=overrides-home2-default-machine
+
+BACKEND_XFER_Q=xfer
+FRONTEND_XFER_Q=xfer
+BACKEND_DEFAULT_Q=production
+FRONTEND_DEFAULT_Q=production
+
+# fasttmp
+TMPFSSIZE=4000

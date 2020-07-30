@@ -1,0 +1,6 @@
+<MODULE name="main" version_number="1.0" date="23 May 2018">
+
+  <SUBMITS sub_name="surface_analysis"/>
+  <MODULE name="surface_analysis"/>
+
+</MODULE>

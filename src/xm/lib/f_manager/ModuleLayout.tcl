@@ -1,22 +1,4 @@
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
+
 
 package require cksum 
 
@@ -25,7 +7,6 @@ package require cksum
 # i.e. creating/removing .tsk .cfg files, container directories
 # It is cleared when the user saves the work dir or when
 # the user is done editing a module
-# 
 # _expPath is path to experiement i.e. SEQ_EXP_HOME
 # _moduleNode is experiment tree node i.e /enkf_mod/anal_mod/Analysis/gem_mod
 proc ModuleLayout_getWorkDir { _expPath _moduleNode } {
@@ -41,7 +22,6 @@ proc ModuleLayout_getWorkDir { _expPath _moduleNode } {
 
 # The resource files are stored using an experiment tree and are located outside
 # the module directory, thus requiring its own work dir
-#
 # _expPath is path to experiement i.e. SEQ_EXP_HOME
 # _moduleNode is experiment tree node i.e /enkf_mod/anal_mod/Analysis/gem_mod
 proc ModuleLayout_getWorkResourceDir { _expPath _moduleNode } {
@@ -51,13 +31,12 @@ proc ModuleLayout_getWorkResourceDir { _expPath _moduleNode } {
    return ${resourceWorkDir}
 }
 
-#
 # _expPath is path to experiement i.e. SEQ_EXP_HOME
 # _moduleNode is experiment tree node i.e /enkf_mod/anal_mod/Analysis/gem_mod
 proc ModuleLayout_clearWorkingDir { _expPath _moduleNode } {
    global ${_moduleNode}_workdir
 
-   #::log::log debug "ModuleLayout_clearWorkingDir _expPath:${_expPath} _moduleNode:${_moduleNode}"
+   
    set workingDir [ModuleLayout_getWorkDirName ${_expPath} ${_moduleNode}]
    if { [ catch {
       # clear module work dir
@@ -83,7 +62,6 @@ proc ModuleLayout_clearWorkingDir { _expPath _moduleNode } {
    catch { unset ${_moduleNode}_workdir }
 }
 
-#
 # _expPath is path to experiement i.e. SEQ_EXP_HOME
 # _moduleNode is experiment tree node i.e /enkf_mod/anal_mod/Analysis/gem_mod
 proc ModuleLayout_createWorkingDir { _expPath _moduleNode } {
@@ -139,7 +117,6 @@ proc ModuleLayout_createWorkingDir { _expPath _moduleNode } {
 # the module working dir is located at exp_work_dir/modules/(checksum of module_node)_name
 # something like exp_work_dir/modules/715733325_gem_mod
 # using checksum of module node (/enkf_mod/anal_mod), ready if module goes from flat to exp tree
-#
 # _expPath is path to experiement i.e. SEQ_EXP_HOME
 # _moduleNode is experiment tree node i.e /enkf_mod/anal_mod/Analysis/gem_mod
 proc ModuleLayout_getWorkDirName { _expPath _moduleNode } {
@@ -175,7 +152,6 @@ proc ModuleLayout_saveWorkingDir { _expPath _moduleNode } {
    MaestroConsole_addMsg "Saving module ${_moduleNode} done."
 }
 
-#
 # _expPath is path to experiement i.e. SEQ_EXP_HOME
 # _moduleNode is experiment tree node i.e /enkf_mod/anal_mod/Analysis/gem_mod
 # _newNode is experiment tree node to be created i.e /enkf_mod/anal_mod/Analysis/gem_mod/runmod
@@ -299,23 +275,23 @@ proc ModuleLayout_renameNode { _expPath _moduleNode _renameNode _newName _nodeTy
       TaskNode -
       NpassTaskNode {
          if { [file exists ${nodeFullPath}.tsk] } {
-            # MaestroConsole_addMsg "rename ${nodeFullPath}.tsk to ${containerFullPath}/${_newName}.tsk"
-            # file rename ${nodeFullPath}.tsk ${containerFullPath}/${_newName}.tsk
+            
+            
             ::log::log debug "ModuleLayout_renameNode() ModuleLayout_moveOrCopy ${nodeFullPath}.tsk ${containerFullPath}/${_newName}.tsk ${_rename_mode}"
             ModuleLayout_moveOrCopy ${nodeFullPath}.tsk ${containerFullPath}/${_newName}.tsk ${_rename_mode}
          }
 
          if { [file exists ${nodeFullPath}.cfg] } {
-            # MaestroConsole_addMsg "rename ${nodeFullPath}.cfg to ${containerFullPath}/${_newName}.cfg"
-            # file rename ${nodeFullPath}.cfg ${containerFullPath}/${_newName}.cfg
+            
+            
             ::log::log debug "ModuleLayout_renameNode() ModuleLayout_moveOrCopy ${nodeFullPath}.cfg ${containerFullPath}/${_newName}.cfg ${_rename_mode}"
             ModuleLayout_moveOrCopy ${nodeFullPath}.cfg ${containerFullPath}/${_newName}.cfg ${_rename_mode}
          }
 
          if { [file exists ${resourceWorkDir}${relativePath}.xml] } {
             set resourceFile ${resourceWorkDir}${relativePath}.xml
-            # MaestroConsole_addMsg "rename ${resourceFile} ${resourceContainerFullPath}/${_newName}.xml."
-            # file rename ${resourceFile} ${resourceContainerFullPath}/${_newName}.xml
+            
+            
             ::log::log debug "ModuleLayout_renameNode() ModuleLayout_moveOrCopy ${resourceFile} ${resourceContainerFullPath}/${_newName}.xml ${_rename_mode}"
             ModuleLayout_moveOrCopy ${resourceFile} ${resourceContainerFullPath}/${_newName}.xml ${_rename_mode}
          }
@@ -326,23 +302,23 @@ proc ModuleLayout_renameNode { _expPath _moduleNode _renameNode _newName _nodeTy
          set resourceDir ${resourceWorkDir}${relativePath}
          if { [file exists ${nodeFullPath}] } {
             # rename the current container dir
-            # MaestroConsole_addMsg "rename ${nodeFullPath} to ${containerFullPath}/${_newName}"
-            # file rename ${nodeFullPath} ${containerFullPath}/${_newName}
+            
+            
             ModuleLayout_moveOrCopy ${nodeFullPath} ${containerFullPath}/${_newName} ${_rename_mode}
          }
 
          if { [file exists ${resourceWorkDir}/${relativePath}] } {
             # rename the current resource container dir
-            # MaestroConsole_addMsg "rename ${resourceWorkDir}/${relativePath} to ${containerFullPath}/${_newName}"
-            # file rename ${resourceWorkDir}/${relativePath} ${resourceContainerFullPath}/${_newName}
+            
+            
             ModuleLayout_moveOrCopy ${resourceWorkDir}/${relativePath} ${resourceContainerFullPath}/${_newName} ${_rename_mode}
          }
       }
       ModuleNode {
          if { [file exists ${resourceWorkDir}/${relativePath}] } {
             # rename the current resource container dir
-            # MaestroConsole_addMsg "rename ${resourceWorkDir}/${relativePath} to ${containerFullPath}/${_newName}"
-            # file rename ${resourceWorkDir}/${relativePath} ${resourceContainerFullPath}/${_newName}
+            
+            
             ModuleLayout_moveOrCopy ${resourceWorkDir}/${relativePath} ${resourceContainerFullPath}/${_newName} ${_rename_mode}
          }
       }
@@ -426,7 +402,7 @@ proc ModuleLayout_assignNewContainer { _expPath _moduleNode _newContainerNode _a
          if { [file exists ${resourceWorkDir}${relativeAffectedNode}] } {
             ::log::log debug "ModuleLayout_assignNewContainer move ${resourceWorkDir}${relativeAffectedNode} to ${resourceWorkDir}${relativeNewContNode}/"
             MaestroConsole_addMsg "Move ${resourceWorkDir}${relativeAffectedNode} to ${resourceWorkDir}${relativeNewContNode}/"
-            # file rename ${resourceWorkDir}${relativeAffectedNode} ${resourceWorkDir}${relativeNewContNode}/ ${_assign_mode}
+            
             ModuleLayout_moveOrCopy ${resourceWorkDir}${relativeAffectedNode} ${resourceWorkDir}${relativeNewContNode}/ ${_assign_mode}
          }
       }
@@ -471,22 +447,22 @@ proc ModuleLayout_deleteNode { _expPath _moduleNode _deleteNode _nodeType _resOn
                # delete only container directory... move children files to
                # parent dir
                # we move everything to the parent directory... except container.cfg
-               # ::log::log debug "ModuleLayout_deleteNode rsync --exclude '/container.cfg' -r ${nodeFullPath}/ [file dirname ${nodeFullPath}]"
+               
                if { ${_resOnly} == false } {
                   MaestroConsole_addMsg "delete file ${configFile}"
                   file delete ${configFile}
-                  #MaestroConsole_addMsg "synchonize module...rsync --exclude '/container.cfg' -r ${nodeFullPath}/ [file dirname ${nodeFullPath}]"
-                  #exec rsync --exclude '/container.cfg' -r ${nodeFullPath}/ [file dirname ${nodeFullPath}]
+                  
+                  
                   MaestroConsole_addMsg "synchonize module...rsync -r -t -l ${nodeFullPath}/ [file dirname ${nodeFullPath}]"
                   exec rsync -r -t -l ${nodeFullPath}/ [file dirname ${nodeFullPath}]
                }
 
                # do the same with the resources files
-               # ::log::log debug "ModuleLayout_deleteNode rsync --exclude '/container.xml' -r ${resourceDir}/ [file dirname ${resourceDir}]"
+               
                MaestroConsole_addMsg "delete file ${resourceFile}"
                file delete ${resourceFile}
-               # MaestroConsole_addMsg "synchonize resources rsync --exclude '/container.xml' -r ${resourceDir}/ [file dirname ${resourceDir}]"
-               # exec rsync --exclude '/container.xml' -r ${resourceDir}/ [file dirname ${resourceDir}]
+               
+               
                MaestroConsole_addMsg "synchonize resources rsync -r -t -l ${resourceDir}/ [file dirname ${resourceDir}]"
                exec rsync -r -t -l ${resourceDir}/ [file dirname ${resourceDir}]
             }
@@ -580,7 +556,6 @@ proc ModuleLayout_getFlowXml { _expPath _moduleNode } {
 }
 
 # retrieve the path to the config file of a node
-#
 # _expPath is path to the experiment
 # _moduleNode is experiment tree of node i.e. /enkf_mod/anal_mod
 # _node is the target node for the source file  i.e. /enkf_mod/anal_mod/Analysis/enkf_pre
@@ -621,7 +596,6 @@ proc ModuleLayout_getNodeConfigPath { _expPath _moduleNode _node _nodeType {_isN
 }
 
 # retrieve the path to the source file of a node
-#
 # _expPath is path to the experiment
 # _moduleNode is experiment tree of node i.e. /enkf_mod/anal_mod
 # _node is the target node for the source file  i.e. /enkf_mod/anal_mod/Analysis/enkf_pre
@@ -656,7 +630,6 @@ proc ModuleLayout_getNodeSourcePath { _expPath _moduleNode _node _nodeType {_isN
 }
 
 # retrieve the path to the resource file of a node
-#
 # _expPath is path to the experiment
 # _moduleNode is experiment tree of node i.e. /enkf_mod/anal_mod
 # _node is the target node for the source file  i.e. /enkf_mod/anal_mod/Analysis/enkf_pre

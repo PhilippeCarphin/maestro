@@ -1,0 +1,6 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+  <BATCH catchup="2" cpu="1" machine="${BACKEND}" queue="${BACKEND_XFER_Q}" wallclock="90"/>
+  <DEPENDS_ON dep_name="/main/geps_mod/enkf_mod/Trials/interp_trials"  status="end" hour="-6" type="node" exp="${ASSIM_GEPS_EXP}"/>
+  <ABORT_ACTION name="rerun"/>
+</NODE_RESOURCES>

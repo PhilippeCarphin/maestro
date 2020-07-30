@@ -1,0 +1,85 @@
+<html>
+    <head>
+        <style>
+.container {
+    margin-left: 50px;
+}
+
+.status-cell{
+    width: 8px;
+    height: 20px;
+    padding: 0px;
+    margin: 0px;
+}
+
+.cell-abort{
+    background: red;
+}
+
+.cell-begin{
+    background: green;
+}
+
+.cell-end{
+    background: blue;
+}
+
+.cell-waiting{
+    background: yellow;
+}
+
+.cell-not-started{
+    background: gray;
+}
+
+.cell-submit{
+    background: aqua;
+}
+
+table {
+    border-spacing: 0;
+}
+
+.tooltip {
+  position: relative;
+  display: inline-block;
+  border-bottom: 1px dotted black;
+}
+
+.tooltip .tooltiptext {
+  visibility: hidden;
+  left: 30px;
+  background-color: black;
+  color: #fff;
+  text-align: center;
+  border-radius: 6px;
+  padding: 10px;
+
+  /* Position the tooltip */
+  position: absolute;
+  z-index: 1;
+}
+
+.tooltip:hover .tooltiptext {
+  visibility: visible;
+}
+
+        </style>
+    </head>
+    <body>
+    
+        <div class="container">
+        <table>            
+            {% for task_name in results["task_keys_sorted"] %}
+            <tr>
+                <td>{{task_name}}</td>
+                {% for datestamp in results['datestamps'] %}{% set status = results['tasks'][task_name][datestamp] | replace(' ','-') %}<td class="tooltip status-cell cell-{{status}}"><span class="tooltiptext">{{datestamp}} {{status}}</span></td>{% endfor %}
+            </tr>
+            {% endfor %}
+        </table>
+        </div>
+        
+	<p>This page was generated on {{date_string_now}} by the script:</p>
+        <pre>{{ script_path }}</pre>
+</body>
+</html>

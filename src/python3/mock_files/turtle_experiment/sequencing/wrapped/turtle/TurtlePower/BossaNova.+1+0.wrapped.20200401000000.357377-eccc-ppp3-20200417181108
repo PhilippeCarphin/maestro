@@ -1,0 +1,33 @@
+export ORDSOUMET_date_started="$(LC_TIME=C date)"
+export ORDSOUMET_date_submitted="Fri Apr 17 18:11:08 UTC 2020"
+export ORDSOUMET_date_begin_ordsoumet="Fri Apr 17 18:11:08 UTC 2020"
+export ORDSOUMET_date_prepared="Fri Apr 17 18:11:08 UTC 2020"
+export ORDSOUMET_date_submit_done=""
+
+echo BossaNova.+1+0:0: JOB_ORDSOUMET at "$ORDSOUMET_date_begin_ordsoumet" Name=BossaNova.+1+0 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID="${JOB_ID:-${LOADL_STEP_ID%.*}}"
+echo BossaNova.+1+0:1: JOB_PREPARED at "$ORDSOUMET_date_prepared" Name=BossaNova.+1+0 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID="${JOB_ID:-${LOADL_STEP_ID%.*}}"
+echo BossaNova.+1+0:2: JOB_SUBMITTED at "$ORDSOUMET_date_submitted" Name=BossaNova.+1+0 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID="${JOB_ID:-${LOADL_STEP_ID%.*}}"
+echo BossaNova.+1+0:3: JOB_SUBMIT_DONE at "$ORDSOUMET_date_submit_done" Name=BossaNova.+1+0 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID=""
+echo BossaNova.+1+0:4: JOB_RUNWRAPPER at "$ORDSOUMET_date_runwrapper" Name=BossaNova.+1+0 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID="${JOB_ID:-${LOADL_STEP_ID%.*}}"
+echo BossaNova.+1+0:5: JOB_STARTED at "$ORDSOUMET_date_started" Name=BossaNova.+1+0 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID="${JOB_ID:-${LOADL_STEP_ID%.*}}"
+
+export JobStartTime=$(date +%s -d "$ORDSOUMET_date_started")
+export JobTimeLimit=60
+export OMP_NUM_THREADS=1
+
+# temporaire tant que je n'aurai pas trouvé de solution homogène...
+if [[ "UnixBatch" != "LoadLeveler5" ]]; then
+	((OMP_NUM_THREADS=OMP_NUM_THREADS*1))
+fi
+export BATCH_MPI_CPUS=1
+
+if [ -n "" ]; then
+	export DISPLAY=
+fi
+if [ -n "" ]; then
+	xterm -ls &
+fi
+
+set +x
+ORDSOUMET_date_ended="$(LC_TIME=C date)"
+echo BossaNova.+1+0:6: JOB_ENDED at "$ORDSOUMET_date_ended" WallTime=$(echo  $(date +%s -d "$ORDSOUMET_date_ended") - $JobStartTime | bc)s Name=BossaNova.+1+0 Dest=eccc-ppp3 CPUS=1 SYSTEM_ID="${JOB_ID:-${LOADL_STEP_ID%.*}}"

@@ -1,0 +1,14 @@
+# Machine stuff
+FRONTEND=turtle-frontend
+DBASE_SERVER=eccc-ppp3
+SEQ_DEFAULT_MACHINE=turtle-default-machine
+
+BACKEND_XFER_Q=prod_xxfer
+FRONTEND_XFER_Q=prod_xxfer
+BACKEND_DEFAULT_Q=production
+FRONTEND_DEFAULT_Q=production
+
+# fasttmp
+TMPFSSIZE=4000
+
+BOSSA_NOVA_LOOP_END=10

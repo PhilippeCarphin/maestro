@@ -1,0 +1,7 @@
+<MODULE name="WarmStart">
+    <SUBMITS sub_name="copy_database_without_verif"/>
+    <SUBMITS sub_name="copy_verif"/>
+    <TASK name="copy_database_without_verif"/>
+    <TASK name="copy_verif"/>
+</MODULE>
+

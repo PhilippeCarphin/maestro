@@ -1,0 +1,34 @@
+<MODULE name="postproc_user">
+    <SUBMITS sub_name="compute_fields"/>
+    <TASK name="compute_fields">
+        <SUBMITS sub_name="loop_interp"/>
+        <SUBMITS sub_name="tar_images_and_send"/>
+    </TASK>
+    <LOOP name="loop_interp">
+        <SUBMITS sub_name="loop_time"/>
+        <SUBMITS sub_name="transfer_images"/>
+        <LOOP name="loop_time">
+            <SUBMITS sub_name="interpolation"/>
+            <TASK name="interpolation">
+                <SUBMITS sub_name="conversion_netcdf"/>
+                <SUBMITS sub_name="image_production"/>
+                <SUBMITS sub_name="transfer_rpn"/>
+            </TASK>
+            <TASK name="conversion_netcdf">
+                <SUBMITS sub_name="transfer_netcdf"/>
+                <SUBMITS sub_name="send_netcdf"/>
+            </TASK>
+            <TASK name="image_production"/>
+            <TASK name="transfer_rpn"/>
+            <TASK name="transfer_netcdf"/>
+            <TASK name="send_netcdf"/>
+        </LOOP>
+        <TASK name="transfer_images">
+            <DEPENDS_ON dep_name="./loop_time" status="end" type="node" local_index="loop_interp=CURRENT_INDEX" index="loop_interp=CURRENT_INDEX"/>
+        </TASK>
+    </LOOP>
+    <TASK name="tar_images_and_send">
+        <DEPENDS_ON dep_name="./loop_interp" type="node" status="end" />
+    </TASK>
+</MODULE>
+

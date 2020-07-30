@@ -1,0 +1,18 @@
+<MODULE name="gem_nemo">
+    <SUBMITS sub_name="prep_gem_nemo"/>
+    <TASK name="prep_gem_nemo">
+        <SUBMITS sub_name="gem4nemo"/>
+        <SUBMITS sub_name="ocean"/>
+    </TASK>
+    <MODULE name="gem4nemo"/>
+    <FAMILY name="ocean">
+        <SUBMITS sub_name="gem_nemo_control" type="user"/>
+        <SUBMITS sub_name="nemo"/>
+        <NPASS_TASK name="gem_nemo_control">
+            <SUBMITS sub_name="gossip" type="user"/>
+        </NPASS_TASK>
+        <NPASS_TASK name="gossip"/>
+        <MODULE name="nemo"/>
+    </FAMILY>
+</MODULE>
+

@@ -1,22 +1,5 @@
 /* l2d2_socket.c - Network functions for server code of the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -40,6 +23,7 @@
 #include <sys/dir.h>
 #include <sys/param.h>
 #include "l2d2_socket.h" 
+#include "SeqUtil.h" 
 
 
 
@@ -47,11 +31,11 @@
 
 extern char * str2md5(const char *, int );
 
-static struct  sockaddr_in server;      /* server socket */
+static struct  sockaddr_in server;      
 static socklen_t sizeserver = sizeof(server);
 static int must_init_signal = 1;
 
-/* GetHostName */
+
 int GetHostName(char *name, size_t len) 
 {
   int junk;
@@ -108,7 +92,7 @@ char *get_Authorization( char *filename , char *username , char **m5sum )
 
      close(fd);
      
-     /* compute md5sum here */
+     
      *m5sum=str2md5(auth_buf,strlen(auth_buf));
 
      return(auth_buf);
@@ -141,7 +125,7 @@ void set_Authorization (unsigned int pid ,char * hostn , char * hip, int port , 
      rt = write(fd, buf, nc);
      rt = close(fd);
      
-     /* compute md5sum here */
+     
      *m5sum=str2md5(buf,strlen(buf));
 }
 
@@ -205,7 +189,7 @@ int get_socket_net()
      /* ignore SIGPIPE signal (i.e. do no abort but return error) */
 
      if (must_init_signal)
-       {  /* DO THIS ONLY ONCE */
+       {  
 	 
 	 signal(SIGPIPE, SIG_IGN); 
 	 must_init_signal = 0;
@@ -507,14 +491,14 @@ int do_Login( int sock , unsigned int pid , char *node, char *xpname , char *sig
     }
 
     snprintf(bLogin,sizeof(bLogin),"I %u %ld %s %s %s %s %s %s", pid, (long) fileStat.st_ino, xpname, node , signl , host, username, *m5);
-    if ( (bytes_sent=send_socket (sock , bLogin , sizeof(bLogin) , SOCK_TIMEOUT_CLIENT)) <= 0 ) { 
+    if ( (bytes_sent=send_socket (sock , bLogin , sizeof(bLogin) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) { 
                 fprintf(stderr,"LOGIN FAILED (Timeout sending) with %s Maestro server from host=%s node=%s signal=%s\n",username, host, node, signl );
     	        return(1);
     } 
    
     
 	    
-    if ( (bytes_read=recv_socket (sock , buffer , sizeof(buffer) , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+    if ( (bytes_read=recv_socket (sock , buffer , sizeof(buffer) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
                 fprintf(stderr,"LOGIN FAILED (Timeout receiving) with %s Maestro server from host=%s node=%s signal=%s\n",username, host, node, signl );
                 return(1);
     }

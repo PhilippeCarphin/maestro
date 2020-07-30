@@ -1,0 +1,4 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+  <BATCH catchup="1" cpu="1" machine="${FRONTEND}" memory="4G" queue="${FRONTEND_DEFAULT_Q}" soumet_args="-tmpfs ${TMPFSSIZE}" wallclock="40"/>
+  <DEPENDS_ON dep_name="${ASSIM_TRANSFER_DEPEND}" exp="${ASSIM_EXP}" hour="-6" status="end" type="node"/>
+</NODE_RESOURCES>

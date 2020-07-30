@@ -1,0 +1,12 @@
+<MODULE name="derisfc">
+    <SUBMITS sub_name="surface_bufr"/>
+    <SUBMITS sub_name="surface_ascii"/>
+    <TASK name="surface_bufr">
+        <SUBMITS sub_name="surface_merge"/>
+    </TASK>
+    <TASK name="surface_ascii"/>
+    <TASK name="surface_merge">
+        <DEPENDS_ON dep_name="./surface_ascii" status="end" type="node"/>
+    </TASK>
+</MODULE>
+

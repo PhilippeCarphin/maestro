@@ -1,0 +1,4 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+  <BATCH catchup="1" cpu="1x1x1" cpu_multiplier="2" machine="${FRONTEND}" memory="5G" mpi="1" queue="${FRONTEND_DEFAULT_Q}" wallclock="15"/>
+</NODE_RESOURCES>

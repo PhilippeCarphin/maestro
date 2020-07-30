@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="1G" mpi="0" wallclock="10" catchup="2" cpu="1"/>
+  <ABORT_ACTION name="rerun"/>
+</NODE_RESOURCES>

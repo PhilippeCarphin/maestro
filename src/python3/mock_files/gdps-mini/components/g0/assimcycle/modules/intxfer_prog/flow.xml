@@ -1,0 +1,12 @@
+<MODULE name="intxfer_prog">
+  <SUBMITS sub_name="loop_prog"/>
+  <LOOP name="loop_prog">
+    <SUBMITS sub_name="interp_progeta"/>
+    <SUBMITS sub_name="interp_progpres"/>
+    <SUBMITS sub_name="interp_progmas"/>
+    <TASK name="interp_progeta"/>
+    <TASK name="interp_progmas"/>
+    <TASK name="interp_progpres"/>
+  </LOOP>
+</MODULE>
+

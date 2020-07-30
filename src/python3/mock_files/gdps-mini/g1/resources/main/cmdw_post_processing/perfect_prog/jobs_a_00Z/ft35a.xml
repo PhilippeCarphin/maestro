@@ -1,0 +1,20 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="1G" mpi="0" wallclock="10" catchup="4" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/ft123" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/jobs_a_00Z/ft35a" hour="-24" index="jobs_a_00Z=00" status="end" type="node"/>
+
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=144" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=132" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=120" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=108" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=96" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=84" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=72" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progpres" index="loop_prog=60" status="end" type="node" local_index="jobs_a_00Z=00" exp="${CMDW_FULL_G1_EXP}"/>
+
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/sfmbc" index="perfect_prog=18" status="end" type="node" exp="${CMDW_POST_PROC_G6_EXP}" hour="-6"/>
+
+  <!-- regional -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/observations/synop" status="end" type="node" exp="${CMDW_POST_PROC_R1_EXP}" />
+
+</NODE_RESOURCES>

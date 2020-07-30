@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+    <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="4G" wallclock="${NEMO_CPUTIME}" catchup="1" />
+    <DEPENDS_ON local_index="gem_nemo_control=000" dep_name="../gem4nemo/StageIN" status="end" type="node" />
+</NODE_RESOURCES>

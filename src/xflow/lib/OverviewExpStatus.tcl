@@ -32,7 +32,7 @@ proc OverviewExpStatus_getStartRelativeClockValue { ref_start_time ref_end_time 
 proc OverviewExpStatus_setLastStatusInfo { exp_path datestamp status date time } {
    # start synchronizing this block, get an exclusive lock
 
-   # puts "OverviewExpStatus_setLastStatusInfo ${exp_path} ${datestamp} ${status} ${date} ${time}"
+   
    # if the status is beginx and the suite already has a begin value... I don't
    # store the begin time.. this means that it is a ripple effect and I don't want
    # the overview box to be moved to the new time...
@@ -116,16 +116,16 @@ proc OverviewExpMsgCenter_gettotalInfo { key } {
 }
 proc OverviewExpStatus_setStatusInfo { _exp_path _datestamp _status _status_info  } {
    global datestamps_${_exp_path}
-   # puts "in OverviewExpStatus_setStatusInfo $_exp_path $_datestamp status:$_status statusinfo:$_status_info"
+   
    if { ![info exists datestamps_${_exp_path}] } {
       array set datestamps_${_exp_path} {}
    }
-   # array set datestamps [SharedData_getExpData ${_exp_path} datestamps]
+   
    
    if { [info exists datestamps_${_exp_path}(${_datestamp})] } {
       set statusList [set datestamps_${_exp_path}(${_datestamp})]
       set index [lsearch ${statusList} ${_status}]
-      #puts "OverviewExpStatus_setStatusInfo index:$index"
+      
       if { ${_status} == "last" } {
          if { ${index} == -1 } {
             lappend statusList ${_status} "${_status_info}"
@@ -145,17 +145,17 @@ proc OverviewExpStatus_setStatusInfo { _exp_path _datestamp _status _status_info
       set statusList [list ${_status} "${_status_info}"]
    }
    set datestamps_${_exp_path}(${_datestamp}) ${statusList}
-   # SharedData_setExpData ${_exp_path} datestamps "[array get datestamps]"
+   
 
 }
 
 proc OverviewExpStatus_getStatusInfo { _exp_path _datestamp _status } {
    global datestamps_${_exp_path}
    set value ""
-   # array set datestamps [SharedData_getExpData ${_exp_path} datestamps]
+   
    if { [info exists datestamps_${_exp_path}(${_datestamp})] } {
       set statusList [set datestamps_${_exp_path}(${_datestamp})]
-      # set statusList $datestamps(${_datestamp})
+      
       set index [lsearch ${statusList} ${_status}]
       if { ${index} != -1 } {
          set valueIndex [incr index]
@@ -193,10 +193,10 @@ proc OverviewExpStatus_printStatusDatestamp { _exp_path {_datestamp ""} } {
    puts "-------------------------------------------"
    puts "${_exp_path}"
    puts "-------------------------------------------"
-   #array set datestamps [SharedData_getExpData ${_exp_path} datestamps]
+   
    set datestamps [OverviewExpStatus_getDatestamps ${_exp_path}]
    foreach datestamp ${datestamps} {
-      # set statusList $datestamps(${datestamp})
+      
       set statusList [set datestamps_${_exp_path}(${_datestamp})]
       puts "datestamp:${datestamp} statuses:${statusList}"
    }

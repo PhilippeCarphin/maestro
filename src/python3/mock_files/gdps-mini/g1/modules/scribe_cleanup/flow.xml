@@ -1,0 +1,5 @@
+<MODULE name="scribe_cleanup">
+    <SUBMITS sub_name="tar_and_clean"/>
+    <TASK name="tar_and_clean"/>
+</MODULE>
+

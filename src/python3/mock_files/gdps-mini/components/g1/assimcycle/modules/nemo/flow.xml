@@ -1,0 +1,16 @@
+<MODULE name="nemo">
+    <SUBMITS sub_name="nemo_run" type="user"/>
+    <SUBMITS sub_name="loop_nemo_run"/>
+    <NPASS_TASK name="nemo_run">
+        <SUBMITS sub_name="nemo_xfer" type="user"/>
+    </NPASS_TASK>
+    <NPASS_TASK name="nemo_xfer"/>
+    <LOOP name="loop_nemo_run">
+        <SUBMITS sub_name="nemo_prep"/>
+        <TASK name="nemo_prep">
+            <SUBMITS sub_name="nemo_cycle" type="user"/>
+        </TASK>
+        <NPASS_TASK name="nemo_cycle"/>
+    </LOOP>
+</MODULE>
+

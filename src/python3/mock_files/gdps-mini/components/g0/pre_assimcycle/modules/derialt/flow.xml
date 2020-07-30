@@ -1,0 +1,49 @@
+<MODULE name="derialt">
+    <SUBMITS sub_name="derivate_sw"/>
+    <SUBMITS sub_name="derivate_sc"/>
+    <SUBMITS sub_name="submit_families"/>
+    <SUBMITS sub_name="derivate_ai"/>
+    <SUBMITS sub_name="derivate_sf_a"/>
+    <SUBMITS sub_name="derivate_sf_b"/>
+    <SUBMITS sub_name="derivate_sf2_a"/>
+    <SUBMITS sub_name="derivate_sf2_b"/>
+    <SUBMITS sub_name="derivate_ua_a"/>
+    <SUBMITS sub_name="derivate_ua_b"/>
+    <SUBMITS sub_name="derivate_pr"/>
+    <SUBMITS sub_name="derivate_ro"/>
+    <TASK name="derivate_sw"/>
+    <TASK name="derivate_sc"/>
+    <TASK name="submit_families">
+        <SUBMITS sub_name="derivate" type="user"/>
+    </TASK>
+    <NPASS_TASK name="derivate"/>
+    <TASK name="derivate_ai"/>
+    <TASK name="derivate_sf_a">
+        <SUBMITS sub_name="merge_sf"/>
+    </TASK>
+    <TASK name="derivate_sf2_a">
+        <SUBMITS sub_name="merge_sf2"/>
+    </TASK>
+    <TASK name="derivate_sf_b"/>
+    <TASK name="derivate_sf2_b"/>
+    <TASK name="derivate_ua_a">
+        <SUBMITS sub_name="merge_ua"/>
+    </TASK>
+    <TASK name="derivate_ua_b"/>
+    <TASK name="derivate_pr"/>
+    <TASK name="derivate_ro"/>
+    <TASK name="merge_ua">
+      <DEPENDS_ON dep_name="./derivate_ua_b" status="end" type="node"/>
+    </TASK>
+    <TASK name="merge_sf">
+      <DEPENDS_ON dep_name="./derivate_sf_b" status="end" type="node"/>
+      <SUBMITS sub_name="derivate_gp"/>
+    </TASK>
+    <TASK name="derivate_gp"/>
+    <TASK name="merge_sf2">
+      <DEPENDS_ON dep_name="./derivate_sf2_b" status="end" type="node"/>
+      <SUBMITS sub_name="derivate_gp2"/>
+    </TASK>
+    <TASK name="derivate_gp2"/>
+</MODULE>
+

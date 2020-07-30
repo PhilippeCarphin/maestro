@@ -1,0 +1,44 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="1G" mpi="0" wallclock="10" catchup="4" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+
+  <!-- edi06 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/loop_on_hours/winter_severe_weather" index="loop_on_hours=6" local_index="loop_edigraf=6" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=6" local_index="loop_edigraf=6" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+  <!-- edi12 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/loop_on_hours/winter_severe_weather" index="loop_on_hours=12" local_index="loop_edigraf=12" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=12" local_index="loop_edigraf=12" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+  <!-- edi18 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/loop_on_hours/winter_severe_weather" index="loop_on_hours=18" local_index="loop_edigraf=18" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=18" local_index="loop_edigraf=18" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+  <!-- edi24 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/loop_on_hours/winter_severe_weather" index="loop_on_hours=24" local_index="loop_edigraf=24" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=24" local_index="loop_edigraf=24" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+  <!-- edi30 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/loop_on_hours/winter_severe_weather" index="loop_on_hours=30" local_index="loop_edigraf=30" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=30" local_index="loop_edigraf=30" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+  <!-- edi36 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/loop_on_hours/winter_severe_weather" index="loop_on_hours=36" local_index="loop_edigraf=36" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=36" local_index="loop_edigraf=36" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+  <!-- edi42 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/loop_on_hours/winter_severe_weather" index="loop_on_hours=42" local_index="loop_edigraf=42" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=42" local_index="loop_edigraf=42" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+  <!-- edi48 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/loop_on_hours/winter_severe_weather" index="loop_on_hours=48" local_index="loop_edigraf=48" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=48" local_index="loop_edigraf=48" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+  <!-- edi54 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/loop_on_hours/winter_severe_weather" index="loop_on_hours=54" local_index="loop_edigraf=54" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=54" local_index="loop_edigraf=54" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+  <!-- edi60 -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/temps_violent_hiver/calculs/loop_on_hours/winter_severe_weather" index="loop_on_hours=60" local_index="loop_edigraf=60" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=60" local_index="loop_edigraf=60" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+
+</NODE_RESOURCES>

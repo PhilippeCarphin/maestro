@@ -1,0 +1,6 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" wallclock="10" catchup="2" cpu="1"/>
+  <DEPENDS_ON dep_name="/main/assimcycle/forecast"  status="end" type="node" exp="${PRE_ASSIM_EVAL_EXP}" hour="-6"/>
+  <!-- <DEPENDS_ON dep_name="/main/pre_assimcycle/derieval"  status="end" type="node" exp="${PRE_ASSIM_EVAL_EXP}"/> -->
+  <ABORT_ACTION name="stop"/>
+</NODE_RESOURCES>

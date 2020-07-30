@@ -1,22 +1,5 @@
 /* QueryServer.c - Basic server code the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 #include <stdlib.h>
 #include <signal.h>
@@ -78,7 +61,7 @@ int Query_L2D2_Server ( int sock , ServerActions action , const char *buf , cons
            case SVR_UNLOCK:
                             sprintf(buffer,"P %s",buf);
 	                    break;
-           case SVR_WRITE_WNF:/* note format here !!! */
+           case SVR_WRITE_WNF:
                             sprintf(buffer,"W %s",buf);
 	                    break;
            case SVR_LOG_NODE:
@@ -93,7 +76,7 @@ int Query_L2D2_Server ( int sock , ServerActions action , const char *buf , cons
                             break;
     }
 
-    if ( (bytes_sent=send_socket(sock , buffer , sizeof(buffer) , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+    if ( (bytes_sent=send_socket(sock , buffer , sizeof(buffer) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
            fprintf(stderr,"%%%%%%%%%%%% Query_L2D2_Server: socket closed at send  %%%%%%%%%%%%%%\n");
 	   fprintf(stderr, "====== Reverting to Nfs Routines ====== \n");
 	   ret_nfs=revert_nfs ( buf , action , buf2 , _seq_exp_home);
@@ -101,7 +84,7 @@ int Query_L2D2_Server ( int sock , ServerActions action , const char *buf , cons
     }
     
     memset(Rbuffer,'\0', sizeof(Rbuffer));
-    if ( (bytes_read=recv_socket (sock , Rbuffer , sizeof(Rbuffer) , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+    if ( (bytes_read=recv_socket (sock , Rbuffer , sizeof(Rbuffer) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
            fprintf(stderr,"%%%%%%%%%%%% Query_L2D2_Server: socket closed at recv   %%%%%%%%%%%%%%\n");
 	   fprintf(stderr, "====== Reverting to Nfs Routines ====== \n");
 	   ret_nfs=revert_nfs ( buf , action , buf2 , _seq_exp_home);
@@ -283,10 +266,9 @@ int OpenConnectionToMLLServer (const char * node ,const char *signal , const cha
 
 void CloseConnectionWithMLLServer ( int con ) 
 {
-      /* int ret; */
       int bytes_sent;
       
-      if ( (bytes_sent=send_socket(con , "S \0" , 3 , SOCK_TIMEOUT_CLIENT)) <= 0 ) {
+      if ( (bytes_sent=send_socket(con , "S \0" , 3 , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
            fprintf(stderr,"%%%%%%%%%%%% CloseConnectionWithMLLServer: socket closed at send %%%%%%%%%%%%%%\n");
       } else close(con);
 

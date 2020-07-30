@@ -1,0 +1,5 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="1G" wallclock="2" catchup="9" cpu="1" />
+  <DEPENDS_ON dep_name="/gdps_verif/SCORES_VS_OBSERVATIONS" status="end" type="node" />
+  <DEPENDS_ON dep_name="/gdps_verif/SCORES_VS_ANALYSIS" status="end" type="node" />
+</NODE_RESOURCES>

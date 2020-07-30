@@ -1,0 +1,3 @@
+<NODE_RESOURCES>
+  <DEPENDS_ON dep_name="/main/surface_analysis/hour" status="end" type="node" exp="${FULL_G6_EXP}" />
+</NODE_RESOURCES>

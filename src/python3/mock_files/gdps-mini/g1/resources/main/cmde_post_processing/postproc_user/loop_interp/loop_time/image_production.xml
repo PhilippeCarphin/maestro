@@ -1,0 +1,3 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+  <BATCH catchup="5" cpu="1x1x${CPU_MAX_POSTPROC_IMAGES_FOR}" machine="${FRONTEND}" memory="50G" mpi="0" queue="${FRONTEND_DEFAULT_Q}" wallclock="60"/>
+</NODE_RESOURCES>

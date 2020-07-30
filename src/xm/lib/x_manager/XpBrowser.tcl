@@ -1,22 +1,4 @@
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
+
 
 
 global _XpBrSelected
@@ -125,8 +107,8 @@ proc XpBrowser::ActivateExpParams { XpSelected } {
 		       set _ExpCatchup $cth
        } else {
 		       set _ExpCatchup ""
-		       #$XpBrowser::Eexpcatch configure -state disabled
-		       #$XpBrowser::BSetCatchup configure -state disabled
+		
+		
        }
 	       
        foreach but {Bmflow Bxflow Bimport Baudit} {
@@ -209,8 +191,8 @@ proc XpBrowser::create { frm } {
       
       set BSetCatchup [button $frmother.bscatch -text "Set" -command {XpBrowser::SetCatchup $::_XpBrSelected $::_ExpCatchup}]
 
-      #set Bdkfont  [button $frmother.dkfont -relief flat -image $XPManager::img_font -command {DkfFont_init}]
-      #tooltip::tooltip $frmother.dkfont  $Dialogs::XpB_dkfont
+
+
 
       # -- get frame for Control buttons
       set XpBfrmCb [frame $XpBfrm.cbutt  -border 2 -relief flat]
@@ -241,7 +223,7 @@ proc XpBrowser::create { frm } {
       # -- Set Default tabs to show to any user  
       set ListTabToShow {}
       if { ! [regexp "afsiops|afsisio|afsipar" $MUSER] } {
-	      #set ListTabToShow {*}$Preferences::ListUsrTabs
+	
 	      set ListTabToShow $Preferences::ListUsrTabs
               lappend ListTabToShow {*}[list "$Dialogs::XpB_OpExp" "$Dialogs::XpB_PaExp" "$Dialogs::XpB_PoExp"]
       } else {
@@ -287,7 +269,7 @@ proc XpBrowser::create { frm } {
 
                 # -- Keep a trace
 		set TreesWidgets($panel)  $pxt
-                #TreeUtil::TLcreate $pane $ToolB $panel $pxt
+
 	        incr i
                 
 		# -- geomtry propagate
@@ -309,7 +291,7 @@ proc XpBrowser::create { frm } {
       pack $frmother.lcatch -side left -padx 4
       pack $Eexpcatch       -side left -padx 4
       pack $BSetCatchup     -side left -padx 4
-      #pack $Bdkfont         -side left -padx 4
+
 
       grid $frmother -row 1 -column 1 -pady 1 -sticky w
 
@@ -381,9 +363,9 @@ proc XpBrowser::validateAndShowExp { sel_xp } {
          } else {
                  set ::_XpBrSelected $sel_xp
 		 
-	         #foreach but {Bmflow Bxflow Bimport Baudit} {
-	         #     eval \$XpBrowser::$but configure -state normal
-	         #}
+	
+	
+	
 		 XpBrowser::ActivateExpParams $sel_xp
          }
 }

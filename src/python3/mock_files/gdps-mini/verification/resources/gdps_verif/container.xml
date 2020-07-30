@@ -1,0 +1,3 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" wallclock="2" catchup="4" cpu="1" />
+</NODE_RESOURCES>

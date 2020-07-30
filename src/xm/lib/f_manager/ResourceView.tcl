@@ -1,22 +1,4 @@
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
+
 
 package require tablelist
 package require autoscroll
@@ -456,7 +438,7 @@ proc ResourceView_createDependsPopMenu { _tableListWidget _x _y } {
    }
    menu ${popMenu} -title "popup"
 
-   # ${popMenu} add separator
+   
    ${popMenu} add command -label  "Add New Entry" -underline 0 -state normal \
       -command [list ResourceView_addNewDepEntry ${_tableListWidget} end] 
 
@@ -560,7 +542,7 @@ proc ResourceView_createDependsWidget { _depFrame _expPath _moduleNode _flowNode
       tablelist::addBWidgetComboBox
    }
 
-   # set defaultAlign center
+   
    set defaultAlign left
    set columns [list 0 Node ${defaultAlign} \
                      0 Index ${defaultAlign} \
@@ -1190,7 +1172,7 @@ proc ResourceView_addEntryMPI { _batchFrame _row {_value ""}} {
    
    set labelW ${_batchFrame}.mpi
    set entryW ${_batchFrame}.mpi_entry
-   # ::tooltip::tooltip  ${entryW} "Check on to enable mpi job."
+   
 
    if { ! [winfo exists ${labelW}] } {
       label ${labelW} -text "Mpi:"

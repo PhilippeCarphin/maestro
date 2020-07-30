@@ -38,7 +38,7 @@ proc ThreadPool_createThread { {is_init false} } {
       source $env(SEQ_SRC)/xflow/lib/FileLogger.tcl
       source $env(SEQ_SRC)/xflow/lib/FlowXml.tcl
       source $env(SEQ_SRC)/xflow/lib/LogReader.tcl
-      # source $env(SEQ_SRC)/xflow/lib/LogMonitor.tcl
+      
       source $env(SEQ_SRC)/xflow/lib/TsvInfo.tcl
       source $env(SEQ_SRC)/xflow/lib/SharedData.tcl
       source $env(SEQ_SRC)/xflow/lib/SharedFlowNode.tcl
@@ -55,12 +55,10 @@ proc ThreadPool_createThread { {is_init false} } {
 # If all threads are busy,
 # the client as the option of waiting until a thread is available
 # or not..in such case an empty string is returned
-#
 # The wait true is mainly used at startup where we do not want
 # to overload with thread creation... instead we wait for the threads
 # to be released i.e. small log files will be processed very fast so the
 # thread will be re-used
-#
 proc ThreadPool_getThread { {wait false} } {
    global PoolId THREAD_RELEASE_EVENT
 
@@ -144,7 +142,7 @@ proc ThreadPool_showThreadStatus {} {
       puts "ThreadPool_showThreadStatus threadid:$threadid busy:$busy"
       if { ${busy} == true } {
          catch {
-            # set activeSuite [thread::send ${threadid} xflow_getActiveSuite]
+            
             puts "threadid:$threadid"
          }
       }

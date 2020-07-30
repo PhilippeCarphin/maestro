@@ -1,0 +1,14 @@
+<MODULE name="cmoi_post_processing">
+    <SUBMITS sub_name="run_hour"/>
+    <SWITCH name="run_hour" type="datestamp_hour">
+       <SWITCH_ITEM name="00">
+          <SUBMITS sub_name="update_pile"/>
+          <SUBMITS sub_name="igmac"/>
+          <MODULE name="update_pile"/>
+          <TASK name="igmac">
+             <DEPENDS_ON dep_name="./update_pile" local_index="run_hour=$((x))" index="run_hour=$((x))" status="end" type="node"/>
+          </TASK>
+       </SWITCH_ITEM>
+    </SWITCH>
+</MODULE>
+

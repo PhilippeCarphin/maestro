@@ -1,0 +1,12 @@
+<MODULE name="anl_ice">
+    <SUBMITS sub_name="arctic"/>
+    <SUBMITS sub_name="antarctic"/>
+    <SUBMITS sub_name="domains_to_global"/>
+    <MODULE name="arctic"/>
+    <MODULE name="antarctic"/>
+    <TASK name="domains_to_global">
+      <DEPENDS_ON dep_name="./arctic" status="end" type="node"/>
+      <DEPENDS_ON dep_name="./antarctic" status="end" type="node"/>
+    </TASK>
+</MODULE>
+

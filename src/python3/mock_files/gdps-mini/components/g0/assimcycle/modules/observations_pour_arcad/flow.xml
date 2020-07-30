@@ -1,0 +1,11 @@
+<MODULE name="observations_pour_arcad">
+  <SUBMITS sub_name="obs_ua"/>
+  <SUBMITS sub_name="ua"/>
+  <SUBMITS sub_name="sf"/>
+  <SUBMITS sub_name="ai"/>
+  
+  <TASK name="obs_ua"/>
+  <TASK name="ua"/>
+  <TASK name="sf"/>
+  <TASK name="ai"/>
+</MODULE>

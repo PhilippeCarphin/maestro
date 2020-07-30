@@ -11,7 +11,7 @@ SeqDepDataPtr SeqDep_newDep(void)
 
    newDep->type = NodeDependancy;
    newDep->exp_scope = IntraSuite;
-   newDep->isInScope = -1; /* Invalid value */
+   newDep->isInScope = -1; 
    newDep->node_name = NULL;
    newDep->node_path = NULL;
    newDep->exp = NULL;

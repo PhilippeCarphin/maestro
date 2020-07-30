@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+ <BATCH machine="${FRONTEND}" memory="2G" queue="${FRONTEND_DEFAULT_Q}" wallclock="30"/> 
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations" exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX" status="end" type="node" />
+</NODE_RESOURCES>
