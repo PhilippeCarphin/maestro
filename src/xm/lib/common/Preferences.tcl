@@ -1,5 +1,3 @@
-
-
 global array TreesWidgets
 global array ArrayTabsDepot
 
@@ -42,8 +40,6 @@ namespace eval Preferences {
 
 }
 
-#---------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------
 proc Preferences::PrefShow {} {
       
       variable  PreferenceWindow
@@ -59,7 +55,7 @@ proc Preferences::PrefShow {} {
       set frm [ frame $PreferenceWindow.frame -border 2 -relief flat]
       label $frm.lab -text $Dialogs::Pref_title -font "ansi 12 "
 
- Create a NoteBook
+      # -- Create a NoteBook
       set nbook [NoteBook ${frm}.nb]
 
       $nbook  insert 0 TextEditor      -text $Dialogs::NotB_TextEdit 
@@ -71,7 +67,6 @@ proc Preferences::PrefShow {} {
       foreach panel {TextEditor W3Browsers Konsoles MaestroEvents WallPaperIcons} {
               set pane [$nbook getframe $panel]
               ${panel}CreateWidget $pane 
-	
               $nbook raise $panel 
       }
 
@@ -84,8 +79,6 @@ proc Preferences::PrefShow {} {
       pack $nbook   -fill both -expand yes -padx 4 -pady 4
 }
 
-#---------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------
 proc Preferences::Lselect { W } {
     variable ExpPathsRemove
     variable CancelBU
@@ -93,8 +86,6 @@ proc Preferences::Lselect { W } {
     variable SelectionToRemove
 
     set chosen [$W curselection]
-
-
 
     # -- Set selection to remove
     set SelectionToRemove $chosen
@@ -105,8 +96,6 @@ proc Preferences::Lselect { W } {
 
 }
 
-#---------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------
 proc Preferences::ConfigDepot { } {
 
       variable listPath
@@ -129,10 +118,10 @@ proc Preferences::ConfigDepot { } {
       set frm [ frame $ConfigDepotWin.frame -border 2 -relief flat]
       label $frm.lab -text "Experiments Depot Setting" -font "ansi 12 "
      
- Get the first tab for now
+      # -- Get the first tab for now
       set Tname  [string trim [lindex $Preferences::ListUsrTabs 0] " "]
 
- Create a NoteBook
+      # -- Create a NoteBook
       set tbook [NoteBook ${frm}.nb]
       $tbook  insert 0 $Tname  -text "$Tname" 
 
@@ -141,7 +130,7 @@ proc Preferences::ConfigDepot { } {
       set t2 [TitleFrame $tpane.titf2 -text $Dialogs::NotB_ExpDepot]
       set subfP [$t2 getframe]
 
- Where to put add/remove butt.
+      # -- Where to put add/remove butt.
       set AddRemButton [frame  $tpane.addrembuttons -border 2 -relief flat]
       set ExpPathsBadd [Button $AddRemButton.butadd  -image $XPManager::img_Add -command "Preferences::AddExpToDepot $Tname"]
       set listPath     [ListBox::create $subfP.lb \
@@ -162,8 +151,8 @@ proc Preferences::ConfigDepot { } {
 				   $Preferences::SaveBU configure -state normal
 				  }]
 
- Populate list with user Exp's paths 
- get depot for notebook
+      # -- Populate list with user Exp's paths 
+      # -- get depot for notebook
       set listexp [Preferences::GetTabListDepots [string trim $Tname " "] "r"]
      
       if {[string compare $listexp "" ] != 0 } {
@@ -179,7 +168,7 @@ proc Preferences::ConfigDepot { } {
       set CancelBU   [button $CtrlButton.cancel -image $XPManager::img_Cancel -command {destroy $Preferences::ConfigDepotWin}]
       set SaveBU     [button $CtrlButton.save   -image $XPManager::img_Save   -command "Preferences::SaveDepotToConfig $Tname"]
      
-
+      # -- pack Ok/Cancel butt.
       pack $CtrlButton -side bottom
       pack $SaveBU     -side right -padx 4
       pack $OkBU       -side left -padx 4
@@ -195,7 +184,7 @@ proc Preferences::ConfigDepot { } {
       pack $frm     -fill x
       pack $tbook   -fill both -expand yes -padx 4 -pady 4
 
- first disable until changes in User Xp. list 
+      # -- first disable until changes in User Xp. list 
       $SaveBU         configure -state disabled
       $CancelBU       configure -state disabled
       $ExpPathsRemove configure -state disabled
@@ -204,9 +193,6 @@ proc Preferences::ConfigDepot { } {
       $tbook raise $Tname 
 }
 
-
-#---------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------
 proc Preferences::AddExpToDepot { nbk } {
 
     set ExpDir [tk_chooseDirectory -initialdir $::env(HOME)/ -title "Choose Experiment directory" -parent $Preferences::ConfigDepotWin]
@@ -227,10 +213,10 @@ proc Preferences::AddExpToDepot { nbk } {
 
 	            switch $ret {
 	                          0 {
-                                    Ok add it to list ,but before check if altready there
+                                         # -- Ok add it to list ,but before check if altready there
                                          set itms [$Preferences::listPath items]
 	                                 set litems [split $itms " "]
-                                    need grep maybe 
+                                         # -- need grep maybe 
 	                                 set _error 0
                                          foreach it $litems {
 	                                        if { $it == $ExpDir } {
@@ -257,7 +243,7 @@ proc Preferences::AddExpToDepot { nbk } {
 					 return
 		                    }
 				  }
-	       Empty Entry
+	            # -- Empty Entry
 		    set ExpDir ""
   
                     $Preferences::SaveBU         configure -state normal
@@ -269,8 +255,6 @@ proc Preferences::AddExpToDepot { nbk } {
    }
 }
 
-#---------------------------------------------------------------------------------
-#---------------------------------------------------------------------------------
 proc Preferences::SaveDepotToConfig { nbk } {
 
   global ArrayTabsDepot
@@ -293,7 +277,7 @@ proc Preferences::SaveDepotToConfig { nbk } {
   set listxp [Preferences::GetTabListDepots $nbk "r"]
 
   if {[string compare $listxp ""] != 0} {
-    Slash is special char. protect it  
+         # -- Slash is special char. protect it  
          regsub -all {/} $lPath {\/} lPath
 	 catch {file delete $::env(TMPDIR)/.maestrorc}
 
@@ -304,7 +288,7 @@ proc Preferences::SaveDepotToConfig { nbk } {
 	 }
 
          if {[file exist  $::env(TMPDIR)/.maestrorc]} {
-              ok cp to HOME
+                   # -- ok cp to HOME
                    catch {set retv [exec cp $::env(TMPDIR)/.maestrorc $::env(HOME)/.maestrorc]} 
          } else {
                    Dialogs::show_msgdlg "Error copying config file"  ok warning "" $Preferences::ConfigDepotWin
@@ -327,7 +311,7 @@ proc Preferences::SaveDepotToConfig { nbk } {
   # -- Update XpBrowser
   set ret [Dialogs::show_msgdlg $Dialogs::Dlg_UpdateExpBrowser  yesno question "" $Preferences::ConfigDepotWin]
   if { $ret == 0 } {
-	  Ok Update XpBrowser NOTE: For Now Always User Tree
+	       # -- Ok Update XpBrowser NOTE: For Now Always User Tree
 	       set crap_tcl [$Preferences::listPath items] 
 	       XTree::reinit $::TreesWidgets($nbk) {*}$crap_tcl
   }
@@ -376,7 +360,7 @@ proc Preferences::TextEditorCreateWidget { frm } {
       set args        [label $subfeditor.args -text "Arguments " -font 10]
 
 
- Editors
+      # -- Editors
       set txtvi       [label $subfeditor.vitxt -text "gvim (default) " -font 10]
       set radEvi      [radiobutton $subfeditor.radE1  -variable t -value "gvim" -command  {\
                         Preferences::UpdateButtons "text_viewer" "gvim" $Preferences::SaveBT $Preferences::OkBT $Preferences::CancelBT
@@ -388,7 +372,7 @@ proc Preferences::TextEditorCreateWidget { frm } {
       set txtemacs    [label $subfeditor.emacstxt -text "emacs " -font 10]
       set radEmacs    [radiobutton $subfeditor.radE2  -variable t -value "emacs" -command  {\
                         Preferences::UpdateButtons "text_viewer" "emacs" $Preferences::SaveBT $Preferences::OkBT $Preferences::CancelBT
-		   Need to disable all the others
+		        # -- Need to disable all the others
 			Preferences::DisableEditorsEntries $Preferences::subfeditor emacs xemacs kate vi oth
 			}]
 
@@ -462,13 +446,13 @@ proc Preferences::TextEditorCreateWidget { frm } {
                         -validatecommand {Preferences::ValidKey $Preferences::SaveBT Preferences::ChosenEditorArgs %d %V %P}]
 
   
-
+      # -- pack Ok/Cancel butt.
       pack $CtrlButton  -side bottom
       pack $SaveBT      -side right -padx 4
       pack $OkBT        -side left  -padx 4
       pack $CancelBT    -side left  -padx 4
 
- pack editors wid.
+      # -- pack editors wid.
       pack $teditor -fill x -pady 2 -padx 2
 
       grid $args        -row 0 -column 3 -stick w
@@ -498,7 +482,7 @@ proc Preferences::TextEditorCreateWidget { frm } {
 
 
 
- Deselect ALL entries
+      # -- Deselect ALL entries
       $EntryEvi    configure -state disabled
       $EntryEkate  configure -state disabled
       $EntryEmacs  configure -state disabled
@@ -561,10 +545,10 @@ proc Preferences::TextEditorCreateWidget { frm } {
 	           }
         }
       
- Args of Editor & chosen Editor
+      # -- Args of Editor & chosen Editor
       set Preferences::ChosenEditorArgs "$Preferences::text_viewer_args"
 
- Disable save
+      # -- Disable save
       $SaveBT   configure -state disable
       $CancelBT configure -state disabled
 }
@@ -616,19 +600,12 @@ proc Preferences::SavePref {compname sbuton cancelb okb utility args} {
 
 	      catch {file delete $::env(TMPDIR)/.maestrorc}
 
-	 Need this for paths
-	
-
-
-	
-
 	      Preferences::OpenConfigAndSetPrefs $compname $utility $word
 
-	 Update Gui
-              Preferences::ParseUserMaestrorc
-              
+	      # -- Update Gui
+              Preferences::ParseUserMaestrorc              
 
-	 disable save button
+	      # -- disable save button
               $sbuton  configure -state disabled
               $cancelb configure -state disabled
               $okb     configure -state normal
@@ -644,8 +621,6 @@ proc Preferences::W3BrowsersCreateWidget { frm } {
       variable ChosenBrowserArgs
       variable subfw3Browser
 
-
-
       set tw3Browser  [TitleFrame $frm.w3Browser  -text $Dialogs::NotB_Browsers]
 
       set subfw3Browser  [$tw3Browser getframe]
@@ -660,7 +635,7 @@ proc Preferences::W3BrowsersCreateWidget { frm } {
 
       set args      [label $subfw3Browser.args -text "Arguments" -font 10]
 
- Browser
+      # -- Browser
       set radffox   [radiobutton $subfw3Browser.radB1 -text "firefox  " -font 12 -variable tata -value firefox \
 		     -command {\
                      Preferences::UpdateButtons "browser" "firefox" $Preferences::SaveBW $Preferences::OkBW $Preferences::CancelBW
@@ -710,13 +685,13 @@ proc Preferences::W3BrowsersCreateWidget { frm } {
 		     ]
 
 
-
+      # -- pack Ok/Cancel butt.
       pack $CtrlButton -side bottom
       pack $SaveBW     -side right -padx 4
       pack $OkBW        -side left -padx 4
       pack $CancelBW    -side left -padx 4
 
- pack browser wid.
+      # -- pack browser wid.
       pack $tw3Browser -fill x -pady 2 -padx 2
 
       grid $args      -row 0 -column 1 -sticky w
@@ -729,11 +704,11 @@ proc Preferences::W3BrowsersCreateWidget { frm } {
 
       pack $frm
 
- Disable save
+      # -- Disable save
       $SaveBW  configure -state disable
       $CancelBW configure -state disabled
 
- First disable all
+      # -- First disable all
       $Entryfox configure -state disabled
       $Entrychr configure -state disabled
       $Entrykon configure -state disabled
@@ -744,7 +719,7 @@ proc Preferences::W3BrowsersCreateWidget { frm } {
       } else {
 	      set ret [Dialogs::show_msgdlg $Dialogs::Dlg_DefaultBrowser  yesno question "" $Preferences::PreferenceWindow]
 	      if { $ret == 0 } {
-	         Update
+	              # -- Update
 		      catch [exec echo "browser = firefox" >> $::env(HOME)/.maestrorc]
 		      set Preferences::browser "firefox"
                       set www "firefox"
@@ -785,7 +760,7 @@ proc Preferences::W3BrowsersCreateWidget { frm } {
 	        }
       }
       
- Args of chosen WWW Browser
+      # -- Args of chosen WWW Browser
       set Preferences::ChosenBrowserArgs "$Preferences::browser_args"
 }
 
@@ -797,7 +772,6 @@ proc Preferences::KonsolesCreateWidget { frm } {
       variable ChosenKonsol
       variable ChosenKonsolArgs
       variable subfconsole
-
 
       set tconsole [TitleFrame $frm.console -text $Dialogs::NotB_Konsole]
 
@@ -812,7 +786,7 @@ proc Preferences::KonsolesCreateWidget { frm } {
 
       set args       [label $subfconsole.args -text "Arguments" -font 10]
       
- Consoles
+      # -- Consoles
       set radCkonsol [radiobutton $subfconsole.radC1 -text "Konsole" -font 12 -variable t1 -value konsole \
 		     -command  {\
                      Preferences::UpdateButtons "default_console" "konsole" $Preferences::SaveBK $Preferences::OkBK $Preferences::CancelBK
@@ -861,13 +835,13 @@ proc Preferences::KonsolesCreateWidget { frm } {
                      -validatecommand {Preferences::ValidKey $Preferences::SaveBK Preferences::ChosenKonsolArgs %d %V %P}\
 		     ]
 
-
+      # -- pack Ok/Cancel butt.
       pack $CtrlButton -side bottom
       pack $SaveBK     -side right -padx 4
       pack $OkBK        -side left -padx 4
       pack $CancelBK    -side left -padx 4
 
- pack console
+      # -- pack console
       pack $tconsole -fill x -pady 2 -padx 2
 
       grid $args        -row 0 -column 1 -sticky w
@@ -883,7 +857,7 @@ proc Preferences::KonsolesCreateWidget { frm } {
 
       pack $frm
 
- Disable save
+      # -- Disable save
       $SaveBK  configure -state disable
       $CancelBK configure -state disabled
 
@@ -893,7 +867,7 @@ proc Preferences::KonsolesCreateWidget { frm } {
       } else {
 	      set ret [Dialogs::show_msgdlg $Dialogs::Dlg_DefaultKonsole  yesno question "" $Preferences::PreferenceWindow]
 	      if { $ret == 0 } {
-	         Update
+	              # -- Update
 		      catch [exec echo "default_console = xterm" >> $::env(HOME)/.maestrorc]
 		      set Preferences::default_console "xterm"
                       set Kon "xterm"
@@ -903,7 +877,7 @@ proc Preferences::KonsolesCreateWidget { frm } {
       }
       }
 
- disable all
+      # -- disable all
       $Entrycon  configure -state disabled
       $Entryxtr  configure -state disabled
       $Entryksys configure -state disabled
@@ -939,7 +913,7 @@ proc Preferences::KonsolesCreateWidget { frm } {
 	        }
       }
       
- Args of chosen console
+      # -- Args of chosen console
       set Preferences::ChosenKonsolArgs "$Preferences::default_console_args"
 
 }
@@ -951,7 +925,6 @@ proc Preferences::MaestroEventsCreateWidget { frm } {
       variable tt1
       variable tt2
       variable tt3
-
 
       set tevents  [TitleFrame $frm.events  -text $Dialogs::NotB_Events]
 
@@ -972,7 +945,7 @@ proc Preferences::MaestroEventsCreateWidget { frm } {
                         }
 		     }]
 
- Events
+      # -- Events
       set chkEvinfo  [checkbutton $subfevents.radEV1 -text "Show events Info" -font 12 -variable tt1 -onvalue true -offvalue false \
 		      -command {\
                      if {[string compare $Preferences::show_info_type  "$tt1"] != 0 || \
@@ -1019,24 +992,24 @@ proc Preferences::MaestroEventsCreateWidget { frm } {
 		      }]
 
 
-
+      # -- pack Ok/Cancel butt.
       pack $CtrlButton -side bottom
       pack $SaveBM     -side right -padx 4
       pack $OkBM       -side left -padx 4
       pack $CancelBM    -side left -padx 4
 
- pack events
+      # -- pack events
       pack $tevents -fill x -pady 2 -padx 2
       pack $chkEvinfo  -anchor w
       pack $chkEvabort -anchor w
       pack $chkEvent   -anchor w
       pack $frm
 
- Disable save
+      # -- Disable save
       $SaveBM   configure -state disable
       $CancelBM configure -state disabled
 
- Prefer. are defined by default if they dont existe!
+      # -- Prefer. are defined by default if they dont existe!
       if {[info exists Preferences::show_abort_type] != 0} {
                switch $Preferences::show_abort_type {
                       "true" {
@@ -1050,7 +1023,6 @@ proc Preferences::MaestroEventsCreateWidget { frm } {
 	       $chkEvabort deselect
       }
 
-
       if {[info exists Preferences::show_info_type] != 0} {
                switch $Preferences::show_info_type {
                       "true" {
@@ -1063,7 +1035,6 @@ proc Preferences::MaestroEventsCreateWidget { frm } {
       } else {
 	       $chkEvinfo deselect
       }
-
 
       if {[info exists Preferences::show_event_type] != 0} {
                switch $Preferences::show_event_type {
@@ -1098,7 +1069,7 @@ proc Preferences::WallPaperIconsCreateWidget { frm } {
       set lwal     [label $subfwall.lbimg -text $Dialogs::Pref_wallpaper   -font 8]
       set licn     [label $subfwall.lbicn -text $Dialogs::Pref_exp_icon    -font 8]
      
- This is where the default images resides
+      # -- This is where the default images resides
       set PathImages "${SEQ_MANAGER_SRC}/etc/bg_templates"
 
       set CtrlButton [frame $frm.ctrlbuttons -border 2 -relief flat]
@@ -1109,6 +1080,7 @@ proc Preferences::WallPaperIconsCreateWidget { frm } {
                      if {[string compare $Preferences::exp_icon "$icon"] != 0 } { 
 		              Preferences::SavePref "exp_icon"  $Preferences::SaveBI $Preferences::CancelBI $Preferences::OkBI $Preferences::ChosenIcon
                      }
+                     
 		     if {[string compare [file tail $Preferences::background_image] $Preferences::_WallPaper] != 0 } {
 		              if {[regexp {\/} $Preferences::ChosenWallP]} {
 		                    Preferences::SavePref "background_image"  $Preferences::SaveBI $Preferences::CancelBI \
@@ -1118,15 +1090,16 @@ proc Preferences::WallPaperIconsCreateWidget { frm } {
 				    $Preferences::OkBI $Preferences::PathImages/$Preferences::ChosenWallP
 			      }
                      }
+                     
                      if {[string compare $Preferences::flow_geometry "$kw1"] != 0 } {
 		              Preferences::SavePref "flow_geometry"  $Preferences::SaveBI $Preferences::CancelBI \
 			      $Preferences::OkBI $Preferences::ChosenGeometry
 		     }
                    }]
 
- Pref. are normally set at begining
+      # -- Pref. are normally set at begining
       if {[info exists Preferences::background_image] != 0} {
-           Check if cmoi images
+                # -- Check if cmoi images
 	        set bfile [file tail $Preferences::background_image]
 
 		if {[lsearch -exact $Preferences::ListWallPapers $bfile] == -1 } {
@@ -1267,9 +1240,9 @@ proc Preferences::WallPaperIconsCreateWidget { frm } {
 		      } 
 		     
 		      set bkg_gif [tk_getOpenFile  -initialdir $::env(HOME) -filetypes $types -parent $Preferences::PreferenceWindow]
-		 Do check the min size of the gif
+		      # -- Do check the min size of the gif
 
-		 strip path if Depot images
+		      # -- strip path if Depot images
 		      if {[regexp {bg_templates} $bkg_gif]} {
 		                 set bkg_gif [file tail $bkg_gif]
 		      }
@@ -1291,16 +1264,13 @@ proc Preferences::WallPaperIconsCreateWidget { frm } {
 	   }]
 
 
-
+      # -- pack Ok/Cancel butt.
       pack $CtrlButton  -side bottom
       pack $SaveBI      -side right -padx 4
       pack $OkBI        -side left  -padx 4
       pack $CancelBI    -side left  -padx 4
-
-
- pack 
+      
       pack $twall -fill x -pady 2 -padx 2
-     
 
       grid $lwin      -row 0 -column 0 -sticky w
       grid $Entrywin  -row 0 -column 1 -sticky w -pady 4
@@ -1322,7 +1292,7 @@ proc Preferences::WallPaperIconsCreateWidget { frm } {
       pack $frm
 
 
- Preferences are normally set by def. at begining
+      # -- Preferences are normally set by def. at begining
       if {[info exists Preferences::flow_geometry] != 0 } {
               $Entrywin delete 0  end
               $Entrywin insert end $Preferences::flow_geometry
@@ -1354,7 +1324,7 @@ proc Preferences::WallPaperIconsCreateWidget { frm } {
 	    $rn4 deselect
       }
 
- Disable save cancel
+      # -- Disable save cancel
       $SaveBI   configure -state disabled
       $CancelBI configure -state disabled
 
@@ -1411,22 +1381,22 @@ proc Preferences::DisableEditorsEntries { frame EntryToEnable args } {
 # -- path must not contain /  or ////, /././. , ... etc  --> check
 # -- We dont want to recurs to much here 
 proc Preferences::FindAndValidateExpDir { path nbk } {
-     remove blanks
+          # -- remove blanks
 	  XPManager::update_progdlg $Preferences::ConfigDepotWin "" "Finding Experiences ... "
 	  regsub -all {[ ][\t]*} $path {} path 
 	  if {[string compare $path ""] != 0} {
 
-	 try to find Exp's
+	      # -- try to find Exp's
 	      set listE [split [exec find $path/ -maxdepth 5 -type l -name EntryModule] "\n"]
               set len [llength $listE]
               if { $len == 0 } {  
 	             return 1
               }
 
-	 Check to see if this path is already in the ExpUsrRepositiry list ie:case where refrence link 
-	 are not the same but the lead to same directory
+	      # -- Check to see if this path is already in the ExpUsrRepositiry list ie:case where refrence link 
+	      # -- are not the same but the lead to same directory
 
-         get depot for notebook
+              # -- get depot for notebook
 	      set listxp [Preferences::GetTabListDepots $nbk "r"]
 
 	      if {[string compare $listxp ""] != 0} {
@@ -1512,7 +1482,7 @@ proc Preferences::ParseUserMaestrorc { } {
                                               set Preferences::ListUsrTabs [split $tabs ":"]
                                    } else {
                                               set Preferences::ListUsrTabs {"My_experiments"}
-					Put in .maestrorc file
+					      # --Put in .maestrorc file
 					      catch { [exec echo "# User can configure his tabs" >> $::env(HOME)/.maestrorc] }
 					      catch { [exec echo "navtabs=My_experiments" >> $::env(HOME)/.maestrorc] }
                                    }
@@ -1568,7 +1538,6 @@ proc Preferences::ParseUserMaestrorc { } {
 			       }
 			       if { $err == 1 } {
 		                         set Preferences::ERROR_NOT_RECOGNIZED_PREF  1
-			
 			       }
 			   }
 	   }
@@ -1668,7 +1637,7 @@ proc Preferences::GetTabListDepots { nbk type} {
 		   }
             }
       } else {
-       got notebook
+            # -- got notebook
 	    if {[info exists ArrayTabsDepot([string trim $nbk " "])] != 0 } {
                       set tab $ArrayTabsDepot([string trim $nbk " "])
                       set ldepot [split $tab ":"]
@@ -1677,7 +1646,7 @@ proc Preferences::GetTabListDepots { nbk type} {
 	    }
       }
   
- Check if depot is writable by user
+      # -- Check if depot is writable by user
       set return_this_list {}
       switch $type {
            "w" {
@@ -1772,7 +1741,7 @@ proc Preferences::set_prefs_default {} {
 	              lappend listPref "xflow_scale=1"
 	      }
 
-	 Remove any previous file
+	      # -- Remove any previous file
 	      catch {[exec rm -f $::env(TMPDIR)/prefs.default]} 
 
 	      if {[llength $listPref] != 0 } {
@@ -1797,10 +1766,10 @@ proc Preferences::OpenConfigAndSetPrefs {token value args} {
 
           catch {[exec rm -f $::env(TMPDIR)/.maestrorc*]}
 
-     concat args
+          # -- concat args
           set word [join $args " "]
 
-     work in TMPDIR
+          # -- work in TMPDIR
 	 
           set fid [open "$::env(HOME)/.maestrorc" r]
           set file_pref [read $fid]
