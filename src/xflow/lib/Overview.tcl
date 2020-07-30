@@ -2141,7 +2141,7 @@ proc Overview_redrawGrid {} {
    Overview_setCanvasScrollArea
 }
 
-# Temporary function to allow on demand redraw of grid
+# Redraw the grid and experiments, sometimes necessary
 # when the exp boxes are not properly aligned
 # see CMOI/maestro/issues/155
 #
