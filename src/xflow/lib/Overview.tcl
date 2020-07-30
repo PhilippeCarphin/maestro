@@ -2147,6 +2147,24 @@ proc Overview_redrawGrid {} {
    Overview_setCanvasScrollArea
 }
 
+# Temporary function to allow on demand redraw of grid
+# when the exp boxes are not properly aligned
+# see CMOI/maestro/issues/155
+#
+proc Overview_redrawGridAndExps {} {
+   set canvasW [Overview_getCanvas]
+   Overview_redrawGrid
+   Overview_setCurrentTime ${canvasW}
+   set displayGroups [ExpXmlReader_getGroups]
+
+   foreach displayGroup $displayGroups {
+      set expList [$displayGroup cget -exp_list]
+      foreach exp $expList {
+         Overview_redrawExp ${exp}
+      }
+   }
+}
+
 # sets the scrolll area of the overview grid
 proc Overview_setCanvasScrollArea {} {
    global graphX graphStartX
@@ -3116,6 +3134,7 @@ proc Overview_addHelpMenu { parent } {
    menubutton $menuButtonW -text Help -underline 0 -menu $menuW
    menu $menuW -tearoff 0
 
+   $menuW add command -label "Refresh Grid" -underline 0 -command "Overview_redrawGridAndExps"
    $menuW add command -label "About" -underline 0 -command "About_show ${parent}"
 
    pack $menuButtonW -side left -padx 2
