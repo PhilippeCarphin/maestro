@@ -1,26 +1,10 @@
 /* runcontrollib.c - Utility functions for logging, for the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include <ctype.h>
 #include "runcontrollib.h"
 #include "nodelogger.h"
 #include "SeqUtil.h"
@@ -77,7 +61,7 @@ void nodesubmit( const SeqNodeDataPtr node_ptr, const char *datestamp)
    memset(message,'\0',sizeof message);
    cpu = (char *) SeqUtil_cpuCalculate(node_ptr->npex,node_ptr->npey,node_ptr->omp,node_ptr->cpu_multiplier);
 
-   /* containers use TRUE_HOST for execution ... TODO check if immediate or exec or submit modes*/
+   
    if ( node_ptr->type == Task || node_ptr->type == NpassTask ) {
    sprintf(message,"Machine=%s Queue=%s CPU=%s (x%s CPU Multiplier as %s MPIxOMP) Memory=%s Wallclock Limit=%d mpi=%d Submit method:%s soumetArgs=\"%s\"",node_ptr->machine, node_ptr->queue, node_ptr->cpu, node_ptr->cpu_multiplier, cpu, node_ptr->memory, node_ptr->wallclock, node_ptr->mpi, node_ptr->submitOrigin,  node_ptr->soumetArgs);
    } else {
@@ -118,7 +102,7 @@ void nodebegin( const char *_signal, const SeqNodeDataPtr node_ptr, const char *
    
    memset(message,'\0',sizeof message);
    sprintf(message,"host=%s job_ID=%s",hostname,jobID);
-   /* nodelogger(job,"begin",message,_nodeDataPtr->expHome); */
+   
    nodelogger(node_ptr->name,_signal,node_ptr->extension,message,datestamp,node_ptr->expHome);
 }
 /****************************************************************/

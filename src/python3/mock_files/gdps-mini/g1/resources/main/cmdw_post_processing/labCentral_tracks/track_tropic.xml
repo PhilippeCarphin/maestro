@@ -1,0 +1,4 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+ <BATCH catchup="4" cpu="1" machine="${FRONTEND}" memory="200M" mpi="0" queue="${FRONTEND_DEFAULT_Q}" wallclock="10"/>
+ <DEPENDS_ON dep_name="/main/cmdw_post_processing/labCentral_tracks/loop_on_hours/tropic_inFile" index="loop_on_hours=*"  status="end" type="node" />
+</NODE_RESOURCES>

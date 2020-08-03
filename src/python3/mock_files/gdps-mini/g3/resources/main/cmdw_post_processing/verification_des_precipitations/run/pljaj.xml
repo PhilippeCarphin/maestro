@@ -1,0 +1,6 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="4G" mpi="0" wallclock="${CMDW_WALLCLOCK_DEFAULT}" catchup="5" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+  <DEPENDS_ON dep_name="/main/intxfer_r1/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=24" status="end" type="node" hour="-48" exp="${CMDW_FULL_R1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer_r1/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=48" status="end" type="node" hour="-48" exp="${CMDW_FULL_R1_EXP}"/>
+</NODE_RESOURCES>
+

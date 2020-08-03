@@ -1,0 +1,67 @@
+<NODE_RESOURCES>
+   <BATCH machine="${FRONTEND}" memory="${MEMO}" queue="${FRONTEND_DEFAULT_Q}" soumet_args="" wallclock="15" cpu="${NCPU_SD}" mpi="1"/>
+   <ABORT_ACTION name="continue"/>
+
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=6" local_index="loop_densite=1" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=6" local_index="loop_densite=2" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=6" local_index="loop_densite=3" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=6" local_index="loop_densite=4" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=6" local_index="loop_densite=5" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" /> <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=6" local_index="loop_densite=6" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=12" local_index="loop_densite=7" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=12" local_index="loop_densite=8" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=12" local_index="loop_densite=9" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=12" local_index="loop_densite=10" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=12" local_index="loop_densite=11" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=12" local_index="loop_densite=12" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=18" local_index="loop_densite=13" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=18" local_index="loop_densite=14" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=18" local_index="loop_densite=15" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=18" local_index="loop_densite=16" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=18" local_index="loop_densite=17" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=18" local_index="loop_densite=18" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=24" local_index="loop_densite=19" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=24" local_index="loop_densite=20" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=24" local_index="loop_densite=21" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=24" local_index="loop_densite=22" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=24" local_index="loop_densite=23" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=24" local_index="loop_densite=24" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=30" local_index="loop_densite=25" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=30" local_index="loop_densite=26" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=30" local_index="loop_densite=27" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=30" local_index="loop_densite=28" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=30" local_index="loop_densite=29" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=30" local_index="loop_densite=30" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=36" local_index="loop_densite=31" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=36" local_index="loop_densite=32" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=36" local_index="loop_densite=33" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=36" local_index="loop_densite=34" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=36" local_index="loop_densite=35" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=36" local_index="loop_densite=36" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=42" local_index="loop_densite=37" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=42" local_index="loop_densite=38" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=42" local_index="loop_densite=39" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=42" local_index="loop_densite=40" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=42" local_index="loop_densite=41" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=42" local_index="loop_densite=42" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=48" local_index="loop_densite=43" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=48" local_index="loop_densite=44" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=48" local_index="loop_densite=45" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=48" local_index="loop_densite=46" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=48" local_index="loop_densite=47" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=48" local_index="loop_densite=48" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=54" local_index="loop_densite=49" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=54" local_index="loop_densite=50" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=54" local_index="loop_densite=51" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=54" local_index="loop_densite=52" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=54" local_index="loop_densite=53" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+    <DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours" index="loop_on_hours=54" local_index="loop_densite=54" status="end" type="node" exp="${CMDW_FULL_GDPS_EXP}" />
+</NODE_RESOURCES>
+

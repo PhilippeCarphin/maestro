@@ -1,0 +1,8 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+  <BATCH catchup="9"/>
+  <DEPENDS_ON dep_name="/main/surface_analysis/derisfc" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/surface_analysis/sfc" status="end" type="node"/>
+<!--
+  <DEPENDS_ON dep_name="/main/surface_analysis" exp="${SFC_REFERENCE_EXP}" status="end" type="node"/>
+-->
+</NODE_RESOURCES>

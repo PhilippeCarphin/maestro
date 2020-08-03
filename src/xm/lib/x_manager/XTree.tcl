@@ -1,22 +1,4 @@
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
+
 
 
 global listExp 
@@ -35,14 +17,14 @@ namespace eval XTree {
 }
 
 
-#-----------------------------------------------------------
-#-----------------------------------------------------------
+
+
 proc XTree::create { frm nb } {
 
     set title [TitleFrame $frm.t -text $Dialogs::XpB_xpbrowser ]
     set sw    [ScrolledWindow [$title getframe].sw -relief sunken -borderwidth 2 ]
 
-    #Tree .tree -xscrollcommand {.xsb set} -yscrollcommand {.ysb set}
+
 
     set tree  [Tree $sw.tree \
                    -relief flat -borderwidth 0 -width 15 -highlightthickness 0\
@@ -66,10 +48,10 @@ proc XTree::create { frm nb } {
     return $tree
 }
 
-#-----------------------------------------------------------
-#-----------------------------------------------------------
+
+
 proc XTree::getPath {w node} {
-      # Note : only experiments have data
+
       set res ""
       while { $node != "root" } {
           set res [$w itemcget $node -text]/$res
@@ -80,8 +62,8 @@ proc XTree::getPath {w node} {
 }
 
 
-#-----------------------------------------------------------
-#-----------------------------------------------------------
+
+
 proc XTree::init { tree args } {
     global listInodes CmdList stopDirList listExp ListAllExperiments
     variable count
@@ -99,7 +81,7 @@ proc XTree::init { tree args } {
                     array unset listInodes
                     set CmdList {}
 
-                    #XTree::walkin $tree $adir "" 0 $adir root "" "" directory $i
+
                     XTree::FindDrawTree $tree $adir "" 0 $adir root "" "" directory $i
 		    set ListAllExperiments [lsort [array names listExp]]
 
@@ -112,8 +94,8 @@ proc XTree::init { tree args } {
 }
 
 
-#-----------------------------------------------------------
-#-----------------------------------------------------------
+
+
 proc XTree::reinit { tree args } {
  
           # -- Delete
@@ -123,8 +105,8 @@ proc XTree::reinit { tree args } {
           XTree::init $tree {*}$args
 }
 
-#-----------------------------------------------------------
-#-----------------------------------------------------------
+
+
 proc XTree::getdir { tree node path } {
     variable count
 
@@ -150,8 +132,8 @@ proc XTree::getdir { tree node path } {
 }
 
 
-#-----------------------------------------------------------
-#-----------------------------------------------------------
+
+
 proc XTree::moddir { idx tree node } {
 
     if { $idx && [$tree itemcget $node -drawcross] == "allways" } {
@@ -167,10 +149,10 @@ proc XTree::moddir { idx tree node } {
 }
 
 
-#-----------------------------------------------------------
-#-----------------------------------------------------------
+
+
 proc XTree::select { where num tree node } {
-   # puts "XTree::select where:${where} num:${num} tree:${tree} node:${node}"
+
     variable dblclick
 
 
@@ -195,10 +177,10 @@ proc XTree::select { where num tree node } {
 }
 
 
-#-----------------------------------------------------------
-#-----------------------------------------------------------
+
+
 proc XTree::select_node { tree node } {
-   # puts "XTree::select_node tree:${tree} node:${node}"
+
 
     $tree selection set $node
     update
@@ -214,10 +196,10 @@ proc XTree::select_node { tree node } {
 }
 
 
-#-----------------------------------------------------------
-#-----------------------------------------------------------
+
+
 proc XTree::edit { where tree node } {
-    # puts "XTree::edit where:${where} tree:${tree} node:${node}"
+
     variable dblclick
 
     if { [info exists dblclick] } {
@@ -235,10 +217,10 @@ proc XTree::edit { where tree node } {
 }
 
 
-#-----------------------------------------------------------
-#-----------------------------------------------------------
+
+
 proc XTree::expand { tree but } {
-    # puts "XTree::expand tree:${tree} but:${but}"
+
     if { [set cur [$tree selection get]] != "" } {
         if { $but == 0 } {
             $tree opentree $cur
@@ -248,8 +230,8 @@ proc XTree::expand { tree but } {
     }
 }
 
-#-----------------------------------------------------------
-#-----------------------------------------------------------
+
+
 proc XTree::lshift listVar {
     upvar 1 $listVar l
     if {![info exists l]} {
@@ -263,7 +245,7 @@ proc XTree::lshift listVar {
 }
 
 proc XTree::FindDrawTree { tree fromDir branche level listD parent CmdList suffix ftype indice } {
-    # puts "XTree::FindDrawTree tree:$tree fromDir:$fromDir branche:$branche level:$level"
+
     global listExp listInodes stopDirList
 
     set basedir [string trimright [file join [file normalize $fromDir] { }]]
@@ -304,7 +286,7 @@ proc XTree::FindDrawTree { tree fromDir branche level listD parent CmdList suffi
 	   set Ftype [file type $basedir]
            set currentNode  ${parent}.${branche} 
 	   set string ";catch { $tree insert end ${parent} ${currentNode} -text $branche -image [Bitmap::get folder] }"
-           # puts "adding $tree insert end ${parent} ${currentNode} -text $branche"
+
     }
     set parent ${currentNode}
     append CmdList $string
@@ -320,7 +302,7 @@ proc XTree::FindDrawTree { tree fromDir branche level listD parent CmdList suffi
     set dirList [lsort [glob -nocomplain -type {l d r} -path $basedir *]]
    
     foreach dname ${dirList} {
-              # puts "go deep on dname:$dname level:$level"
+
 	      set basename [file tail $dname]
 	      set Ftype [file type $dname]
 	      file stat $dname statinfo
@@ -354,7 +336,7 @@ proc XTree::FindDrawTree { tree fromDir branche level listD parent CmdList suffi
                    }
               } else {
 	        set PointingTo [ exec true_path $dname]
-	        #set PointingTo [file normalize $dname]
+	
 		# -- dont follow link pointing to files|links
 		if {[file isdirectory $PointingTo]} {
 		     file stat $PointingTo statinfo
@@ -386,7 +368,7 @@ proc XTree::FindExps {args} {
 	          set Ftype [file type $x]
                   set basename [file tail $x]
                   if {$Ftype ne "link" } {
-		           # puts "x=$x is a dir"
+		
 			   file stat $x statinfo
 			   set inode $statinfo(ino)
                            
@@ -408,7 +390,7 @@ proc XTree::FindExps {args} {
 		                  set myListInodes($inode) 1
                            }
                   } else {
-		      # puts "x=$x is a link"
+		
 		      if { [catch {set PointingTo [exec true_path $x]}] == 0 }  {
 		           if {[file isdirectory $PointingTo]} {
 		               file stat $PointingTo statinfo

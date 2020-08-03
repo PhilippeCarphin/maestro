@@ -1,23 +1,3 @@
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
-
 global array TreesWidgets
 global array ArrayTabsDepot
 
@@ -60,10 +40,6 @@ namespace eval Preferences {
 
 }
 
-#---------------------------------------------------------------------------------
-#
-#
-#---------------------------------------------------------------------------------
 proc Preferences::PrefShow {} {
       
       variable  PreferenceWindow
@@ -91,7 +67,6 @@ proc Preferences::PrefShow {} {
       foreach panel {TextEditor W3Browsers Konsoles MaestroEvents WallPaperIcons} {
               set pane [$nbook getframe $panel]
               ${panel}CreateWidget $pane 
-	      #$nbook itemconfigure $panel -createcmd  "Preferences::${panel}Create $pane $PrefWin" 
               $nbook raise $panel 
       }
 
@@ -104,10 +79,6 @@ proc Preferences::PrefShow {} {
       pack $nbook   -fill both -expand yes -padx 4 -pady 4
 }
 
-#---------------------------------------------------------------------------------
-#
-#
-#---------------------------------------------------------------------------------
 proc Preferences::Lselect { W } {
     variable ExpPathsRemove
     variable CancelBU
@@ -115,8 +86,6 @@ proc Preferences::Lselect { W } {
     variable SelectionToRemove
 
     set chosen [$W curselection]
-    #$W delete $chosen 
-    #$W itemconfigure $chosen -foreground red
 
     # -- Set selection to remove
     set SelectionToRemove $chosen
@@ -127,10 +96,6 @@ proc Preferences::Lselect { W } {
 
 }
 
-#---------------------------------------------------------------------------------
-#
-#
-#---------------------------------------------------------------------------------
 proc Preferences::ConfigDepot { } {
 
       variable listPath
@@ -228,11 +193,6 @@ proc Preferences::ConfigDepot { } {
       $tbook raise $Tname 
 }
 
-
-#---------------------------------------------------------------------------------
-#
-#
-#---------------------------------------------------------------------------------
 proc Preferences::AddExpToDepot { nbk } {
 
     set ExpDir [tk_chooseDirectory -initialdir $::env(HOME)/ -title "Choose Experiment directory" -parent $Preferences::ConfigDepotWin]
@@ -295,10 +255,6 @@ proc Preferences::AddExpToDepot { nbk } {
    }
 }
 
-#---------------------------------------------------------------------------------
-#
-#
-#---------------------------------------------------------------------------------
 proc Preferences::SaveDepotToConfig { nbk } {
 
   global ArrayTabsDepot
@@ -644,17 +600,10 @@ proc Preferences::SavePref {compname sbuton cancelb okb utility args} {
 
 	      catch {file delete $::env(TMPDIR)/.maestrorc}
 
-	      # -- Need this for paths
-	      #regsub -all {/} $utility {\/} utility
-
-              # -- What if the pref. doe not exist e in config file? existe but empty ie pref= ?
-	      # -- Have to add code
-
 	      Preferences::OpenConfigAndSetPrefs $compname $utility $word
 
 	      # -- Update Gui
-              Preferences::ParseUserMaestrorc
-              
+              Preferences::ParseUserMaestrorc              
 
 	      # -- disable save button
               $sbuton  configure -state disabled
@@ -671,8 +620,6 @@ proc Preferences::W3BrowsersCreateWidget { frm } {
       variable ChosenBrowser
       variable ChosenBrowserArgs
       variable subfw3Browser
-
-      #label $frm.lab -text "Browser Setting" -font "ansi 12 "
 
       set tw3Browser  [TitleFrame $frm.w3Browser  -text $Dialogs::NotB_Browsers]
 
@@ -826,7 +773,6 @@ proc Preferences::KonsolesCreateWidget { frm } {
       variable ChosenKonsolArgs
       variable subfconsole
 
-      #label $frm.lab -text "Console Setting" -font "ansi 12 "
       set tconsole [TitleFrame $frm.console -text $Dialogs::NotB_Konsole]
 
       set subfconsole [$tconsole getframe]
@@ -980,7 +926,6 @@ proc Preferences::MaestroEventsCreateWidget { frm } {
       variable tt2
       variable tt3
 
-      #label $frm.lab -text "Events Setting" -font "12 "
       set tevents  [TitleFrame $frm.events  -text $Dialogs::NotB_Events]
 
       set subfevents  [$tevents getframe]
@@ -992,15 +937,12 @@ proc Preferences::MaestroEventsCreateWidget { frm } {
                         if {[string compare $Preferences::show_info_type "$tt1"] != 0 } {
 		              Preferences::SavePref "show_info_type"  $Preferences::SaveBM $Preferences::CancelBM $Preferences::OkBM $tt1 
                         }
-		        #
                         if {[string compare $Preferences::show_abort_type "$tt2"] != 0 } {
 		              Preferences::SavePref "show_abort_type" $Preferences::SaveBM $Preferences::CancelBM $Preferences::OkBM $tt2 
                         }
-		        #
                         if {[string compare $Preferences::show_event_type "$tt3"] != 0 } {
 		              Preferences::SavePref "show_event_type" $Preferences::SaveBM $Preferences::CancelBM $Preferences::OkBM $tt3 
                         }
-		      #
 		     }]
 
       # -- Events
@@ -1081,7 +1023,6 @@ proc Preferences::MaestroEventsCreateWidget { frm } {
 	       $chkEvabort deselect
       }
 
-      # --
       if {[info exists Preferences::show_info_type] != 0} {
                switch $Preferences::show_info_type {
                       "true" {
@@ -1095,7 +1036,6 @@ proc Preferences::MaestroEventsCreateWidget { frm } {
 	       $chkEvinfo deselect
       }
 
-      # --
       if {[info exists Preferences::show_event_type] != 0} {
                switch $Preferences::show_event_type {
                       "true" {
@@ -1140,7 +1080,7 @@ proc Preferences::WallPaperIconsCreateWidget { frm } {
                      if {[string compare $Preferences::exp_icon "$icon"] != 0 } { 
 		              Preferences::SavePref "exp_icon"  $Preferences::SaveBI $Preferences::CancelBI $Preferences::OkBI $Preferences::ChosenIcon
                      }
-                     #
+                     
 		     if {[string compare [file tail $Preferences::background_image] $Preferences::_WallPaper] != 0 } {
 		              if {[regexp {\/} $Preferences::ChosenWallP]} {
 		                    Preferences::SavePref "background_image"  $Preferences::SaveBI $Preferences::CancelBI \
@@ -1150,7 +1090,7 @@ proc Preferences::WallPaperIconsCreateWidget { frm } {
 				    $Preferences::OkBI $Preferences::PathImages/$Preferences::ChosenWallP
 			      }
                      }
-		     #
+                     
                      if {[string compare $Preferences::flow_geometry "$kw1"] != 0 } {
 		              Preferences::SavePref "flow_geometry"  $Preferences::SaveBI $Preferences::CancelBI \
 			      $Preferences::OkBI $Preferences::ChosenGeometry
@@ -1329,11 +1269,8 @@ proc Preferences::WallPaperIconsCreateWidget { frm } {
       pack $SaveBI      -side right -padx 4
       pack $OkBI        -side left  -padx 4
       pack $CancelBI    -side left  -padx 4
-
-
-      # -- pack 
+      
       pack $twall -fill x -pady 2 -padx 2
-     
 
       grid $lwin      -row 0 -column 0 -sticky w
       grid $Entrywin  -row 0 -column 1 -sticky w -pady 4
@@ -1491,20 +1428,6 @@ proc Preferences::FindAndValidateExpDir { path nbk } {
 	  return 0
 }
 
-
-proc xBtn {w {args {}} } {
-      catch {destroy $w}
-      catch {destroy ${w}_lbl}
-      eval button $w  $args
-      pack propagate $w 0
-      pack [label ${w}_lbl -text [$w cget -text] ] -side right -in $w
-      foreach item [bind Button] {
-        bind ${w}_lbl $item [string map "%W $w" [bind Button $item]]
-      }
-     return $w
-}
-# pack [xBtn .myB -image image1 -text "Test button" -height 40 -width 80]
-
 proc Preferences::Config_table {} {
 
      # Create the font TkDefaultFont if not yet present
@@ -1615,7 +1538,6 @@ proc Preferences::ParseUserMaestrorc { } {
 			       }
 			       if { $err == 1 } {
 		                         set Preferences::ERROR_NOT_RECOGNIZED_PREF  1
-			                 #puts "You Have a non Recognize token ... $line "
 			       }
 			   }
 	   }

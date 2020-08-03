@@ -1,22 +1,5 @@
 /* Part of the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 
 #ifndef _SEQ_UTIL
@@ -112,7 +95,7 @@ char *SeqUtil_getTraceLevelString();
 int SeqUtil_sprintStatusFile(char *dst,const char * exp_home, const char *node_name, const char *datestamp, const char * extension, const char *status);
 int SeqUtil_getmappedfile(const char *filename, char ** filestart , char** fileend);
 void SeqUtil_unmapfiles(); 
-
+int SeqUtil_getEnvOrDefaultI (char* env_var, int default_value); 
 
 
 #endif

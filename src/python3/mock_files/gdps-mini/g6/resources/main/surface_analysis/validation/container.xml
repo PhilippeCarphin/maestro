@@ -1,0 +1,8 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+  <BATCH catchup="9"/>
+  <DEPENDS_ON dep_name="/main/surface_analysis/anl_ice" status="end" type="node"/>
+<!--
+  <DEPENDS_ON dep_name="/main/surface_analysis/hour" index="hour=00" status="end" type="node" valid_hour="00"/>
+-->
+  <DEPENDS_ON dep_name="/main/surface_analysis" status="end" type="node" exp="${SFC_REFERENCE_EXP}" />
+</NODE_RESOURCES>

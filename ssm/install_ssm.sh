@@ -12,6 +12,8 @@ Options:
     --reinstall           If this version is already installed, uninstall it first.
 "
 
+BASELINE_MAESTRO_DOMAIN="eccc/cmo/isst/maestro/1.6.8"
+
 set -eu
 
 # idiomatic parameter and option handling in sh
@@ -53,7 +55,15 @@ if [[ $DELETE_ALL_SSM = "true" ]]; then
     	rm -rf $INSTALLED_MAESTRO_PATH
 fi
 if [[ $REINSTALL = "true" ]]; then
-    	rm -rf $SSM_DOMAIN_PATH/*${ORDENV_PLAT}*
+	rm -rf $SSM_DOMAIN_PATH/*${ORDENV_PLAT}*
+	SSM_PACKAGES=""
+	for platform in $PLATFORMS ; do
+		SSM_PACKAGE=ssm/maestro_${VERSION}_${platform}.ssm
+		if [[ -f $SSM_PACKAGE ]]; then
+			ssm unpublish -p maestro_${VERSION}_${platform} -d $SSM_DOMAIN_PATH
+			ssm uninstall -p maestro_${VERSION}_${platform} -d $SSM_DOMAIN_PATH
+		fi
+	done
 fi
 
 # Install new
@@ -77,7 +87,6 @@ set +x
 
 echo "Installed and published: '$SSM_PACKAGES'"
 
-BASELINE_MAESTRO_DOMAIN="eccc/cmo/isst/maestro/1.5.1-rc22"
 if [[ -n $(command -v python3) ]] ; then
 		./scripts/environment-compare.py $SSM_DOMAIN_PATH $BASELINE_MAESTRO_DOMAIN
 fi
@@ -89,4 +98,4 @@ echo "To use the new SSM package:
 
 You may also want to start the mserver with the new maestro version:
 
-     . ssmuse-sh -d $SSM_DOMAIN_PATH ; mserver_check -m maestro1"
+     . ssmuse-sh -d $SSM_DOMAIN_PATH ; mserver_check -m $TRUE_HOST"

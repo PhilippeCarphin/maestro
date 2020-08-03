@@ -9,7 +9,7 @@ proc Catchup_createMainWidgets { _exp_path _topLevelW _parentW } {
    toplevel ${_topLevelW}
    wm geometry ${_topLevelW} +[winfo pointerx ${_parentW}]+[winfo pointery ${_parentW}]
 
-   # Utils_positionWindow ${_topLevelW}
+   
 
    wm title ${_topLevelW} "Maestro Catchup Settings Exp=[file tail ${_exp_path}]"
    set catchupValues { Stop 1 2 3 4 5 6 7 Normal Discretionary }
@@ -51,7 +51,7 @@ proc Catchup_applyCallback { _exp_path _catchupComboBox } {
       -message "Are you sure you want to save the experiment catchup value to '${catchupValue}'?" ]
 
    if { ${answer} == "ok" } {
-      # get int value
+      
       set catchupIntValue [Catchup_getIntValue ${catchupValue}]
 
       # save

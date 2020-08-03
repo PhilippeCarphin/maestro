@@ -1,0 +1,8 @@
+<MODULE name="uvboz_dfxuv">
+    <SUBMITS sub_name="uvboz"/>
+    <TASK name="uvboz">
+        <SUBMITS sub_name="dfxuv"/>
+    </TASK>
+    <TASK name="dfxuv"/>
+</MODULE>
+

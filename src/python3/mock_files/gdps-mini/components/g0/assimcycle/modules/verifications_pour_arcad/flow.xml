@@ -1,0 +1,10 @@
+<MODULE name="verifications_pour_arcad">
+  <SUBMITS sub_name="ua"/>
+  <SUBMITS sub_name="sf"/>
+  <SUBMITS sub_name="arch_prog"/>
+
+  <TASK name="ua"/>
+  <TASK name="sf"/>
+  <TASK name="arch_prog"/>
+
+</MODULE>

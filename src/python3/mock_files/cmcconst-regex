@@ -1,0 +1,23 @@
+# this is a test file for finding references to files at the root level in $CMCCONST
+
+# should match this:
+bob $CMCCONST/abc
+bob ${CMCCONST}/abc123
+$GRIBGEN -i $FSTFILE -o ${SNDFILE}.grib2 -g2dic $CMCCONST/grib2.dictionary_datamart
+
+
+# should not match this:
+
+
+#                To move img.1PANconsts from $CMCCONST/cmoi/... to ${SEQ_EXP_HOME}/bin/.
+#                 - Usage de la variable $CMCCONST prise de l'environnement 
+#.                       - Replace the $CMCCONST/removescript[1,2,3] methodology by
+$EDITFST -s $CMCCONST/tictac_wt1 $dir/fstd/CMC_glb_latlon.5x.5_${stamp}_P${PROG}.fstd $TMPDIR/omega2_${PROG}.std -d $TMPDIR/mark_${PROG} -i 0
+   
+# This folder contains the dictionary, grib.config and process.grib2 that were previously stored under $CMCCONST
+- Scribe constants: $CMCCONST/cmdm/scribe/version
+$EDITFST -s ${CMCCONST}/tictac_wt1 $dir/fstd/CMC_glb_latlon.5x.5_${stamp}_P${PROG}.fstd $TMPDIR/omega2_${PROG}.std -d $TMPDIR/mark_${PROG} -i 0
+
+something $CMCCONST blah blah
+bob $CMCCONST/abc/123
+bob $CMCCONST/abc/123 joe gazoo timebobalal

@@ -1,22 +1,5 @@
 /* l2d2_Util.c - Utility functions for server code of the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 
 #include <stdio.h>
@@ -32,6 +15,7 @@
 #include <pwd.h>
 #include <glob.h>
 #include <time.h>
+#include <utime.h>
 #include <string.h>
 #include <sys/stat.h>
 #include <sys/types.h>
@@ -45,6 +29,7 @@
 #include "SeqLoopsUtil.h"
 #include "SeqNameValues.h"
 #include "SeqUtil.h"
+#include "l2d2_commun.h"
 
 
 extern _l2d2server L2D2;
@@ -237,7 +222,7 @@ int globPath (char *pattern, int flags, int (*errfunc) (const char *epath, int e
 	case GLOB_NOMATCH:
                      globfree(&glob_p);
 		     return(0);
-		     break;/* not reached */
+		     break;
     }
 
     ret=glob_p.gl_pathc;
@@ -275,7 +260,7 @@ int NodeLogr (char *nodeLogerBuffer , int pid, FILE *mlog)
      int NodeLogfile;
      int bwrite, num=0,ret;
      char user[10];
-     char firsin[512],Stime[40],Etime[40];
+     char firsin[512];
      char logBuffer[1024];
 
      if ( nodeLogerBuffer == NULL ) {
@@ -289,11 +274,7 @@ int NodeLogr (char *nodeLogerBuffer , int pid, FILE *mlog)
 	     return (1);
      }
      
-     /* test existence of Exp. and datestamp  
-     if ( access(firsin,R_OK) != 0 ) {
-             fprintf(mlog,"NodeLogr: Experiment:%s do not exists\n",firsin);
-     }
-     */
+     
 
      strcat(logBuffer,"\n");
      if ((NodeLogfile = open(firsin, O_WRONLY|O_APPEND|O_CREAT, 00666)) != -1 ) {
@@ -379,9 +360,9 @@ int  writeNodeWaitedFile ( const char * string , FILE *mlog )
      
     if ( !found ) {
           snprintf(this_line, sizeof(this_line),"exp=%s node=%s datestamp=%s args=%s\n",this_exp,this_node,this_datestamp,this_loopArgs); 
-          /* fprintf( waitingFile,"%s", this_line );  */
+          
           num = fwrite(this_line ,sizeof(char) , strlen(this_line) , waitingFile); 
-	  if ( num != strlen(this_line) )  fprintf(mlog,"writeNodeWaitFile Error: written:%zu out of:%d \n",num,strlen(this_line));
+	  if ( num != strlen(this_line) )  fprintf(mlog,"writeNodeWaitFile Error: written:%zu out of:%ld \n",num,strlen(this_line));
     }
     fclose( waitingFile );
     return(0);
@@ -403,14 +384,7 @@ int writeInterUserDepFile (const char * tbuffer, FILE *mlog)
      char *tmpString;
      const char delimiter[] = "#";
      struct stat st;
-     char mode[] = "0444";
-     char wbuffer[2048];
-     char junk[2048];
-     char csize[5];
-     int n,to_read=0, total=0,received=0;
-
-     int r,i;
-     int size;
+     int r;
 
      tmpString=strdup(tbuffer); 
 
@@ -444,8 +418,6 @@ int writeInterUserDepFile (const char * tbuffer, FILE *mlog)
 	       return(1);
      }
 
-     /* in case of ocm dep. and depending on a loop the file exist already
-      * from last iteration */
      if ((fp=fopen(filename,"w")) == NULL) {
                fprintf(mlog,"maestro server cannot write to interUser dependency file:%s\n",filename );
 	       return(1);
@@ -609,7 +581,7 @@ int ParseXmlConfigFile(char *filename ,  _l2d2server *pl2d2 )
 	       sprintf(pl2d2->emailCC,"");
 	       pl2d2->maxNumOfProcess=4;
 	       pl2d2->maxClientPerProcess=50;
-	       pl2d2->pollfreq=30;       /* sec */
+	       pl2d2->pollfreq=30; /* sec */
 	       pl2d2->dependencyTimeOut=24; /* hours */
                pl2d2->dzone=0;
                fprintf(stderr,"Setting Defaults for maxNumOfProcess:%d maxClientPerProcess:%d\n",pl2d2->maxNumOfProcess,pl2d2->maxClientPerProcess);
@@ -624,7 +596,7 @@ int ParseXmlConfigFile(char *filename ,  _l2d2server *pl2d2 )
 
       node_t *root = roxml_load_buf(buffer);
       node_t *item = roxml_get_chld(root,NULL,0);
-      char *r_txt  = roxml_get_name(item,bf,sizeof(bf));
+      roxml_get_name(item,bf,sizeof(bf));
 
       if ( strcmp(bf,"mserver") == 0 ) {
              node_t *log_n = roxml_get_chld(item,"log",0);
@@ -876,14 +848,12 @@ struct _depParameters * ParseXmlDepFile(char *filename , FILE * dmlog )
 {
 
       FILE *doc=NULL;
-      node_t *dep, *name, *inode, *lock , *sub;
       struct _depParameters *listParam=NULL;
       char bf[256];
-      char bfl[1024];
       char buffer[2048];
       char tmpbf[2048];
       char *c;
-      int size,i;
+      int size;
 
       memset(bf, '\0' , sizeof(bf));
       memset(buffer, '\0' , sizeof(buffer));
@@ -902,7 +872,7 @@ struct _depParameters * ParseXmlDepFile(char *filename , FILE * dmlog )
 
       node_t *root = roxml_load_buf(buffer);
       node_t *item = roxml_get_chld(root,NULL,0);
-      char *r_txt  = roxml_get_name(item,bf,sizeof(bf));
+      roxml_get_name(item,bf,sizeof(bf));
 
       node_t *type = roxml_get_attr(item, "type",0);
       c=roxml_get_content(type,bf,sizeof(bf),&size);
@@ -1200,9 +1170,9 @@ int SendFile (const char * filename , int sock, FILE *mlog )
  */
 int lock ( char *md5Token , _l2d2server L2D2 , char *xpn , char *node , FILE *mlog ) 
 {
-   int i, ret;
-   char *base,*leaf;
-   char src[1024],dest[1024],Ltime[25];
+   int ret;
+   char src[1024];
+   char dest[1024];
    struct stat st;
    time_t now;
    double diff_t=0.0;
@@ -1278,7 +1248,7 @@ int sendmail(const char *to, const char *from, const char *cc , const char *subj
             pclose(mailpipe);
             retval = 0;
      } else {
-             /* freopen(stderr, "w+", stderr); */
+             
               fprintf(mlog,"Failed to invoke sendmail\n"); 
      }
 
@@ -1320,7 +1290,7 @@ dpnode *getDependencyFiles(char *DDep, char *xp ,FILE *fp, const char *deptype)
                         /* use inode */
 			if ( strcmp(deptype,"depender") == 0 ) {
                             /*This xp is the depender,  check on which xp this experiment depend  */
-			    /* insert list_ptr, depender xp, depender node, dependee xp name, dependee node, depender date, dependee date, depender loop args, dependee loop ars, file, link */
+			    
                             if ( strcmp(xp,"all") == 0 ) {
                                      ret=insert(&PRT_listdep, xp, depXp->xpd_snode, depXp->xpd_name, depXp->xpd_node, depXp->xpd_sxpdate, depXp->xpd_xpdate, depXp->xpd_slargs, depXp->xpd_largs, depXp->xpd_key, *p, linkname);
                             } else {
@@ -1331,7 +1301,7 @@ dpnode *getDependencyFiles(char *DDep, char *xp ,FILE *fp, const char *deptype)
                             }
 			} else {
                             /* This xp is the dependee, check which experiment depends on this xp */
-			    /* insert list_ptr, dependee xp, depender node, dependee xp name, dependee node, depender date, dependee date, depender loop args, dependee loop ars, file, link */
+			    
                             this_inode=get_Inode(depXp->xpd_name);
                             if ( this_inode == Inode  ) { 
                                       ret=insert(&PRT_listdep, xp, depXp->xpd_snode, depXp->xpd_name, depXp->xpd_node, depXp->xpd_sxpdate, depXp->xpd_xpdate, depXp->xpd_slargs, depXp->xpd_largs, depXp->xpd_key, *p, linkname);
@@ -1348,7 +1318,7 @@ dpnode *getDependencyFiles(char *DDep, char *xp ,FILE *fp, const char *deptype)
 int globerr(const char *path, int eerrno)
 {
     fprintf(stderr, "%s: %s\n", path, strerror(eerrno));
-    return 0; /* let glob() keep going */
+    return 0; 
 }
 /*
 l2d2_Util_isNodeXState 

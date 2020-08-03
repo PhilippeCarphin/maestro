@@ -1,22 +1,4 @@
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
+
 
 
 global stdin stdout
@@ -120,12 +102,12 @@ proc Import::ImportExp { exp } {
 		      -bg #FFFFFF \
 		      -helptext "Total Size of constants to import "]
 
-      #  -modifycmd {compo .a } --> proc compo {w} { puts "Your Favourite Composer is [$w get]"; destroy .a}
+
 
       set XpBrBut [Button $subf1.but1 -text "..." \
                  -image $XPManager::img_XpSel \
                  -command {
-		      #set xp [XpSelector::selectXp]
+		
 		      set xp [tk_chooseDirectory -initialdir $env(HOME)/ -title "Choose a directory" -parent $Import::ImportW]
 		      if {$xp ne ""} {
 		            # use nativename to resolve tilde expansion
@@ -207,9 +189,9 @@ proc Import::ImportExp { exp } {
       $ImportCte deselect
 
       # -- disable Exp name if not an experiment
-      #if {[string compare $Import::_importname ""] == 0} {
-      #         $NewExpName configure -state disabled
-      #}
+
+
+
 }
 proc Import::NextButton { } {
 
@@ -242,9 +224,9 @@ proc Import::NextButton { } {
 
       # Take a detour through the ExpDirectoriesConfig dialog
       NewExp::ExpDirectoriesConfig $Import::ImportW path name entrymod true false $Import::_selected
-      # ^^^^^^^^^^^^^^^^^^^^^^^^^ This function will call ImportNext because ^^^ is false
-      # -- ok Execute Import
-      # Import::ImportNext $Import::ImportW $Import::_importname $Import::_selected $Import::Destination $Import::_ImportGit $Import::_ImportCte
+
+
+
 }
 
 
@@ -267,28 +249,12 @@ proc Import::GetConstantsSize { selected } {
 	        set Import::_Importsize 0 
 	}
  } else {
-        # -- this code has to be reviewed!!
-        if { 1 == 2 } {
-	    set hubs [exec  find $selected/ \( -type d -o -type l \) -name hub ]
-	    set listhub [split $hubs "\n"]
-	    set sum 0
-	    foreach hb $listhub {
-	               if {[file isdirectory $hb/constants] } {
-                             set size [exec du -ms $hb/constants/ | tr \011 \040]
-	                     set vsize [split $size " "]
-			     puts "vsize=$vsize"
-			     set sum [ expr [lindex $vsize 0]  + "$sum" ]; 
-                       }
-	    }
-	     set Import::_Importsize $sum
-        }
-	# -- For now issue a dialog
 	Dialogs::show_msgdlg "For Now the size is not avaliable but you can\nalways en(dis)able the import of constant files" ok warning "" $Import::ImportW
  }
 }
 
 proc Import::UpdateIMportWidget { wid1 wid2 } {
-#    -modifycmd "Import::UpdateExpName $subf1.list
+
 
       Import::UpdateExpName $wid1.list
       $wid2.radcte deselect
@@ -478,7 +444,7 @@ proc Import::UpdateExpName { widgt } {
 }
 
 proc Import::CheckName { widgt } {
-     # set Import::_importname after checking
+
      set Name [$widgt get]
      
      # -- validated by the Enter command
@@ -516,8 +482,6 @@ proc Import::ExecImport {win newname srcexp dest git cte mklinks} {
       set WinInfoWidget [text $frm.txt -xscrollcommand "$frm.xscroll set" -yscrollcommand "$frm.yscroll set"  \
                          -width 80 -height 30 -bg #FFFFFF -font 12 -wrap word]
       
-      #scrollbar $frm.xscroll  -command "$frm.txt xview"
-      #scrollbar $frm.yscroll  -command "$frm.txt yview"
       ${scrolledW} setwidget ${WinInfoWidget}
 
       set CancelB  [button $frm.cancel -text "Quit" -bg gray -command {destroy $Import::ExeImport}]
@@ -526,8 +490,8 @@ proc Import::ExecImport {win newname srcexp dest git cte mklinks} {
       pack  $CancelB -padx 5 -pady 5
       pack $frm -fill both -expand true 
 
-      #grid $frm.txt $frm.yscroll -sticky news
-      #grid $CancelB -sticky w
+
+
       
       $WinInfoWidget insert end "New Name=$newname \n"
       $WinInfoWidget insert end "Source=$srcexp \n"
@@ -597,10 +561,10 @@ proc Import::GetImportScriptOutputs {fid Winfo win} {
 			 flush $fid
 		} elseif {[regexp {(error|ERROR)} $line]} {
 		         set Import::ERROR 1
-			 #$Winfo tag configure $line  -foreground red
+			
 		} elseif {[regexp {Done importing} $line]} {
 		         set Import::SUCCES 1
-			 #$Winfo tag configure $line  -foreground green
+			
 		} elseif {[regexp {Import[ +]Cancelled} $line]} {
 		         close $fid
 			 return

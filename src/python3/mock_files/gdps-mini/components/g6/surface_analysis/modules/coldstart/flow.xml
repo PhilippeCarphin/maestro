@@ -1,0 +1,9 @@
+<MODULE name="coldstart">
+  <SUBMITS sub_name="getData"/>
+
+  <TASK name="getData">
+    <SUBMITS sub_name="start_cycle"/>
+  </TASK>
+
+  <TASK name="start_cycle"/>
+</MODULE>

@@ -1,0 +1,40 @@
+{
+    "_schema": "http://json-schema.org/draft-04/schema#",
+    "properties": {
+        "flow_children_node_paths": {
+            "type": "array"
+        },
+        "flow_branch": {
+            "type": "string"
+        },
+        "flow_path": {
+            "type": "string"
+        },
+        "module_name": {
+            "type": "string"
+        },
+        "module_path_inner": {
+            "type": "string"
+        },
+        "submits_children_node_paths": {
+            "type": "array"
+        },
+        "switch_type": {
+            "type": "string"
+        },
+        "type": {
+            "type": "string"
+        }
+    },
+    "required": [
+        "flow_children_node_paths",
+        "flow_branch",
+        "flow_path",
+        "module_name",
+        "module_path_inner",
+        "submits_children_node_paths",
+        "type"
+    ],
+    "type": "object",
+    "additionalProperties": false
+}

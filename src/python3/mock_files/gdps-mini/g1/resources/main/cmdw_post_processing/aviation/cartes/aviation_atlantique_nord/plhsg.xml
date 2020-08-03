@@ -1,0 +1,7 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="1G" mpi="0" wallclock="5" catchup="4" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+
+  <!-- On depends des progpres et progeta-->
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=18" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" index="loop_prog=24" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+</NODE_RESOURCES>

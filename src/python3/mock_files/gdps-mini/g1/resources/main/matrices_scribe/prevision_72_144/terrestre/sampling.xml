@@ -1,0 +1,17 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+  <BATCH catchup="4" cpu="24" machine="${FRONTEND}" memory="8G" mpi="0" queue="${FRONTEND_DEFAULT_Q}" wallclock="20"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=72" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=78" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=84" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=90" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=96" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=102" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=108" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=114" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=120" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=126" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=132" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=138" status="end" type="node"/>
+  <DEPENDS_ON dep_name="${SCRIBE_GDPS_DEP}" exp="${SCRIBE_GDPS_EXP}" index="loop_prog=144" status="end" type="node"/>
+</NODE_RESOURCES>

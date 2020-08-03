@@ -1,0 +1,11 @@
+<MODULE name="evalalt">
+  <SUBMITS sub_name="envar"/>
+  <SUBMITS sub_name="post_envar"/>
+
+  <MODULE name="envar"/>
+
+  <TASK name="post_envar">
+    <DEPENDS_ON dep_name="./envar" status="end" type="node"/>
+  </TASK>
+
+</MODULE>

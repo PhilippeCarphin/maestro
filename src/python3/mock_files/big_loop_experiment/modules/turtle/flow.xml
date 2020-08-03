@@ -1,0 +1,8 @@
+<MODULE name="turtle">
+    <SUBMITS sub_name="BigLoop"/>
+    <LOOP name="BigLoop">
+        <SUBMITS sub_name="loopTask"/>
+        <TASK name="loopTask"/>
+    </LOOP>
+</MODULE>
+

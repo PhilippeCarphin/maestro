@@ -1,0 +1,60 @@
+<MODULE name = "validation">
+
+   <SUBMITS sub_name = "surface_preliminaire_pour_jaa_jab_et_jac"/>
+   <FAMILY      name = "surface_preliminaire_pour_jaa_jab_et_jac">
+      <SUBMITS sub_name = "fichiers_plot"/>
+      <MODULE      name = "fichiers_plot"/>
+
+      <SUBMITS sub_name = "fichiers_hpgl"/>
+      <MODULE      name = "fichiers_hpgl"/>
+
+      <SUBMITS sub_name = "fichiers_hpgl_edig_ref"/>
+      <MODULE      name = "fichiers_hpgl_edig_ref"/>
+   </FAMILY>
+
+   <SUBMITS sub_name = "precipitations_observees"/>
+   <FAMILY      name = "precipitations_observees">
+      <SUBMITS sub_name = "pour_jaf"/>
+      <FAMILY      name = "pour_jaf">
+         <SUBMITS sub_name = "fichiers_plot"/>
+         <MODULE      name = "fichiers_plot"/>
+      </FAMILY>
+
+      <SUBMITS sub_name = "run"/>
+      <SWITCH      name = "run" type = "datestamp_hour">
+         <SWITCH_ITEM name = "00,12">
+            <SUBMITS sub_name = "pour_jag_et_jah"/>
+            <FAMILY      name = "pour_jag_et_jah">
+               <SUBMITS sub_name = "fichiers_plot"/>
+               <MODULE      name = "fichiers_plot"/>
+            </FAMILY>
+         </SWITCH_ITEM>
+         <SWITCH_ITEM name = "06,18"/>
+      </SWITCH>
+   </FAMILY>
+
+   <SUBMITS sub_name = "verification_des_precipitations"/>
+   <FAMILY      name = "verification_des_precipitations">
+      <SUBMITS sub_name = "run"/>
+      <SWITCH      name = "run" type = "datestamp_hour">
+         <SWITCH_ITEM name = "00,12">
+            <SUBMITS sub_name = "pour_jaj_et_jal"/>
+            <FAMILY      name = "pour_jaj_et_jal">
+               <SUBMITS sub_name = "fichiers_plot"/>
+               <MODULE      name = "fichiers_plot"/>
+            </FAMILY>
+         </SWITCH_ITEM>
+         <SWITCH_ITEM name = "06,18"/>
+      </SWITCH>
+   </FAMILY>
+
+   <SUBMITS sub_name = "dfxsm"/>
+   <MODULE      name = "dfxsm"/>
+
+   <SUBMITS sub_name = "pcp_cumul"/>
+   <MODULE      name = "pcp_cumul"/>
+
+  <!--SUBMITS sub_name = "copy_pcp_cumul_files"/-->
+  <!--TASK        name = "copy_pcp_cumul_files"/-->
+
+</MODULE>

@@ -1,0 +1,25 @@
+<NODE_RESOURCES>
+    <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=$((x))"   index="loop_prog=$((x))" status="end" type="node"/>
+    <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=6"   index="loop_prog=0" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=12"   index="loop_prog=6" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=18"   index="loop_prog=12" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=24"   index="loop_prog=18" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=30"   index="loop_prog=24" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=36"   index="loop_prog=30" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=42"   index="loop_prog=36" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=48"   index="loop_prog=42" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=54"   index="loop_prog=48" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=60"   index="loop_prog=54" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=66"   index="loop_prog=60" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=72"   index="loop_prog=66" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=78"   index="loop_prog=72" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=84"   index="loop_prog=78" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=90"   index="loop_prog=84" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=96"   index="loop_prog=90" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=102"   index="loop_prog=96" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=108"   index="loop_prog=102" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=114"   index="loop_prog=108" status="end" type="node"/>
+     <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" local_index="nato_aviation_loop=120"   index="loop_prog=114" status="end" type="node"/>
+
+    <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" cpu="1" memory="4G" wallclock="30" catchup="5"/>
+</NODE_RESOURCES>

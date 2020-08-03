@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+    <LOOP start="0" set="1" end="${NEMO_CYCLE}" step="1"/>
+</NODE_RESOURCES>
+

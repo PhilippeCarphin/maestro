@@ -1,0 +1,21 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="512M" mpi="0" wallclock="5" catchup="4" cpu="1" queue="${FRONTEND_XFER_Q}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=240" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=234" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=228" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=222" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=216" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=210" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=204" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=198" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=186" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=180" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=174" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=168" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=162" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=156" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=144" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=138" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=132" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+  <DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog/interp_progeta" index="loop_prog=126" local_index="run=00" status="end" type="node" exp="${CMDW_FULL_G1_EXP}"/>
+</NODE_RESOURCES> 

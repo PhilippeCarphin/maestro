@@ -73,7 +73,7 @@ namespace eval ::dkfFontSel {
             if { [string index ${line} 0] != "#" && [string length ${line}] > 0 } {
                set splittedList [split ${line} =]
                if { [llength ${splittedList}] != 2 } {
-                   # error "ERROR: While reading ${fileName}\nInvalid property syntax: ${line}"
+
                    set errorMsg "While reading ${fileName}\n\nInvalid property syntax: ${line}.\n"
                } else {
                    set keyFound   [string trim [lindex $splittedList 0]]
@@ -421,8 +421,8 @@ namespace eval ::dkfFontSel {
 	}
 	set Family [$w get $index]
 
-	##DEBUG
-	#wm title [winfo toplevel $w] $Family
+	
+	
 	'set_font
     }
 
@@ -574,7 +574,7 @@ namespace eval ::dkfFontSel {
            }
 	}
         
-	#foreach {family size styles} $options(-initialfont) {break}
+	
 	set Family $family
 	set familyIndex [lsearch -exact ['list_families] $family]
 	if {$familyIndex<0} {
@@ -646,7 +646,7 @@ namespace eval ::dkfFontSel {
 }
 namespace import ::dkfFontSel::dkf_chooseFont
 
-# Is there anything already set up as a standard command?
+
 if {![info exist tk_chooseFont]} {
     # If not, set ourselves up using an alias
     interp alias {} tk_chooseFont {} ::dkfFontSel::dkf_chooseFont

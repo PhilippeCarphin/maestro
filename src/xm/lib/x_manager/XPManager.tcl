@@ -1,23 +1,5 @@
 
-#/* Part of the Maestro sequencer software package.
-# * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
-# *                          Environment Canada
-# *
-# * Maestro is free software; you can redistribute it and/or
-# * modify it under the terms of the GNU Lesser General Public
-# * License as published by the Free Software Foundation,
-# * version 2.1 of the License.
-# *
-# * Maestro is distributed in the hope that it will be useful,
-# * but WITHOUT ANY WARRANTY; without even the implied warranty of
-# * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
-# * Lesser General Public License for more details.
-# *
-# * You should have received a copy of the GNU Lesser General Public
-# * License along with this library; if not, write to the
-# * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
-# * Boston, MA 02111-1307, USA.
-# */
+
 
 
 global SEQ_BIN
@@ -36,24 +18,6 @@ set SEQ_MANAGER_SRC $env(SEQ_MANAGER_SRC)
 
 # -- get user
 set MUSER [exec id -nu]
-
-# ---------- NOT used for Now -----------------
-# -- Global Code for Error Trapping
-# -- set the proc
-proc bug_Report {error} {
-
-     global errorInfo env argv argv0
-
-     set bugReport $errorInfo
-     set question "Unexpected Error : $error"
-
-    puts "$error   $errorInfo"
-}
-# -- set the Handler
-#proc bgerror {error} {
-#           bug_Report $error
-#}
-#----------------------------------------------
 
 namespace eval XPManager {
 
@@ -264,7 +228,7 @@ proc XPManager::parseCmdOptions {} {
    namespace inscope :: package require cmdline
    set usage "\[options] \noptions:"
    if [ catch { array set params [::cmdline::getoptions argv $options $usage] } message ] {
-      # puts "ERROR: XPManager::parseCmdOptions "
+
       puts "\n$message"
       exit 1
    }
@@ -339,12 +303,12 @@ proc XPManager::_show_progress { } {
 
 
 proc XPManager::_update_progress { } {
-    #variable _progress
+
     variable _afterid
 
     if { $XPManager::_progress } {
         if { $XPManager::prgindic < 100 } {
-            #incr XPManager::prgindic 5
+
             puts "prgindic -> $XPManager::prgindic _progress-> $XPManager::_progress"
             set _afterid [after 10 XPManager::_update_progress]
         } else {
@@ -398,7 +362,6 @@ proc XPManager::ParseOpParExpDepot {} {
            $prefDparser alias ExpOpsRepository    XPManager::set_prefs_cmd_ExpOpsRepository
            $prefDparser alias ExpParRepository    XPManager::set_prefs_cmd_ExpParRepository
            $prefDparser alias ExpPreOpsRepository XPManager::set_prefs_cmd_ExpPreOpsRepository
-	   # this is temp. 
            $prefDparser alias DefaultModDepot XPManager::set_prefs_cmd_DefaultModDepot
 
            set cmd {
@@ -408,7 +371,7 @@ proc XPManager::ParseOpParExpDepot {} {
                    $prefDparser eval $script
            }
            if {[catch  $cmd err] != 0} {
-		    #Dialogs::show_msgdlg $Dialogs::Dlg_ErrorParseConfigOP  ok warning "" .
+		
 		    puts "Error Parsing file config"
            }
 
@@ -459,7 +422,7 @@ proc sleep {N} {
 
 # -- Prepar widget display language
 Dialogs::setDlg
-#Preferences::Config_table
+
 
 XpOptions::globalOptions
 XpOptions::tablelistOptions
@@ -472,15 +435,15 @@ if { $Preferences::ERROR_PARSING_USER_CONFIG == 1 } {
                      Dialogs::show_msgdlg $Dialogs::Dlg_Error_parsing_user_file  ok warning "" .
 }
 
-#if { $Preferences::ERROR_NOT_RECOGNIZED_PREF == 1 } {
-#                     Dialogs::show_msgdlg $Dialogs::Dlg_NonRecognizedPref  ok warning "" .
-#}
+
+
+
 
 if {[string compare $Preferences::ListUsrTabs "" ] == 0 } {
                      Dialogs::show_msgdlg $Dialogs::Dlg_DefineExpPath  ok warning "" .
 }
 
-# -- depot which  do not existe (ie could be erased by user and left in .maestrorc)
-#if { $Preferences::ERROR_DEPOT_DO_NOT_EXIST == 1 } {
-#                     Dialogs::show_msgdlg $Dialogs::Dlg_DepotNotExist  ok warning "" .
-#}
+
+
+
+

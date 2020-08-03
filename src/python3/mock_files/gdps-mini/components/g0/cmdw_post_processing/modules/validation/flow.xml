@@ -1,0 +1,10 @@
+<MODULE name="validation">
+    <SUBMITS sub_name="validation_images"/>
+    <SUBMITS sub_name="validation_fichiers_hpgl"/>
+    <SUBMITS sub_name="validation_fichiers_hpgl_edig_ref"/>
+    <SUBMITS sub_name="validation_pcp_cumul"/>
+    <MODULE name="validation_images"/>
+    <MODULE name="validation_fichiers_hpgl"/>
+    <MODULE name="validation_fichiers_hpgl_edig_ref"/>
+    <MODULE name="validation_pcp_cumul"/>
+</MODULE>

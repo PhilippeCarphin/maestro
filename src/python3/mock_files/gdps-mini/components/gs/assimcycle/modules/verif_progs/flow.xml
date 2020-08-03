@@ -1,0 +1,13 @@
+<MODULE name="verif_progs">
+  <SUBMITS sub_name="verifications_pour_arcad"/>
+  <SUBMITS sub_name="verdict"/>
+  <SUBMITS sub_name="extract4emet"/>
+  <SUBMITS sub_name="extract4umos"/>
+  <SUBMITS sub_name="obs_minus_fcst"/>
+
+  <MODULE name="verifications_pour_arcad"/>
+  <TASK name="verdict"/>
+  <TASK name="extract4emet"/>
+  <TASK name="extract4umos"/>
+  <MODULE name="obs_minus_fcst"/>
+</MODULE>

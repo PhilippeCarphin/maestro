@@ -1,0 +1,18 @@
+<MODULE name="scribe">
+    <SUBMITS sub_name="proc_matrice"/>
+    <TASK name="proc_matrice">
+        <SUBMITS sub_name="transmission_mat"/>
+        <SUBMITS sub_name="mtm"/>
+        <SUBMITS sub_name="que"/>
+        <SUBMITS sub_name="ont"/>
+        <SUBMITS sub_name="pnr"/>
+        <SUBMITS sub_name="pyr"/>
+    </TASK>
+    <TASK name="transmission_mat"/>
+    <MODULE name="mtm"/>
+    <MODULE name="que"/>
+    <MODULE name="ont"/>
+    <MODULE name="pnr"/>
+    <MODULE name="pyr"/>
+</MODULE>
+

@@ -3,7 +3,6 @@ package require Thread
 # This is a generic to store data for a specific experiment in
 # a shared memory structure... This data can be retrieved from
 # all threads within the application i.e. overview thread, msg center and experiment threads
-#
 
 # exp_path is the full path of the experiment i.e. SEQ_EXP_HOME
 # key is the key for the specific value
@@ -39,17 +38,17 @@ proc SharedData_unsetExpData { exp_path key } {
 }
 
 proc SharedData_getExpDatestampMutex { exp_path datestamp } {
-   # puts "SharedData_getExpDatestampMutex ${exp_path}_${datestamp} called"
+   
    set mutexValue ""
    foreach { key mutexValue } [tsv::array get SharedData_ExpMutex ${exp_path}_${datestamp}] {}
    if { ${mutexValue} == "" } {
        thread::mutex lock [SharedData_getMiscData COMMON_MUTEX]
-       # set mutexValue [thread::mutex create -recursive]
+       
        set mutexValue [thread::mutex create]
        tsv::array set SharedData_ExpMutex ${exp_path}_${datestamp} ${mutexValue}
        thread::mutex unlock [SharedData_getMiscData COMMON_MUTEX]
    }
-   # puts "SharedData_getExpDatestampMutex ${exp_path}_${datestamp} DONE"
+   
    return ${mutexValue}
 }
 
@@ -58,59 +57,59 @@ proc SharedData_removeExpDatestampMutex { exp_path datestamp } {
 }
 
 proc SharedData_setExpDatestampData { exp_path datestamp key value } {
-   # puts "SharedData_setExpDatestampData ${exp_path}_${datestamp} called"
+   
    set expDatestampMutex [SharedData_getExpDatestampMutex ${exp_path} ${datestamp}]
    thread::mutex lock ${expDatestampMutex}
-   # puts "SharedData_setExpDatestampData ${expDatestampMutex} locked"
+   
 
       tsv::keylset SharedData_${exp_path}_${datestamp} data ${key} ${value}
 
    thread::mutex unlock ${expDatestampMutex}
-   # puts "SharedData_setExpDatestampData exp_path:${exp_path} datestamp:$datestamp key:$key value:$value DONE"
+   
 }
 
 proc SharedData_removeExpDatestampData { exp_path datestamp } {
    ::log::log notice "SharedData_removeExpDatestampData() exp_path:${exp_path} datestamp:${datestamp}"
-   # puts "SharedData_removeExpDatestampData() exp_path:${exp_path} datestamp:${datestamp}"
+   
    catch { after cancel [SharedData_getExpOverviewUpdateAfterId ${exp_path} ${datestamp}] }
-   # ::log::log notice "SharedData_removeExpDatestampData() exp_path:${exp_path} datestamp:${datestamp} reset done"
+   
 
    ::log::log notice "SharedData_removeExpDatestampData() exp_path:${exp_path} datestamp:${datestamp} getting lock"
    set expDatestampMutex [SharedData_getExpDatestampMutex ${exp_path} ${datestamp}]
-   # puts "SharedData_removeExpDatestampData ${expDatestampMutex} locked"
+   
    thread::mutex lock ${expDatestampMutex}
 
    ::log::log notice "SharedData_removeExpDatestampData() exp_path:${exp_path} datestamp:${datestamp} unset "
-   # puts "SharedData_removeExpDatestampData() unset exp_path:${exp_path} datestamp:${datestamp}"
+   
    catch { tsv::unset SharedData_${exp_path}_${datestamp} }
 
    ::log::log notice "SharedData_removeExpDatestampData() exp_path:${exp_path} datestamp:${datestamp} unlock"
-   # puts "SharedData_removeExpDatestampData() exp_path:${exp_path} datestamp:${datestamp} unlocking..."
+   
    thread::mutex unlock ${expDatestampMutex}
    ::log::log notice "SharedData_removeExpDatestampData() exp_path:${exp_path} datestamp:${datestamp} unset done"
-   # puts "SharedData_removeExpDatestampData() exp_path:${exp_path} datestamp:${datestamp} unset done"
-   # puts "SharedData_removeExpDatestampData() exp_path:${exp_path} datestamp:${datestamp} DONE"
+   
+   
 }
 
 # retrieve experiment data based on the exp_path and the key
 proc SharedData_getExpDatestampData { exp_path datestamp key } {
-   # puts "SharedData_getExpDatestampData() exp_path:${exp_path} datestamp:${datestamp} key:$key"
+   
    set returnedValue ""
    set keys ""
    catch { set keys [tsv::keylkeys SharedData_${exp_path}_${datestamp} data] }
    if { [lsearch ${keys} ${key}] != -1 } {
-      # puts "SharedData_getExpDatestampData() exp_path:${exp_path} datestamp:${datestamp} key:$key"
+      
       set returnedValue [tsv::keylget SharedData_${exp_path}_${datestamp} data ${key}]
    }
-   # puts "SharedData_getExpDatestampData() exp_path:${exp_path} datestamp:${datestamp} key:$key DONE"
+   
    return ${returnedValue}
 }
 
 # removes experiment data based on the exp_path and the key
 proc SharedData_unsetExpDatestampData { exp_path datestamp key } {
-   # puts "SharedData_unsetExpDatestampData() exp_path:${exp_path} datestamp:${datestamp}"
+   
    catch { tsv::keyldel SharedData_${exp_path}_${datestamp} data ${key} }
-   # puts "SharedData_unsetExpDatestampData() exp_path:${exp_path} datestamp:${datestamp} DONE"
+   
 }
 
 # retrieves the experiment thread id
@@ -513,8 +512,8 @@ proc SharedData_getExpFlowSize { _exp_path _datestamp} {
 }
 
 proc SharedData_addExpNodeMapping { _exp_path _datestamp _real_node _flow_node } {
- #  puts "SharedData_addExpNodeMapping exp_path:${_exp_path} datestamp:${_datestamp} real_node:${_real_node} flow_node:${_flow_node}"
-   # ::log::log notice "SharedData_addExpNodeMapping()  exp_path:${_exp_path} datestamp:${_datestamp} real_node:${_real_node} flow_node:${_flow_node}"
+ 
+   
 
    array set nodeMappings [SharedData_getExpDatestampData ${_exp_path} ${_datestamp} node_mappings]
    set nodeMappings(${_real_node}) ${_flow_node}
@@ -523,14 +522,14 @@ proc SharedData_addExpNodeMapping { _exp_path _datestamp _real_node _flow_node }
 }
 
 proc SharedData_getExpNodeMapping { _exp_path _datestamp _real_node } {
-   # puts "SharedData_getExpNodeMapping exp_path:${_exp_path} datestamp:${_datestamp} real_node:${_real_node}"
+   
    set flowNode ${_real_node}
       array set nodeMapping [SharedData_getExpDatestampData ${_exp_path} ${_datestamp} node_mappings]
       if { [info exists nodeMapping(${_real_node})] } {
          set flowNode $nodeMapping(${_real_node})
       }
 
-   # puts "SharedData_getExpNodeMapping exp_path:${_exp_path} datestamp:${_datestamp} real_node;${_real_node} flowNode:${flowNode}"
+   
    return ${flowNode}
 }
 
@@ -798,9 +797,9 @@ proc SharedData_setPlugins { parent } {
 	if { [file exists ${fname}] } {
 	    set pluginContent [open ${fname} r]
 	    while {[gets ${pluginContent} line] >= 0 && ${errorMsg} == "" } {
-		#puts "SharedData_readProperties processing line: ${line}"
+		
 		if { [string index ${line} 0] != "#" && [string length ${line}] > 0 } {
-		    #puts "SharedData_readProperties found data line: ${line}"
+		    
 		    # the = sign is used to separate between the key and the value.
 		    # spaces around the values are trimmed
 		    set splittedList [split ${line} =]
@@ -808,7 +807,7 @@ proc SharedData_setPlugins { parent } {
 		    # if the list does not contain 2 elements, something's not right
 		    # output the error message
 		    if { [llength ${splittedList}] != 2 } {
-			# error "ERROR: While reading ${fileName}\nInvalid property syntax: ${line}"
+			
 			set errorMsg "While reading ${fname}\n\nInvalid property syntax: ${line}.\n"
 		    } else {
 			set propertyName  [string trim [lindex $splittedList 0]] 
@@ -898,7 +897,7 @@ proc SharedData_init {} {
    DATESTAMP_VISIBLE_LEN 10 \
    ]
 
-   # SharedData_readProperties
+   
 }
 
 proc SharedData_readProperties { {rc_file ""} } {
@@ -916,9 +915,9 @@ proc SharedData_readProperties { {rc_file ""} } {
       SharedData_setMiscData "RC_FILE" ${fileName}
 
       while {[gets ${propertiesFile} line] >= 0 && ${errorMsg} == "" } {
-         #puts "SharedData_readProperties processing line: ${line}"
+         
          if { [string index ${line} 0] != "#" && [string length ${line}] > 0 } {
-            #puts "SharedData_readProperties found data line: ${line}"
+            
             # the = sign is used to separate between the key and the value.
             # spaces around the values are trimmed
             set splittedList [split ${line} =]
@@ -926,12 +925,12 @@ proc SharedData_readProperties { {rc_file ""} } {
             # if the list does not contain 2 elements, something's not right
             # output the error message
             if { [llength ${splittedList}] != 2 } {
-               # error "ERROR: While reading ${fileName}\nInvalid property syntax: ${line}"
+               
                set errorMsg "While reading ${fileName}\n\nInvalid property syntax: ${line}.\n"
             } else {
                set keyFound   [string toupper [string trim [lindex $splittedList 0]]]
                set valueFound [string trim [lindex $splittedList 1]]
-               #puts "SharedData_readProperties found key:${keyFound} value:${valueFound}"
+               
                puts "maestrorc preference name:${keyFound} value:${valueFound}"
                SharedData_setMiscData ${keyFound} ${valueFound}
             }

@@ -1,0 +1,11 @@
+<MODULE name="cmdw_post_processing">
+    <SUBMITS sub_name="pllaa"/>
+    <SUBMITS sub_name="pllab"/>
+    <SUBMITS sub_name="pllac"/>
+    <SUBMITS sub_name="pcp_cumul"/>
+    <TASK name="pllaa"/>
+    <TASK name="pllab"/>
+    <TASK name="pllac"/>
+    <TASK name="pcp_cumul"/>
+</MODULE>
+

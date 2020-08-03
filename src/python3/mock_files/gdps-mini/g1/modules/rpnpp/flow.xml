@@ -1,0 +1,8 @@
+<MODULE name="rpnpp">
+    <SUBMITS sub_name="loop_rpnpp_run"/>
+    <LOOP name="loop_rpnpp_run">
+        <SUBMITS sub_name="rpnpp"/>
+        <TASK name="rpnpp"/>
+    </LOOP>
+</MODULE>
+

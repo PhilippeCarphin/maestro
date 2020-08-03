@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+  <BATCH catchup="3" cpu="4" machine="${BACKEND}" memory="5G" mpi="0" queue="xfer" soumet_args="-waste 100" wallclock="30" />
+  <ABORT_ACTION name="stop" />
+</NODE_RESOURCES>

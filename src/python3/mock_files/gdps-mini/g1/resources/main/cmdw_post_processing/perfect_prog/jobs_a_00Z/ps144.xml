@@ -1,0 +1,10 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="1G" mpi="0" wallclock="10" catchup="4" cpu="1" queue="${FRONTEND_DEFAULT_Q}"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/pps72" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/jobs_a_00Z/y3144" index="jobs_a_00Z=00" local_index="jobs_a_00Z=00" status="end" type="node"/>
+
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/perfect_prog/ppgbc" index="perfect_prog=18" status="end" type="node" exp="${CMDW_POST_PROC_G6_EXP}" hour="-6"/>
+
+  <!-- regional -->
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing/observations/synop" status="end" type="node" exp="${CMDW_POST_PROC_R1_EXP}" />
+</NODE_RESOURCES> 

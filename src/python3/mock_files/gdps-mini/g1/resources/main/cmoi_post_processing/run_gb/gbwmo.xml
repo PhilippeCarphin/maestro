@@ -1,0 +1,10 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_XFER_Q}"  memory="4G" wallclock="20" catchup="4" cpu="1"  soumet_args="-tmpfs ${TMPFSSIZE}"/>
+  <DEPENDS_ON exp="${CMOI_G1_XFER_EXP}" dep_name="/main/intxfer/intxfer_prog/loop_prog" status="end" type="node"/>  
+  <DEPENDS_ON dep_name="/main/intxfer_e1/intxfer_loop/intxfer_prog/loop_prog/interp_progpres" exp="${CMOI_E1_EXP}" index="intxfer_loop=0,progtime_loop=120" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer_e1/intxfer_loop/intxfer_prog/loop_prog/interp_progpres" exp="${CMOI_E1_EXP}" index="intxfer_loop=0,progtime_loop=96" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer_e1/intxfer_loop/intxfer_prog/loop_prog/interp_progpres" exp="${CMOI_E1_EXP}" index="intxfer_loop=0,progtime_loop=72" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer_e1/intxfer_loop/intxfer_prog/loop_prog/interp_progpres" exp="${CMOI_E1_EXP}" index="intxfer_loop=0,progtime_loop=48" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer_e1/intxfer_loop/intxfer_prog/loop_prog/interp_progpres" exp="${CMOI_E1_EXP}" index="intxfer_loop=0,progtime_loop=24" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/intxfer_e1/intxfer_loop/intxfer_prog/loop_prog/interp_progpres" exp="${CMOI_E1_EXP}" index="intxfer_loop=0,progtime_loop=0" status="end" type="node"/>
+</NODE_RESOURCES>

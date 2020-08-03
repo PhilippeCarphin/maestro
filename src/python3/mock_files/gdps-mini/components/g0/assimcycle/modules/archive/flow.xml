@@ -1,0 +1,20 @@
+<MODULE name="archive">
+  <SUBMITS sub_name="build_frontend"/>
+  <SUBMITS sub_name="build_backend"/>
+
+  <TASK  name="build_frontend">
+    <SUBMITS sub_name="build_all"/>
+  </TASK>
+  <TASK name="build_backend"/>
+
+  <TASK  name="build_all">
+    <DEPENDS_ON dep_name="./build_backend"  status="end" type="node"/>
+    <SUBMITS sub_name="send"/>
+  </TASK>
+
+  <TASK  name="send">
+    <SUBMITS sub_name="eraseArchivedFiles"/>
+  </TASK>
+
+  <TASK  name="eraseArchivedFiles"/>
+</MODULE>

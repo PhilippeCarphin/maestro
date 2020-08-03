@@ -1,0 +1,20 @@
+<MODULE name="coldstart">
+  <SUBMITS sub_name="getData"/>
+  <SUBMITS sub_name="getDynbcor"/>
+  <SUBMITS sub_name="getSurface"/>
+
+  <TASK name="getData">
+    <SUBMITS sub_name="start_cycle"/>
+  </TASK>
+
+  <TASK name="getDynbcor"/>
+
+  <TASK name="getSurface">
+    <DEPENDS_ON dep_name="./getData" status="end" type="node"/>
+  </TASK>
+
+  <TASK name="start_cycle">
+    <DEPENDS_ON dep_name="./getDynbcor" status="end" type="node"/>
+    <DEPENDS_ON dep_name="./getSurface" status="end" type="node"/>
+  </TASK>
+</MODULE>

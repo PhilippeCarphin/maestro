@@ -1,0 +1,414 @@
+<MODULE name="cmdw_post_processing">
+    <SUBMITS sub_name="warm_start"/>
+    <SUBMITS sub_name="champ_essai"/>
+    <SUBMITS sub_name="analyses"/>
+    <SUBMITS sub_name="precipitations"/>
+    <SUBMITS sub_name="meteo_generale"/>
+    <SUBMITS sub_name="aviation"/>
+    <SUBMITS sub_name="temps_violent_hiver"/>
+    <SUBMITS sub_name="temps_violent_ete"/>
+    <SUBMITS sub_name="perfect_prog"/>
+    <SUBMITS sub_name="divers"/>
+    <SUBMITS sub_name="domaines"/>
+    <SUBMITS sub_name="labCentral_tracks"/>
+    <SUBMITS sub_name="labCentral_bourrasques"/>
+    <SUBMITS sub_name="labHAL_fog_stratus"/>
+    <SUBMITS sub_name="cleanup_DEPOT"/>
+    <SUBMITS sub_name="pivot"/>
+    
+
+    <FAMILY name="warm_start">
+        <SUBMITS sub_name="get_uvboz_data"/>
+        <SUBMITS sub_name="get_perfect_prog_data"/>
+        <TASK name="get_uvboz_data"/>
+        <TASK name="get_perfect_prog_data"/>
+    </FAMILY>
+    <FAMILY name="champ_essai">
+        <SUBMITS sub_name="plhaa"/>
+        <TASK name="plhaa"/>
+    </FAMILY>
+    <FAMILY name="analyses">
+        <SUBMITS sub_name="fx250"/>
+        <SUBMITS sub_name="fx500"/>
+        <SUBMITS sub_name="plhae"/>
+        <SUBMITS sub_name="plhja"/>
+        <SUBMITS sub_name="plhjb"/>
+        <SUBMITS sub_name="plhjd"/>
+        <SUBMITS sub_name="plhbx"/>
+        <SUBMITS sub_name="plhby"/>
+        <SUBMITS sub_name="aws250mb"/>
+        <SUBMITS sub_name="aws500mb"/>
+        <TASK name="fx250"/>
+        <TASK name="fx500"/>
+        <TASK name="plhae"/>
+        <TASK name="plhja"/>
+        <TASK name="plhjb"/>
+        <TASK name="plhjd"/>
+        <TASK name="plhbx"/>
+        <TASK name="plhby"/>
+        <FAMILY name="aws250mb">
+          <SUBMITS sub_name="aw2es"/>
+          <SUBMITS sub_name="aw2na"/>
+          <SUBMITS sub_name="aw2no"/>
+          <SUBMITS sub_name="aw2ou"/>
+          <TASK name="aw2es"/>
+          <TASK name="aw2na"/>
+          <TASK name="aw2no"/>
+          <TASK name="aw2ou"/>
+        </FAMILY>
+        <FAMILY name="aws500mb">
+          <SUBMITS sub_name="aw5es"/>
+          <SUBMITS sub_name="aw5na"/>
+          <SUBMITS sub_name="aw5no"/>
+          <SUBMITS sub_name="aw5ou"/>
+          <TASK name="aw5es"/>
+          <TASK name="aw5na"/>
+          <TASK name="aw5no"/>
+          <TASK name="aw5ou"/>
+        </FAMILY>
+    </FAMILY>
+    <FAMILY name="precipitations">
+        <SUBMITS sub_name="calculs"/>
+        <SUBMITS sub_name="cartes"/>
+        <SUBMITS sub_name="bulletins"/>
+        <FAMILY name="calculs">
+	  <SUBMITS sub_name="loop_on_hours"/>
+	  <LOOP name="loop_on_hours">
+            <SUBMITS sub_name="pcpn_interval"/>
+            <SUBMITS sub_name="pcpn_interval_native"/>
+            <TASK name="pcpn_interval"/>
+            <TASK name="pcpn_interval_native"/>
+	  </LOOP>
+	</FAMILY>
+        <FAMILY name="cartes">
+            <SUBMITS sub_name="plhfc"/>
+            <SUBMITS sub_name="run"/>
+            <TASK name="plhfc"/>
+            <SWITCH name="run" type="datestamp_hour">
+                <SWITCH_ITEM name="00">
+                    <SUBMITS sub_name="accumulation_de_precipitations"/>
+                    <FAMILY name="accumulation_de_precipitations">
+                        <SUBMITS sub_name="plhcd"/>
+                        <SUBMITS sub_name="plhce"/>
+                        <TASK name="plhcd"/>
+                        <TASK name="plhce"/>
+                    </FAMILY>
+                </SWITCH_ITEM>
+                <SWITCH_ITEM name="12"/>
+            </SWITCH>
+        </FAMILY>
+        <FAMILY name="bulletins">
+            <SUBMITS sub_name="fgc13"/>
+            <TASK name="fgc13"/>
+        </FAMILY>
+    </FAMILY>
+    <FAMILY name="meteo_generale">
+        <SUBMITS sub_name="calculs"/>
+        <SUBMITS sub_name="cartes"/>
+        <SUBMITS sub_name="bulletins"/>
+        <FAMILY name="calculs">
+            <SUBMITS sub_name="loop_on_hours"/>
+            <LOOP name="loop_on_hours">
+                <SUBMITS sub_name="humidity_and_temperature"/>
+                <TASK name="humidity_and_temperature"/>
+            </LOOP>
+        </FAMILY>
+        <FAMILY name="cartes">
+            <SUBMITS sub_name="classique_4_panneaux"/>
+            <SUBMITS sub_name="classique_2_panneaux"/>
+            <SUBMITS sub_name="dfxf4"/>
+            <SUBMITS sub_name="dfx24"/>
+            <FAMILY name="classique_4_panneaux">
+                <SUBMITS sub_name="dfx20"/>
+                <SUBMITS sub_name="loop_4_pan_classique"/>
+                <TASK name="dfx20"/>
+                <LOOP name="loop_4_pan_classique">
+                    <SUBMITS sub_name="dfx"/>
+                    <TASK name="dfx"/>
+                </LOOP>
+            </FAMILY>
+            <FAMILY name="classique_2_panneaux">
+                <SUBMITS sub_name="plhda"/>
+                <SUBMITS sub_name="plhdb"/>
+                <SUBMITS sub_name="plhdc"/>
+                <SUBMITS sub_name="plhdd"/>
+                <SUBMITS sub_name="plhdh"/>
+                <SUBMITS sub_name="plhdi"/>
+                <SUBMITS sub_name="run"/>
+                <TASK name="plhda"/>
+                <TASK name="plhdb"/>
+                <TASK name="plhdc"/>
+                <TASK name="plhdd"/>
+                <TASK name="plhdh"/>
+                <TASK name="plhdi"/>
+                <SWITCH name="run" type="datestamp_hour">
+                    <SWITCH_ITEM name="00">
+                        <SUBMITS sub_name="plhdg"/>
+                        <TASK name="plhdg"/>
+                        <SUBMITS sub_name="plhde"/>
+                        <TASK name="plhde"/>
+                        <SUBMITS sub_name="plhdj"/>
+                        <TASK name="plhdj"/>
+                        <SUBMITS sub_name="plhdk"/>
+                        <TASK name="plhdk"/>
+                        <SUBMITS sub_name="plhdf"/>
+                        <TASK name="plhdf"/>
+                    </SWITCH_ITEM>
+                    <SWITCH_ITEM name="12"/>
+                </SWITCH>
+            </FAMILY>
+            <TASK name="dfxf4"/>
+            <TASK name="dfx24"/>
+        </FAMILY>
+        <FAMILY name="bulletins">
+            <SUBMITS sub_name="fxcn6"/>
+            <SUBMITS sub_name="run"/>
+            <TASK name="fxcn6"/>
+            <SWITCH name="run" type="datestamp_hour">
+                <SWITCH_ITEM name="00"/>
+                <SWITCH_ITEM name="12">
+                    <SUBMITS sub_name="fpext"/>
+                    <TASK name="fpext"/>
+                </SWITCH_ITEM>
+            </SWITCH>
+        </FAMILY>
+    </FAMILY>
+    <FAMILY name="aviation">
+        <SUBMITS sub_name="calculs"/>
+        <SUBMITS sub_name="cartes"/>
+        <SUBMITS sub_name="bulletins"/>
+        <FAMILY name="calculs"/>
+        <FAMILY name="cartes">
+            <SUBMITS sub_name="aviation_atlantique_nord"/>
+            <SUBMITS sub_name="givrage"/>
+            <FAMILY name="aviation_atlantique_nord">
+                <SUBMITS sub_name="loop_aviation_atlantique_nord"/>
+                <SUBMITS sub_name="plhsg"/>
+                <LOOP name="loop_aviation_atlantique_nord">
+                    <SUBMITS sub_name="jt"/>
+                    <SUBMITS sub_name="ti"/>
+                    <TASK name="jt"/>
+                    <TASK name="ti"/>
+                </LOOP>
+                <TASK name="plhsg"/>
+            </FAMILY>
+            <FAMILY name="givrage">
+                <SUBMITS sub_name="plhia"/>
+                <SUBMITS sub_name="plhib"/>
+                <SUBMITS sub_name="plhic"/>
+                <SUBMITS sub_name="plhid"/>
+                <TASK name="plhia"/>
+                <TASK name="plhib"/>
+                <TASK name="plhic"/>
+                <TASK name="plhid"/>
+            </FAMILY>
+        </FAMILY>
+        <FAMILY name="bulletins">
+            <SUBMITS sub_name="loop_fbcn"/>
+            <SUBMITS sub_name="fnt12"/>
+            <LOOP name="loop_fbcn">
+                <SUBMITS sub_name="fbcn"/>
+                <TASK name="fbcn"/>
+            </LOOP>
+            <TASK name="fnt12"/>
+        </FAMILY>
+    </FAMILY>
+    <FAMILY name="temps_violent_hiver">
+        <SUBMITS sub_name="calculs"/>
+        <SUBMITS sub_name="cartes"/>
+        <SUBMITS sub_name="bulletins"/>
+        <FAMILY name="calculs">
+            <SUBMITS sub_name="loop_edigraf"/>
+            <SUBMITS sub_name="loop_on_hours"/>
+            <LOOP name="loop_edigraf">
+                <SUBMITS sub_name="edi"/>
+                <TASK name="edi"/>
+            </LOOP>
+            <LOOP name="loop_on_hours">
+                <SUBMITS sub_name="winter_severe_weather"/>
+                <TASK name="winter_severe_weather"/>
+            </LOOP>
+        </FAMILY>
+        <FAMILY name="cartes"/>
+        <FAMILY name="bulletins"/>
+    </FAMILY>
+    <FAMILY name="temps_violent_ete">
+        <SUBMITS sub_name="calculs"/>
+        <SUBMITS sub_name="cartes"/>
+        <SUBMITS sub_name="bulletins"/>
+        <FAMILY name="calculs">
+          <SUBMITS sub_name="loop_on_hours"/>
+            <LOOP name="loop_on_hours">
+                <SUBMITS sub_name="convective_indices_buoyancy"/>
+                <SUBMITS sub_name="capes_surf"/>
+                <SUBMITS sub_name="capes_mean_layer"/>
+                <SUBMITS sub_name="capes_most_unstable"/>
+                <TASK name="convective_indices_buoyancy"/>
+                <TASK name="capes_surf"/>
+                <TASK name="capes_mean_layer"/>
+                <TASK name="capes_most_unstable"/>
+            </LOOP>
+        </FAMILY>
+        <FAMILY name="cartes"/>
+        <FAMILY name="bulletins"/>
+    </FAMILY>
+    <FAMILY name="perfect_prog">
+        <SUBMITS sub_name="ft123"/>
+        <SUBMITS sub_name="ym372"/>
+        <SUBMITS sub_name="jobs_a_00Z"/>
+        <TASK name="ft123"/>
+        <TASK name="ym372">
+            <SUBMITS sub_name="pps72"/>
+        </TASK>
+        <TASK name="pps72">
+            <SUBMITS sub_name="pppcl"/>
+        </TASK>
+        <TASK name="pppcl">
+            <SUBMITS sub_name="fxcn5"/>
+        </TASK>
+        <TASK name="fxcn5">
+            <SUBMITS sub_name="jobs_a_12Z"/>
+        </TASK>
+        <SWITCH name="jobs_a_12Z" type="datestamp_hour">
+            <SWITCH_ITEM name="00"/>
+            <SWITCH_ITEM name="06"/>
+            <SWITCH_ITEM name="12">
+                <SUBMITS sub_name="mupy2_mupy1_12Z"/>
+                <MODULE name="mupy2_mupy1_12Z"/>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="18"/>
+        </SWITCH>
+        <SWITCH name="jobs_a_00Z" type="datestamp_hour">
+            <SWITCH_ITEM name="00">
+                <SUBMITS sub_name="ft35a"/>
+                <TASK name="ft35a">
+                    <SUBMITS sub_name="anefu"/>
+                </TASK>
+                <TASK name="anefu"/>
+                <SUBMITS sub_name="y3144"/>
+                <TASK name="y3144">
+                    <SUBMITS sub_name="pc144"/>
+                </TASK>
+                <TASK name="pc144">
+                    <SUBMITS sub_name="ps144"/>
+                </TASK>
+                <TASK name="ps144">
+                    <SUBMITS sub_name="mupy2_mupy1_00Z"/>
+                </TASK>
+                <MODULE name="mupy2_mupy1_00Z"/>
+                <SUBMITS sub_name="ft710"/>
+                <TASK name="ft710">
+                    <SUBMITS sub_name="tfmcn"/>
+                </TASK>
+                <TASK name="tfmcn"/>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="12"/>
+        </SWITCH>
+    </FAMILY>
+    <FAMILY name="divers">
+        <SUBMITS sub_name="run"/>
+        <SWITCH name="run" type="datestamp_hour">
+            <SWITCH_ITEM name="00">
+                <SUBMITS sub_name="degres_jours_de_chauffe"/>
+                <FAMILY name="degres_jours_de_chauffe">
+                    <SUBMITS sub_name="plhca"/>
+                    <SUBMITS sub_name="plhcb"/>
+                    <TASK name="plhca"/>
+                    <TASK name="plhcb"/>
+                </FAMILY>
+                <SUBMITS sub_name="spwav"/>
+                <TASK name="spwav"/>
+                <SUBMITS sub_name="uvboz_dfxuv_00Z"/>
+                <MODULE name="uvboz_dfxuv_00Z"/>
+            </SWITCH_ITEM>
+            <SWITCH_ITEM name="12">
+                <SUBMITS sub_name="launch_at_19Z"/>
+                <TASK name="launch_at_19Z">
+                    <SUBMITS sub_name="uvboz_dfxuv_12Z"/>
+                </TASK>
+                <MODULE name="uvboz_dfxuv_12Z"/>
+            </SWITCH_ITEM>
+        </SWITCH>
+    </FAMILY>
+    <FAMILY name="domaines">
+        <SUBMITS sub_name="afghanistan"/>
+        <SUBMITS sub_name="africa"/>
+        <SUBMITS sub_name="yugoslavia"/>
+        <FAMILY name="afghanistan">
+            <SUBMITS sub_name="loop_afghanistan"/>
+            <LOOP name="loop_afghanistan">
+                <SUBMITS sub_name="afg"/>
+                <TASK name="afg"/>
+            </LOOP>
+        </FAMILY>
+        <FAMILY name="africa">
+            <SUBMITS sub_name="loop_africa"/>
+            <LOOP name="loop_africa">
+                <SUBMITS sub_name="afr"/>
+                <TASK name="afr"/>
+            </LOOP>
+        </FAMILY>
+        <FAMILY name="yugoslavia">
+            <SUBMITS sub_name="yog00"/>
+            <SUBMITS sub_name="loop_yugoslavia"/>
+            <TASK name="yog00"/>
+            <LOOP name="loop_yugoslavia">
+                <SUBMITS sub_name="yog"/>
+                <TASK name="yog"/>
+            </LOOP>
+        </FAMILY>
+    </FAMILY>
+
+    <FAMILY name="labCentral_tracks">
+      <SUBMITS sub_name="loop_on_hours"/>
+      <LOOP name="loop_on_hours">
+        <SUBMITS sub_name="mslp_gz_inFile"/>
+        <TASK name="mslp_gz_inFile">
+          <SUBMITS sub_name="tropic_inFile"/>
+        </TASK>
+        <TASK name="tropic_inFile"/>
+      </LOOP>
+      <SUBMITS sub_name="track_mslp_gz"/>
+      <TASK name="track_mslp_gz">
+        <SUBMITS sub_name="gpkg_mslp"/>
+      </TASK>
+      <TASK name="gpkg_mslp">
+        <SUBMITS sub_name="gpkg_gz500"/>
+      </TASK>
+      <TASK name="gpkg_gz500">
+        <SUBMITS sub_name="gpkg_gz1000"/>
+      </TASK>
+      <TASK name="gpkg_gz1000"/>
+      <SUBMITS sub_name="track_tropic"/>
+      <TASK name="track_tropic">
+        <SUBMITS sub_name="gpkg_tropic"/>
+      </TASK>
+      <TASK name="gpkg_tropic"/>
+    </FAMILY>
+
+    <FAMILY name="labCentral_bourrasques">
+      <SUBMITS sub_name="loop_on_hours"/>
+      <LOOP name="loop_on_hours">
+        <SUBMITS sub_name="bourrasques_calculate"/>
+        <TASK name="bourrasques_calculate"/>
+      </LOOP>
+    </FAMILY>
+
+
+    <FAMILY name="labHAL_fog_stratus">
+       <SUBMITS sub_name="loop_on_hours"/>
+       <LOOP name="loop_on_hours">
+         <SUBMITS sub_name="fog_stratus_calculate"/>
+         <TASK name="fog_stratus_calculate">
+           <SUBMITS sub_name="garrys_morning_patch"/>
+         </TASK>
+         <TASK name="garrys_morning_patch"/>
+       </LOOP>
+    </FAMILY>
+
+
+
+    <TASK name="cleanup_DEPOT"/>
+    <TASK name="pivot"/>
+</MODULE>
+

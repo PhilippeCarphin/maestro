@@ -1,22 +1,5 @@
 /* tictac_main.c - Command-line API for datestamp utility tictac, part of the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -38,15 +21,13 @@
 ******************************************************************************/
 
 
-int MLLServerConnectionFid;
-static void alarm_handler() { /* nothing */ };
+static void alarm_handler() {  };
 
 static void printUsage()
 {
-char *seq_exp_home = NULL;
 char * usage = "DESCRIPTION: Date accessor/modifier interface for experiments\n\
 \n\
-USAGE:\N\
+USAGE:\n\
     \n\
     tictac [-s date,-f format] [-e exp] [-d datestamp] [-v]\n\
 \n\
@@ -108,7 +89,7 @@ main (int argc, char * argv [])
    int i = 0;
 
    char *datestamp = NULL, *expHome = NULL, *format=NULL, *tmpDate = NULL;
-   int setDate=0, r, padding;
+   int setDate=0, r;
    struct sigaction act;
 
    memset (&act, '\0', sizeof(act));

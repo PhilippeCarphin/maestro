@@ -1,0 +1,5 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}"/>
+  <!-- <DEPENDS_ON dep_name="/main/assimcycle" status="end" exp="${OPS_G1_EXP}" type="node" /> -->
+</NODE_RESOURCES>

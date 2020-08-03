@@ -1,0 +1,12 @@
+				# This is a tab delimited spreadsheet (TSV) for all codes associate to file content.
+				# The ‘filetypes’ is a comma delimited list of what file types to search: all, tsk, cfg, xml, resource_xml
+				# If ‘substring’ is found in a file, or the regex matches its content, heimdall produces the scanner code.
+				# Anything more complicated probably deserves its own Python function.
+				# if regex groups are used, the first matching group is the string inserted into the user message. If no group, use the whole match.
+code	filetypes	strip_comments	substring	regex_string
+w003	tsk,cfg	yes		/site[12]/ops/
+w004	tsk,cfg	yes		/space/hall[12]/sitestore/
+e008	resource_xml	yes		[a-zA-Z]+=['"]\$[a-zA-Z_]+.['"]
+b011	tsk,cfg	yes		\n[^#].+(\${?CMCCONST}?\/[^\/\n ]+)(?!.*\/)
+e018	flow_xml			<SUBMITS[^>]+\sname\b[^>]*>
+e019	flow_xml			<(?!!--)(?!SUBMITS)[^>]+\ssub_name\b[^>]*>

@@ -1,0 +1,8 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" memory="1G" queue="${FRONTEND_DEFAULT_Q}" wallclock="5" catchup="4"/>
+  <DEPENDS_ON dep_name="/main/surface_analysis" status="end" type="node" /> 
+  <DEPENDS_ON dep_name="/main/run_orji" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/cmdw_post_processing" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/cmde_post_processing" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/main/cmoi_post_processing" status="end" type="node"/>
+</NODE_RESOURCES>

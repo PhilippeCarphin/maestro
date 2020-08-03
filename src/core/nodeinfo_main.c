@@ -1,22 +1,5 @@
 /* nodeinfo_main.c - Command-line API to use the node contruction mechanism in the Maestro sequencer software package.
- * Copyright (C) 2011-2015  Operations division of the Canadian Meteorological Centre
- *                          Environment Canada
- *
- * Maestro is free software; you can redistribute it and/or
- * modify it under the terms of the GNU Lesser General Public
- * License as published by the Free Software Foundation,
- * version 2.1 of the License.
- *
- * Maestro is distributed in the hope that it will be useful,
- * but WITHOUT ANY WARRANTY; without even the implied warranty of
- * MERCHANTABILITY or FITNESS FOR A PARTICULAR PURPOSE.  See the GNU
- * Lesser General Public License for more details.
- *
- * You should have received a copy of the GNU Lesser General Public
- * License along with this library; if not, write to the
- * Free Software Foundation, Inc., 59 Temple Place - Suite 330,
- * Boston, MA 02111-1307, USA.
- */
+*/
 
 #include <stdlib.h>
 #include <stdio.h>
@@ -30,11 +13,9 @@
 #include "getopt.h"
 #include "SeqDatesUtil.h"
 
-int MLLServerConnectionFid=0;
 
 static void printUsage()
 {
-   char *seq_exp_home = NULL;
    char * usage = "For complete and up to date information on this command, see the man page by typing 'man nodeinfo'.";
    puts(usage);
 }
@@ -65,8 +46,8 @@ int main ( int argc, char * argv[] )
    SeqNameValuesPtr loopsArgs = NULL;
    char *node = NULL, *seq_exp_home = NULL, *outputFile=NULL, *datestamp=NULL, *tmpDate=NULL, 
         *filters_str = strdup("all");
-   int errflg = 0, nodeFound = 0, i;
-   int gotLoops=0, showRootOnly = 0;
+   int nodeFound = 0, i;
+   int gotLoops=0;
    if ( argc == 1 || argc == 2) {
       printUsage();
       exit(1);

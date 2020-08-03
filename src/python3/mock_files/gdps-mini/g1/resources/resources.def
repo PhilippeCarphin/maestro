@@ -1,0 +1,239 @@
+# Machine stuff
+FRONTEND=eccc-ppp4
+BACKEND=daley
+DBASE_SERVER=eccc-ppp4
+BACKEND_DEFAULT_Q=production
+FRONTEND_DEFAULT_Q=production
+BACKEND_XFER_Q=xfer
+# FRONTEND_XFER_Q=xfer
+FRONTEND_XFER_Q=production
+
+SEQ_DEFAULT_MACHINE=eccc-ppp4
+
+SEQ_JOBNAME_PREFIX=g1
+
+#-------------------------------
+# GEM_NEMO section
+GEM_NEMO_SUPERJOB_WORKQ=/main/assimcycle/forecast_coupled/gem_nemo/ocean/gem_nemo_control
+
+#-------------------------------
+# GEM section
+#-------------------------------
+GEM_NPEX=87
+GEM_NPEY=36
+GEM_OMP=1
+
+#-------------------------------
+# NEMO section
+#-------------------------------
+NEMO_CYCLE=0
+
+NEMO_NPEX=20
+NEMO_NPEY=30
+
+NEMO_CPUTIME=90
+NEMO_MEMORY=1600M
+NEMO_XIOS_PAR=y
+NEMO_XIOS_NCPUS=80
+# 1/10 to 1/50 of TOTAL NEMO CPUS
+
+# 20x30 + 80
+NEMO_NP_TOTAL=680
+
+RPNPP_NCPUS=20
+#-------------------
+
+OPS_G1_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+
+# pre_assimcycle dependencies
+PRE_ASSIM_CUTOFF_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+
+# assimcycle dependencies
+ASSIM_DERIALT_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+ASSIM_TRIAL_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+
+## get TM|LG in 'gridpt/anal/hyb/*_sfc' or 'gridpt/anal/sfc'
+ASSIM_SFC_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+
+## get 'derisfc' files
+ASSIM_DERISFC_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+
+ASSIM_GEPS_EXP=/home/smco500/maestro_suites/geps_20191231/e2
+
+# get 'ocean-ice' analysis
+ASSIM_OCEAN_EXP=/home/smco500/maestro_suites/giops_20191231/gu
+
+
+# intxfer dependencies
+FORECAST_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+
+INTXFER_ANLPOST_NAME=/main/assimcycle/anlpost/forecast_coupled/loop_post_gem/post_gem
+INTXFER_GEM_TRANSFER_NAME=/main/assimcycle/forecast_coupled/loop_post_gem/post_gem
+INTXFER_GEM_TRANSFER_NAME_0hr=/main/assimcycle/anlpost/forecast_coupled/loop_post_gem/post_gem
+
+# for queues
+# XXFER=fexfer
+XXFER=production
+XFER=production
+
+#-------------------
+# CMDE post-processing
+#-------------------
+T_LOOP_MAX_GRID=3
+CPU_MAX_POSTPROC_INTERP_FOR=25
+CPU_MAX_POSTPROC_NETCDF_FOR=25
+CPU_MAX_POSTPROC_IMAGES_FOR=25
+F_PST_NTEPS_TIME=10
+F_PST_NCHUNKS_TIME=10
+#-------------------
+
+#-------------------
+# CMDW post-processing
+#-------------------
+TMPFSSIZE=3000
+
+# This is the part of the G1 that is external to cmdw post-processing
+CMDW_FULL_G1_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+
+CMDW_FULL_G2_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+
+CMDW_POST_PROC_G6_EXP=/home/smco500/maestro_suites/gdps_20191231/g6
+CMDW_TRANSFER_R1_EXP=/home/smco500/maestro_suites/rdps_20191231/r1
+CMDW_POST_PROC_R1_EXP=/home/smco500/maestro_suites/rdps_20191231/r1
+
+
+# output of ozone files for uvboz job
+OZONE_EXP=/home/smco500/.suites/AetP_20191231/ap/default
+
+# Default resources variables for CMDW
+CMDW_VALIDATION_DEFAULT_Q=development
+CMDW_MEMORY_DEFAULT=500M
+CMDW_WALLCLOCK_DEFAULT=5
+
+# CPU allocation settings for postproc_user module:
+PST_LOOP_MAX_GRID=3
+CPU_MAX_POSTPROC_INTERP_FOR=9
+CPU_MAX_POSTPROC_NETCDF_FOR=9
+CPU_MAX_POSTPROC_IMAGES_FOR=9
+F_PST_NTEPS_TIME=10
+F_PST_NCHUNKS_TIME=10
+#-------------------
+
+#-------------------
+# CMOI post_processing
+#-------------------
+CMOI_G1_XFER_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+CMOI_G1_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+CMOI_G1_CMDW_PP_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+CMOI_G0_EXP=/home/smco500/maestro_suites/gdps_20191231/g0
+CMOI_G2_EXP=/home/smco500/maestro_suites/gdps_20191231/g2
+CMOI_G6_EXP=/home/smco500/maestro_suites/gdps_20191231/g6
+CMOI_E1_EXP=/home/smco500/maestro_suites/geps_20191231/e1
+CMOI_R1_EXP=/home/smco500/maestro_suites/rdps_20191231/r1
+
+#-------------------
+
+#-------------------
+# module densite neige
+#-------------------
+CMDW_FULL_GDPS_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+
+# cpus
+NCPU_SD=20
+
+# HOUR loop control
+hr_start = 0
+hr_end = 54
+hr_inc = 1
+hr_set = 9
+
+# mémoire ~30G (1cpu)/ NCPU_SD,  12G (8 cpus).  The main cpu needs more memory. It has to read the full grid. TBD memory for RDPS and GDPS
+MEMO="8G"
+#-------------------
+
+#-------------------
+# scribe matrices
+#-------------------
+# gdps deps
+SCRIBE_GDPS_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+SCRIBE_GDPS_DEP=/main/intxfer/intxfer_prog/loop_prog
+SCRIBE_GDPS_UMOS_DEP=/main/umos/umos_qc
+SCRIBE_GDPS_CMDW_POST_PROC_MUPY2_00Z_DEP=/main/cmdw_post_processing/perfect_prog/jobs_a_00Z/mupy2_mupy1_00Z/mupy2
+SCRIBE_GDPS_CMDW_POST_PROC_MUPY2_12Z_DEP=/main/cmdw_post_processing/perfect_prog/jobs_a_12Z/mupy2_mupy1_12Z/mupy2
+SCRIBE_GDPS_CMDW_POST_PROC_UVBOZ_00Z_DEP=/main/cmdw_post_processing/divers/run/uvboz_dfxuv_00Z/uvboz
+SCRIBE_GDPS_CMDW_POST_PROC_UVBOZ_12Z_DEP=/main/cmdw_post_processing/divers/run/uvboz_dfxuv_12Z/uvboz
+# wam dependancies
+SCRIBE_GWAM_DEP_EXP=/home/smco500/maestro_suites/gdwps_20191231/forecast
+
+# SCRIBE_GWAM_DEP=/gdwps
+SCRIBE_GWAM_DEP=/gdwps/prog/Postproc_wave/wave_bin2fst
+#-------------------
+
+#-------------------
+# CMDM - SCRIBE 
+#-------------------
+SCRIBE_R1_EXP=/home/smco500/maestro_suites/rdps_20191231/r1
+SCRIBE_G1_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+SCRIBE_E1_EXP=/home/smco500/maestro_suites/geps_20191231/e1
+SCRIBE_GM_EXP=/home/smco500/maestro_suites/raqdps_firework_20200401/main
+
+# for cleanup scribe in both sites /fs/site1 and /fs/site2 (yes/no)
+SCRIBE_CLEAN_SITES=yes
+#-------------------
+
+#-------------------
+# CMDM - post-processing 
+#-------------------
+CMDM_G1_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+CMDM_G1_PROG_DEPEND=/main/intxfer/intxfer_prog/loop_prog
+CMDM_DEP_G1_MATRICES_SCRIBE_TERRESTRE=/main/matrices_scribe/prevision_0_72/terrestre/scbt1
+CMDM_DEP_G1_MATRICES_SCRIBE_MARINE=/main/matrices_scribe/prevision_0_72/marine/scbm1
+
+#-------------------
+
+#-------------------
+# UMOS configuration
+#-------------------
+
+UMOS_LOOP_START_INDEX=0
+UMOS_LOOP_END_INDEX=1
+UMOS_LOOP_SET=2
+
+# Experience de reference pour le warmstart et la validation
+UMOS_WARMSTART_DEP_EXP=/home/smco501/maestro_suites/gdps_20190128/g1
+# UMOS_WARMSTART_DEP_EXP=/home/stat999/.suites/umos/umos_gdps_phase2
+
+# Experience dont on depend pour les obs
+UMOS_RDPS_DEP_EXP=/home/smco500/maestro_suites/rdps_20191231/r1 
+
+# Experience dont on depend pour le transfert
+UMOS_TRANSFER_DEP_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+
+#-------------------
+
+
+XFER_CATCHUP=4
+
+RDPS_EXP=/home/smco500/maestro_suites/rdps_20191231/r1
+GDPS_EXP=/home/smco500/maestro_suites/gdps_20191231/g1
+GDPS_SFC_EXP=/home/smco500/maestro_suites/gdps_20191231/g6
+
+GEPS_EXP=/home/smco500/maestro_suites/geps_20191231/e1
+REPS_EXP=/home/smco500/maestro_suites/reps_20191231/forecast
+RDPS_GSL_EXP=/home/smco500/maestro_suites/gsl_20191231/rdps_cgsl
+DEPEND_RDPS_EXP=/home/smco500/maestro_suites/rdps_20191231/r1
+
+HRDPS_NATIONAL_EXP=/home/smco500/maestro_suites/hrdps_national_20191231
+CAPS_EXP=/home/smco500/maestro_suites/caps_20191231
+
+# HOUR loop control for HRDPS
+hr_start = 0
+hr_end = 48
+hr_inc = 1
+hr_set = 12
+
+#GRIB2 SET defined for the prog_hour_loop
+grib_set = 12
+
+
+

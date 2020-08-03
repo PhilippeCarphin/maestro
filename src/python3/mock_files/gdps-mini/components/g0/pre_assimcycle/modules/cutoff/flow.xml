@@ -1,0 +1,8 @@
+<MODULE name="cutoff">
+    <SUBMITS sub_name="submit_families"/>
+    <TASK name="submit_families">
+        <SUBMITS sub_name="cutoff" type="user"/>
+    </TASK>
+    <NPASS_TASK name="cutoff"/>
+</MODULE>
+

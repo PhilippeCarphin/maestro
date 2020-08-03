@@ -1,0 +1,2 @@
+nodelogger -n ${SEQ_NODE} ${SEQ_LOOP_ARGS} -s info -m "splinterTask seq_node=${SEQ_NODE} seq_loop_args=${SEQ_LOOP_ARGS} not_an_env_var='${BLAHBLAH}' exp_home='${SEQ_EXP_HOME}'"
+

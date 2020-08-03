@@ -1,0 +1,5 @@
+<?xml version="1.0" ?><NODE_RESOURCES>
+   <BATCH catchup="3" cpu="1" machine="${FRONTEND}" memory="4G" mpi="0" queue="${FRONTEND_DEFAULT_Q}" soumet_args="-tmpfs ${TMPFSSIZE}" wallclock="15"/>
+   <DEPENDS_ON dep_name="/main/surface_analysis/get_sfc" status="end" type="node"/>
+   <DEPENDS_ON dep_name="/main/surface_analysis/hour/anl_sst" index="hour=00" valid_hour="00" status="end" type="node"/>
+</NODE_RESOURCES>

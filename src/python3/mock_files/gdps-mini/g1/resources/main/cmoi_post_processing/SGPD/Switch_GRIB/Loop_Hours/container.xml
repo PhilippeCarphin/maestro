@@ -1,0 +1,51 @@
+<?xml version="1.0" ?>
+<NODE_RESOURCES>
+ 
+<LOOP end="240" set="21" start="0" step="6"/>
+
+<DEPENDS_ON dep_name="/main/intxfer/intxfer_prog/loop_prog" exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=$((PROG))"   index="loop_prog=$((PROG))"   status="end" type="node" />
+
+<!-- NOTE: we can't use depencies shortcut syntax below because local_index iteration 0 is dependent on index iteration 6 of the target -->
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=0" index="loop_on_hours=6" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=6" index="loop_on_hours=6" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=12" index="loop_on_hours=12" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=18" index="loop_on_hours=18" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=24" index="loop_on_hours=24" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=30" index="loop_on_hours=30" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=36" index="loop_on_hours=36" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=42" index="loop_on_hours=42" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=48" index="loop_on_hours=48" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=54" index="loop_on_hours=54" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=60" index="loop_on_hours=60" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=66" index="loop_on_hours=66" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=72" index="loop_on_hours=72" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=78" index="loop_on_hours=78" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=84" index="loop_on_hours=84" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=90" index="loop_on_hours=90" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=96" index="loop_on_hours=96" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=102" index="loop_on_hours=102" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=108" index="loop_on_hours=108" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=114" index="loop_on_hours=114" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=120" index="loop_on_hours=120" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=126" index="loop_on_hours=126" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=132" index="loop_on_hours=132" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=138" index="loop_on_hours=138" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=144" index="loop_on_hours=144" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=150" index="loop_on_hours=150" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=156" index="loop_on_hours=156" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=162" index="loop_on_hours=162" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=168" index="loop_on_hours=168" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=174" index="loop_on_hours=174" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=180" index="loop_on_hours=180" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=186" index="loop_on_hours=186" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=192" index="loop_on_hours=192" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=198" index="loop_on_hours=198" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=204" index="loop_on_hours=204" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=210" index="loop_on_hours=210" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=216" index="loop_on_hours=216" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=222" index="loop_on_hours=222" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=228" index="loop_on_hours=228" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=234" index="loop_on_hours=234" status="end" type="node" />
+<DEPENDS_ON dep_name="/main/cmdw_post_processing/precipitations/calculs/loop_on_hours/pcpn_interval"  exp="${GDPS_EXP}" local_index="Switch_GRIB=CURRENT_INDEX,Loop_Hours=240" index="loop_on_hours=240" status="end" type="node" />
+
+</NODE_RESOURCES>
