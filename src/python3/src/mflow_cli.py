@@ -61,7 +61,7 @@ def main(args):
     print("Reading experiment files for '%s'" % experiment_path)
 
     try:
-        tui_config = get_mflow_config(args["--config"],
+        tui_config = get_mflow_config(os.path.expanduser(args["--config"]),
                                       inline_config_string=args["--config-inline"])
     except:
         print_red("Aborted. Failed to open or parse config file '%s'" % args["--config"])
