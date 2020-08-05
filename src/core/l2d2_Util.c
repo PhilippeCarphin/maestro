@@ -652,8 +652,8 @@ int ParseXmlConfigFile(char *filename ,  _l2d2server *pl2d2 )
              if ( pparam_n != NULL ) {
                       node_t *prc_n = roxml_get_attr(pparam_n,"maxNumOfProcess",0);
                       if ( prc_n != NULL && (c=roxml_get_content(prc_n,bf,sizeof(bf),&size)) != NULL && size > 0 ) {
-	                    if ( (pl2d2->maxNumOfProcess=atoi(bf)) <= 0 ) {
-			              pl2d2->maxNumOfProcess=4;
+	                    if ( (pl2d2->maxNumOfProcess=atoi(bf)) < 0 ) {
+			              pl2d2->maxNumOfProcess=0;
 			              fprintf(stderr,"Forcing maxNumOfProcess=%d\n",pl2d2->maxNumOfProcess);
                             } else if ( (pl2d2->maxNumOfProcess=atoi(bf)) > 8 ) {
 			              pl2d2->maxNumOfProcess=8;
