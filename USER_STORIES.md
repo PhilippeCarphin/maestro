@@ -43,6 +43,12 @@ xflow_overview -suites /home/smco500/.suites/gdps/g0
 
 Expected: overview and xflow successfully launch.
 
+# mserver nodelogger spam
+
+Create (or find) a toy suite that runs about 10 concurrent jobs each spamming 1000 nodelogger messages.
+
+Expected: all messages appear in the message center eventually, and mserver handles the stress test without errors.
+
 # man pages 
 As a newbie, launch a man page.
 
