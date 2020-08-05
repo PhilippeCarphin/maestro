@@ -62,7 +62,7 @@ clean:
 	rm -rf ${BIN_FOLDER}
 	# Delete all builds for this ord environment platform
 	rm -rf ${BUILD_FOLDER}/*${ORDENV_PLAT}*
-	find . -name "*\.o" -exec rm {} \;
+	find ${SOURCE_FOLDER} -name "*\.o" -exec rm {} \;
 	rm -f ${SSM_FOLDER}/*${ORDENV_PLAT}*.ssm
 
 	mkdir -p build
