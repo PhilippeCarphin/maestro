@@ -18,6 +18,7 @@ Options:
     --exp=<experiment-path>      The path to a maestro experiment, such as a folder containing "ExpOptions". [default: %s]
     --date=<datestamp>           The datestamp to view using YYYYMMDDHH or YYYYMMDD format. Default is the latest found in experiment logs. If none, datestamp is now.
     --config=<path>              A path to a configuration file for options which are rarely changed. If '%s/.mflowrc' exists, that becomes the default. [default: %s]
+    --config-inline=<values>     A comma delimited list of values here is read as if it were in the --config file. Example: --config-inline=A=1,B=2
     --home=<folder>              The home folder used to lookup files like '~/.suites/overrides.def'. By default, use the home of the owner of the maestro experiment.
     
     --tui-id=<id>                Used internally. This value helps the bash wrapper distinguish between multiple launches of mflow.
@@ -35,7 +36,7 @@ from utilities.maestro.datestamp import get_latest_yyyymmddhh_from_experiment_pa
 from maestro_experiment import MaestroExperiment
 from mflow import TuiManager
 from utilities.mflow.threading import async_set_qstat_data_in_maestro_experiment
-from utilities.mflow import get_mflow_config
+from utilities.mflow import get_mflow_config, get_unknown_mflow_config_keys
 from utilities import print_red
 from utilities.docopt import docopt
 import traceback
@@ -60,10 +61,16 @@ def main(args):
     print("Reading experiment files for '%s'" % experiment_path)
 
     try:
-        tui_config = get_mflow_config(args["--config"])
+        tui_config = get_mflow_config(args["--config"],
+                                      inline_config_string=args["--config-inline"])
     except:
         print_red("Aborted. Failed to open or parse config file '%s'" % args["--config"])
         traceback.print_exc()
+        return
+    
+    unknown_keys=get_unknown_mflow_config_keys(tui_config)
+    if unknown_keys:
+        print_red("Aborted. Found config keys that are not present in the default config file. This probably means it's a typo: "+str(unknown_keys))
         return
 
     interval = tui_config["FLOW_STATUS_REFRESH_SECONDS"]
