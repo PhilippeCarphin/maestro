@@ -36,7 +36,7 @@ fi
 for exp in $exps ; do
 
     ! [[ -d  $exp ]] && continue    
-    echo "\n --> Scanning under $exp ..."
+    echo " --> Scanning under $exp ..."
     if [[ -z $f || $f == *cfg* ]] ; then  
         [[ -f  $exp/experiment.cfg ]] && grep -${ignore}H $s $exp/experiment.cfg
     fi
@@ -70,7 +70,7 @@ for exp in $exps ; do
                 #visible local
                 find $exp/listings/$machine/ -type f -exec zgrep -${ignore}H $s {} \;
             else 
-                echo "\n==Logging on $machine to scan listings=="
+                echo "==Logging on $machine to scan listings=="
                 ping -q -c 1 $machine >> /dev/null && ssh $machine find $exp/listings/$machine/ -type f -exec zgrep -${ignore}H $s {} \;
             fi
         done 
