@@ -9,6 +9,7 @@ cp ${PACKAGE_HOME}/.ssm.d/profile.sh ${PROFILE_SCRIPT}
 
 BIN_FOLDER=${PACKAGE_HOME}/bin
 TCL_BIN_FOLDER=${PACKAGE_HOME}/tcl_bin
+MAN1_FOLDER=${PACKAGE_HOME}/man/man1
  
 # Soft link all bins to the root bin folder.
 ln -s ${PACKAGE_HOME}/src/core/bin/* ${BIN_FOLDER}/
@@ -18,6 +19,59 @@ for executable in heimdall mflow maestro_search ; do
 	ln -s ${PACKAGE_HOME}/src/python3/bin/$executable ${BIN_FOLDER}/
 done
 ln -s ${PACKAGE_HOME}/src/xm/bin/* ${BIN_FOLDER}/
+
+# remove .orig files if they are there
+find ${BIN_FOLDER} -name "*.orig" -delete
+
+# Create 'm.' soft links, like 'm.getdef -> getdef' in bin folder.
+# This makes it easy to see all maestro executables by typing 'm. <tab> <tab>'
+# Also link the man pages, if the man page exists.
+for executable in $(ls ${BIN_FOLDER}) ; do
+
+	# tools that do not need 'm.'
+	if [[ $executable == maestro* || $executable == m.* || $executable == l2d2_* ]] ; then
+		continue
+	fi
+
+	# skip tools that may be deprecated
+	should_skip="false"
+	for skip_executable in $(echo "submit_listcmd
+tictac
+tkdiff
+runvars
+task_setup_cachegen
+subtask_builder.py
+o.set_array.dot
+Exec_Gitk.ksh
+mtest
+rebuild_task_ext  
+use_fast_tmp
+program_monitor") ; do
+		if [[ $executable == $skip_executable ]] ; then
+			should_skip="true"
+			break
+		fi
+	done
+	if [[ $should_skip == "true" ]] ; then
+		continue
+	fi
+
+	new_link=m.$executable
+
+	# tools that should strip the first 'm' character so it is 'm.server' and not 'm.mserver'
+	if [[ $executable == "mflow" || $executable == mserver* || $executable == "madmin" ]] ; then
+		new_link=m.${executable:1}
+	fi
+
+	ln -s $executable ${BIN_FOLDER}/$new_link
+
+	# Also make a man page link, so 'man m.getdef' and 'man getdef' both work and use the same man page.
+	if [[ -e ${MAN1_FOLDER}/${executable}.1 ]] ; then
+		ln -s ${executable}.1 ${MAN1_FOLDER}/${new_link}.1
+	fi
+
+done
+ln -s xm ${BIN_FOLDER}/m.experiment_manager
 
 # tcl bins go in a special bins folder, so that they do not clash with a possible system installation of tcl
 rm -f ${TCL_BIN_FOLDER}
