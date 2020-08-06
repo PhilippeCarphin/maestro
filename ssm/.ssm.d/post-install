@@ -19,6 +19,33 @@ for executable in heimdall mflow maestro_search ; do
 done
 ln -s ${PACKAGE_HOME}/src/xm/bin/* ${BIN_FOLDER}/
 
+# Create 'm.' soft links, like 'm.getdef -> getdef' in bin folder.
+# This makes it easy to see all maestro executables by typing 'm. <tab> <tab>'
+before_dir=$($PWD)
+cd ${BIN_FOLDER}
+for executable in $(ls) ; do
+
+	# tools that do not need 'm.'
+	if [[ $executable == "maestro*" || $executable == "m.*" || $executable == "l2d2_*" ]] ; then
+		continue
+	fi
+
+	# skip tools that may be deprecated
+	if [[ $executable == "program_monitor" || $executable == "Exec_Gitk.ksh" || $executable == "mtest" || 
+	      $executable == "subtask_builder.py" || $executable == "tictac" ]] ; then
+		continue
+	fi
+
+	new_link=m.$executable
+
+	# tools that should strip the first 'm' character so it is 'm.server' and not 'm.mserver'
+	if [[ $executable == "mflow" || $executable == "mserver*" || $executable == "madmin" ]] ; then
+		new_link=m.${executable:1}
+	fi
+
+	ln -s $executable $new_link
+done
+
 # tcl bins go in a special bins folder, so that they do not clash with a possible system installation of tcl
 rm -f ${TCL_BIN_FOLDER}
 ln -s ${PACKAGE_HOME}/src/tcl/bin ${TCL_BIN_FOLDER}
