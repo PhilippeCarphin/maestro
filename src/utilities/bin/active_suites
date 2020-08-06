@@ -1,9 +1,25 @@
 #!/usr/bin/env python2
  
+import optparse
+import os
+import sys
+import xml.etree.ElementTree
 
+class Suites(dict):
+    """General Mestro suite information"""
+    def __init__(self,cfgfile):
+        """Class constructor"""
+        try:
+            self.tree = xml.etree.ElementTree.parse(cfgfile)
+            self.root = self.tree.getroot()
+            self.exps = [elem.text for elem in self.root.findall(".//Exp")]
+        except IOError:
+            sys.stderr.write("Error: cannot read from "+cfgfile+"\n")
+            sys.exit(-1)
 
-
-import optparse,os,suites
+    def print_active(self):
+        """Generate a list of active experiments"""
+        [sys.stdout.write(exp+"\n") for exp in self.exps]
 
 # Executable segment
 if __name__ == "__main__":
@@ -21,7 +37,7 @@ if __name__ == "__main__":
     (options,args) = parser.parse_args()
 
     # Obtain suite information
-    suite = suites.Suites(options.suite_file)
+    suite = Suites(options.suite_file)
 
     # Perform user-specified operations
     if options.list:
