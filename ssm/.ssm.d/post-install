@@ -9,6 +9,7 @@ cp ${PACKAGE_HOME}/.ssm.d/profile.sh ${PROFILE_SCRIPT}
 
 BIN_FOLDER=${PACKAGE_HOME}/bin
 TCL_BIN_FOLDER=${PACKAGE_HOME}/tcl_bin
+MAN1_FOLDER=${PACKAGE_HOME}/man/man1
  
 # Soft link all bins to the root bin folder.
 ln -s ${PACKAGE_HOME}/src/core/bin/* ${BIN_FOLDER}/
@@ -24,9 +25,8 @@ find ${BIN_FOLDER} -name "*.orig" -delete
 
 # Create 'm.' soft links, like 'm.getdef -> getdef' in bin folder.
 # This makes it easy to see all maestro executables by typing 'm. <tab> <tab>'
-before_dir=$($PWD)
-cd ${BIN_FOLDER}
-for executable in $(ls) ; do
+# Also link the man pages, if the man page exists.
+for executable in $(ls ${BIN_FOLDER}) ; do
 
 	# tools that do not need 'm.'
 	if [[ $executable == maestro* || $executable == m.* || $executable == l2d2_* ]] ; then
@@ -46,10 +46,15 @@ for executable in $(ls) ; do
 		new_link=m.${executable:1}
 	fi
 
-	ln -s $executable $new_link
+	ln -s $executable ${BIN_FOLDER}/$new_link
+
+	# Also make a man page link, so 'man m.getdef' and 'man getdef' both work and use the same man page.
+	if [[ -e ${MAN1_FOLDER}/${executable}.1 ]] ; then
+		ln -s ${executable}.1 ${MAN1_FOLDER}/${new_link}.1
+	fi
+
 done
-ln -s xm m.experiment_manager
-cd $before_dir
+ln -s xm ${BIN_FOLDER}/m.experiment_manager
 
 # tcl bins go in a special bins folder, so that they do not clash with a possible system installation of tcl
 rm -f ${TCL_BIN_FOLDER}
