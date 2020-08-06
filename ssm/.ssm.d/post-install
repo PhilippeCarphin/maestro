@@ -34,8 +34,25 @@ for executable in $(ls ${BIN_FOLDER}) ; do
 	fi
 
 	# skip tools that may be deprecated
-	if [[ $executable == "program_monitor" || $executable == "Exec_Gitk.ksh" || $executable == "mtest" || 
-	      $executable == "subtask_builder.py" || $executable == "tictac" ]] ; then
+	should_skip="false"
+	for skip_executable in $(echo "submit_listcmd
+tictac
+tkdiff
+runvars
+task_setup_cachegen
+subtask_builder.py
+o.set_array.dot
+Exec_Gitk.ksh
+mtest
+rebuild_task_ext  
+use_fast_tmp
+program_monitor") ; do
+		if [[ $executable == $skip_executable ]] ; then
+			should_skip="true"
+			break
+		fi
+	done
+	if [[ $should_skip == "true" ]] ; then
 		continue
 	fi
 
