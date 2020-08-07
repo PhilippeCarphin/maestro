@@ -39,7 +39,8 @@ static void pdir (const char * dir_name);
 
 /**
 * Copied from SeqUtil
-*
+* Returns leaf of given argument (similar to basename)
+* /path/to/leaf -> leaf 
 *
 */
 char *getPathLeaf (const char *full_path) {
@@ -60,7 +61,7 @@ char *getPathLeaf (const char *full_path) {
 
 /**
  * Name        : removeFile
- * 
+ * Removes a file, returns the removal status. This functions should be deprecated. 
  */
 int removeFile(char *filename) {
    int status=0;
@@ -159,7 +160,8 @@ int isDirExists ( const char* path_name ) {
 }
 
 /**
- * create a directory  1+ level 
+ * creates one or several directories  1+ level
+ * Logs failures in mserver log.  
  */
 int r_mkdir ( const char* dir_name, int is_recursive , FILE *mlog) {
    char tmp[1024];
@@ -233,7 +235,9 @@ int globPath (char *pattern, int flags, int (*errfunc) (const char *epath, int e
 }
 
 /**
- * copied from nodelogger_svr
+ * copied from nodelogger_svr (should be removed and included if duplicate exists
+ * Returns all but last element of a "/" delimited string. 
+ * /path/to/leaf -> /path/to
  */
 char *getPathBase (const char *full_path) {
   char *split=NULL;
@@ -371,7 +375,7 @@ int  writeNodeWaitedFile ( const char * string , FILE *mlog )
 
 /**
  * write dependency file btw diff users
- *
+ * The files are used by mserver dependency monitor to check remote dependencies 
  *
  */
 int writeInterUserDepFile (const char * tbuffer, FILE *mlog)
@@ -1162,7 +1166,7 @@ int SendFile (const char * filename , int sock, FILE *mlog )
 }
 
 /**
- * Obtain a lock on a file , and if  symlink is old by x sec remove it
+ * Obtain a lock on a file using a link to it as mechanism, and clears symlink if it is old by x sec remove it
  * return 
  *  0 if lock obtained 
  *  1 if not 
@@ -1206,7 +1210,7 @@ int lock ( char *md5Token , _l2d2server L2D2 , char *xpn , char *node , FILE *ml
 }
 
 /** 
- * remove a lock, 
+ * remove lock on a file, 
  * return 0 if success 1 if not 
  */
 int unlock ( char *md5Token , _l2d2server L2D2, char *xpn, char *node, FILE *mlog) 
@@ -1315,6 +1319,9 @@ dpnode *getDependencyFiles(char *DDep, char *xp ,FILE *fp, const char *deptype)
    return (PRT_listdep);  
 }
 
+/* 
+* Glob error function handler  
+*/ 
 int globerr(const char *path, int eerrno)
 {
     fprintf(stderr, "%s: %s\n", path, strerror(eerrno));
