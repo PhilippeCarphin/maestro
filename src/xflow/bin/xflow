@@ -1,5 +1,7 @@
 #!/bin/ksh
 
+assert_x11_forwarding_is_enabled || exit 1
+
 [[ "$1" = --help || "$1" = -h ]] && set -h
 # check tcl/tk installation: 
 [[ -z ${SEQ_MAESTRO_DOMAIN} ]] && echo "SEQ_MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 

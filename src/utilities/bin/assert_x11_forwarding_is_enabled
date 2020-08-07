@@ -1,0 +1,18 @@
+#!/bin/bash
+
+# If 'ssh' is used without the '-X' or '-Y' options, forwarding a GUI application like xflow may not be possible.
+# If display is enabled:
+#     Do nothing, return 'exit 0'
+# If display is disabled:
+#     Describe the problem and how to fix it, return 'exit 1'
+
+if [[ -z $DISPLAY ]] ; then
+	echo "Aborted. X11 forwarding is not enabled.
+
+In order to launch some graphical applications from the commandline through ssh, you need to enable 'X11 forwarding'.
+This can be done with the ssh options '-X' or '-Y'. For example: 'ssh sts271@eccc-ppp4 -X'
+You may need to 'exit' this ssh session, reconnect with that option, and try running this command again."
+	exit 1
+fi
+
+exit 0
