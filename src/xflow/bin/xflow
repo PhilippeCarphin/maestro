@@ -42,8 +42,15 @@ test "${nosubmitpopup}" != "" && nosubmitpopup_opt="-nosubmitpopup ${nosubmitpop
 
 date_opt=""
 if [[ "${d}" != "" ]] ; then
-   print "\n starting $(basename $0) with date ${d}"
-   date_opt="-date ${d}"
+
+	# Transform datestamps like YYYYMMDD or YYYYMMDDhh into YYYYMMDDhhmmss by adding zeroes.
+	# First add lots of extra zeroes.
+	d=${d}000000
+	# Take just the first 14 characters.
+	d=${d:0:14}
+
+     	print "\n starting $(basename $0) with date ${d}"
+     	date_opt="-date ${d}"
 fi
 exp_opt=""
 if [[ "${exp}" != "" ]] ; then
