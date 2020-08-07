@@ -2,17 +2,17 @@
  * the Maestro sequencer software package.
  */
 
-#include "SeqDatesUtil.h"
-#include "SeqLoopsUtil.h"
-#include "SeqNameValues.h"
-#include "SeqUtil.h"
-#include "getopt.h"
-#include "nodeinfo.h"
-#include "nodeinfo_filters.h"
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include "SeqUtil.h"
+#include "nodeinfo.h"
+#include "nodeinfo_filters.h"
+#include "SeqLoopsUtil.h"
+#include "SeqNameValues.h"
+#include "getopt.h"
+#include "SeqDatesUtil.h"
 
 static void printUsage() {
   char *usage = "For complete and up to date information on this command, see "

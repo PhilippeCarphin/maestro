@@ -2,32 +2,32 @@
  * software package.
  */
 
-#include "l2d2_commun.h"
-#include "l2d2_lists.h"
-#include "l2d2_roxml.h"
-#include "l2d2_server.h"
-#include "l2d2_socket.h"
-#include <ctype.h>
-#include <dirent.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <glob.h>
-#include <libgen.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <pwd.h>
-#include <signal.h>
-#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
-#include <sys/param.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <dirent.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <glob.h>
+#include <ctype.h>
 #include <sys/wait.h>
+#include <sys/socket.h>
+#include <errno.h>
+#include <pwd.h>
+#include <libgen.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sys/stat.h>
+#include <sys/param.h>
+#include "l2d2_roxml.h"
+#include "l2d2_server.h"
+#include "l2d2_lists.h"
+#include "l2d2_socket.h"
+#include "l2d2_commun.h"
 
 extern char *get_Authorization(char *, char *, char **);
 extern dpnode *getDependencyFiles(char *ddep, char *xp, FILE *fp,

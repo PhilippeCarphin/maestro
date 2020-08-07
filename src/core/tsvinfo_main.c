@@ -1,13 +1,13 @@
 /* mtest_main.c - Used for experimentation and unit testing.
  */
-#include "SeqDatesUtil.h"
-#include "SeqUtil.h"
-#include "getopt.h"
-#include "tsvinfo.h"
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include "getopt.h"
+#include "SeqUtil.h"
+#include "SeqDatesUtil.h"
+#include "tsvinfo.h"
 
 static void printUsage() {
   char *usage = "\

@@ -2,11 +2,11 @@
  * package.
  */
 
-#include "SeqDatesUtil.h"
-#include "SeqUtil.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "SeqUtil.h"
+#include "SeqDatesUtil.h"
 
 /********************************************************************************
  * Returns a copy of baseDatestamp incremented by time_delta or by hour if

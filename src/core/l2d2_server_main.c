@@ -2,34 +2,34 @@
  */
 
 #define _REENTRANT
-#include "l2d2_Util.h"
-#include "l2d2_commun.h"
-#include "l2d2_server.h"
-#include "l2d2_socket.h"
-#include <arpa/inet.h>
-#include <dirent.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <glob.h>
-#include <pthread.h>
-#include <pwd.h>
-#include <signal.h>
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/dir.h>
-#include <sys/ioctl.h>
-#include <sys/ipc.h>
-#include <sys/param.h>
-#include <sys/select.h>
-#include <sys/sem.h>
-#include <sys/socket.h>
+#include <stdio.h>
+#include <unistd.h>
+#include <signal.h>
+#include <pwd.h>
+#include <errno.h>
+#include <time.h>
+#include <glob.h>
+#include <utime.h>
 #include <sys/stat.h>
 #include <sys/types.h>
+#include <sys/ipc.h>
+#include <sys/socket.h>
+#include <arpa/inet.h>
+#include <pthread.h>
+#include <sys/ioctl.h>
+#include <sys/dir.h>
+#include <sys/param.h>
 #include <sys/wait.h>
-#include <time.h>
-#include <unistd.h>
-#include <utime.h>
+#include <sys/sem.h>
+#include <sys/select.h>
+#include <fcntl.h>
+#include <dirent.h>
+#include "l2d2_Util.h"
+#include "l2d2_server.h"
+#include "l2d2_socket.h"
+#include "l2d2_commun.h"
 
 #define MAX_PROCESS 8                  /* max number of Transient workers */
 #define ETERNAL_WORKER_STIMEOUT 1 * 60 /* 1 minute */

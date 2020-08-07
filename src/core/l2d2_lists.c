@@ -2,11 +2,11 @@
  * sequencer software package.
  */
 
-#include "l2d2_lists.h"
-#include <malloc.h>
 #include <stdio.h>
-#include <stdlib.h>
 #include <string.h>
+#include <stdlib.h>
+#include <malloc.h>
+#include "l2d2_lists.h"
 
 /*
  * ----------------------------------------------

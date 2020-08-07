@@ -30,9 +30,9 @@
  */
 #define ROXML_INT
 
-#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <fcntl.h>
 #include <string.h>
 
 #include "l2d2_roxml-defines.h"

@@ -5,11 +5,11 @@
 #ifndef _RESOURCE_VISITOR_H_
 #define _RESOURCE_VISITOR_H_
 
-#include "SeqNode.h"
 #include <libxml/parser.h>
-#include <libxml/tree.h>
 #include <libxml/xpath.h>
+#include <libxml/tree.h>
 #include <libxml/xpathInternals.h>
+#include "SeqNode.h"
 
 /* Uncomment this line to use the replacement functions for getting worker
  * information:

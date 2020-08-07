@@ -4,18 +4,18 @@
 #ifndef L2D2UTIL_H
 #define L2D2UTIL_H
 
-#include "l2d2_lists.h"
-#include "l2d2_server.h"
-#include <dirent.h>
-#include <fcntl.h>
-#include <limits.h>
 #include <stdlib.h>
-#include <string.h>
-#include <sys/ipc.h>
-#include <sys/sem.h>
-#include <sys/types.h>
-#include <time.h>
+#include <limits.h>
 #include <unistd.h>
+#include <dirent.h>
+#include <sys/types.h>
+#include <sys/sem.h>
+#include <sys/ipc.h>
+#include <fcntl.h>
+#include <time.h>
+#include <string.h>
+#include "l2d2_server.h"
+#include "l2d2_lists.h"
 
 #define CONSOLE_OUT 0
 #define CONSOLE_ERR 1

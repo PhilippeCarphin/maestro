@@ -4,8 +4,8 @@
 #ifndef _SEQ_UTIL
 #define _SEQ_UTIL
 
-#include "SeqListNode.h"
 #include "SeqNode.h"
+#include "SeqListNode.h"
 #include "regex.h"
 #include <openssl/md5.h>
 #include <stdio.h>

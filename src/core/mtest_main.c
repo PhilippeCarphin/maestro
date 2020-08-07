@@ -1,23 +1,23 @@
 /* mtest_main.c - Used for experimentation and unit testing.
  */
-#include "FlowVisitor.h"
-#include "ResourceVisitor.h"
-#include "SeqDatesUtil.h"
-#include "SeqLoopsUtil.h"
-#include "SeqNode.h"
-#include "SeqUtil.h"
-#include "XmlUtils.h"
-#include "getopt.h"
-#include "l2d2_commun.h"
-#include "nodeinfo.h"
-#include <libxml/parser.h>
-#include <libxml/tree.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/tree.h>
+#include <libxml/xpathInternals.h>
+#include "ResourceVisitor.h"
+#include "FlowVisitor.h"
+#include "SeqDatesUtil.h"
+#include "SeqLoopsUtil.h"
+#include "SeqUtil.h"
+#include "nodeinfo.h"
+#include "getopt.h"
+#include "SeqNode.h"
+#include "XmlUtils.h"
+#include "l2d2_commun.h"
 
 static char *testDir = NULL;
 

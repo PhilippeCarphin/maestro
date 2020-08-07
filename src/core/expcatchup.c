@@ -8,12 +8,12 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "SeqUtil.h"
-#include "XmlUtils.h"
-#include <libxml/encoding.h>
 #include <libxml/parser.h>
-#include <libxml/xmlwriter.h>
 #include <libxml/xpath.h>
+#include <libxml/encoding.h>
+#include <libxml/xmlwriter.h>
+#include "XmlUtils.h"
+#include "SeqUtil.h"
 
 const char *CATCHUP_XML_FILE = "/resources/catchup.xml";
 const char *XML_NODE_NAME = "CATCHUP";

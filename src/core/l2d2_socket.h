@@ -3,23 +3,24 @@
 
 #ifndef L2D2_SOCKET_H
 #define L2D2_SOCKET_H
-#include <dirent.h>
-#include <fcntl.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <pwd.h>
-#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <signal.h>
+#include <unistd.h>
+#include <pwd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <fcntl.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <netdb.h>
+#include <time.h>
+#include <fcntl.h>
+#include <dirent.h>
 #include <sys/dir.h>
 #include <sys/param.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <time.h>
-#include <unistd.h>
 
 /* size of socket buffers in KiloBytes */
 #define SOCK_BUF_SIZE 10

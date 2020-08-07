@@ -1,14 +1,14 @@
 /* QueryServer.c - Basic server code the Maestro sequencer software package.
  */
 
-#include "QueryServer.h"
-#include "SeqUtil.h"
-#include "SeqUtilServer.h"
-#include "l2d2_socket.h"
-#include <glob.h>
-#include <signal.h>
 #include <stdlib.h>
+#include <signal.h>
 #include <sys/param.h>
+#include <glob.h>
+#include "SeqUtil.h"
+#include "l2d2_socket.h"
+#include "SeqUtilServer.h"
+#include "QueryServer.h"
 
 /**
  *

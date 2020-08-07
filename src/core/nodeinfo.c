@@ -2,25 +2,25 @@
  * software package.
  */
 
+#include <stdlib.h>
+#include <stdio.h>
+#include <string.h>
+#include <stdarg.h>
+#include <pwd.h>
+#include <unistd.h>
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/tree.h>
+#include <libxml/xpathInternals.h>
 #include "nodeinfo.h"
+#include "SeqDepends.h"
+#include "tictac.h"
+#include "SeqUtil.h"
+#include "SeqDatesUtil.h"
+#include "XmlUtils.h"
+#include "SeqLoopsUtil.h"
 #include "FlowVisitor.h"
 #include "ResourceVisitor.h"
-#include "SeqDatesUtil.h"
-#include "SeqDepends.h"
-#include "SeqLoopsUtil.h"
-#include "SeqUtil.h"
-#include "XmlUtils.h"
-#include "tictac.h"
-#include <libxml/parser.h>
-#include <libxml/tree.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
-#include <pwd.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
 /* root node of xml resource file */
 const char *NODE_RES_XML_ROOT = "/NODE_RESOURCES";

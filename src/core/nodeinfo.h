@@ -4,8 +4,8 @@
 #define _NODEINFO_H_
 
 #include "SeqNode.h"
-#include "nodeinfo_filters.h"
 #include <libxml/xpath.h>
+#include "nodeinfo_filters.h"
 
 extern SeqNodeDataPtr nodeinfo(const char *node, unsigned int filters,
                                SeqNameValuesPtr _loops, const char *_exp_home,

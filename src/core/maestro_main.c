@@ -2,18 +2,18 @@
  * sequencer software package.
  */
 
-#include "SeqDatesUtil.h"
-#include "SeqListNode.h"
-#include "SeqLoopsUtil.h"
-#include "SeqNameValues.h"
-#include "SeqUtil.h"
-#include "getopt.h"
-#include "maestro.h"
-#include <libxml/parser.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <unistd.h>
+#include "maestro.h"
+#include "SeqListNode.h"
+#include "SeqUtil.h"
+#include "SeqNameValues.h"
+#include "SeqDatesUtil.h"
+#include "SeqLoopsUtil.h"
+#include "getopt.h"
+#include <libxml/parser.h>
 /***********************************************************************************
  * name: maestro
  *

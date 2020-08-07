@@ -1,19 +1,19 @@
 /* ResourceVisitor.c - Parses data from resource XML file of a node into the
  * nodeDataPtr.
  */
-#include "ResourceVisitor.h"
-#include "SeqDatesUtil.h"
-#include "SeqLoopsUtil.h"
-#include "SeqNode.h"
-#include "SeqUtil.h"
-#include "SeqUtilServer.h"
-#include "XmlUtils.h"
-#include "nodeinfo.h"
 #include <libxml/parser.h>
-#include <libxml/tree.h>
 #include <libxml/xpath.h>
+#include <libxml/tree.h>
 #include <libxml/xpathInternals.h>
 #include <string.h>
+#include "ResourceVisitor.h"
+#include "SeqUtilServer.h"
+#include "XmlUtils.h"
+#include "SeqNode.h"
+#include "nodeinfo.h"
+#include "SeqDatesUtil.h"
+#include "SeqLoopsUtil.h"
+#include "SeqUtil.h"
 
 /********************************************************************************
  * Allocates and initialises a ValidityData struct to transfer between

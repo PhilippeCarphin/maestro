@@ -2,19 +2,19 @@
  * sequencer software package.
  */
 
-#include "SeqUtilServer.h"
-#include "QueryServer.h"
-#include "SeqUtil.h"
-#include "l2d2_commun.h"
-#include <dirent.h>
-#include <errno.h>
-#include <pwd.h>
-#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
+#include <dirent.h>
 #include <sys/stat.h>
 #include <unistd.h>
+#include <pwd.h>
+#include <errno.h>
+#include "SeqUtil.h"
+#include "QueryServer.h"
+#include "SeqUtilServer.h"
+#include "l2d2_commun.h"
 
 int MLLServerConnectionFid = 0;
 
@@ -29,7 +29,7 @@ int (*_isFileExists)(const char *lockfile, const char *caller,
 int (*_globPath)(const char *pattern, int flags,
                  int (*errfunc)(const char *epath, int eerrno),
                  const char *_seq_exp_home);
-LISTNODEPTR(*_globExtList)
+LISTNODEPTR (*_globExtList)
 (const char *pattern, int flags, int (*errfunc)(const char *epath, int eerrno));
 int (*_lock)(const char *filename, const char *datestamp,
              const char *_seq_exp_home);

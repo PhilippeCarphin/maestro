@@ -2,10 +2,10 @@
 #include <stdlib.h>
 #include <string.h>
 
-#include "SeqLoopsUtil.h"
 #include "SeqNode.h"
-#include "SeqNodeCensus.h"
 #include "SeqUtil.h"
+#include "SeqLoopsUtil.h"
+#include "SeqNodeCensus.h"
 
 #include "ResourceVisitor.h"
 

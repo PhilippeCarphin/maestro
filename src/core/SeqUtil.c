@@ -1,27 +1,27 @@
 /* SeqUtil.c - Basic utilities used by the Maestro sequencer software package.
  */
 
-#include "SeqUtil.h"
-#include "SeqListNode.h"
-#include "SeqNameValues.h"
-#include "l2d2_commun.h"
-#include <dirent.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <glob.h>
-#include <pwd.h>
-#include <signal.h>
-#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
-#include <sys/mman.h>
+#include <dirent.h>
 #include <sys/stat.h>
 #include <sys/types.h>
 #include <sys/wait.h>
-#include <time.h>
+#include <sys/mman.h>
+#include <fcntl.h>
+#include <signal.h>
 #include <unistd.h>
+#include <pwd.h>
+#include <glob.h>
 #include <utime.h>
+#include <errno.h>
+#include "SeqUtil.h"
+#include <time.h>
+#include "SeqNameValues.h"
+#include "SeqListNode.h"
+#include "l2d2_commun.h"
 
 #define ispathsep(ch) ((ch) == '/' || (ch) == '\\')
 #define iseos(ch) ((ch) == '\0')

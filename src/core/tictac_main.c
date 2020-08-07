@@ -2,15 +2,15 @@
  * Maestro sequencer software package.
  */
 
-#include "SeqUtil.h"
-#include "getopt.h"
-#include "tictac.h"
-#include <signal.h>
-#include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdarg.h>
 #include <string.h>
+#include <signal.h>
 #include <unistd.h>
+#include "tictac.h"
+#include "SeqUtil.h"
+#include "getopt.h"
 
 /*****************************************************************************
  * tictac_main:

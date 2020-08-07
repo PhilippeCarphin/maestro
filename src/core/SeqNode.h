@@ -4,9 +4,9 @@
 #ifndef _SEQ_NODE
 #define _SEQ_NODE
 
-#include "SeqDepends.h"
 #include "SeqListNode.h"
 #include "SeqNameValues.h"
+#include "SeqDepends.h"
 #include <stdio.h>
 
 typedef enum _SeqNodeType {

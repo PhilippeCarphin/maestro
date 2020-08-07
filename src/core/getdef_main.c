@@ -1,11 +1,11 @@
 
 
-#include "SeqUtil.h"
-#include "getopt.h"
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 #include <unistd.h>
+#include "SeqUtil.h"
+#include "getopt.h"
 static void printUsage() {
   char *usage = "For complete and up to date information on this command, see "
                 "the man page by typing 'man getdef'.";

@@ -2,14 +2,14 @@
  * software package.
  */
 
-#include "SeqLoopsUtil.h"
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
 #include "SeqListNode.h"
 #include "SeqNameValues.h"
 #include "SeqNode.h"
 #include "SeqUtil.h"
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
+#include "SeqLoopsUtil.h"
 #include <string.h>
 
 #define DEF_START 0

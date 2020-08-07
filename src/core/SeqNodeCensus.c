@@ -1,12 +1,12 @@
-#include <libxml/parser.h>
-#include <libxml/tree.h>
-#include <libxml/xpath.h>
-#include <libxml/xpathInternals.h>
 #include <string.h>
+#include <libxml/parser.h>
+#include <libxml/xpath.h>
+#include <libxml/tree.h>
+#include <libxml/xpathInternals.h>
 
+#include "XmlUtils.h"
 #include "FlowVisitor.h"
 #include "SeqUtil.h"
-#include "XmlUtils.h"
 #include "nodeinfo.h"
 
 #include "SeqNodeCensus.h"

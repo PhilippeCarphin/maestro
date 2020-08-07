@@ -2,19 +2,19 @@
  * Maestro sequencer software package.
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <signal.h>
+#include <string.h>
+#include <unistd.h>
+#include "nodelogger.h"
+#include "tictac.h"
+#include "nodeinfo.h"
 #include "SeqLoopsUtil.h"
 #include "SeqNameValues.h"
 #include "SeqUtil.h"
 #include "getopt.h"
-#include "nodeinfo.h"
-#include "nodelogger.h"
-#include "tictac.h"
-#include <signal.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
 static void alarm_handler() {
   fprintf(stderr, "@@@@@@ EXCEEDED TIME IN LOOP ITERATIONS @@@@@@\n");

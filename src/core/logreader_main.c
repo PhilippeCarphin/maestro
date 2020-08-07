@@ -2,17 +2,17 @@
  * used in the Maestro sequencer software package.
  */
 
-#include "SeqDatesUtil.h"
-#include "SeqUtil.h"
-#include "getopt.h"
-#include "logreader.h"
-#include <errno.h>
-#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <unistd.h>
 #include <string.h>
 #include <time.h>
-#include <unistd.h>
+#include <fcntl.h>
+#include "logreader.h"
+#include <errno.h>
+#include "SeqUtil.h"
+#include "getopt.h"
+#include "SeqDatesUtil.h"
 
 static void printUsage() {
   char *usage = "For complete and up to date information on this command, see "

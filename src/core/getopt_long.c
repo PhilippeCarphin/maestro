@@ -30,13 +30,13 @@
  *      $NetBSD: getopt_long.c,v 1.3 2008/04/29 05:46:09 martin Exp $
  */
 
-#include "getopt.h"
 #include <assert.h>
 #include <errno.h>
 #include <stdarg.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "getopt.h"
 
 #ifndef _DIAGASSERT
 #define _DIAGASSERT(e)

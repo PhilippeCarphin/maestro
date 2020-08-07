@@ -7,17 +7,17 @@
  *AUTHOR: Dominic Racette
  ******************************************************************************/
 
-#include "SeqDatesUtil.h"
-#include "SeqUtil.h"
 #include <glob.h>
-#include <locale.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
+#include <time.h>
+#include <locale.h>
 #include <sys/stat.h>
 #include <sys/types.h>
-#include <time.h>
-#include <unistd.h>
+#include "SeqUtil.h"
+#include "SeqDatesUtil.h"
 
 /*****************************************************************************
  * tictac:

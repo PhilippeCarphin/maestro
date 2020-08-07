@@ -2,33 +2,34 @@
  * software package.
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <string.h>
+#include <errno.h>
+#include <assert.h>
+#include <dirent.h>
+#include <limits.h>
+#include <fcntl.h>
+#include <stdarg.h>
+#include <grp.h>
+#include <pwd.h>
+#include <glob.h>
+#include <time.h>
+#include <utime.h>
+#include <string.h>
+#include <sys/stat.h>
+#include <sys/types.h>
+#include <sys/socket.h>
+#include <sys/uio.h>
+#include <unistd.h>
+#include <sys/param.h>
+#include "l2d2_roxml.h"
+#include "l2d2_server.h"
 #include "l2d2_Util.h"
 #include "SeqLoopsUtil.h"
 #include "SeqNameValues.h"
 #include "SeqUtil.h"
 #include "l2d2_commun.h"
-#include "l2d2_roxml.h"
-#include "l2d2_server.h"
-#include <assert.h>
-#include <dirent.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <glob.h>
-#include <grp.h>
-#include <limits.h>
-#include <pwd.h>
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <sys/param.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <sys/uio.h>
-#include <time.h>
-#include <unistd.h>
-#include <utime.h>
 
 extern _l2d2server L2D2;
 extern FILE *mlog;

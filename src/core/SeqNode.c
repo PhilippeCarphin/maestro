@@ -2,19 +2,19 @@
  * Maestro sequencer software package.
  */
 
-#include "SeqNode.h"
-#include "SeqLoopsUtil.h"
-#include "SeqNameValues.h"
-#include "SeqUtil.h"
-#include "SeqUtilServer.h"
-#include "nodeinfo_filters.h"
-#include <assert.h>
-#include <ctype.h>
-#include <stdarg.h>
 #include <stdio.h>
+#include <ctype.h>
 #include <stdlib.h>
 #include <string.h>
+#include <stdarg.h>
+#include <assert.h>
 #include <unistd.h>
+#include "SeqNode.h"
+#include "SeqUtil.h"
+#include "SeqLoopsUtil.h"
+#include "SeqNameValues.h"
+#include "SeqUtilServer.h"
+#include "nodeinfo_filters.h"
 
 static char *FamilyTypeString = "Family";
 static char *TaskTypeString = "Task";

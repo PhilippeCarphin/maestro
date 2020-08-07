@@ -2,16 +2,16 @@
  * the Maestro sequencer software package.
  */
 
-#include "l2d2_commun.h"
-#include <errno.h>
-#include <fcntl.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include <errno.h>
+#include <fcntl.h>
+#include <time.h>
 #include <sys/param.h>
 #include <sys/stat.h>
 #include <sys/time.h>
-#include <time.h>
+#include "l2d2_commun.h"
 
 /**
  *  Name        : get_time

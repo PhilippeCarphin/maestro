@@ -2,11 +2,11 @@
  * sequencer software package.
  */
 
-#include "SeqListNode.h"
-#include "SeqUtil.h"
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
+#include "SeqListNode.h"
+#include "SeqUtil.h"
 
 /********************************************************************************
  * SeqListNode_insertItem: Inserts an Item into the list

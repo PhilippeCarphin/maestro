@@ -1,20 +1,20 @@
 /* FlowVisitor.c - Visits flow.xml files to assign flow information to a
  * nodeDataPtr.
  */
-#include <stdio.h>
 #include <stdlib.h>
+#include <stdio.h>
 #include <string.h>
 
 #include <libxml/parser.h>
-#include <libxml/tree.h>
 #include <libxml/xpath.h>
+#include <libxml/tree.h>
 #include <libxml/xpathInternals.h>
 
-#include "SeqLoopsUtil.h"
 #include "SeqNode.h"
+#include "nodeinfo.h"
 #include "SeqUtil.h"
 #include "XmlUtils.h"
-#include "nodeinfo.h"
+#include "SeqLoopsUtil.h"
 
 #include "FlowVisitor.h"
 #include "ResourceVisitor.h"

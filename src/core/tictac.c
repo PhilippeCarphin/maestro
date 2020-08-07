@@ -2,11 +2,11 @@
  */
 
 #include "tictac.h"
-#include "QueryServer.h"
 #include "SeqUtil.h"
-#include "SeqUtilServer.h"
 #include "l2d2_commun.h"
 #include "l2d2_socket.h"
+#include "QueryServer.h"
+#include "SeqUtilServer.h"
 
 /*****************************************************************************
  * tictac:

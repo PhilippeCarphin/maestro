@@ -5,8 +5,8 @@
 #define _XMLUTILS
 
 #include <libxml/parser.h>
-#include <libxml/tree.h>
 #include <libxml/xpath.h>
+#include <libxml/tree.h>
 #include <libxml/xpathInternals.h>
 
 /* Usage: get a result set using XmlUtils_getnodeset() then to iterate over the

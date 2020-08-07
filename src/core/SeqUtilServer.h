@@ -3,9 +3,9 @@
 
 #ifndef _SEQ_UTIL_SERVER
 #define _SEQ_UTIL_SERVER
+#include <openssl/md5.h>
 #include "SeqListNode.h"
 #include "l2d2_socket.h"
-#include <openssl/md5.h>
 
 extern int MLLServerConnectionFid;
 

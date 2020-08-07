@@ -4,24 +4,24 @@
 #ifndef QUERY_SERVER_H
 #define QUERY_SERVER_H
 
-#include <ctype.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <libgen.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <pwd.h>
-#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
-#include <sys/param.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/types.h>
+#include <fcntl.h>
+#include <signal.h>
+#include <ctype.h>
 #include <sys/wait.h>
+#include <sys/socket.h>
+#include <errno.h>
+#include <pwd.h>
+#include <libgen.h>
 #include <time.h>
 #include <unistd.h>
+#include <sys/types.h>
+#include <netdb.h>
+#include <netinet/in.h>
+#include <sys/stat.h>
+#include <sys/param.h>
 
 #define MAXBUF 1024
 

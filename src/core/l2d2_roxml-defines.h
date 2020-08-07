@@ -68,7 +68,7 @@
 
 #define ROXML_LONG_LEN                                                         \
   512 /* This is the max size for XML objects (node name, attribute name and   \
-       * values...) It is caused by the split of the XML file for parsing: 512 \
+       * values...) It is caused by the split of the XML file for parsing: 512                                                                           \
        * bytes are reserved as security to handle splitting inside an XML      \
        * object.                                                               \
        */

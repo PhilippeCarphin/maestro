@@ -2,28 +2,29 @@
  * software package.
  */
 
-#include "l2d2_socket.h"
-#include "SeqUtil.h"
-#include <arpa/inet.h>
-#include <dirent.h>
-#include <errno.h>
-#include <fcntl.h>
-#include <netdb.h>
-#include <netinet/in.h>
-#include <openssl/md5.h>
-#include <pwd.h>
-#include <signal.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <strings.h>
+#include <signal.h>
+#include <unistd.h>
+#include <errno.h>
+#include <pwd.h>
+#include <sys/types.h>
+#include <sys/stat.h>
+#include <openssl/md5.h>
+#include <fcntl.h>
+#include <sys/socket.h>
+#include <netinet/in.h>
+#include <arpa/inet.h>
+#include <netdb.h>
+#include <time.h>
+#include <fcntl.h>
+#include <dirent.h>
 #include <sys/dir.h>
 #include <sys/param.h>
-#include <sys/socket.h>
-#include <sys/stat.h>
-#include <sys/types.h>
-#include <time.h>
-#include <unistd.h>
+#include "l2d2_socket.h"
+#include "SeqUtil.h"
 
 extern char *str2md5(const char *, int);
 

@@ -1,6 +1,6 @@
+#include <stdlib.h>
 #include "SeqDepends.h"
 #include "SeqUtil.h"
-#include <stdlib.h>
 
 /********************************************************************************
  * Allocate and intialize a new SeqDepData object

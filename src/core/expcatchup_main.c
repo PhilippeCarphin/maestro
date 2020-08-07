@@ -2,14 +2,14 @@
  * sequencer software package.
  */
 
+#include <stdio.h>
+#include <stdlib.h>
+#include <stdarg.h>
+#include <string.h>
+#include <unistd.h>
 #include "SeqUtil.h"
 #include "expcatchup.h"
 #include "getopt.h"
-#include <stdarg.h>
-#include <stdio.h>
-#include <stdlib.h>
-#include <string.h>
-#include <unistd.h>
 
 static void printUsage() {
   char *usage =
