@@ -24,6 +24,8 @@ Do you have a bug to report, feature request, or want to write and review code? 
 
 Developers can contribute changes to the git repo roughly using [this git branching model](https://nvie.com/posts/a-successful-git-branching-model/). In summary:
 
+* The `integration` branch is the latest development branch to start from.
+* Only documentation updates can be pushed directly to integration, otherwise use merge requests.
 * Create a new issue describing the feature or bug before doing any work.
 * Create feature branches named `feature-xflow-refresh-button` with all commits for that feature.
 * Create bugfix branches named `bugfix-empty-catchup-xml` with all commits for that bugfix.
