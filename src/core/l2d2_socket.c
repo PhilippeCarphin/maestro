@@ -36,6 +36,10 @@ static socklen_t sizeserver = sizeof(server);
 static int must_init_signal = 1;
 
 
+/*
+* Wrapper for system gethostname... should be deprecated and removed. 
+*/
+
 int GetHostName(char *name, size_t len) 
 {
   int junk;
@@ -99,7 +103,8 @@ char *get_Authorization( char *filename , char *username , char **m5sum )
 }
 
 /**
- * write Parameters tokens into file ~user/.suites/.maestro_server_${version} 
+ * write Parameters tokens into file ~user/.suites/.maestro_server_${version}
+ * file will contain the location of the mserver process for clients (maestro/nodelogger) to connect to.  
  */
 void set_Authorization (unsigned int pid ,char * hostn , char * hip, int port , char * filename, char *username , char **m5sum) 
 {
@@ -405,7 +410,7 @@ void send_reply(int fclient, int status )
 
 /**
  * read from socket with time out 
- * Not used !
+ * Not used ! (then should be deprecated) 
  */
 int read_socket (int sock , char *buf , int size , unsigned int timeout) 
 {
@@ -454,7 +459,7 @@ int send_socket (int sock , char *buf , int size , unsigned int timeout)
 	return (bytes_write);
 }
 /** 
- * Initiate a connection with maestro_server 
+ * Initiate a connection with maestro_server mserver 
  */
 int do_Login( int sock , unsigned int pid , char *node, char *xpname , char *signl , char *username ,char **m5) {
 

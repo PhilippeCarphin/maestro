@@ -72,8 +72,7 @@ int removeFile(char *filename) {
 
 /**
  * Name        : CreateLock
- * Description : touch a file (calls touch) if file
- *               not there
+ * Description : touch a file (calls touch) if file not there. Returns 0 if file exists or was unable to be created. 
  */
 int CreateLock (char *filename) {
    int status=0;
@@ -91,7 +90,7 @@ int CreateLock (char *filename) {
 
 /**
  * Name        : touch
- * Author      : copied form SeqUtil.c 
+ * Author      : copied form SeqUtil.c  --> deprecate and use util one
  * Description : touch a file 
  */
 int touch (char *filename) {
@@ -117,7 +116,7 @@ int touch (char *filename) {
 
 /*
  * Name        : isFileExists
- * Author      : copied form SeqUtil.c
+ * Author      : copied form SeqUtil.c  -> deprecate and use util one if existing
  * Description : check if file exists 
  */
 int isFileExists( const char* lockfile ) {
@@ -128,7 +127,7 @@ int isFileExists( const char* lockfile ) {
 
 /**
  * Name        : Access
- * Description : check if file exist 
+ * Description : check if file exist -> deprecate, use system function.  
  */
 int Access ( const char* lockfile ) {
 
@@ -138,7 +137,7 @@ int Access ( const char* lockfile ) {
 
 /**
  * Name        : isDirExists
- * Author      : copied from SeqUtil.c 
+ * Author      : copied from SeqUtil.c -> deprecated, use util one. 
  * Description : check if directory exists 
  */
 int isDirExists ( const char* path_name ) {
@@ -160,7 +159,7 @@ int isDirExists ( const char* path_name ) {
 }
 
 /**
- * creates one or several directories  1+ level
+ * creates one or several directories levels, one at a time to deal with possible race conditions
  * Logs failures in mserver log.  
  */
 int r_mkdir ( const char* dir_name, int is_recursive , FILE *mlog) {
@@ -257,7 +256,7 @@ char *getPathBase (const char *full_path) {
 
 /**
  * Name        : NodeLogr
- * Description : write in .../logs/YYYYMMDDHH0000_nodelog file 
+ * Description : write in .../logs/YYYYMMDDHH0000_nodelog file, logs errors in mserver log file 
  */
 int NodeLogr (char *nodeLogerBuffer , int pid, FILE *mlog)
 {
@@ -278,8 +277,6 @@ int NodeLogr (char *nodeLogerBuffer , int pid, FILE *mlog)
 	     return (1);
      }
      
-     
-
      strcat(logBuffer,"\n");
      if ((NodeLogfile = open(firsin, O_WRONLY|O_APPEND|O_CREAT, 00666)) != -1 ) {
            bwrite = write(NodeLogfile,logBuffer , strlen(logBuffer));
@@ -535,7 +532,7 @@ char* page_end_blocked =
 
 
 /**
- * parse xml configuration file using libroxml
+ * parse mconfig.xml configuration file using libroxml
  */
 int ParseXmlConfigFile(char *filename ,  _l2d2server *pl2d2 )
 {
@@ -846,7 +843,7 @@ int ParseXmlConfigFile(char *filename ,  _l2d2server *pl2d2 )
       return (0);
 }
 /**
- * parse dependency file (polling for the moment )
+ * parse dependency file (polling for the moment ), errors logged in dependency manager log
  */
 struct _depParameters * ParseXmlDepFile(char *filename , FILE * dmlog )
 {
@@ -1082,8 +1079,7 @@ void logZone(int this_Zone, int conf_Zone, FILE *fp  , char * txt, ...)
 
 /**
 *   Function : typeofFile
-*   object   : return a code corresponding to the type
-*              of the file
+*   object   : return a code corresponding to the type of the file
 */
 char typeofFile(mode_t mode)
 {
@@ -1261,7 +1257,7 @@ int sendmail(const char *to, const char *from, const char *cc , const char *subj
 
 /**
 * getDependencyFiles
-* return parameters of inter-dependencies
+* return parsed content of inter-dependency files in dpnode struct
 * located under $HOME/.suites/maestrod/dependencies/polling/$version
 */
 dpnode *getDependencyFiles(char *DDep, char *xp ,FILE *fp, const char *deptype)
@@ -1328,7 +1324,7 @@ int globerr(const char *path, int eerrno)
     return 0; 
 }
 /*
-l2d2_Util_isNodeXState 
+l2d2_Util_isNodeXState --> deprecate and use maestro.c version ? 
 
 Returns an integer saying whether the targetted node is in a given state. 1 if node is in the desired state, 0 if not. 
 
