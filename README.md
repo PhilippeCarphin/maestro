@@ -27,8 +27,8 @@ Developers can contribute changes to the git repo roughly using [this git branch
 * The `integration` branch is the latest development branch to start from.
 * Only documentation updates can be pushed directly to integration, otherwise use merge requests.
 * Create a new issue describing the feature or bug before doing any work.
-* Create feature branches named `feature-xflow-refresh-button` with all commits for that feature.
-* Create bugfix branches named `bugfix-empty-catchup-xml` with all commits for that bugfix.
+* Create feature branches named `feature-*` like `feature-xflow-refresh-button` with all commits for that feature.
+* Create bugfix branches named `bugfix-*` like `bugfix-empty-catchup-xml` with all commits for that bugfix.
 * Submit [merge requests](https://www.youtube.com/watch?v=0AT7JxqoIps&list=PLRf-PfhVvwFA7tGxwEgxgnJIY7aVevqqo&index=5) when your branch is ready. Start the title of the merge request with "WIP" for "work in progress" if it's not ready to merge, but you want feedback.
 * Release branches named `release-*` like `release-1.6` can be used to cherry-pick hotfixes and publish another SSM, without releasing a new major version.
 
