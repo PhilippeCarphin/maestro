@@ -13,7 +13,7 @@ fi
 
 targets="$(find $target_folder -name "*.c") $(find $target_folder -name "*.h")"
 for target in $targets ; do
-	cmd="clang-format -i $target"
-	echo $cmd
-	$cmd
+	set -x
+	clang-format -i --style="{SortIncludes: false}" $target
+	set +x
 done
