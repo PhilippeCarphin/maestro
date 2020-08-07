@@ -7,7 +7,7 @@
 #     Describe the problem and how to fix it, return 'exit 1'
 
 if [[ -z $DISPLAY ]] ; then
-	echo "Aborted. X11 forwarding is not enabled.
+	echo "Aborted. X11 forwarding does not seem to be enabled because the environment variable DISPLAY is empty. Trying to run X11 may show the error: 'Error: Can't open display'.
 
 In order to launch some graphical applications from the commandline through ssh, you need to enable 'X11 forwarding'.
 This can be done with the ssh options '-X' or '-Y'. For example: 'ssh sts271@eccc-ppp4 -X'
