@@ -43,6 +43,15 @@ test "${nosubmitpopup}" != "" && nosubmitpopup_opt="-nosubmitpopup ${nosubmitpop
 date_opt=""
 if [[ "${d}" != "" ]] ; then
 
+	datestamp_regex='^[0-9]{8,14}$'
+	if ! [[ $d =~ $datestamp_regex ]] ; then
+		echo "Aborted. Bad '-d' option. Datestamps must be 8 to 14 digits for YYYYMMDDhhmmss like:
+	20200401
+	2020040112
+	20200401120000"
+		exit 1
+	fi
+
 	# Transform datestamps like YYYYMMDD or YYYYMMDDhh into YYYYMMDDhhmmss by adding zeroes.
 	# First add lots of extra zeroes.
 	d=${d}000000
