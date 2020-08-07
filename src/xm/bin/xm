@@ -1,5 +1,6 @@
 #!/bin/ksh
 
+assert_x11_forwarding_is_enabled || exit 1
 
 [[ "$1" = --help || "$1" = -h ]] && set -h
 
