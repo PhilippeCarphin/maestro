@@ -19,7 +19,7 @@
 #include "XmlUtils.h"
 #include "l2d2_commun.h"
 
-static char * testDir = NULL;
+static char * c_test_files_folder = NULL;
 
 /********************************************************************************
  * MAESTRO TEST FILE
@@ -30,7 +30,7 @@ static char * testDir = NULL;
  * This file assumes that the executable is being run from the maestro directory
  * so that paths can be relative to that directory:
  *
- * testDir is the location to look in for whaterver files are being used for
+ * c_test_files_folder is the location to look in for whaterver files are being used for
  * these tests.
  *
  * It is encouraged to put all files that need to be accessed in
@@ -51,16 +51,16 @@ static char * testDir = NULL;
 ********************************************************************************/
 
 /********************************************************************************
- * Creates an absolute path by appending the relative path to testDir, where
- * testDir = ${MAESTRO_REPO_LOCATION}/testDir/
+ * Creates an absolute path by appending the relative path to c_test_files_folder, where
+ * c_test_files_folder = ${MAESTRO_REPO_LOCATION}/c_test_files_folder/
  * This should be used for any paths so that the tests can be portable to
  * different users who keep their maestro stuff in different places.
 ********************************************************************************/
 char * absolutePath(const char * relativePath)
 {
    SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() begin\n");
-   char * absPath = (char *) malloc( strlen(testDir) + 1 + strlen(relativePath) + 1);
-   sprintf( absPath, "%s%c%s", testDir,'/', relativePath);
+   char * absPath = (char *) malloc( strlen(c_test_files_folder) + 1 + strlen(relativePath) + 1);
+   sprintf( absPath, "%s%c%s", c_test_files_folder,'/', relativePath);
    SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() end, returning %s\n", absPath);
    return absPath;
 }
@@ -540,12 +540,12 @@ FlowVisitorPtr createTestFlowVisitor()
       raiseError("createTestFlowVisitor(): out of memory\n");
 
    char postfix[] = "/flow.xml";
-   char * xmlFilename = (char *) malloc ( strlen(testDir) + strlen(postfix) + 1 );
+   char * xmlFilename = (char *) malloc ( strlen(c_test_files_folder) + strlen(postfix) + 1 );
    if (xmlFilename == NULL) {
         raiseError("createTestFlowVisitor(): out of memory\n");
    }
 
-   sprintf(xmlFilename, "%s%s", testDir,postfix);
+   sprintf(xmlFilename, "%s%s", c_test_files_folder,postfix);
    xmlDocPtr doc = XmlUtils_getdoc(xmlFilename);
    if (doc == NULL) {
         raiseError("createTestFlowVisitor(): file %s not found or unreadable\n", xmlFilename);
@@ -728,11 +728,11 @@ from the maestro directory.\n");
       exit(1);
    }
 
-   char * suffix = "/src/core/testDir";
-   testDir = (char *) malloc( sizeof(char) * (strlen(PWD) + strlen(suffix) + 1));
-   sprintf( testDir, "%s%s" , PWD, suffix);
+   char * suffix = "/tests/mock_files/c_tests";
+   c_test_files_folder = (char *) malloc( sizeof(char) * (strlen(PWD) + strlen(suffix) + 1));
+   sprintf( c_test_files_folder, "%s%s" , PWD, suffix);
 
-   puts ( testDir );
+   puts ( c_test_files_folder );
 
    if  (( datestamp == NULL ) && ( (tmpDate = getenv("SEQ_DATE")) != NULL ))  {
        datestamp = malloc( PADDED_DATE_LENGTH + 1 );
