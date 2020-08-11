@@ -1225,7 +1225,7 @@ int SendFile(const char *filename, int sock, FILE *mlog) {
                    */
   FILE *waitf;
 
-  int bytes_written = 0, bytes_read = 0, bytes_left = 0, total = 0;
+  int bytes_written = 0, bytes_left = 0, total = 0;
   struct stat st;
 
   /* get & format size of file in bytes */
