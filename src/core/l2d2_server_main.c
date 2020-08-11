@@ -303,7 +303,7 @@ void DependencyManager(_l2d2server l2d2) {
               fprintf(dmlg, "dependency node name:%s\n", depXp->xpd_name);
               fprintf(
                   dmlg,
-                  "current_epoch=%d registred_epoch=%d epoch_diff(hours)=%lu\n",
+                  "current_epoch=%ld registred_epoch=%d epoch_diff(hours)=%lu\n",
                   current_epoch, atoi(depXp->xpd_regtimepoch), epoch_diff);
               fprintf(dmlg, "\n");
 
