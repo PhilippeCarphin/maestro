@@ -72,7 +72,6 @@ PathArgNodePtr getNodeList(const char *seq_exp_home, const char *datestamp) {
    */
   getNodeList_internal(fv, &list_head, fixedBasePath, "", 0);
 
-out_free:
   free((char *)fixedBasePath);
   free((char *)basePath);
   Flow_deleteVisitor(fv);
@@ -224,7 +223,6 @@ static int gnl_enterSwitchItem(FlowVisitorPtr fv) {
   /* Enter the switch item corresponding to switch_value */
   retval = Flow_findSwitchItem(fv, switch_value);
 
-out_free:
   free((char *)switch_value);
   free((char *)switch_type);
   return retval;
@@ -292,7 +290,6 @@ void gnl_module(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
   getNodeList_internal(fv, pathArgList, path, baseSwitchArgs, depth + 1);
   Flow_restoreContext(fv);
 
-out_free:
   free((char *)module_name);
 }
 
@@ -347,7 +344,6 @@ void gnl_switch_item(FlowVisitorPtr fv, PathArgNodePtr *pathArgList,
    */
   getNodeList_internal(fv, pathArgList, basePath, switch_args, depth + 1);
 
-out:
   free((char *)switch_item_name);
   free((char *)switch_name);
 }
