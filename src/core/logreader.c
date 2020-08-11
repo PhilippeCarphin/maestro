@@ -737,7 +737,7 @@ int printAverage() {
 
   while (node_tmpptr != NULL) {
     if ((prev_node == NULL) || (strcmp(node_tmpptr->node, prev_node) != 0)) {
-      fprintf(stdout, "%s\\avg {", node_tmpptr->node, node_tmpptr->member);
+      fprintf(stdout, "%s\\avg {", node_tmpptr->node);
     }
 
     if (node_tmpptr->member != NULL) {
