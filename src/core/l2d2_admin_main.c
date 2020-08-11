@@ -73,8 +73,14 @@ ssize_t r;
 char filename[256];
 
 int main(int argc, char *argv[]) {
-  int i, next_option, answer, ret, status = 0;
-  int sock, bytes_read, bytes_sent, port;
+  int i;
+  int next_option;
+  int answer;
+  int ret;
+  int sock;
+  int bytes_read;
+  int bytes_sent;
+  int port;
   ServerActions whatAction;
   DepOption Doption;
   unsigned int pid;
@@ -107,10 +113,6 @@ int main(int argc, char *argv[]) {
   /* A string listing valid short options letters. */
   static const char *const short_options = ":ieshcbl:r:t:?";
 
-  /* The name of the file to receive program output, or NULL for
-     standard output.  */
-  const char *input_file = NULL;
-
   /* Whether to display verbose messages.  */
   int verbose = 0;
 
@@ -139,7 +141,6 @@ int main(int argc, char *argv[]) {
     case 'c': /* -i or --confile */
       /* This option takes an argument, the name of the directive input file xml
        * format.  */
-      input_file = optarg;
       whatAction = RELOAD_CONFIG;
       break;
     case 'l': /* -l or --list */
@@ -285,7 +286,7 @@ int main(int argc, char *argv[]) {
   strcpy(node, passwdEnt->pw_dir);
   sprintf(buffer, "%s/.suites", node);
   if (access(buffer, R_OK) != 0)
-    status = mkdir(buffer, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
+    mkdir(buffer, S_IRWXU | S_IRWXG | S_IROTH | S_IXOTH);
   snprintf(exp_home, sizeof(exp_home), "%s", buffer);
 
   /* inter user dep. directory */

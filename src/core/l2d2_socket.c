@@ -107,7 +107,7 @@ void set_Authorization(unsigned int pid, char *hostn, char *hip, int port,
                        char *filename, char *username, char **m5sum) {
   int fd;
   char buf[1024];
-  int nc, rt;
+  int nc;
   struct passwd *ppass;
 
   if ((ppass = getpwnam(username)) == NULL) {
@@ -127,8 +127,8 @@ void set_Authorization(unsigned int pid, char *hostn, char *hip, int port,
 
   nc = snprintf(buf, sizeof(buf), "seqpid=%u seqhost=%s seqip=%s seqport=%d\n",
                 pid, hostn, hip, port);
-  rt = write(fd, buf, nc);
-  rt = close(fd);
+  write(fd, buf, nc);
+  close(fd);
 
   *m5sum = str2md5(buf, strlen(buf));
 }
@@ -394,11 +394,10 @@ int connect_to_host_port_by_ip(char *hostip, int portno) {
  * close_conn=TRUE to remove this client from the list.
  */
 void send_reply(int fclient, int status) {
-  int ret;
   if (status == 0)
-    ret = write(fclient, "00\0", 3);
+    write(fclient, "00\0", 3);
   else
-    ret = write(fclient, "11\0", 3);
+    write(fclient, "11\0", 3);
 }
 
 /**

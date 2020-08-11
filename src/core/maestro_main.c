@@ -55,7 +55,9 @@ int main(int argc, char *argv[])
   char *node = NULL, *sign = NULL, *loops = NULL, *flow = NULL,
        *extraArgs = NULL, *datestamp = NULL, *seq_exp_home = NULL,
        *tmpDate = NULL;
-  int errflg = 0, status = 0, i = 0, vset = 0;
+  int status = 0;
+  int i = 0;
+  int vset = 0;
   int ignoreAllDeps = 0;
   int gotNode = 0, gotSignal = 0, gotLoops = 0;
   SeqNameValuesPtr loopsArgs = NULL;
@@ -121,7 +123,6 @@ int main(int argc, char *argv[])
   if (gotLoops) {
 
     if (SeqLoops_parseArgs(&loopsArgs, loops) == -1) {
-      errflg = 1;
       fprintf(stderr, "ERROR: Invalid loop arguments: %s\n", loops);
       exit(1);
     }

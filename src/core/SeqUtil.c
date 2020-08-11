@@ -1158,7 +1158,7 @@ int WriteNodeWaitedFile_nfs(const char *seq_xp_home, const char *nname,
   char tmp_line[SEQ_MAXFIELD];
   char line[SEQ_MAXFIELD];
   char Lexp[256], Lnode[256], Ldatestamp[25], LloopArgs[128];
-  int found = 0, n;
+  int found = 0;
   size_t num, inode, Linode;
 
   fprintf(
@@ -1195,7 +1195,7 @@ int WriteNodeWaitedFile_nfs(const char *seq_xp_home, const char *nname,
     /* clear LloopArgs since args might be empty, meaning it would not match in
      * the sscanf which would leave LloopArgs unchanged */
     memset(LloopArgs, '\0', sizeof(LloopArgs));
-    n = sscanf(line, "exp=%255s node=%255s datestamp=%24s args=%127s", Lexp,
+    sscanf(line, "exp=%255s node=%255s datestamp=%24s args=%127s", Lexp,
                Lnode, Ldatestamp, LloopArgs);
     if ((Linode = get_Inode(Lexp)) < 0) {
       fprintf(stderr,
@@ -1232,7 +1232,6 @@ int WriteInterUserDepFile_nfs(const char *filename, const char *DepBuf,
   char buff[1024];
   char DepFileName[1024];
   FILE *fp = NULL;
-  int ret;
 
   if ((fp = fopen(filename, "w")) == NULL) {
     raiseError("WriteInterUserDepFile_nfs: Cannot write to interUser "
@@ -1264,7 +1263,7 @@ int WriteInterUserDepFile_nfs(const char *filename, const char *DepBuf,
            maestro_version, datestamp, md5sum);
 
   /* have to check for re-runs */
-  ret = symlink(filename, DepFileName);
+  symlink(filename, DepFileName);
 
   return (0);
 }
@@ -1292,7 +1291,7 @@ int WriteForEachFile_nfs(const char *_exp, const char *_node,
   char tmp_line[SEQ_MAXFIELD];
   char line[SEQ_MAXFIELD];
   char Lexp[256], Lnode[256], Ldatestamp[25], LloopArgs[128], Lindex[128];
-  int found = 0, n;
+  int found = 0;
   size_t inode, Linode, num;
 
   SeqUtil_TRACE(
@@ -1323,7 +1322,7 @@ int WriteForEachFile_nfs(const char *_exp, const char *_node,
   SeqUtil_TRACE(TL_FULL_TRACE, "writeForEachFile_nfs updating %s\n", _filename);
 
   while (fgets(line, SEQ_MAXFIELD, waitingFile) != NULL) {
-    n = sscanf(
+    sscanf(
         line,
         "exp=%255s node=%255s datestamp=%24s index_to_add=%127s args=%127s",
         Lexp, Lnode, Ldatestamp, Lindex, LloopArgs);

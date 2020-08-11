@@ -1294,7 +1294,7 @@ void logreader(char *inputFilePath, char *outputFilePath, char *exp,
 
   FILE *output_file = NULL;
   char *base;
-  int fp = -1, ret;
+  int fp = -1;
   char input_file_path[512], optional_output_path[512],
       optional_output_dir[512];
 
@@ -1392,7 +1392,7 @@ void logreader(char *inputFilePath, char *outputFilePath, char *exp,
 
   if ((read_type == LR_SHOW_ALL) || (read_type == LR_SHOW_AVG)) {
     getAverage(exp, datestamp);
-    ret = printAverage();
+    printAverage();
   }
 
   if (read_type == LR_CALC_AVG) {

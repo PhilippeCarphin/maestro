@@ -546,7 +546,7 @@ static void l2d2SelectServlet(int listen_sd, TypeOfWorker tworker) {
   int i, count, try
     ;
   unsigned int pidSent;
-  int _ZONE_ = 1, STOP = -1, SelecTimeOut;
+  int _ZONE_ = 1, SelecTimeOut;
 
   char buf[1024], buff[1024];
   char expName[256], expInode[64], hostname[128];
@@ -973,7 +973,6 @@ static void l2d2SelectServlet(int listen_sd, TypeOfWorker tworker) {
                      close his side, the server will then
                      report a closed socket */
               ret = shutdown(i, SHUT_WR);
-              STOP = TRUE; /* var STOP not used for the moment */
               break;
             case 'T': /* Touch a Lock file on local xp */
               ret = touch(&buff[2]);
@@ -988,7 +987,6 @@ static void l2d2SelectServlet(int listen_sd, TypeOfWorker tworker) {
             case 'X': /* server shutdown */
               kill(L2D2.pid, SIGUSR1);
               ret = shutdown(i, SHUT_WR);
-              STOP = TRUE;
               break;
             case 'Y': /* server is alive need to return more here? */
               get_time(Stime, 1);
