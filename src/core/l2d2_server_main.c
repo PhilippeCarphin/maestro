@@ -123,10 +123,10 @@ void DependencyManager(_l2d2server l2d2) {
   int g_lres;
   int datestamp, nb;
   char underline[2];
-  char buf[1024];
+  char buf[2048];
   char cmd[2048];
-  char listings[1024];
-  char largs[128];
+  char listings[2048];
+  char largs[256];
   char extension[256]; /* probably a malloc here */
   char ffilename[512], filename[256], linkname[1024], LoopName[64];
   char ControllerAlive[128];

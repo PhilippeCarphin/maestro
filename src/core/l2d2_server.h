@@ -26,8 +26,8 @@ typedef struct {
   char ip[32];
   char host[128];
   char logdir[256];
-  char mlog[256];
-  char dmlog[256];
+  char mlog[512];
+  char dmlog[512];
   char web[256];
   char auth[256];
   char web_dep[256];
