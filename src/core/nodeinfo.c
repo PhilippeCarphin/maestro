@@ -137,7 +137,8 @@ const char *getVarName(const char *src, const char *startDelim,
                 "getVarName() inputs: src=%s startDelim=%s endDelim=%s\n", src,
                 startDelim, endDelim);
 
-  if (start = strstr(src, startDelim))
+  start = strstr(src, startDelim);
+  if (start)
     start += strlen(startDelim);
   else
     return NULL;

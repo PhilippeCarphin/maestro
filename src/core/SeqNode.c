@@ -303,7 +303,8 @@ void SeqNode_setShell(SeqNodeDataPtr node_ptr, const char *shell) {
 void SeqNode_setMemory(SeqNodeDataPtr node_ptr, const char *memory) {
   if (memory != NULL) {
     free(node_ptr->memory);
-    if (node_ptr->memory = malloc(strlen(memory) + 1)) {
+    node_ptr->memory = malloc(strlen(memory) + 1);
+    if (node_ptr->memory) {
       strcpy(node_ptr->memory, memory);
     } else {
       raiseError("OutOfMemory exception in SeqNode_setMemory()\n");
@@ -665,7 +666,8 @@ void SeqNode_setForEachTarget(SeqNodeDataPtr nodePtr, const char *t_node,
     SeqNode_freeForEachTarget(nodePtr->forEachTarget);
   }
 
-  if (forEachTargetPtr = malloc(sizeof(SeqForEachTarget))) {
+  forEachTargetPtr = malloc(sizeof(SeqForEachTarget));
+  if (forEachTargetPtr) {
     nodePtr->forEachTarget = forEachTargetPtr;
     SeqNode_initForEachTarget(nodePtr->forEachTarget);
   } else {
@@ -1040,7 +1042,8 @@ SeqNodeDataPtr SeqNode_createNode(char *name) {
   char *pathLeaf = SeqUtil_getPathLeaf(name);
   char *pathBase = SeqUtil_getPathBase(name);
   SeqUtil_TRACE(TL_FULL_TRACE, "SeqNode.SeqNode_createNode() started\n");
-  if (nodeDataPtr = malloc(sizeof(SeqNodeData))) {
+  nodeDataPtr = malloc(sizeof(SeqNodeData));
+  if (nodeDataPtr) {
     SeqNode_init(nodeDataPtr);
   } else {
     raiseError("OutOfMemory exception in SeqNode_createNode()\n");
@@ -1222,7 +1225,8 @@ void SeqNode_generateConfig(const SeqNodeDataPtr _nodeDataPtr, const char *flow,
     tmpValue = SeqNameValues_getValue(loopArgsPtr, _nodeDataPtr->nodeName);
     /*remove the ^last, raise flag that node has a ^last*/
     stringLength = strlen(tmpValue) - 5;
-    if (tmp2Value = malloc(stringLength + 1)) {
+    tmp2Value = malloc(stringLength + 1);
+    if (tmp2Value) {
       memset(tmp2Value, '\0', stringLength + 1);
     } else {
       raiseError("OutOfMemory exception in SeqNode_generateConfig()\n");

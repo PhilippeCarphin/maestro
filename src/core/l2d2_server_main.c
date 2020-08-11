@@ -142,14 +142,16 @@ void DependencyManager(_l2d2server l2d2) {
   /* redirect  streams
      Note : dup2 should handle close and open , but it does not !!*/
   close(STDIN_FILENO);
-  if (fd = open("/dev/null", O_RDONLY) != -1) {
+  fd = open("/dev/null", O_RDONLY);
+  if (fd != -1) {
     if (dup2(fd, STDIN_FILENO) < 0) {
       exit(1);
     }
   }
   close(STDOUT_FILENO);
   close(STDERR_FILENO);
-  if (fd = open("/dev/null", O_WRONLY) != -1) {
+  fd = open("/dev/null", O_WRONLY);
+  if (fd != -1) {
     if (dup2(fd, STDOUT_FILENO) < 0) {
       exit(1);
     }
@@ -228,7 +230,7 @@ void DependencyManager(_l2d2server l2d2) {
     fp = fopen(l2d2.web_dep, "w");
     fwrite(page_start_dep, 1, strlen(page_start_dep), fp);
 
-    while (pd = readdir(dp)) {
+    while ((pd = readdir(dp))) {
       memset(listings, '\0', sizeof(listings));
       memset(linkname, '\0', sizeof(linkname));
       memset(LoopName, '\0', sizeof(LoopName));
@@ -1154,7 +1156,8 @@ static void maestro_l2d2_main_process_server(int fserver) {
 
   /* redirect streams : same comment as in Dependency manager */
   close(STDIN_FILENO);
-  if (fd = open("/dev/null", O_RDONLY, 0) != -1) {
+  fd = open("/dev/null", O_RDONLY, 0);
+  if (fd != -1) {
     if (dup2(fd, STDIN_FILENO) < 0) {
       perror("dup2 stdin");
       exit(1);
@@ -1162,7 +1165,8 @@ static void maestro_l2d2_main_process_server(int fserver) {
   }
   close(STDOUT_FILENO);
   close(STDERR_FILENO);
-  if (fd = open("/dev/null", O_RDWR, 0) != -1) {
+  fd = open("/dev/null", O_RDWR, 0);
+  if (fd != -1) {
     if (dup2(fd, STDOUT_FILENO) < 0) {
       perror("dup2 stdout");
       exit(1);
