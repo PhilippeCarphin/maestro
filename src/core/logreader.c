@@ -917,8 +917,14 @@ int getStats(FILE *_stats) {
 
 /*parse stats line and add stats node*/
 int parseStatsLine(char line[1024]) {
-  char *node, *member, *stime, *btime, *etime, *exectime, *submitdelay,
-      *deltafromstart;
+  char *node;
+  char *member;
+  char *stime;
+  char *btime;
+  char *etime;
+  char *exectime;
+  char *submitdelay = NULL;
+  char *deltafromstart;
   int ret = 0;
 
   char tmp_node[] = "SEQNODE=", tmp_member[] = "MEMBER=",
