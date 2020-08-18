@@ -1,5 +1,5 @@
 /* mtest_main.c - Used for experimentation and unit testing.
-*/
+ */
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
@@ -9,10 +9,8 @@
 #include "SeqDatesUtil.h"
 #include "tsvinfo.h"
 
-
-static void printUsage()
-{
-   char * usage = "\
+static void printUsage() {
+  char *usage = "\
 DESCRIPTION: tsvinfo\n\
 \n\
         Creates a file containing data on the nodes of an experiment for the GUI\n\
@@ -69,123 +67,110 @@ EXAMPLES:\n\
 \n\
         Send TSV ready output to STDOUT and send human readable output to \n\
         STDERR.\n";
-puts(usage);
+  puts(usage);
 }
 
-static
-FILE *open_filename( const char *filename)
-{
-   FILE * fp = NULL;
-   if ( strcmp(filename,"stderr") == 0 )
-      fp = stderr;
-   else if ( strcmp(filename,"stdout") == 0)
-      fp = stdout;
-   else if(!(fp = fopen(filename, "w")))
-      raiseError("Error : unable to open file %s for writing\n", optarg);
+static FILE *open_filename(const char *filename) {
+  FILE *fp = NULL;
+  if (strcmp(filename, "stderr") == 0)
+    fp = stderr;
+  else if (strcmp(filename, "stdout") == 0)
+    fp = stdout;
+  else if (!(fp = fopen(filename, "w")))
+    raiseError("Error : unable to open file %s for writing\n", optarg);
 
-   return fp;
+  return fp;
 }
 
+int main(int argc, char *argv[]) {
+  char *short_opts = "d:e:t:r:vh";
 
+  extern char *optarg;
+  extern char *optarg;
+  extern int optind;
+  struct option long_opts[] = {
+      /*  NAME        ,    has_arg       , flag  val(ID) */
 
-int main ( int argc, char * argv[] )
-{
-   char * short_opts = "d:e:t:r:vh";
+      {"exp", required_argument, 0, 'e'},
+      {"datestamp", required_argument, 0, 'd'},
+      {"tsv-file", required_argument, 0, 't'},
+      {"readable-output", required_argument, 0, 'r'},
+      {"verbose", no_argument, 0, 'v'},
+      {"help", no_argument, 0, 'h'},
+      {NULL, 0, 0, 0} /* End indicator */
+  };
+  int opt_index, c = 0, i;
 
-   extern char *optarg;
-   extern char *optarg;
-   extern int   optind;
-   struct       option long_opts[] =
-   { /*  NAME        ,    has_arg       , flag  val(ID) */
+  char *seq_exp_home = NULL, *datestamp = NULL, *tmpDate = NULL;
 
-      {"exp"            , required_argument,   0,     'e'},
-      {"datestamp"      , required_argument,   0,     'd'},
-      {"tsv-file"       , required_argument,   0,     't'},
-      {"readable-output", required_argument,   0,     'r'},
-      {"verbose"        , no_argument      ,   0,     'v'},
-      {"help"           , no_argument      ,   0,     'h'},
-      {NULL,0,0,0} /* End indicator */
-   };
-   int opt_index, c = 0, i;
+  FILE *human_output_fp = NULL, *tsv_output_fp = NULL;
 
-   char *seq_exp_home = NULL,
-        *datestamp = NULL,
-        *tmpDate=NULL;
-
-   FILE *human_output_fp = NULL,
-        *tsv_output_fp = NULL;
-
-   while ((c = getopt_long(argc, argv, short_opts, long_opts, &opt_index )) != -1) {
-      switch(c) {
-         case 'e':
-            seq_exp_home = strdup(optarg);
-            break;
-         case 'd':
-            datestamp = malloc(PADDED_DATE_LENGTH + 1);
-            strncpy(datestamp,optarg,PADDED_DATE_LENGTH);
-            break;
-         case 'r':
-            human_output_fp = open_filename( optarg );
-            break;
-         case 't':
-            tsv_output_fp = open_filename( optarg );
-            break;
-         case 'v':
-            SeqUtil_setTraceFlag(TRACE_LEVEL,TL_FULL_TRACE);
-            SeqUtil_setTraceFlag(TF_TIMESTAMP,TF_ON);
-            break;
-         case 'h':
-            printUsage();
-            exit(0);
-            break;
-         case '?':
-            exit(1);
-      }
-   }
-
-   if( seq_exp_home == NULL ){
-      if( (seq_exp_home = getenv("SEQ_EXP_HOME")) != NULL ){
-         seq_exp_home = strdup(seq_exp_home);
-      } else {
-         raiseError("Error : Experiment home must either be set as an argument of option -e (--exp) \n        or through the environment variable SEQ_EXP_HOME\n");
-      }
-   }
-
-   if  (( datestamp == NULL ) && ( (tmpDate = getenv("SEQ_DATE")) != NULL ))  {
-       datestamp = malloc( PADDED_DATE_LENGTH + 1 );
-       strncpy(datestamp,tmpDate,PADDED_DATE_LENGTH);
-   }
-
-   if ( datestamp != NULL ) {
-      i = strlen(datestamp);
-      while ( i < PADDED_DATE_LENGTH ){
-         datestamp[i++] = '0';
-      }
-      datestamp[PADDED_DATE_LENGTH] = '\0';
-   } else { 
+  while ((c = getopt_long(argc, argv, short_opts, long_opts, &opt_index)) !=
+         -1) {
+    switch (c) {
+    case 'e':
+      seq_exp_home = strdup(optarg);
+      break;
+    case 'd':
+      datestamp = malloc(PADDED_DATE_LENGTH + 1);
+      strncpy(datestamp, optarg, PADDED_DATE_LENGTH);
+      break;
+    case 'r':
+      human_output_fp = open_filename(optarg);
+      break;
+    case 't':
+      tsv_output_fp = open_filename(optarg);
+      break;
+    case 'v':
+      SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
+      SeqUtil_setTraceFlag(TF_TIMESTAMP, TF_ON);
+      break;
+    case 'h':
       printUsage();
-      raiseError("Error: Datestamp must be set\n");
-   }
+      exit(0);
+      break;
+    case '?':
+      exit(1);
+    }
+  }
 
-   write_db_file(seq_exp_home, datestamp, tsv_output_fp , human_output_fp);
+  if (seq_exp_home == NULL) {
+    if ((seq_exp_home = getenv("SEQ_EXP_HOME")) != NULL) {
+      seq_exp_home = strdup(seq_exp_home);
+    } else {
+      raiseError("Error : Experiment home must either be set as an argument of "
+                 "option -e (--exp) \n        or through the environment "
+                 "variable SEQ_EXP_HOME\n");
+    }
+  }
 
-   if( human_output_fp != NULL )
-      fclose(human_output_fp);
+  if ((datestamp == NULL) && ((tmpDate = getenv("SEQ_DATE")) != NULL)) {
+    datestamp = malloc(PADDED_DATE_LENGTH + 1);
+    strncpy(datestamp, tmpDate, PADDED_DATE_LENGTH);
+  }
 
-   if( tsv_output_fp != NULL )
-      fclose(tsv_output_fp);
+  if (datestamp != NULL) {
+    i = strlen(datestamp);
+    while (i < PADDED_DATE_LENGTH) {
+      datestamp[i++] = '0';
+    }
+    datestamp[PADDED_DATE_LENGTH] = '\0';
+  } else {
+    printUsage();
+    raiseError("Error: Datestamp must be set\n");
+  }
 
-   free(datestamp);
-   free(seq_exp_home);
-   SeqUtil_unmapfiles();
-   
-   return 0;
+  write_db_file(seq_exp_home, datestamp, tsv_output_fp, human_output_fp);
+
+  if (human_output_fp != NULL)
+    fclose(human_output_fp);
+
+  if (tsv_output_fp != NULL)
+    fclose(tsv_output_fp);
+
+  free(datestamp);
+  free(seq_exp_home);
+  SeqUtil_unmapfiles();
+
+  return 0;
 }
-
-
-
-
-
-
-
-

@@ -194,7 +194,6 @@ int test_checkValidityData() {
   if (checkValidity(ndp, val) != 0)
     raiseError("TEST MISMATCH FAILED\n");
 
-out_free:
   ndp->extension = NULL;
   SeqNode_freeNode(ndp);
   return 0;
@@ -238,7 +237,6 @@ int test_Resource_createContext() {
     raiseError("TEST FAILED");
   }
 
-out_free:
   SeqNode_freeNode(ndp);
   free((char *)xmlFile);
   free((char *)defFile);
@@ -317,7 +315,6 @@ int test_nodeStackFunctions() {
   if (rv->_stackSize != 0)
     raiseError("TEST_FAILED");
 
-out_free:
   SeqNode_freeNode(ndp);
   free((char *)xmlFile);
   free((char *)defFile);
@@ -348,7 +345,7 @@ int test_getValidityData() {
 
   header("isValid");
   /* INPUT: _nodeDataPtr and xmlNodePtr of a validityNode. */
-out_free:
+  
   SeqNode_freeNode(ndp);
   free((char *)xmlFile);
   xmlXPathFreeContext(rc);
@@ -384,7 +381,6 @@ int test_isValid() {
     raiseError("TEST_FAILED");
   deleteValidityData(valDat);
 
-out_free:
   SeqNode_freeNode(ndp);
   xmlXPathFreeObject(result);
   xmlXPathFreeContext(rc);
@@ -432,7 +428,6 @@ int test_Resource_getLoopAttributes() {
   if (expression == NULL || strcmp(expression, "0:54:3:6") != 0)
     raiseError("TEST_FAILED");
 
-out_free:
   SeqNode_freeNode(ndp);
   free(expression);
   free((char *)xmlFile);
