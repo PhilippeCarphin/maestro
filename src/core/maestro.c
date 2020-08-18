@@ -3355,7 +3355,6 @@ int checkTargetedIterations(SeqNodeDataPtr _nodeDataPtr,
     _unlock(statusFile, _nodeDataPtr->datestamp, _nodeDataPtr->expHome);
   }
 
-out_free:
   SeqListNode_deleteWholeList(&extensions);
   SeqUtil_TRACE(TL_FULL_TRACE, "checkTargetedIterations() end\n");
   return retval;

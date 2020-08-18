@@ -507,7 +507,6 @@ int Resource_getLoopAttributes(ResourceVisitorPtr rv,
     rv->loopResourcesFound = RESOURCE_TRUE;
   }
 
-out_free:
   xmlXPathFreeObject(result);
 out:
   SeqUtil_TRACE(TL_FULL_TRACE, "getLoopAttributes() end\n");
@@ -533,7 +532,6 @@ int Resource_getForEachAttributes(ResourceVisitorPtr rv,
     rv->forEachResourcesFound = RESOURCE_TRUE;
   }
 
-out_free:
   xmlXPathFreeObject(result);
 out:
   SeqUtil_TRACE(TL_FULL_TRACE, "getForEachAttributes() end\n");
@@ -559,7 +557,6 @@ int Resource_getBatchAttributes(ResourceVisitorPtr rv,
     rv->batchResourcesFound = RESOURCE_TRUE;
   }
 
-out_free:
   xmlXPathFreeObject(result);
 out:
   SeqUtil_TRACE(TL_FULL_TRACE, "getBatchAttributes() end\n");
@@ -580,9 +577,7 @@ int Resource_getDependencies(ResourceVisitorPtr rv,
   if (result != NULL)
     parseDepends(result, _nodeDataPtr, 0);
 
-out_free:
   xmlXPathFreeObject(result);
-out:
   SeqUtil_TRACE(TL_FULL_TRACE, "getDependencies() end\n");
   return retval;
 }
@@ -614,7 +609,6 @@ int Resource_getAbortActions(ResourceVisitorPtr rv,
     rv->abortActionFound = RESOURCE_TRUE;
   }
 
-out_free:
   free(abortValue);
   xmlXPathFreeObject(result);
 out:
@@ -661,7 +655,6 @@ int Resource_getWorkerPath(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr) {
     rv->workerPathFound = RESOURCE_TRUE;
   }
 
-out_free:
   free(workerPath);
   xmlXPathFreeObject(result);
 out:
@@ -737,7 +730,6 @@ int Resource_setShell(ResourceVisitorPtr rv, SeqNodeDataPtr _nodeDataPtr) {
     SeqNode_setShell(_nodeDataPtr, "/bin/ksh");
   }
 
-out_free:
   free(shellValue);
 out:
   SeqUtil_TRACE(TL_FULL_TRACE, "Resource_setShell() end\n");
@@ -764,9 +756,7 @@ int getNodeResources(SeqNodeDataPtr _nodeDataPtr, const char *expHome,
   Resource_validateMachine(rv, _nodeDataPtr);
   Resource_setShell(rv, _nodeDataPtr);
 
-out_free:
   deleteResourceVisitor(rv);
-out:
   SeqUtil_TRACE(TL_FULL_TRACE, "getNodeResources() end\n");
   return retval;
 }

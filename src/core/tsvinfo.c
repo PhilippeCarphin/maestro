@@ -234,7 +234,6 @@ int write_db_file(const char *seq_exp_home, const char *datestamp,
     SeqNode_freeNode(ndp);
   }
 
-out_free:
   PathArgNode_deleteList(&nodeList);
   return 0;
 }

@@ -62,7 +62,6 @@ FlowVisitorPtr Flow_newVisitor(const char *nodePath, const char *seq_exp_home,
 
   new_flow_visitor->_stackSize = 0;
 
-out_free:
 out:
   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_newVisitor() end\n");
   return new_flow_visitor;
@@ -243,7 +242,6 @@ int Flow_doNodeQuery(FlowVisitorPtr _flow_visitor, const char *nodeName,
   _flow_visitor->currentNodeType =
       getNodeType(_flow_visitor->context->node->name);
 
-out_free:
   xmlXPathFreeObject(result);
 out:
   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_doNodeQuery() end\n");
@@ -511,7 +509,7 @@ out_free:
 const char *Flow_findSwitchType(const FlowVisitorPtr fv) {
   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchType() begin\n");
   const char *switchType = xmlGetProp(fv->context->node, "type");
-out:
+  
   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchType() end, returning %s\n",
                 switchType);
   return switchType;
@@ -540,7 +538,6 @@ int Flow_findSwitchItem(FlowVisitorPtr _flow_visitor, const char *switchValue) {
     goto out;
   }
 
-out_free:
 out:
   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_findSwitchItem(): end\n");
   return retval;
@@ -632,7 +629,6 @@ int Flow_switchItemHasValue(const FlowVisitorPtr _flow_visitor,
   retval = switchNameContains(
       attributesResult->nodesetval->nodeTab[0]->children->content, switchValue);
 
-out:
   xmlXPathFreeObject(attributesResult);
   _flow_visitor->context->node = previousNodePtr;
   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_switchItemHasValue() end\n");
@@ -804,7 +800,6 @@ int Flow_parseDependencies(FlowVisitorPtr _flow_visitor,
 
   parseDepends(result, _nodeDataPtr, 1);
 
-out_free:
   xmlXPathFreeObject(result);
 out:
   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parseDependencies end\n");
@@ -824,7 +819,6 @@ int Flow_parseSubmits(FlowVisitorPtr _flow_visitor,
       XmlUtils_getnodeset("(child::SUBMITS)", _flow_visitor->context);
   parseSubmits(result, _nodeDataPtr);
 
-out_free:
   xmlXPathFreeObject(result);
   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parseSubmits return FLOW_SUCCESS\n");
   return FLOW_SUCCESS;
@@ -876,7 +870,6 @@ int Flow_parseSiblings(FlowVisitorPtr _flow_visitor,
   }
   parseNodeSiblings(result, _nodeDataPtr);
 
-out_free:
   free(switchPrefix);
   xmlXPathFreeObject(result);
   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parseSiblings return FLOW_SUCCESS\n");
@@ -900,7 +893,6 @@ int Flow_parseSpecifics(FlowVisitorPtr _flow_visitor,
 
   parseNodeSpecifics(_nodeDataPtr->type, result, _nodeDataPtr);
 
-out_free:
   xmlXPathFreeObject(result);
 out:
   SeqUtil_TRACE(TL_FULL_TRACE, "Flow_parseSpecifics() end\n");
