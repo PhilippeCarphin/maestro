@@ -99,7 +99,7 @@ int main(int argc, char *argv[]) {
   struct sigaction act;
 
   char dpkey[128];
-  char cmdBuf[1024];
+  char cmdBuf[3000];
   char Time[40];
   char lpargs[512];
   char *mversion = NULL;
