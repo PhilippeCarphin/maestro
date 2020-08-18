@@ -2515,9 +2515,9 @@ static void setWaitingState(const SeqNodeDataPtr _nodeDataPtr,
   memset(filename, '\0', sizeof filename);
   sprintf(filename, "%s/%s/%s.waiting", _nodeDataPtr->workdir,
           _nodeDataPtr->datestamp, extName);
-
-  if (waitMsg =
-          (char *)malloc(strlen(waited_one) + strlen(waited_status) + 2)) {
+  
+  waitMsg = (char *)malloc(strlen(waited_one) + strlen(waited_status) + 2);
+  if (waitMsg) {
     sprintf(waitMsg, "%s %s", waited_status, waited_one);
   } else {
     raiseError("OutOfMemory exception in maestro.setWaitingState()\n");

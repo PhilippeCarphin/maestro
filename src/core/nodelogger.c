@@ -538,7 +538,7 @@ static int sync_nodelog_over_nfs(const char *node, const char *type,
       usleep(100);
       continue;
     }
-    while (d = readdir(dp)) {
+    while ((d = readdir(dp))) {
       snprintf(ffilename, sizeof(ffilename), "%s/%s", lpath, d->d_name);
       snprintf(filename, sizeof(filename), "%s", d->d_name);
 
