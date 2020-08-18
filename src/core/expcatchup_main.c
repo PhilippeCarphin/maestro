@@ -1,18 +1,19 @@
-/* expcatchup_main.c - Command-line API for expcatchup, contained in the Maestro sequencer software package.
-*/
+/* expcatchup_main.c - Command-line API for expcatchup, contained in the Maestro
+ * sequencer software package.
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
 #include <stdarg.h>
 #include <string.h>
-#include <unistd.h> 
+#include <unistd.h>
 #include "SeqUtil.h"
 #include "expcatchup.h"
 #include "getopt.h"
 
-static void printUsage()
-{
-   char * usage = "DESCRIPTION: Accessor/modifier interface for experiment catchup value.\n\
+static void printUsage() {
+  char *usage =
+      "DESCRIPTION: Accessor/modifier interface for experiment catchup value.\n\
 \n\
 USAGE:\n\
 \n\
@@ -43,79 +44,81 @@ EXAMPLES:\n\
 \n\
     expcatchup -g\n\
         will return to stdout the catchup value\n";
-   puts(usage);
+  puts(usage);
 }
 
-int main (int argc, char * argv [])
-{
-   extern char *optarg;
-   extern int   optind;
-   char        *short_opts = "s:e:ghv";
-   struct       option long_opts[] =
-   { /*  NAME        ,    has_arg       , flag  val(ID) */
-      {"set-catchup" , required_argument,   0,     's'},
-      {"exp-home"    , required_argument,   0,     'e'},
-      {"get-catchup" , no_argument      ,   0,     'g'},
-      {"help"        , no_argument      ,   0,     'h'},
-      {"verbose"     , no_argument      ,   0,     'v'},
-      {NULL,0,0,0} /* End indicator */
-   };
-   int opt_index, c = 0;
-   int catchupValue = 8;
-   char *expHome = NULL;
-   int isDebugArg = 0, 
-         isSetArg = 0, 
-         isGetArg = 0;
-   if (argc > 1) {
-      expHome = getenv("SEQ_EXP_HOME");
-      if ( expHome == NULL ) {
-         fprintf(stderr, "ERROR: SEQ_EXP_HOME environment variable not set!\n" );
-         exit(1);
-      }
-      while ((c = getopt_long(argc, argv, short_opts,long_opts, &opt_index)) != -1) {
-            switch(c) {
-            case 's':
-               catchupValue = atoi( optarg );
-               isSetArg = 1;
-               if ( catchupValue == 0 && strcmp( optarg, "0" ) != 0 ) {
-                  fprintf(stderr, "ERROR: invalid catchup value=%s, must be integer value between [0-%d]\n", optarg, CatchupMax );
-                  exit(1);
-               }
-               break;
-            case 'e':
-               expHome = strdup( optarg );
-               break;
-            case 'g':
-               isGetArg = 1;
-               break;
-            case 'h':
-               printUsage();
-               break;
-            case 'v':
-               isDebugArg = 1;
-               break;
-            case '?':
-                 fprintf (stderr, "ERROR:Argument s or g must be specified!\n");
-                 printUsage();
-                 exit(1);
-            }
-      }
-      if ( isSetArg && isGetArg ) {
-         fprintf (stderr, "ERROR:Argument s and g are mutually exclusive!\n");
-         exit(1);
-      }
-      if ( isDebugArg ) {
-			SeqUtil_setTraceFlag( TRACE_LEVEL , TL_FULL_TRACE );
-			SeqUtil_setTraceFlag( TF_TIMESTAMP , TF_ON );
-		}
-      if ( isSetArg ) catchup_set( expHome,catchupValue);
-      if ( isGetArg ) {
-         catchupValue = catchup_get( expHome );
-         printf( "%d\n", catchupValue );
-      }
-   } else {
-      printUsage();
+int main(int argc, char *argv[]) {
+  extern char *optarg;
+  extern int optind;
+  char *short_opts = "s:e:ghv";
+  struct option long_opts[] = {
+      /*  NAME        ,    has_arg       , flag  val(ID) */
+      {"set-catchup", required_argument, 0, 's'},
+      {"exp-home", required_argument, 0, 'e'},
+      {"get-catchup", no_argument, 0, 'g'},
+      {"help", no_argument, 0, 'h'},
+      {"verbose", no_argument, 0, 'v'},
+      {NULL, 0, 0, 0} /* End indicator */
+  };
+  int opt_index, c = 0;
+  int catchupValue = 8;
+  char *expHome = NULL;
+  int isDebugArg = 0, isSetArg = 0, isGetArg = 0;
+  if (argc > 1) {
+    expHome = getenv("SEQ_EXP_HOME");
+    if (expHome == NULL) {
+      fprintf(stderr, "ERROR: SEQ_EXP_HOME environment variable not set!\n");
       exit(1);
-   }
-   exit(0);
+    }
+    while ((c = getopt_long(argc, argv, short_opts, long_opts, &opt_index)) !=
+           -1) {
+      switch (c) {
+      case 's':
+        catchupValue = atoi(optarg);
+        isSetArg = 1;
+        if (catchupValue == 0 && strcmp(optarg, "0") != 0) {
+          fprintf(stderr,
+                  "ERROR: invalid catchup value=%s, must be integer value "
+                  "between [0-%d]\n",
+                  optarg, CatchupMax);
+          exit(1);
+        }
+        break;
+      case 'e':
+        expHome = strdup(optarg);
+        break;
+      case 'g':
+        isGetArg = 1;
+        break;
+      case 'h':
+        printUsage();
+        break;
+      case 'v':
+        isDebugArg = 1;
+        break;
+      case '?':
+        fprintf(stderr, "ERROR:Argument s or g must be specified!\n");
+        printUsage();
+        exit(1);
+      }
+    }
+    if (isSetArg && isGetArg) {
+      fprintf(stderr, "ERROR:Argument s and g are mutually exclusive!\n");
+      exit(1);
+    }
+    if (isDebugArg) {
+      SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
+      SeqUtil_setTraceFlag(TF_TIMESTAMP, TF_ON);
+    }
+    if (isSetArg)
+      catchup_set(expHome, catchupValue);
+    if (isGetArg) {
+      catchupValue = catchup_get(expHome);
+      printf("%d\n", catchupValue);
+    }
+  } else {
+    printUsage();
+    exit(1);
+  }
+  exit(0);
 }

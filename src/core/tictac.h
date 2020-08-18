@@ -1,12 +1,11 @@
 /* Part of the Maestro sequencer software package.
-*/
-
+ */
 
 /******************************************************************************
-*FILE: tictac.h
-*
-*AUTHOR: Dominic Racette
-******************************************************************************/
+ *FILE: tictac.h
+ *
+ *AUTHOR: Dominic Racette
+ ******************************************************************************/
 
 #include <glob.h>
 #include <stdio.h>
@@ -21,13 +20,13 @@
 #include "SeqDatesUtil.h"
 
 /*****************************************************************************
-* tictac:
-* Read or set the datestamp of a given experiment.
-*
-*
-******************************************************************************/
-extern void tictac_setDate( char* _expHome, char* datestamp );
+ * tictac:
+ * Read or set the datestamp of a given experiment.
+ *
+ *
+ ******************************************************************************/
+extern void tictac_setDate(char *_expHome, char *datestamp);
 
-extern char* tictac_getDate( char* _expHome, char* format, char * datestamp );
+extern char *tictac_getDate(char *_expHome, char *format, char *datestamp);
 
 extern void checkValidDatestamp(char *datestamp);

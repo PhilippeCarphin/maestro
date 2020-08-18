@@ -1,5 +1,6 @@
-/* nodelogger.c - Log writing functions of the Maestro sequencer software package.
-*/
+/* nodelogger.c - Log writing functions of the Maestro sequencer software
+ * package.
+ */
 
 #include <stdio.h>
 #include <stdlib.h>
@@ -28,14 +29,13 @@
 #define NODELOG_FILE_LENGTH 512
 #define TIMEOUT_NFS_SYNC 3
 
-
 /* global variables */
 static char nodelogger_buf[NODELOG_BUFSIZE];
 static char nodelogger_buf_top[NODELOG_BUFSIZE];
 static char nodelogger_buf_short[NODELOG_BUFSIZE];
 static char nodelogger_buf_notify[NODELOG_BUFSIZE];
 static char nodelogger_buf_notify_short[NODELOG_BUFSIZE];
-extern int OpenConnectionToMLLServer (const char *, const char *, const char *);
+extern int OpenConnectionToMLLServer(const char *, const char *, const char *);
 
 static char NODELOG_JOB[NODELOG_BUFSIZE];
 static char NODELOG_MESSAGE[NODELOG_BUFSIZE];
@@ -47,534 +47,664 @@ static char LOG_PATH[1024];
 static char TMP_LOG_PATH[1024];
 static char TOP_LOG_PATH[1024];
 
-static int write_line(int sock, int top, const char* type);
-static void gen_message (const char *job, const char *type, const char* loop_ext, const char *message);
-static int sync_nodelog_over_nfs(const char *job, const char *type, const char* loop_ext, const char *message, const char *dtstmp, const char *logtype, const char * _seq_exp_home);
-static  void NotifyUser (int sock , int top , char mode , const char* _seq_exp_home);
-extern char* str2md5 (const char *str, int length);
+static int write_line(int sock, int top, const char *type);
+static void gen_message(const char *job, const char *type, const char *loop_ext,
+                        const char *message);
+static int sync_nodelog_over_nfs(const char *job, const char *type,
+                                 const char *loop_ext, const char *message,
+                                 const char *dtstmp, const char *logtype,
+                                 const char *_seq_exp_home);
+static void NotifyUser(int sock, int top, char mode, const char *_seq_exp_home);
+extern char *str2md5(const char *str, int length);
 
-static void log_alarm_handler() { fprintf(stderr,"=== EXCEEDED TIME IN LOOP ITERATIONS ===\n"); };
- 
-typedef enum {
-           FROM_MAESTRO,
- 	   FROM_NODELOGGER,
- 	   FROM_MAESTRO_NO_SVR
-} _FromWhere;
+static void log_alarm_handler() {
+  fprintf(stderr, "=== EXCEEDED TIME IN LOOP ITERATIONS ===\n");
+};
+
+typedef enum { FROM_MAESTRO, FROM_NODELOGGER, FROM_MAESTRO_NO_SVR } _FromWhere;
 _FromWhere FromWhere;
- 
-void nodelogger(const char *job, const char* type, const char* loop_ext, const char *message, const char* datestamp, const char* _seq_exp_home)
-{
-   int sock=-1, write_ret;
-   char *tmpfrommaestro = NULL;
-   struct passwd *p, *p2;
-   struct sigaction sa;
-   char *logtocreate = NULL;
-   int pathcounter=0, ret;
-   char *pathelement=NULL, *tmpbuf=NULL, *startOfTmp=NULL;
 
-   if ( loop_ext == NULL ) { loop_ext=strdup(""); }
-   if ( message  == NULL ) { message=strdup(""); }
-    
-   SeqUtil_TRACE(TL_FULL_TRACE, "nodelogger job:%s signal:%s message:%s loop_ext:%s datestamp:%s exp:%s\n", job, type, message, loop_ext, datestamp, _seq_exp_home);
+void nodelogger(const char *job, const char *type, const char *loop_ext,
+                const char *message, const char *datestamp,
+                const char *_seq_exp_home) {
+  int sock = -1, write_ret;
+  char *tmpfrommaestro = NULL;
+  struct passwd *p, *p2;
+  struct sigaction sa;
+  char *logtocreate = NULL;
+  int pathcounter = 0, ret;
+  char *pathelement = NULL, *tmpbuf = NULL, *startOfTmp = NULL;
 
-   memset(LOG_PATH,'\0',sizeof LOG_PATH);
-   memset(TMP_LOG_PATH,'\0',sizeof TMP_LOG_PATH);
-   memset(TOP_LOG_PATH,'\0',sizeof TOP_LOG_PATH);
-   memset(username,'\0',sizeof username);
+  if (loop_ext == NULL) {
+    loop_ext = strdup("");
+  }
+  if (message == NULL) {
+    message = strdup("");
+  }
 
-   if ( ( p = getpwuid ( getuid() ) ) == NULL ) {
-      fprintf(stderr,"nodelogger: getpwuid() error" );
-      return;
-   } else {
-      /* example: pw_name = afsipat */
-      strcpy(username, p->pw_name);
-   }
+  SeqUtil_TRACE(TL_FULL_TRACE,
+                "nodelogger job:%s signal:%s message:%s loop_ext:%s "
+                "datestamp:%s exp:%s\n",
+                job, type, message, loop_ext, datestamp, _seq_exp_home);
 
-   p2 = getpwnam(username);
-   if (p2 == NULL) {
-     fprintf( stderr, "Nodelogger::ERROR: getpwnam error... returns null.\n" );
-   }
-   if( _seq_exp_home == NULL ) {
-      fprintf( stderr, "Nodelogger::ERROR: You must provide a valid SEQ_EXP_HOME.\n" );
-      exit(1);
-   }
+  memset(LOG_PATH, '\0', sizeof LOG_PATH);
+  memset(TMP_LOG_PATH, '\0', sizeof TMP_LOG_PATH);
+  memset(TOP_LOG_PATH, '\0', sizeof TOP_LOG_PATH);
+  memset(username, '\0', sizeof username);
 
-   snprintf(LOG_PATH,sizeof(LOG_PATH),"%s/logs/%s_nodelog",_seq_exp_home,datestamp);
-   snprintf(TMP_LOG_PATH,sizeof(TMP_LOG_PATH),"%s/sequencing/sync/%s",_seq_exp_home,datestamp);
-   snprintf(TOP_LOG_PATH,sizeof(TOP_LOG_PATH),"%s/logs/%s_toplog",_seq_exp_home,datestamp);
+  if ((p = getpwuid(getuid())) == NULL) {
+    fprintf(stderr, "nodelogger: getpwuid() error");
+    return;
+  } else {
+    /* example: pw_name = afsipat */
+    strcpy(username, p->pw_name);
+  }
 
-    /* setup an alarm so that if the logging is stuck
-     * it will timeout after 60 seconds. This will prevent the
-     * processes from hanging when there are network problems.
-     */
+  p2 = getpwnam(username);
+  if (p2 == NULL) {
+    fprintf(stderr, "Nodelogger::ERROR: getpwnam error... returns null.\n");
+  }
+  if (_seq_exp_home == NULL) {
+    fprintf(stderr,
+            "Nodelogger::ERROR: You must provide a valid SEQ_EXP_HOME.\n");
+    exit(1);
+  }
 
-    memset(NODELOG_JOB,'\0',NODELOG_BUFSIZE);
-    strcpy(NODELOG_JOB,job);
-    memset(NODELOG_LOOPEXT,'\0',NODELOG_BUFSIZE);
-    strcpy(NODELOG_LOOPEXT,loop_ext);
-    memset(NODELOG_MESSAGE,'\0',NODELOG_BUFSIZE);
-    strcpy(NODELOG_MESSAGE,message);
-    memset(NODELOG_DATE,'\0',NODELOG_BUFSIZE);
-    strcpy(NODELOG_DATE,datestamp);
-    
-    pathcounter = 0;
-    tmpbuf=strdup(NODELOG_JOB);
-    startOfTmp=tmpbuf;
-    pathelement = strtok(tmpbuf, "/");
-    while (pathelement != NULL) {
-       if (strcmp(pathelement, "") != 0) {
-           pathcounter=pathcounter+1;
-       }
-       pathelement=strtok(NULL, "/");
+  snprintf(LOG_PATH, sizeof(LOG_PATH), "%s/logs/%s_nodelog", _seq_exp_home,
+           datestamp);
+  snprintf(TMP_LOG_PATH, sizeof(TMP_LOG_PATH), "%s/sequencing/sync/%s",
+           _seq_exp_home, datestamp);
+  snprintf(TOP_LOG_PATH, sizeof(TOP_LOG_PATH), "%s/logs/%s_toplog",
+           _seq_exp_home, datestamp);
+
+  /* setup an alarm so that if the logging is stuck
+   * it will timeout after 60 seconds. This will prevent the
+   * processes from hanging when there are network problems.
+   */
+
+  memset(NODELOG_JOB, '\0', NODELOG_BUFSIZE);
+  strcpy(NODELOG_JOB, job);
+  memset(NODELOG_LOOPEXT, '\0', NODELOG_BUFSIZE);
+  strcpy(NODELOG_LOOPEXT, loop_ext);
+  memset(NODELOG_MESSAGE, '\0', NODELOG_BUFSIZE);
+  strcpy(NODELOG_MESSAGE, message);
+  memset(NODELOG_DATE, '\0', NODELOG_BUFSIZE);
+  strcpy(NODELOG_DATE, datestamp);
+
+  pathcounter = 0;
+  tmpbuf = strdup(NODELOG_JOB);
+  startOfTmp = tmpbuf;
+  pathelement = strtok(tmpbuf, "/");
+  while (pathelement != NULL) {
+    if (strcmp(pathelement, "") != 0) {
+      pathcounter = pathcounter + 1;
     }
-    free (startOfTmp);
+    pathelement = strtok(NULL, "/");
+  }
+  free(startOfTmp);
 
-    /* if called inside maestro, a connection is already open  */
-    tmpfrommaestro = getenv("FROM_MAESTRO");
-    if ( tmpfrommaestro == NULL ) {
-       SeqUtil_TRACE(TL_MEDIUM, "\n================= NODELOGGER: NOT_FROM_MAESTRO signal:%s================== \n",type);
-       FromWhere = FROM_NODELOGGER;
-       if ( (sock=OpenConnectionToMLLServer( job , "LOG",_seq_exp_home )) < 0 ) { 
-          gen_message(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE);
-          if ((pathcounter <= 1) || (strcmp(type, "abort") == 0) || (strcmp(type, "event") == 0) || (strcmp(type, "info") == 0) ) {
-            logtocreate = "both";
-          } else {
-            logtocreate = "nodelog";
-          }
-          ret=sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE, datestamp, logtocreate,_seq_exp_home);
-          return;
-       }
-       /* install SIGALRM handler */
-       /* set the signal handler */
-       memset (&sa, '\0', sizeof(sa));
-       sa.sa_handler = &log_alarm_handler;
-       sa.sa_flags = 0; /* was SA_RESTART  */
-       sigemptyset(&sa.sa_mask);
-       /* register signals */
-       if ( sigaction(SIGALRM,&sa,NULL) == -1 ) fprintf(stderr,"Nodelogger::error in registring SIGALRM\n");
-    } else {
-       SeqUtil_TRACE(TL_MEDIUM, "\n================= NODELOGGER: TRYING TO USE CONNECTION FROM MAESTRO PROCESS IF SERVER IS UP signal:%s================== \n",type);
-       if ( MLLServerConnectionFid > 0 ) {
-          FromWhere = FROM_MAESTRO;
-          sock = MLLServerConnectionFid;
-          SeqUtil_TRACE(TL_MEDIUM, "\n================= NODELOGGER: OK,HAVE A CONNECTION FROM MAESTRO PROCESS ================== \n");
-       } else {
-        /* it could be that we dont have the env. variable set to use Server */
-           FromWhere = FROM_MAESTRO_NO_SVR;
-	   if ( (sock=OpenConnectionToMLLServer( job , "LOG" , _seq_exp_home )) < 0 ) { 
-               SeqUtil_TRACE(TL_MEDIUM, "\n================= NODELOGGER: CANNOT ACQUIRE CONNECTION FROM MAESTRO PROCESS signal:%s================== \n",type);
-               gen_message(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE);
-               if ((pathcounter <= 1) || (strcmp(type, "abort") == 0) || (strcmp(type, "event") == 0) || (strcmp(type, "info") == 0) ) {
-                 logtocreate = "both";
-               } else {
-                 logtocreate = "nodelog";
-               }
-               ret=sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE, datestamp, logtocreate, _seq_exp_home);
-               return;
-            } else {
-               SeqUtil_TRACE(TL_MEDIUM, "\n================= ACQUIRED A NEW CONNECTION FROM NODELOGGER PROCESS ================== \n");
-            }
-       }
-    }
- 
-    /* if we are here socket is Up then why the second test > -1 ??? */ 
-    gen_message(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE);
-    if ( sock > -1 ) {
-      if ((write_ret=write_line(sock, 0, type )) == -1) {
-        logtocreate = "nodelog";
-        ret=sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE, datestamp, logtocreate, _seq_exp_home); 
-      }
-      if ((pathcounter <= 1) || (strcmp(type, "abort") == 0) || (strcmp(type, "event") == 0) || (strcmp(type, "info") == 0) ) {
-         if ((write_ret=write_line(sock, 1, type )) == -1) {
-           logtocreate = "toplog";
-           ret=sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE, datestamp, logtocreate, _seq_exp_home); 
-         }
-      }
-      if (write_ret == -1) return;
-    } else {
-      if ((pathcounter <= 1) || (strcmp(type, "abort") == 0) || (strcmp(type, "event") == 0) || (strcmp(type, "info") == 0) ) {
+  /* if called inside maestro, a connection is already open  */
+  tmpfrommaestro = getenv("FROM_MAESTRO");
+  if (tmpfrommaestro == NULL) {
+    SeqUtil_TRACE(TL_MEDIUM,
+                  "\n================= NODELOGGER: NOT_FROM_MAESTRO "
+                  "signal:%s================== \n",
+                  type);
+    FromWhere = FROM_NODELOGGER;
+    if ((sock = OpenConnectionToMLLServer(job, "LOG", _seq_exp_home)) < 0) {
+      gen_message(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE);
+      if ((pathcounter <= 1) || (strcmp(type, "abort") == 0) ||
+          (strcmp(type, "event") == 0) || (strcmp(type, "info") == 0)) {
         logtocreate = "both";
       } else {
         logtocreate = "nodelog";
       }
-      ret=sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE, datestamp, logtocreate, _seq_exp_home);
+      ret = sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
+                                  datestamp, logtocreate, _seq_exp_home);
       return;
     }
-        /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@ CRITICAL  : CLOSE SOCKET ONLY WHEN NOT ACQUIRED FROM MAESTRO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
-    switch (FromWhere)
-    {
-
-       case FROM_NODELOGGER:
-       case FROM_MAESTRO_NO_SVR:
-	   ret=write(sock,"S \0",3);
-           close(sock);
-           SeqUtil_TRACE(TL_MEDIUM, "\n================= ClOSING CONNECTION FROM NODELOGGER PROCESS ================== \n");
-	   break;
-       default:
-           break;
+    /* install SIGALRM handler */
+    /* set the signal handler */
+    memset(&sa, '\0', sizeof(sa));
+    sa.sa_handler = &log_alarm_handler;
+    sa.sa_flags = 0; /* was SA_RESTART  */
+    sigemptyset(&sa.sa_mask);
+    /* register signals */
+    if (sigaction(SIGALRM, &sa, NULL) == -1)
+      fprintf(stderr, "Nodelogger::error in registring SIGALRM\n");
+  } else {
+    SeqUtil_TRACE(
+        TL_MEDIUM,
+        "\n================= NODELOGGER: TRYING TO USE CONNECTION FROM MAESTRO "
+        "PROCESS IF SERVER IS UP signal:%s================== \n",
+        type);
+    if (MLLServerConnectionFid > 0) {
+      FromWhere = FROM_MAESTRO;
+      sock = MLLServerConnectionFid;
+      SeqUtil_TRACE(TL_MEDIUM,
+                    "\n================= NODELOGGER: OK,HAVE A CONNECTION FROM "
+                    "MAESTRO PROCESS ================== \n");
+    } else {
+      /* it could be that we dont have the env. variable set to use Server */
+      FromWhere = FROM_MAESTRO_NO_SVR;
+      if ((sock = OpenConnectionToMLLServer(job, "LOG", _seq_exp_home)) < 0) {
+        SeqUtil_TRACE(
+            TL_MEDIUM,
+            "\n================= NODELOGGER: CANNOT ACQUIRE CONNECTION FROM "
+            "MAESTRO PROCESS signal:%s================== \n",
+            type);
+        gen_message(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE);
+        if ((pathcounter <= 1) || (strcmp(type, "abort") == 0) ||
+            (strcmp(type, "event") == 0) || (strcmp(type, "info") == 0)) {
+          logtocreate = "both";
+        } else {
+          logtocreate = "nodelog";
+        }
+        ret =
+            sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
+                                  datestamp, logtocreate, _seq_exp_home);
+        return;
+      } else {
+        SeqUtil_TRACE(TL_MEDIUM,
+                      "\n================= ACQUIRED A NEW CONNECTION FROM "
+                      "NODELOGGER PROCESS ================== \n");
+      }
     }
-}
+  }
 
+  /* if we are here socket is Up then why the second test > -1 ??? */
+  gen_message(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE);
+  if (sock > -1) {
+    if ((write_ret = write_line(sock, 0, type)) == -1) {
+      logtocreate = "nodelog";
+      ret = sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
+                                  datestamp, logtocreate, _seq_exp_home);
+    }
+    if ((pathcounter <= 1) || (strcmp(type, "abort") == 0) ||
+        (strcmp(type, "event") == 0) || (strcmp(type, "info") == 0)) {
+      if ((write_ret = write_line(sock, 1, type)) == -1) {
+        logtocreate = "toplog";
+        ret =
+            sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
+                                  datestamp, logtocreate, _seq_exp_home);
+      }
+    }
+    if (write_ret == -1)
+      return;
+  } else {
+    if ((pathcounter <= 1) || (strcmp(type, "abort") == 0) ||
+        (strcmp(type, "event") == 0) || (strcmp(type, "info") == 0)) {
+      logtocreate = "both";
+    } else {
+      logtocreate = "nodelog";
+    }
+    ret = sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
+                                datestamp, logtocreate, _seq_exp_home);
+    return;
+  }
+  /* @@@@@@@@@@@@@@@@@@@@@@@@@@@@@ CRITICAL  : CLOSE SOCKET ONLY WHEN NOT
+   * ACQUIRED FROM MAESTRO @@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@@ */
+  switch (FromWhere) {
+
+  case FROM_NODELOGGER:
+  case FROM_MAESTRO_NO_SVR:
+    ret = write(sock, "S \0", 3);
+    close(sock);
+    SeqUtil_TRACE(TL_MEDIUM, "\n================= ClOSING CONNECTION FROM "
+                             "NODELOGGER PROCESS ================== \n");
+    break;
+  default:
+    break;
+  }
+}
 
 /**
  * write a buffer to socket with timeout
  * and receive an ack 0 || 1
  */
-static int write_line(int sock, int top, const char* type)
-{
+static int write_line(int sock, int top, const char *type) {
 
-   int bytes_read, bytes_sent;
-   int fileid;
-   char bf[512];
+  int bytes_read, bytes_sent;
+  int fileid;
+  char bf[512];
 
+  memset(bf, '\0', sizeof(bf));
 
-   memset(bf, '\0', sizeof(bf));
-
-   if (top == 0) {
-     if ( ((bytes_sent=send_socket(sock , nodelogger_buf , sizeof(nodelogger_buf) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0)) {
-        fprintf(stderr,"%%%%%%%%%%%% NODELOGGER: socket closed at send  %%%%%%%%%%%%%%\n");
-        return(-1);
-     }
-   } else {
-     /* create tolog file */
-     if ((fileid = open(TOP_LOG_PATH,O_WRONLY|O_CREAT,0755)) < 1 ) {
-                        fprintf(stderr,"Nodelogger: could not create toplog:%s\n",TOP_LOG_PATH);
-			
-     }
-
-     if ( ((bytes_sent=send_socket(sock , nodelogger_buf_top , sizeof(nodelogger_buf_top) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0)) {
-       fprintf(stderr,"%%%%%%%%%%%% NODELOGGER: socket closed at send  %%%%%%%%%%%%%%\n");
-       return(-1);
-     }
-   }
-
-   if ( (bytes_read=recv_socket (sock , bf , sizeof(bf) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
-     fprintf(stderr,"%%%%%%%%%%%% NODELOGGER: socket closed at recv   %%%%%%%%%%%%%%\n");
-     return(-1);
-   }
-   if ( bf[0] != '0' ) {
-     bf[bytes_read > 0 ? bytes_read : 0] = '\0';  
-     fprintf(stderr,"Nodelogger::write_line: Error=%s bf=%s nodelogger_buf=%s\n",strerror(errno),bf,nodelogger_buf);
-     return(-1);
-   }
-   
-   
-
-   return(0);
-}
-
-
-
-static void gen_message (const char *node,const char *type,const char* loop_ext, const char* message)
-{
-
-    time_t time();
-    time_t timval;
-
-    char nodepath[100];
-    int c_month, c_day, c_hour, c_min, c_sec, c_year;
-
-
-    struct tm *tmptr;
-
-    (void) time(&timval);
-    tmptr = gmtime(&timval);
-
-    /* obtain the current date */
-
-    c_year  = tmptr->tm_year+1900;
-    c_month = tmptr->tm_mon+1;
-    c_day   = tmptr->tm_mday;
-    c_hour  = tmptr->tm_hour;
-    c_min   = tmptr->tm_min;
-    c_sec   = tmptr->tm_sec;
-
-    memset(nodepath, '\0', sizeof nodepath);
-
-    /* write the message into "nodelogger_buf", which will be sent to a socket if server up */
-    memset(nodelogger_buf, '\0', NODELOG_BUFSIZE );
-    memset(nodelogger_buf_short, '\0', NODELOG_BUFSIZE );
-    memset(nodelogger_buf_notify, '\0', NODELOG_BUFSIZE );
-    memset(nodelogger_buf_notify_short, '\0', NODELOG_BUFSIZE );
-    SeqUtil_TRACE(TL_FULL_TRACE, "\nNODELOGGER node:%s type:%s message:%s\n", node, type, message );
-
-    if ( loop_ext != NULL ) {
-        snprintf(nodelogger_buf,sizeof(nodelogger_buf),"L %-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=%s:SEQLOOP=%s:SEQMSG=%s\n",username,LOG_PATH,c_year,c_month,c_day,c_hour,c_min,c_sec,node,type,loop_ext,message);
-	snprintf(nodelogger_buf_top,sizeof(nodelogger_buf_top),"L %-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=%s:SEQLOOP=%s:SEQMSG=%s\n",username,TOP_LOG_PATH,c_year,c_month,c_day,c_hour,c_min,c_sec,node,type,loop_ext,message);
-        snprintf(nodelogger_buf_short,sizeof(nodelogger_buf_short),"TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=%s:SEQLOOP=%s:SEQMSG=%s\n",c_year,c_month,c_day,c_hour,c_min,c_sec,node,type,loop_ext,message);
-	 snprintf(nodelogger_buf_notify,sizeof(nodelogger_buf_notify),"L %-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=info:SEQLOOP=%s:SEQMSG=",username,LOG_PATH,c_year,c_month,c_day,c_hour,c_min,c_sec,node,loop_ext); 
-         snprintf(nodelogger_buf_notify_short,sizeof(nodelogger_buf_notify_short),"TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=info:SEQLOOP=%s:SEQMSG=",c_year,c_month,c_day,c_hour,c_min,c_sec,node,loop_ext); 
-    } else {
-        snprintf(nodelogger_buf,sizeof(nodelogger_buf),"L %-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=%s:SEQMSG=%s\n",username,LOG_PATH,c_year,c_month,c_day,c_hour,c_min,c_sec,node,type,message);
-	snprintf(nodelogger_buf_top,sizeof(nodelogger_buf_top),"L %-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=%s:SEQMSG=%s\n",username,TOP_LOG_PATH,c_year,c_month,c_day,c_hour,c_min,c_sec,node,type,message);
-        snprintf(nodelogger_buf_short,sizeof(nodelogger_buf_short),"TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=%s:SEQMSG=%s\n",c_year,c_month,c_day,c_hour,c_min,c_sec,node,type,message);
-	snprintf(nodelogger_buf_notify,sizeof(nodelogger_buf_notify),"L %-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=info:SEQMSG=",username,LOG_PATH,c_year,c_month,c_day,c_hour,c_min,c_sec,node); 
-        snprintf(nodelogger_buf_notify_short,sizeof(nodelogger_buf_notify_short),"TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=info:SEQMSG=",c_year,c_month,c_day,c_hour,c_min,c_sec,node); 
+  if (top == 0) {
+    if (((bytes_sent = send_socket(
+              sock, nodelogger_buf, sizeof(nodelogger_buf),
+              SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT",
+                                       SOCK_TIMEOUT_CLIENT))) <= 0)) {
+      fprintf(
+          stderr,
+          "%%%%%%%%%%%% NODELOGGER: socket closed at send  %%%%%%%%%%%%%%\n");
+      return (-1);
     }
-    
-    
+  } else {
+    /* create tolog file */
+    if ((fileid = open(TOP_LOG_PATH, O_WRONLY | O_CREAT, 0755)) < 1) {
+      fprintf(stderr, "Nodelogger: could not create toplog:%s\n", TOP_LOG_PATH);
+    }
+
+    if (((bytes_sent = send_socket(
+              sock, nodelogger_buf_top, sizeof(nodelogger_buf_top),
+              SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT",
+                                       SOCK_TIMEOUT_CLIENT))) <= 0)) {
+      fprintf(
+          stderr,
+          "%%%%%%%%%%%% NODELOGGER: socket closed at send  %%%%%%%%%%%%%%\n");
+      return (-1);
+    }
+  }
+
+  if ((bytes_read =
+           recv_socket(sock, bf, sizeof(bf),
+                       SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT",
+                                                SOCK_TIMEOUT_CLIENT))) <= 0) {
+    fprintf(
+        stderr,
+        "%%%%%%%%%%%% NODELOGGER: socket closed at recv   %%%%%%%%%%%%%%\n");
+    return (-1);
+  }
+  if (bf[0] != '0') {
+    bf[bytes_read > 0 ? bytes_read : 0] = '\0';
+    fprintf(stderr,
+            "Nodelogger::write_line: Error=%s bf=%s nodelogger_buf=%s\n",
+            strerror(errno), bf, nodelogger_buf);
+    return (-1);
+  }
+
+  return (0);
 }
 
+static void gen_message(const char *node, const char *type,
+                        const char *loop_ext, const char *message) {
 
+  time_t time();
+  time_t timval;
+
+  char nodepath[100];
+  int c_month, c_day, c_hour, c_min, c_sec, c_year;
+
+  struct tm *tmptr;
+
+  (void)time(&timval);
+  tmptr = gmtime(&timval);
+
+  /* obtain the current date */
+
+  c_year = tmptr->tm_year + 1900;
+  c_month = tmptr->tm_mon + 1;
+  c_day = tmptr->tm_mday;
+  c_hour = tmptr->tm_hour;
+  c_min = tmptr->tm_min;
+  c_sec = tmptr->tm_sec;
+
+  memset(nodepath, '\0', sizeof nodepath);
+
+  /* write the message into "nodelogger_buf", which will be sent to a socket if
+   * server up */
+  memset(nodelogger_buf, '\0', NODELOG_BUFSIZE);
+  memset(nodelogger_buf_short, '\0', NODELOG_BUFSIZE);
+  memset(nodelogger_buf_notify, '\0', NODELOG_BUFSIZE);
+  memset(nodelogger_buf_notify_short, '\0', NODELOG_BUFSIZE);
+  SeqUtil_TRACE(TL_FULL_TRACE, "\nNODELOGGER node:%s type:%s message:%s\n",
+                node, type, message);
+
+  if (loop_ext != NULL) {
+    snprintf(nodelogger_buf, sizeof(nodelogger_buf),
+             "L "
+             "%-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE="
+             "%s:SEQLOOP=%s:SEQMSG=%s\n",
+             username, LOG_PATH, c_year, c_month, c_day, c_hour, c_min, c_sec,
+             node, type, loop_ext, message);
+    snprintf(nodelogger_buf_top, sizeof(nodelogger_buf_top),
+             "L "
+             "%-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE="
+             "%s:SEQLOOP=%s:SEQMSG=%s\n",
+             username, TOP_LOG_PATH, c_year, c_month, c_day, c_hour, c_min,
+             c_sec, node, type, loop_ext, message);
+    snprintf(nodelogger_buf_short, sizeof(nodelogger_buf_short),
+             "TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=%s:"
+             "SEQLOOP=%s:SEQMSG=%s\n",
+             c_year, c_month, c_day, c_hour, c_min, c_sec, node, type, loop_ext,
+             message);
+    snprintf(nodelogger_buf_notify, sizeof(nodelogger_buf_notify),
+             "L "
+             "%-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE="
+             "info:SEQLOOP=%s:SEQMSG=",
+             username, LOG_PATH, c_year, c_month, c_day, c_hour, c_min, c_sec,
+             node, loop_ext);
+    snprintf(nodelogger_buf_notify_short, sizeof(nodelogger_buf_notify_short),
+             "TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=info:"
+             "SEQLOOP=%s:SEQMSG=",
+             c_year, c_month, c_day, c_hour, c_min, c_sec, node, loop_ext);
+  } else {
+    snprintf(nodelogger_buf, sizeof(nodelogger_buf),
+             "L "
+             "%-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE="
+             "%s:SEQMSG=%s\n",
+             username, LOG_PATH, c_year, c_month, c_day, c_hour, c_min, c_sec,
+             node, type, message);
+    snprintf(nodelogger_buf_top, sizeof(nodelogger_buf_top),
+             "L "
+             "%-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE="
+             "%s:SEQMSG=%s\n",
+             username, TOP_LOG_PATH, c_year, c_month, c_day, c_hour, c_min,
+             c_sec, node, type, message);
+    snprintf(nodelogger_buf_short, sizeof(nodelogger_buf_short),
+             "TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=%s:"
+             "SEQMSG=%s\n",
+             c_year, c_month, c_day, c_hour, c_min, c_sec, node, type, message);
+    snprintf(nodelogger_buf_notify, sizeof(nodelogger_buf_notify),
+             "L "
+             "%-7s:%s:TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE="
+             "info:SEQMSG=",
+             username, LOG_PATH, c_year, c_month, c_day, c_hour, c_min, c_sec,
+             node);
+    snprintf(
+        nodelogger_buf_notify_short, sizeof(nodelogger_buf_notify_short),
+        "TIMESTAMP=%.4d%.2d%.2d.%.2d:%.2d:%.2d:SEQNODE=%s:MSGTYPE=info:SEQMSG=",
+        c_year, c_month, c_day, c_hour, c_min, c_sec, node);
+  }
+}
 
 /**
-  *  Synchronize clients logging to Experiment nodelog file
-  *  author : Rochdi Lahlou, cmoi 2013
-  *  Algo   : hypotheses : nfs 2+, garanties that link and rename are atomic
-  *           build on this to make clients writes to nodelog file based 
-  *           on a timed round robin methods. 
-  *
-  *
-  *
-  */
-static int sync_nodelog_over_nfs (const char *node, const char * type, const char * loop_ext, const char * message, const char * datestamp, const char *logtype, const char * _seq_exp_home)
-{
-    FILE *fd;
-    struct stat fileStat;
-    int fileid,num,nb,my_turn,ret,status=0;
-    int success=0, loop=0;
-    unsigned int pid;
-    struct stat st;
-    static DIR *dp = NULL;
-    struct dirent *d;
-    time_t now;
-    char *truehost=NULL, *path_status=NULL, *mversion=NULL;
-    char resolved[MAXPATHLEN];
-    char host[128], lock[1024],flock[1024],lpath[1024];
-    char Stime[40],Etime[40],Atime[40];
-    char ffilename[1024],filename[256];
-    char host_pid[64],TokenHostPid[256],underline[2];
-    double Tokendate,date;
-    double diff_t;
+ *  Synchronize clients logging to Experiment nodelog file
+ *  author : Rochdi Lahlou, cmoi 2013
+ *  Algo   : hypotheses : nfs 2+, garanties that link and rename are atomic
+ *           build on this to make clients writes to nodelog file based
+ *           on a timed round robin methods.
+ *
+ *
+ *
+ */
+static int sync_nodelog_over_nfs(const char *node, const char *type,
+                                 const char *loop_ext, const char *message,
+                                 const char *datestamp, const char *logtype,
+                                 const char *_seq_exp_home) {
+  FILE *fd;
+  struct stat fileStat;
+  int fileid, num, nb, my_turn, ret, status = 0;
+  int success = 0, loop = 0;
+  unsigned int pid;
+  struct stat st;
+  static DIR *dp = NULL;
+  struct dirent *d;
+  time_t now;
+  char *truehost = NULL, *path_status = NULL, *mversion = NULL;
+  char resolved[MAXPATHLEN];
+  char host[128], lock[1024], flock[1024], lpath[1024];
+  char Stime[40], Etime[40], Atime[40];
+  char ffilename[1024], filename[256];
+  char host_pid[64], TokenHostPid[256], underline[2];
+  double Tokendate, date;
+  double diff_t;
 
-    SeqUtil_TRACE(TL_FULL_TRACE,"sync_nodelog_over_nfs(): Called\n");
+  SeqUtil_TRACE(TL_FULL_TRACE, "sync_nodelog_over_nfs(): Called\n");
 
-    if (logtype == NULL)  {
-       fprintf(stderr,"sync_nodelog_over_nfs logtype = NULL\n");
-       return (-1);
-    }
+  if (logtype == NULL) {
+    fprintf(stderr, "sync_nodelog_over_nfs logtype = NULL\n");
+    return (-1);
+  }
 
-    if (strcmp(logtype, "both") == 0 ) { 
-       sync_nodelog_over_nfs(node,type,loop_ext,message,datestamp,"nodelog", _seq_exp_home);
-       sync_nodelog_over_nfs(node,type,loop_ext,message,datestamp,"toplog", _seq_exp_home);
-       return(0);
-    }
-    
-    /* get user parameters */
-    if (  (getpwnam(username)) == NULL ) {
-        fprintf(stderr, " Nodelogger::Cannot get user:%s passwd parameters\n",username);
-        return (1); 
-    }
-    /* get host , pid */
-    gethostname(host, sizeof(host));
-    pid = getpid();
-     
-    /* env TRUE HOST should be defined */
-    if ( (truehost=getenv("TRUE_HOST")) == NULL ) {
-       fprintf(stderr, "Nodelogger::Cannot get env. var TRUE_HOST\n");
-       truehost=host;
-    }
- 
-    /* env MAESTRO_VERSION */
-    if ( (mversion=getenv("SEQ_MAESTRO_VERSION")) == NULL ) {
-        fprintf(stderr, "Nodelogger::Cannot get env. var SEQ_MAESTRO_VERSION\n");
-    }
- 
-    /* env SEQ_EXP_HOME */
-    if ( _seq_exp_home == NULL ) {
-        fprintf(stderr,"Nodelogger::_seq_exp_home cannot be NULL...\n");
-        exit (1);
-    }
- 
-    /* construct a unique bucket name  */
-    memset(lock,'\0', sizeof(lock));
-    memset(flock,'\0', sizeof(flock));
-    memset(lpath,'\0', sizeof(lpath));
- 
-    /* I need an xp Inode */
-    if ( (path_status=realpath(_seq_exp_home,resolved)) == NULL ) {
-       fprintf(stderr,"Nodelogger::Probleme avec _seq_exp_home=%s\n",_seq_exp_home);
-       return (-1);
-    } 
- 						     
-    /* get inode */
-    if (stat(resolved,&fileStat) < 0) {
-       fprintf(stderr,"Nodelogger::Cannot stat on path=%s\n",resolved);
-       return (-1);
-    }
-     
-    /* create sync directory if not there */
-    snprintf(lpath,sizeof(lpath),"%s/v%s",TMP_LOG_PATH,mversion);
-    if ( access(lpath,R_OK) != 0 ) status=SeqUtil_mkdir_nfs(lpath , 1, NULL);
-     
-    snprintf(lock,sizeof(lock),"%s/v%s/node_logger_lock",TMP_LOG_PATH,mversion);
- 
-    get_time(Stime,3);
-    Tokendate = atof(Stime);
-    snprintf (flock,sizeof(flock),"%s/%s_%s_%u",lpath,Stime,host,pid);
-     
-    SeqUtil_TRACE(TL_FULL_TRACE, "\nToken date=%s host=%s pid=%u flock=%s\n",Stime,host,pid,flock);
+  if (strcmp(logtype, "both") == 0) {
+    sync_nodelog_over_nfs(node, type, loop_ext, message, datestamp, "nodelog",
+                          _seq_exp_home);
+    sync_nodelog_over_nfs(node, type, loop_ext, message, datestamp, "toplog",
+                          _seq_exp_home);
+    return (0);
+  }
 
-    sprintf (TokenHostPid,"%s_%u",host,pid);
-    
-    if ( (fd=fopen(flock,"w+")) == NULL ) {
-       fprintf(stderr,"Nodelogger::could not open filename:%s\n",flock);
-       /* decide what to do here */ 
-       return(-1);
-    } else {
-       fclose(fd);
-    }
+  /* get user parameters */
+  if ((getpwnam(username)) == NULL) {
+    fprintf(stderr, " Nodelogger::Cannot get user:%s passwd parameters\n",
+            username);
+    return (1);
+  }
+  /* get host , pid */
+  gethostname(host, sizeof(host));
+  pid = getpid();
 
-    time(&now);
-    alarm(TIMEOUT_NFS_SYNC);
-    get_time(Stime,3);
-    while ( loop < 500 ) {
-       if ( (dp=opendir(lpath)) == NULL ) {
-          fprintf(stderr,"Nodelogger::Cannot open dir:%s\n",lpath);
-          loop=loop+1;
-          usleep(100);
-          continue; 
-       }
-       while ( d=readdir(dp)) {
-          snprintf(ffilename,sizeof(ffilename),"%s/%s",lpath,d->d_name);
-          snprintf(filename,sizeof(filename),"%s",d->d_name);
- 
-          if ( stat(ffilename,&st) != 0 ) { continue; }
-	      if ( ( st.st_mode & S_IFMT ) == S_IFREG ) {
- 	       /* skip hidden files */
- 	          if ( filename[0] == '.' ) continue;
-              nb = sscanf(filename,"%lf%1[_]%s",&date,underline,host_pid);
-              if ( nb == 3 ) {
-                  if (  strcmp(TokenHostPid,host_pid) == 0 ) {
-                      my_turn = 1;
-                      continue;
-                  }
-                  if ( Tokendate > date ) {
-                     /* modif time should  be less than 2 sec */
-                     if ( (stat(ffilename,&st)) < 0 ) {
- 	                    continue;
- 	                 }
- 		             if ( (diff_t=difftime(now,st.st_mtime)) > 2 ) {
-						SeqUtil_TRACE(TL_FULL_TRACE, "Removed old token file %s \n",ffilename);
- 		                ret=unlink(ffilename); 
- 		             }
- 		             my_turn = 0;
- 		             break;
- 		          } else {
- 		             my_turn = 1;
- 	 	          }
-              }
-         }
-      } /* first while */
-      
-      if ( my_turn == 1 ) {
-          if ( (status=link(flock,lock)) == -1 ) {
-          /*  have to examine the life of the lock to see if it's belong to a living process */
-            if ( (lstat(lock,&st)) < 0 ) {
- 	        continue;
-            } else if ( (diff_t=difftime(now,st.st_mtime)) > 2 ) {
-               SeqUtil_TRACE(TL_FULL_TRACE, "Removed old lock file %s \n",lock);
- 			   ret=unlink(lock); /* lock file removed */
+  /* env TRUE HOST should be defined */
+  if ((truehost = getenv("TRUE_HOST")) == NULL) {
+    fprintf(stderr, "Nodelogger::Cannot get env. var TRUE_HOST\n");
+    truehost = host;
+  }
+
+  /* env MAESTRO_VERSION */
+  if ((mversion = getenv("SEQ_MAESTRO_VERSION")) == NULL) {
+    fprintf(stderr, "Nodelogger::Cannot get env. var SEQ_MAESTRO_VERSION\n");
+  }
+
+  /* env SEQ_EXP_HOME */
+  if (_seq_exp_home == NULL) {
+    fprintf(stderr, "Nodelogger::_seq_exp_home cannot be NULL...\n");
+    exit(1);
+  }
+
+  /* construct a unique bucket name  */
+  memset(lock, '\0', sizeof(lock));
+  memset(flock, '\0', sizeof(flock));
+  memset(lpath, '\0', sizeof(lpath));
+
+  /* I need an xp Inode */
+  if ((path_status = realpath(_seq_exp_home, resolved)) == NULL) {
+    fprintf(stderr, "Nodelogger::Probleme avec _seq_exp_home=%s\n",
+            _seq_exp_home);
+    return (-1);
+  }
+
+  /* get inode */
+  if (stat(resolved, &fileStat) < 0) {
+    fprintf(stderr, "Nodelogger::Cannot stat on path=%s\n", resolved);
+    return (-1);
+  }
+
+  /* create sync directory if not there */
+  snprintf(lpath, sizeof(lpath), "%s/v%s", TMP_LOG_PATH, mversion);
+  if (access(lpath, R_OK) != 0)
+    status = SeqUtil_mkdir_nfs(lpath, 1, NULL);
+
+  snprintf(lock, sizeof(lock), "%s/v%s/node_logger_lock", TMP_LOG_PATH,
+           mversion);
+
+  get_time(Stime, 3);
+  Tokendate = atof(Stime);
+  snprintf(flock, sizeof(flock), "%s/%s_%s_%u", lpath, Stime, host, pid);
+
+  SeqUtil_TRACE(TL_FULL_TRACE, "\nToken date=%s host=%s pid=%u flock=%s\n",
+                Stime, host, pid, flock);
+
+  sprintf(TokenHostPid, "%s_%u", host, pid);
+
+  if ((fd = fopen(flock, "w+")) == NULL) {
+    fprintf(stderr, "Nodelogger::could not open filename:%s\n", flock);
+    /* decide what to do here */
+    return (-1);
+  } else {
+    fclose(fd);
+  }
+
+  time(&now);
+  alarm(TIMEOUT_NFS_SYNC);
+  get_time(Stime, 3);
+  while (loop < 500) {
+    if ((dp = opendir(lpath)) == NULL) {
+      fprintf(stderr, "Nodelogger::Cannot open dir:%s\n", lpath);
+      loop = loop + 1;
+      usleep(100);
+      continue;
+    }
+    while (d = readdir(dp)) {
+      snprintf(ffilename, sizeof(ffilename), "%s/%s", lpath, d->d_name);
+      snprintf(filename, sizeof(filename), "%s", d->d_name);
+
+      if (stat(ffilename, &st) != 0) {
+        continue;
+      }
+      if ((st.st_mode & S_IFMT) == S_IFREG) {
+        /* skip hidden files */
+        if (filename[0] == '.')
+          continue;
+        nb = sscanf(filename, "%lf%1[_]%s", &date, underline, host_pid);
+        if (nb == 3) {
+          if (strcmp(TokenHostPid, host_pid) == 0) {
+            my_turn = 1;
+            continue;
+          }
+          if (Tokendate > date) {
+            /* modif time should  be less than 2 sec */
+            if ((stat(ffilename, &st)) < 0) {
+              continue;
             }
-         } else {
- 	         get_time(Atime,3);
-             if ( strcmp(logtype, "toplog") == 0 ) {
-                 if ((fileid = open(TOP_LOG_PATH,O_WRONLY|O_CREAT,0755)) < 1 ) {
-                    fprintf(stderr,"Nodelogger::could not open toplog:%s\n",TOP_LOG_PATH);
-                 } else {
- 	                lseek(fileid, 0, SEEK_END);
-		            num = write(fileid, nodelogger_buf_short, strlen(nodelogger_buf_short));
-		            fsync(fileid);
-		            close(fileid);
- 	                ret=unlink(lock);
- 	                ret=unlink(flock);
-                    closedir(dp);
-		            success=1;
-		            break;
-                 }
-		     } else {
-                if ( (fileid = open(LOG_PATH,O_WRONLY|O_CREAT,0755)) < 1 ) {
-                    fprintf(stderr,"Nodelogger::could not open filename:%s\n",LOG_PATH);
-                } else {
- 	                lseek(fileid, 0, SEEK_END);
-		            num = write(fileid, nodelogger_buf_short, strlen(nodelogger_buf_short));
-		            fsync(fileid);
-		            close(fileid);
- 	                ret=unlink(lock);
- 	                ret=unlink(flock);
-                    closedir(dp);
- 	                success=1;
-		            break;
-                }
+            if ((diff_t = difftime(now, st.st_mtime)) > 2) {
+              SeqUtil_TRACE(TL_FULL_TRACE, "Removed old token file %s \n",
+                            ffilename);
+              ret = unlink(ffilename);
             }
+            my_turn = 0;
+            break;
+          } else {
+            my_turn = 1;
+          }
+        }
+      }
+    } /* first while */
+
+    if (my_turn == 1) {
+      if ((status = link(flock, lock)) == -1) {
+        /*  have to examine the life of the lock to see if it's belong to a
+         * living process */
+        if ((lstat(lock, &st)) < 0) {
+          continue;
+        } else if ((diff_t = difftime(now, st.st_mtime)) > 2) {
+          SeqUtil_TRACE(TL_FULL_TRACE, "Removed old lock file %s \n", lock);
+          ret = unlink(lock); /* lock file removed */
         }
       } else {
-         /* update own modif time to signal other that still active */
-         ret=utime(flock,NULL);
+        get_time(Atime, 3);
+        if (strcmp(logtype, "toplog") == 0) {
+          if ((fileid = open(TOP_LOG_PATH, O_WRONLY | O_CREAT, 0755)) < 1) {
+            fprintf(stderr, "Nodelogger::could not open toplog:%s\n",
+                    TOP_LOG_PATH);
+          } else {
+            lseek(fileid, 0, SEEK_END);
+            num = write(fileid, nodelogger_buf_short,
+                        strlen(nodelogger_buf_short));
+            fsync(fileid);
+            close(fileid);
+            ret = unlink(lock);
+            ret = unlink(flock);
+            closedir(dp);
+            success = 1;
+            break;
+          }
+        } else {
+          if ((fileid = open(LOG_PATH, O_WRONLY | O_CREAT, 0755)) < 1) {
+            fprintf(stderr, "Nodelogger::could not open filename:%s\n",
+                    LOG_PATH);
+          } else {
+            lseek(fileid, 0, SEEK_END);
+            num = write(fileid, nodelogger_buf_short,
+                        strlen(nodelogger_buf_short));
+            fsync(fileid);
+            close(fileid);
+            ret = unlink(lock);
+            ret = unlink(flock);
+            closedir(dp);
+            success = 1;
+            break;
+          }
+        }
       }
- 
-      loop++;
-      closedir(dp);
+    } else {
+      /* update own modif time to signal other that still active */
+      ret = utime(flock, NULL);
     }
-    get_time(Etime,3);
-    if ( success == 1 ) { 
-       fprintf(stderr,"Nodelogger NFS_SYNC::Started at:%s Grabbed at:%s Ended at:%s tries=%d\n",Stime,Atime,Etime,loop);
-    } else  {
-       /* erase the lock  will lower load on the remaining clients */
-       ret=unlink(flock);
-       fprintf(stderr,"Nodelogger NFS_SYNC DID NOT GET the lock Started at:%s Ended at:%s tries=%d\n",Stime,Etime,loop);
-    }
-    
-    
-    SeqUtil_TRACE(TL_FULL_TRACE,"sync_nodelog_over_nfs(): returning\n");
-    alarm(0);
-    return(0);
+
+    loop++;
+    closedir(dp);
+  }
+  get_time(Etime, 3);
+  if (success == 1) {
+    fprintf(stderr,
+            "Nodelogger NFS_SYNC::Started at:%s Grabbed at:%s Ended at:%s "
+            "tries=%d\n",
+            Stime, Atime, Etime, loop);
+  } else {
+    /* erase the lock  will lower load on the remaining clients */
+    ret = unlink(flock);
+    fprintf(stderr,
+            "Nodelogger NFS_SYNC DID NOT GET the lock Started at:%s Ended "
+            "at:%s tries=%d\n",
+            Stime, Etime, loop);
+  }
+
+  SeqUtil_TRACE(TL_FULL_TRACE, "sync_nodelog_over_nfs(): returning\n");
+  alarm(0);
+  return (0);
 }
 
-/** 
-* Notify User if he is using nfs mode, This notification will happen twice a run :
-* in the beginning and end of root Node
-*/
-static void NotifyUser (int sock , int top , char mode, const char * _seq_exp_home)
-{
-   char bf[512];
-   char *rcfile, *lmech ;
-   int bytes_sent, bytes_read, fileid, num;
+/**
+ * Notify User if he is using nfs mode, This notification will happen twice a
+ * run : in the beginning and end of root Node
+ */
+static void NotifyUser(int sock, int top, char mode,
+                       const char *_seq_exp_home) {
+  char bf[512];
+  char *rcfile, *lmech;
+  int bytes_sent, bytes_read, fileid, num;
 
-   if ( top != 0 ) {
-         if ( (rcfile=malloc( strlen (getenv("HOME")) + strlen("/.maestrorc") + 2 )) != NULL ) {
-	     sprintf(rcfile, "%s/.maestrorc", getenv("HOME"));
-        if ( (lmech=SeqUtil_getdef( rcfile, "SEQ_LOGGING_MECH", _seq_exp_home )) != NULL ) {
-		  switch ( mode ) {
-		        case 'S': /* mserver is up but logging mechanism is through NFS */
-			         strcat(nodelogger_buf_notify,"Please initialize SEQ_LOGGING_MECH=server in ~/.maestrorc file\n");
-	                         if ( strcmp(lmech,"nfs") == 0 ) {
-                                     if ( ((bytes_sent=send_socket(sock , nodelogger_buf_notify , sizeof(nodelogger_buf_notify) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0)) {
-	                                     free(rcfile);free(lmech);
-                                             return;
-                                     }
-                                     if ( (bytes_read=recv_socket (sock , bf , sizeof(bf) , SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT", SOCK_TIMEOUT_CLIENT))) <= 0 ) {
-	                                     free(rcfile);free(lmech);
-                                             return;
-                                     }
-		                  }
-				  break;
-		        case 'N': /* mserver is down and logging mech. is through NFS */
-			         strcat(nodelogger_buf_notify_short,"Please start mserver and initialize SEQ_LOGGING_MECH=server in ~/.maestrorc file\n");
-	                         if ( strcmp(lmech,"nfs") == 0 ) {
-                                       if ( (fileid = open(LOG_PATH,O_WRONLY|O_CREAT,0755)) > 0 ) {
- 	                                        lseek(fileid, 0, SEEK_END);
-		                                num = write(fileid, nodelogger_buf_notify_short, strlen(nodelogger_buf_notify_short));
-		                                fsync(fileid);
-		                                close(fileid);
-                                       } 
-				 } 
-				 break;
-                  }
-		  free(lmech);
-	     }
-	     free(rcfile);
-	 }
-   }
-
+  if (top != 0) {
+    if ((rcfile = malloc(strlen(getenv("HOME")) + strlen("/.maestrorc") + 2)) !=
+        NULL) {
+      sprintf(rcfile, "%s/.maestrorc", getenv("HOME"));
+      if ((lmech = SeqUtil_getdef(rcfile, "SEQ_LOGGING_MECH", _seq_exp_home)) !=
+          NULL) {
+        switch (mode) {
+        case 'S': /* mserver is up but logging mechanism is through NFS */
+          strcat(nodelogger_buf_notify,
+                 "Please initialize SEQ_LOGGING_MECH=server in ~/.maestrorc "
+                 "file\n");
+          if (strcmp(lmech, "nfs") == 0) {
+            if (((bytes_sent = send_socket(
+                      sock, nodelogger_buf_notify,
+                      sizeof(nodelogger_buf_notify),
+                      SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT",
+                                               SOCK_TIMEOUT_CLIENT))) <= 0)) {
+              free(rcfile);
+              free(lmech);
+              return;
+            }
+            if ((bytes_read = recv_socket(
+                     sock, bf, sizeof(bf),
+                     SeqUtil_getEnvOrDefaultI("SEQ_TIMEOUT_CLIENT",
+                                              SOCK_TIMEOUT_CLIENT))) <= 0) {
+              free(rcfile);
+              free(lmech);
+              return;
+            }
+          }
+          break;
+        case 'N': /* mserver is down and logging mech. is through NFS */
+          strcat(nodelogger_buf_notify_short,
+                 "Please start mserver and initialize SEQ_LOGGING_MECH=server "
+                 "in ~/.maestrorc file\n");
+          if (strcmp(lmech, "nfs") == 0) {
+            if ((fileid = open(LOG_PATH, O_WRONLY | O_CREAT, 0755)) > 0) {
+              lseek(fileid, 0, SEEK_END);
+              num = write(fileid, nodelogger_buf_notify_short,
+                          strlen(nodelogger_buf_notify_short));
+              fsync(fileid);
+              close(fileid);
+            }
+          }
+          break;
+        }
+        free(lmech);
+      }
+      free(rcfile);
+    }
+  }
 }

@@ -1,72 +1,70 @@
-/* SeqListNode.h - Utilities for list of maestro nodes used by the Maestro sequencer software package.
-*/
+/* SeqListNode.h - Utilities for list of maestro nodes used by the Maestro
+ * sequencer software package.
+ */
 
 #ifndef _SEQ_LISTNODE
 #define _SEQ_LISTNODE
 
-#define for_list(iterator, list_head) \
-   LISTNODEPTR iterator;\
-   for( iterator = list_head;\
-        iterator != NULL;\
-        iterator = iterator->nextPtr \
-      )
+#define for_list(iterator, list_head)                                          \
+  LISTNODEPTR iterator;                                                        \
+  for (iterator = list_head; iterator != NULL; iterator = iterator->nextPtr)
 
 struct listNode {
-    struct listNode *nextPtr;
-    char *data;
-  };
+  struct listNode *nextPtr;
+  char *data;
+};
 
 typedef struct listNode LISTNODE;
 typedef LISTNODE *LISTNODEPTR;
 
 struct tokenNode {
-   char *token;
-   char *data;
-   struct tokenNode *nextPtr;
+  char *token;
+  char *data;
+  struct tokenNode *nextPtr;
 };
 
 typedef struct tokenNode TOKENNODE;
 typedef TOKENNODE *TOKENNODEPTR;
 
 /****************************************************************
-*insertItem: Insert an item 's' into the list 'list'. The memory
-*necessary to store the string 's' will be allocated by insertItem.
-*****************************************************************/
+ *insertItem: Insert an item 's' into the list 'list'. The memory
+ *necessary to store the string 's' will be allocated by insertItem.
+ *****************************************************************/
 void SeqListNode_insertItem(LISTNODEPTR *list, char *s);
 void SeqListNode_insertTokenItem(TOKENNODEPTR *list, char *token, char *data);
 
 /****************************************************************
-* pushFront: Adds an item at the start of a list.
-*****************************************************************/
-void SeqListNode_pushFront(LISTNODEPTR * list_head,const char *data);
+ * pushFront: Adds an item at the start of a list.
+ *****************************************************************/
+void SeqListNode_pushFront(LISTNODEPTR *list_head, const char *data);
 
 /****************************************************************
-*deleteItem: Delete the first item from the token node list pointer 'list'. 
-*The memory will be deallocated by deleteItem.
-*****************************************************************/
+ *deleteItem: Delete the first item from the token node list pointer 'list'.
+ *The memory will be deallocated by deleteItem.
+ *****************************************************************/
 void SeqListNode_deleteTokenItem(TOKENNODEPTR *sPtr);
 
 /****************************************************************
-*isListEmpty: Returns 1 if list 'sPtr' is empty, eitherwise 0
-*****************************************************************/
+ *isListEmpty: Returns 1 if list 'sPtr' is empty, eitherwise 0
+ *****************************************************************/
 int SeqListNode_isListEmpty(LISTNODEPTR sPtr);
-    
+
 /********************************************************************************
-* SeqListNode_isItemExists: returns true if the data already exists in the list
-*                           otherwise returns false
-********************************************************************************/
+ * SeqListNode_isItemExists: returns true if the data already exists in the list
+ *                           otherwise returns false
+ ********************************************************************************/
 int SeqListNode_isItemExists(LISTNODEPTR sPtr, char *data);
 int SeqListNode_isTokenItemExists(TOKENNODEPTR sPtr, char *token);
 char *SeqListNode_getTokenData(TOKENNODEPTR sPtr, char *token);
 
 /****************************************************************
-*deleteWholeList: delete the list 'list' and deallocate the memories
-*****************************************************************/
+ *deleteWholeList: delete the list 'list' and deallocate the memories
+ *****************************************************************/
 void SeqListNode_deleteWholeList(LISTNODEPTR *list);
 
 /****************************************************************
-*printList: print the list 'list'
-*****************************************************************/
+ *printList: print the list 'list'
+ *****************************************************************/
 void SeqListNode_printList(LISTNODEPTR list);
 
 /********************************************************************************
@@ -80,8 +78,8 @@ void SeqListNode_reverseList(LISTNODEPTR *sPtr);
 LISTNODEPTR SeqListNode_multiply_lists(LISTNODEPTR lhs, LISTNODEPTR rhs);
 
 /********************************************************************************
- * SeqListNode_addLists: Concatenates lists lhs->...->end_lhs->rhs->...->end_rhs->NULL
+ * SeqListNode_addLists: Concatenates lists
+ *lhs->...->end_lhs->rhs->...->end_rhs->NULL
  ********************************************************************************/
-void SeqListNode_addLists(LISTNODEPTR * lhs, LISTNODEPTR rhs );
+void SeqListNode_addLists(LISTNODEPTR *lhs, LISTNODEPTR rhs);
 #endif
-
