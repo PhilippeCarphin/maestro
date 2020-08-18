@@ -89,7 +89,6 @@ int main(int argc, char *argv[])
         printf("Message = %s \n", message);
         break;
       case 'd':
-        hasDate = 1;
         datestamp = malloc(PADDED_DATE_LENGTH + 1);
         strncpy(datestamp, optarg, PADDED_DATE_LENGTH);
         break;
