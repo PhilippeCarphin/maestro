@@ -2064,13 +2064,13 @@ static int go_submit(const char *_signal, char *_flow,
     if (_nodeDataPtr->mpi == 1)
       sprintf(mpi_flag, "-mpi");
     else
-      sprintf(mpi_flag, "");
+      mpi_flag[0]='\0';
 
     /* get immediate flag for the ord_soumet call */
     if (_nodeDataPtr->immediateMode == 1)
       sprintf(immediateMode, "-immediate");
     else
-      sprintf(immediateMode, "");
+      immediateMode[0]='\0';
 
     /* go and submit the job */
     if (_nodeDataPtr->type == Task || _nodeDataPtr->type == NpassTask) {
@@ -3365,7 +3365,6 @@ int checkTargetedIterations(SeqNodeDataPtr _nodeDataPtr,
     _unlock(statusFile, _nodeDataPtr->datestamp, _nodeDataPtr->expHome);
   }
 
-out_free:
   SeqListNode_deleteWholeList(&extensions);
   SeqUtil_TRACE(TL_FULL_TRACE, "checkTargetedIterations() end\n");
   return retval;

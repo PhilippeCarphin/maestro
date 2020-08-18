@@ -612,7 +612,7 @@ int ParseXmlConfigFile(char *filename, _l2d2server *pl2d2) {
     fprintf(stderr, "Setting Defaults for web directory:%s\n", pl2d2->web);
     sprintf(pl2d2->web_dep, "%s/dependencies.html", pl2d2->web);
     sprintf(pl2d2->emailTO, "%s@ec.gc.ca", pl2d2->user);
-    sprintf(pl2d2->emailCC, "");
+    pl2d2->emailCC[0]='\0';
     pl2d2->maxNumOfProcess = 4;
     pl2d2->maxClientPerProcess = 50;
     pl2d2->pollfreq = 30;          /* sec */
@@ -836,7 +836,7 @@ int ParseXmlConfigFile(char *filename, _l2d2server *pl2d2) {
         sprintf(pl2d2->emailCC, "%s", bf);
         fprintf(stderr, "in xml file found  email cc=%s\n", pl2d2->emailCC);
       } else {
-        sprintf(pl2d2->emailCC, "");
+	pl2d2->emailCC[0]='\0';
       }
     }
 
@@ -933,7 +933,7 @@ int ParseXmlConfigFile(char *filename, _l2d2server *pl2d2) {
     sprintf(pl2d2->mlog, "%s/mcontroller", pl2d2->logdir);
     sprintf(pl2d2->dmlog, "%s/mdpmanager", pl2d2->logdir);
     sprintf(pl2d2->emailTO, "%s@ec.gc.ca", pl2d2->user);
-    sprintf(pl2d2->emailCC, "");
+    pl2d2->emailCC[0]='\0';
     fprintf(stderr, "Setting Defaults for log directory:%s\n", pl2d2->logdir);
     fprintf(stderr, "Setting Defaults for web directory:%s\n", pl2d2->web);
     fprintf(stderr,
@@ -1225,7 +1225,7 @@ int SendFile(const char *filename, int sock, FILE *mlog) {
                    */
   FILE *waitf;
 
-  int bytes_written = 0, bytes_read = 0, bytes_left = 0, total = 0;
+  int bytes_written = 0, bytes_left = 0, total = 0;
   struct stat st;
 
   /* get & format size of file in bytes */

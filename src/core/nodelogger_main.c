@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
   char *node = NULL, *signal = NULL, *message = NULL, *loops = NULL,
        *datestamp = NULL, *seq_exp_home = NULL, *tmpDate = NULL;
-  int hasSignal = 0, hasNode = 0, hasLoops = 0, dateSize = 14;
+  int hasSignal = 0, hasNode = 0, hasLoops = 0;
   int r, i;
   int errflg = 0;
 
@@ -89,6 +89,7 @@ int main(int argc, char *argv[])
         printf("Message = %s \n", message);
         break;
       case 'd':
+        hasDate = 1;
         datestamp = malloc(PADDED_DATE_LENGTH + 1);
         strncpy(datestamp, optarg, PADDED_DATE_LENGTH);
         break;
