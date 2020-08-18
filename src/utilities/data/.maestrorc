@@ -61,7 +61,7 @@ user_tmp_dir = default
 mc_show_console = false
 
 # used by xflow_overview to know list of suites/experiments to monitor
-#suites_file = /home/binops/afsi/ops/xflow.suites.xml
+#suites_file = /home/smco500/xflow.suites.xml
 
 # maestro-center version control system
 # the name will be used as tooltip 
