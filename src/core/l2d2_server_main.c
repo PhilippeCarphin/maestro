@@ -1003,7 +1003,7 @@ static void l2d2SelectServlet(int listen_sd, TypeOfWorker tworker) {
                   if (epoch_diff >= 180) {
                     snprintf(
                         buf, sizeof(buf),
-                        "0 Problems with Dependency Manager: heartbeat \0");
+                        "0 Problems with Dependency Manager: heartbeat ");
                     ret = write(i, buf, strlen(buf));
                     break;
                   }
@@ -1011,13 +1011,13 @@ static void l2d2SelectServlet(int listen_sd, TypeOfWorker tworker) {
               } else if (g_AliveFiles.gl_pathc > 1) {
                 snprintf(
                     buf, sizeof(buf),
-                    "0 Problems with Dependency Manager: Multiple instances\0");
+                    "0 Problems with Dependency Manager: Multiple instances");
                 ret = write(i, buf, strlen(buf));
                 break;
               } else {
                 /* issue a kill here before sending message */
                 snprintf(buf, sizeof(buf),
-                         "0 Problems with Dependency Manager: process dead \0");
+                         "0 Problems with Dependency Manager: process dead ");
                 ret = write(i, buf, strlen(buf));
                 break;
               }
@@ -1033,7 +1033,7 @@ static void l2d2SelectServlet(int listen_sd, TypeOfWorker tworker) {
                     /* 60 sec for EW heartbeat if no coonections  */
                     if (epoch_diff >= 100) {
                       snprintf(buf, sizeof(buf),
-                               "0 Problems with Eternal worker: heartbeat\0");
+                               "0 Problems with Eternal worker: heartbeat");
                       ret = write(i, buf, strlen(buf));
                       break;
                     }
@@ -1041,13 +1041,13 @@ static void l2d2SelectServlet(int listen_sd, TypeOfWorker tworker) {
                 } else if (g_AliveFiles.gl_pathc > 1) {
                   snprintf(
                       buf, sizeof(buf),
-                      "0 Problems with Eternal worker: Multiple instances\0");
+                      "0 Problems with Eternal worker: Multiple instances");
                   ret = write(i, buf, strlen(buf));
                   break;
                 } else {
                   /* issue a kill here before sending message */
                   snprintf(buf, sizeof(buf),
-                           "0 Problems with Eternal worker: process dead \0");
+                           "0 Problems with Eternal worker: process dead ");
                   ret = write(i, buf, strlen(buf));
                   break;
                 }
@@ -1055,7 +1055,7 @@ static void l2d2SelectServlet(int listen_sd, TypeOfWorker tworker) {
 
               snprintf(buf, sizeof(buf),
                        "0 Server is Alive on host=%s version=%s, Dependency "
-                       "Manager ok, Eworker ok \0",
+                       "Manager ok, Eworker ok ",
                        L2D2.host, L2D2.mversion);
               ret = write(i, buf, strlen(buf));
               break;
