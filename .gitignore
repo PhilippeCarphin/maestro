@@ -9,6 +9,9 @@ _*
 # Debug scripts
 src/python3/mflow-debug.sh
 
+# Shortcuts with extensions to that file without extension, useful for IDE's to recognize file types for colors.
+ssm/.ssm.d/post-install.ksh
+
 # Generated files
 *.ssm
 *.log
