@@ -263,7 +263,8 @@ char *getPathBase(const char *full_path) {
  */
 int NodeLogr(char *nodeLogerBuffer, int pid, FILE *mlog) {
   int NodeLogfile;
-  int bwrite, num = 0, ret;
+  int num = 0;
+  int ret;
   char user[10];
   char firsin[512];
   char logBuffer[1024];
@@ -283,7 +284,7 @@ int NodeLogr(char *nodeLogerBuffer, int pid, FILE *mlog) {
   strcat(logBuffer, "\n");
   if ((NodeLogfile = open(firsin, O_WRONLY | O_APPEND | O_CREAT, 00666)) !=
       -1) {
-    bwrite = write(NodeLogfile, logBuffer, strlen(logBuffer));
+    write(NodeLogfile, logBuffer, strlen(logBuffer));
     fsync(NodeLogfile);
     close(NodeLogfile);
     ret = 0;
@@ -958,7 +959,6 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   char bf[256];
   char buffer[2048];
   char tmpbf[2048];
-  char *c;
   int size;
 
   memset(bf, '\0', sizeof(bf));
@@ -983,7 +983,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   roxml_get_name(item, bf, sizeof(bf));
 
   node_t *type = roxml_get_attr(item, "type", 0);
-  c = roxml_get_content(type, bf, sizeof(bf), &size);
+  roxml_get_content(type, bf, sizeof(bf), &size);
 
   if (strcmp(bf, "pol") != 0) {
     fprintf(dmlog,
@@ -1001,7 +1001,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_n = roxml_get_chld(item, "xp", 0);
   node_t *xp_txt = roxml_get_txt(xp_n, 0);
   if (xp_n != NULL && xp_txt != NULL) {
-    c = roxml_get_content(xp_txt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_txt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_name, bf);
   } else {
     strcpy(listParam->xpd_name, "");
@@ -1010,7 +1010,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_node = roxml_get_chld(item, "node", 0);
   node_t *xp_nodetxt = roxml_get_txt(xp_node, 0);
   if (xp_node != NULL && xp_nodetxt != NULL) {
-    c = roxml_get_content(xp_nodetxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_nodetxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_node, bf);
   } else {
     strcpy(listParam->xpd_node, "");
@@ -1019,7 +1019,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_indx = roxml_get_chld(item, "indx", 0);
   node_t *xp_indxtxt = roxml_get_txt(xp_indx, 0);
   if (xp_indx != NULL && xp_indxtxt != NULL) {
-    c = roxml_get_content(xp_indxtxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_indxtxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_indx, bf);
   } else {
     strcpy(listParam->xpd_indx, "");
@@ -1027,7 +1027,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_xdate = roxml_get_chld(item, "xdate", 0);
   node_t *xp_xdatetxt = roxml_get_txt(xp_xdate, 0);
   if (xp_xdate != NULL && xp_xdatetxt != NULL) {
-    c = roxml_get_content(xp_xdatetxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_xdatetxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_xpdate, bf);
   } else {
     strcpy(listParam->xpd_xpdate, "");
@@ -1035,7 +1035,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_status = roxml_get_chld(item, "status", 0);
   node_t *xp_statustxt = roxml_get_txt(xp_status, 0);
   if (xp_status != NULL && xp_statustxt != NULL) {
-    c = roxml_get_content(xp_statustxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_statustxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_status, bf);
   } else {
     strcpy(listParam->xpd_status, "");
@@ -1043,7 +1043,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_largs = roxml_get_chld(item, "largs", 0);
   node_t *xp_largstxt = roxml_get_txt(xp_largs, 0);
   if (xp_largs != NULL && xp_largstxt != NULL) {
-    c = roxml_get_content(xp_largstxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_largstxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_largs, bf);
   } else {
     strcpy(listParam->xpd_largs, "");
@@ -1052,7 +1052,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_susr = roxml_get_chld(item, "susr", 0);
   node_t *xp_susrtxt = roxml_get_txt(xp_susr, 0);
   if (xp_susr != NULL && xp_susrtxt != NULL) {
-    c = roxml_get_content(xp_susrtxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_susrtxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_susr, bf);
   } else {
     strcpy(listParam->xpd_susr, "");
@@ -1061,7 +1061,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_sxp = roxml_get_chld(item, "sxp", 0);
   node_t *xp_sxptxt = roxml_get_txt(xp_sxp, 0);
   if (xp_sxp != NULL && xp_sxptxt != NULL) {
-    c = roxml_get_content(xp_sxptxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_sxptxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_sname, bf);
   } else {
     strcpy(listParam->xpd_sname, "");
@@ -1070,7 +1070,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_snode = roxml_get_chld(item, "snode", 0);
   node_t *xp_snodetxt = roxml_get_txt(xp_snode, 0);
   if (xp_snode != NULL && xp_snodetxt != NULL) {
-    c = roxml_get_content(xp_snodetxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_snodetxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_snode, bf);
   } else {
     strcpy(listParam->xpd_snode, "");
@@ -1079,7 +1079,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_sxdate = roxml_get_chld(item, "sxdate", 0);
   node_t *xp_sxdatetxt = roxml_get_txt(xp_sxdate, 0);
   if (xp_sxdate != NULL && xp_sxdatetxt != NULL) {
-    c = roxml_get_content(xp_sxdatetxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_sxdatetxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_sxpdate, bf);
   } else {
     strcpy(listParam->xpd_sxpdate, "");
@@ -1088,7 +1088,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_slargs = roxml_get_chld(item, "slargs", 0);
   node_t *xp_slargstxt = roxml_get_txt(xp_slargs, 0);
   if (xp_slargs != NULL && xp_slargstxt != NULL) {
-    c = roxml_get_content(xp_slargstxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_slargstxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_slargs, bf);
   } else {
     strcpy(listParam->xpd_slargs, "");
@@ -1097,7 +1097,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_lockfile = roxml_get_chld(item, "lock", 0);
   node_t *xp_lockfiletxt = roxml_get_txt(xp_lockfile, 0);
   if (xp_lockfile != NULL && xp_lockfiletxt != NULL) {
-    c = roxml_get_content(xp_lockfiletxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_lockfiletxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_lock, bf);
   } else {
     strcpy(listParam->xpd_lock, "");
@@ -1106,7 +1106,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_cnt = roxml_get_chld(item, "container", 0);
   node_t *xp_cnttxt = roxml_get_txt(xp_cnt, 0);
   if (xp_cnt != NULL && xp_cnttxt != NULL) {
-    c = roxml_get_content(xp_cnttxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_cnttxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_container, bf);
   } else {
     strcpy(listParam->xpd_container, "");
@@ -1115,7 +1115,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_mversion = roxml_get_chld(item, "mversion", 0);
   node_t *xp_mversiontxt = roxml_get_txt(xp_mversion, 0);
   if (xp_mversion != NULL && xp_mversiontxt != NULL) {
-    c = roxml_get_content(xp_mversiontxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_mversiontxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_mversion, bf);
   } else {
     strcpy(listParam->xpd_mversion, "");
@@ -1124,7 +1124,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_mdomain = roxml_get_chld(item, "mdomain", 0);
   node_t *xp_mdomaintxt = roxml_get_txt(xp_mdomain, 0);
   if (xp_mdomain != NULL && xp_mdomaintxt != NULL) {
-    c = roxml_get_content(xp_mdomaintxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_mdomaintxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_mdomain, bf);
   } else {
     strcpy(listParam->xpd_mdomain, "");
@@ -1133,7 +1133,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_key = roxml_get_chld(item, "key", 0);
   node_t *xp_keytxt = roxml_get_txt(xp_key, 0);
   if (xp_key != NULL && xp_keytxt != NULL) {
-    c = roxml_get_content(xp_keytxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_keytxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_key, bf);
   } else {
     strcpy(listParam->xpd_key, "");
@@ -1142,7 +1142,7 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   node_t *xp_flow = roxml_get_chld(item, "flow", 0);
   node_t *xp_flowtxt = roxml_get_txt(xp_flow, 0);
   if (xp_flow != NULL && xp_flowtxt != NULL) {
-    c = roxml_get_content(xp_flowtxt, bf, sizeof(bf), &size);
+    roxml_get_content(xp_flowtxt, bf, sizeof(bf), &size);
     strcpy(listParam->xpd_flow, bf);
   } else {
     strcpy(listParam->xpd_flow, "");
@@ -1152,14 +1152,14 @@ struct _depParameters *ParseXmlDepFile(char *filename, FILE *dmlog) {
   if (xp_regtime != NULL) {
     node_t *xp_regtimedate = roxml_get_attr(xp_regtime, "date", 0);
     if (xp_regtimedate != NULL) {
-      c = roxml_get_content(xp_regtimedate, bf, sizeof(bf), &size);
+      roxml_get_content(xp_regtimedate, bf, sizeof(bf), &size);
       strcpy(listParam->xpd_regtimedate, bf);
     } else
       strcpy(listParam->xpd_regtimedate, "");
 
     node_t *xp_regtimepoch = roxml_get_attr(xp_regtime, "epoch", 0);
     if (xp_regtimepoch != NULL) {
-      c = roxml_get_content(xp_regtimepoch, bf, sizeof(bf), &size);
+      roxml_get_content(xp_regtimepoch, bf, sizeof(bf), &size);
       strcpy(listParam->xpd_regtimepoch, bf);
     } else
       strcpy(listParam->xpd_regtimepoch, "");
@@ -1380,7 +1380,7 @@ dpnode *getDependencyFiles(char *DDep, char *xp, FILE *fp,
   glob_t g_depFiles;
   size_t cnt;
   ssize_t r;
-  int g_ldp, ret;
+  int g_ldp;
   size_t Inode, this_inode;
   char buf[1024], linkname[1024];
   struct _depParameters *depXp = NULL;
@@ -1411,14 +1411,14 @@ dpnode *getDependencyFiles(char *DDep, char *xp, FILE *fp,
            */
 
           if (strcmp(xp, "all") == 0) {
-            ret = insert(&PRT_listdep, xp, depXp->xpd_snode, depXp->xpd_name,
+            insert(&PRT_listdep, xp, depXp->xpd_snode, depXp->xpd_name,
                          depXp->xpd_node, depXp->xpd_sxpdate, depXp->xpd_xpdate,
                          depXp->xpd_slargs, depXp->xpd_largs, depXp->xpd_key,
                          *p, linkname);
           } else {
             this_inode = get_Inode(depXp->xpd_sname);
             if (this_inode == Inode) {
-              ret = insert(&PRT_listdep, xp, depXp->xpd_snode, depXp->xpd_name,
+              insert(&PRT_listdep, xp, depXp->xpd_snode, depXp->xpd_name,
                            depXp->xpd_node, depXp->xpd_sxpdate,
                            depXp->xpd_xpdate, depXp->xpd_slargs,
                            depXp->xpd_largs, depXp->xpd_key, *p, linkname);
@@ -1430,7 +1430,7 @@ dpnode *getDependencyFiles(char *DDep, char *xp, FILE *fp,
 
           this_inode = get_Inode(depXp->xpd_name);
           if (this_inode == Inode) {
-            ret = insert(&PRT_listdep, xp, depXp->xpd_snode, depXp->xpd_name,
+            insert(&PRT_listdep, xp, depXp->xpd_snode, depXp->xpd_name,
                          depXp->xpd_node, depXp->xpd_sxpdate, depXp->xpd_xpdate,
                          depXp->xpd_slargs, depXp->xpd_largs, depXp->xpd_key,
                          *p, linkname);

@@ -159,7 +159,7 @@ void nodelogger(const char *job, const char *type, const char *loop_ext,
       } else {
         logtocreate = "nodelog";
       }
-      ret = sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
+      sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
                                   datestamp, logtocreate, _seq_exp_home);
       return;
     }
@@ -200,8 +200,7 @@ void nodelogger(const char *job, const char *type, const char *loop_ext,
         } else {
           logtocreate = "nodelog";
         }
-        ret =
-            sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
+        sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
                                   datestamp, logtocreate, _seq_exp_home);
         return;
       } else {
@@ -217,15 +216,14 @@ void nodelogger(const char *job, const char *type, const char *loop_ext,
   if (sock > -1) {
     if ((write_ret = write_line(sock, 0, type)) == -1) {
       logtocreate = "nodelog";
-      ret = sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
+      sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
                                   datestamp, logtocreate, _seq_exp_home);
     }
     if ((pathcounter <= 1) || (strcmp(type, "abort") == 0) ||
         (strcmp(type, "event") == 0) || (strcmp(type, "info") == 0)) {
       if ((write_ret = write_line(sock, 1, type)) == -1) {
         logtocreate = "toplog";
-        ret =
-            sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
+        sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
                                   datestamp, logtocreate, _seq_exp_home);
       }
     }
@@ -238,7 +236,7 @@ void nodelogger(const char *job, const char *type, const char *loop_ext,
     } else {
       logtocreate = "nodelog";
     }
-    ret = sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
+    sync_nodelog_over_nfs(NODELOG_JOB, type, loop_ext, NODELOG_MESSAGE,
                                 datestamp, logtocreate, _seq_exp_home);
     return;
   }
@@ -248,7 +246,7 @@ void nodelogger(const char *job, const char *type, const char *loop_ext,
 
   case FROM_NODELOGGER:
   case FROM_MAESTRO_NO_SVR:
-    ret = write(sock, "S \0", 3);
+    write(sock, "S \0", 3);
     close(sock);
     SeqUtil_TRACE(TL_MEDIUM, "\n================= ClOSING CONNECTION FROM "
                              "NODELOGGER PROCESS ================== \n");
@@ -425,8 +423,12 @@ static int sync_nodelog_over_nfs(const char *node, const char *type,
                                  const char *_seq_exp_home) {
   FILE *fd;
   struct stat fileStat;
-  int fileid, num, nb, my_turn, ret, status = 0;
-  int success = 0, loop = 0;
+  int fileid;
+  int nb;
+  int my_turn;
+  int status = 0;
+  int success = 0;
+  int loop = 0;
   unsigned int pid;
   struct stat st;
   static DIR *dp = NULL;
@@ -561,7 +563,7 @@ static int sync_nodelog_over_nfs(const char *node, const char *type,
             if ((diff_t = difftime(now, st.st_mtime)) > 2) {
               SeqUtil_TRACE(TL_FULL_TRACE, "Removed old token file %s \n",
                             ffilename);
-              ret = unlink(ffilename);
+              unlink(ffilename);
             }
             my_turn = 0;
             break;
@@ -580,7 +582,7 @@ static int sync_nodelog_over_nfs(const char *node, const char *type,
           continue;
         } else if ((diff_t = difftime(now, st.st_mtime)) > 2) {
           SeqUtil_TRACE(TL_FULL_TRACE, "Removed old lock file %s \n", lock);
-          ret = unlink(lock); /* lock file removed */
+          unlink(lock); /* lock file removed */
         }
       } else {
         get_time(Atime, 3);
@@ -590,12 +592,12 @@ static int sync_nodelog_over_nfs(const char *node, const char *type,
                     TOP_LOG_PATH);
           } else {
             lseek(fileid, 0, SEEK_END);
-            num = write(fileid, nodelogger_buf_short,
+            write(fileid, nodelogger_buf_short,
                         strlen(nodelogger_buf_short));
             fsync(fileid);
             close(fileid);
-            ret = unlink(lock);
-            ret = unlink(flock);
+            unlink(lock);
+            unlink(flock);
             closedir(dp);
             success = 1;
             break;
@@ -606,12 +608,12 @@ static int sync_nodelog_over_nfs(const char *node, const char *type,
                     LOG_PATH);
           } else {
             lseek(fileid, 0, SEEK_END);
-            num = write(fileid, nodelogger_buf_short,
+            write(fileid, nodelogger_buf_short,
                         strlen(nodelogger_buf_short));
             fsync(fileid);
             close(fileid);
-            ret = unlink(lock);
-            ret = unlink(flock);
+            unlink(lock);
+            unlink(flock);
             closedir(dp);
             success = 1;
             break;
@@ -620,7 +622,7 @@ static int sync_nodelog_over_nfs(const char *node, const char *type,
       }
     } else {
       /* update own modif time to signal other that still active */
-      ret = utime(flock, NULL);
+      utime(flock, NULL);
     }
 
     loop++;
@@ -634,7 +636,7 @@ static int sync_nodelog_over_nfs(const char *node, const char *type,
             Stime, Atime, Etime, loop);
   } else {
     /* erase the lock  will lower load on the remaining clients */
-    ret = unlink(flock);
+    unlink(flock);
     fprintf(stderr,
             "Nodelogger NFS_SYNC DID NOT GET the lock Started at:%s Ended "
             "at:%s tries=%d\n",
@@ -653,8 +655,11 @@ static int sync_nodelog_over_nfs(const char *node, const char *type,
 static void NotifyUser(int sock, int top, char mode,
                        const char *_seq_exp_home) {
   char bf[512];
-  char *rcfile, *lmech;
-  int bytes_sent, bytes_read, fileid, num;
+  char *rcfile;
+  char *lmech;
+  int bytes_sent;
+  int bytes_read;
+  int fileid;
 
   if (top != 0) {
     if ((rcfile = malloc(strlen(getenv("HOME")) + strlen("/.maestrorc") + 2)) !=
@@ -694,7 +699,7 @@ static void NotifyUser(int sock, int top, char mode,
           if (strcmp(lmech, "nfs") == 0) {
             if ((fileid = open(LOG_PATH, O_WRONLY | O_CREAT, 0755)) > 0) {
               lseek(fileid, 0, SEEK_END);
-              num = write(fileid, nodelogger_buf_notify_short,
+              write(fileid, nodelogger_buf_notify_short,
                           strlen(nodelogger_buf_notify_short));
               fsync(fileid);
               close(fileid);

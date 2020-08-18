@@ -84,7 +84,6 @@ void catchup_set(char *_expHome, int _catchupValue) {
 
   char *catchupXmlFile = NULL;
   xmlTextWriterPtr writer;
-  int rc;
 
   SeqUtil_TRACE(TL_FULL_TRACE, "catchup_set(): experiment catchup set to %d\n",
                 _catchupValue);
@@ -111,13 +110,13 @@ void catchup_set(char *_expHome, int _catchupValue) {
   }
 
   /* start the document with default values */
-  rc = xmlTextWriterStartDocument(writer, NULL, NULL, NULL);
+  xmlTextWriterStartDocument(writer, NULL, NULL, NULL);
   /* create the CATCHUP root element */
-  rc = xmlTextWriterStartElement(writer, BAD_CAST XML_NODE_NAME);
+  xmlTextWriterStartElement(writer, BAD_CAST XML_NODE_NAME);
   /* add the catchup value to the value attribute */
-  rc = xmlTextWriterWriteFormatAttribute(writer, "value", "%d", _catchupValue);
+  xmlTextWriterWriteFormatAttribute(writer, "value", "%d", _catchupValue);
   /* close the document, elements are automcatically closed */
-  rc = xmlTextWriterEndDocument(writer);
+  xmlTextWriterEndDocument(writer);
 
   xmlFreeTextWriter(writer);
 }

@@ -516,7 +516,7 @@ static int go_initialize(char *_signal, char *_flow,
    * node was submitted with xfer, else just the current node */
   char *extName = NULL;
   char cmd[SEQ_MAXFIELD];
-  int returnValue = 0;
+  
   actions(_signal, _flow, _nodeDataPtr->name);
   SeqUtil_TRACE(TL_FULL_TRACE,
                 "maestro.go_initialize() node=%s signal=%s flow=%s\n",
@@ -552,7 +552,7 @@ static int go_initialize(char *_signal, char *_flow,
         _nodeDataPtr->nodeName, extName, extName, extName, extName, extName);
     SeqUtil_TRACE(TL_FULL_TRACE, "cmd=%s\n", cmd);
     fprintf(stderr, "Following status files are being deleted: \n");
-    returnValue = system(cmd);
+    system(cmd);
 
     /* for npass tasks  */
     memset(cmd, '\0', sizeof cmd);
@@ -569,7 +569,7 @@ static int go_initialize(char *_signal, char *_flow,
         _nodeDataPtr->workdir, _nodeDataPtr->datestamp, _nodeDataPtr->container,
         _nodeDataPtr->nodeName, extName, extName, extName, extName, extName);
     SeqUtil_TRACE(TL_FULL_TRACE, "cmd=%s\n", cmd);
-    returnValue = system(cmd);
+    system(cmd);
 
   } else if (strcmp(_signal, "initnode") == 0) {
     memset(cmd, '\0', sizeof cmd);
@@ -582,7 +582,7 @@ static int go_initialize(char *_signal, char *_flow,
             _nodeDataPtr->container);
     SeqUtil_TRACE(TL_FULL_TRACE, "cmd=%s\n", cmd);
     fprintf(stderr, "Following status files are being deleted: \n");
-    returnValue = system(cmd);
+    system(cmd);
   }
 
   nodelogger(_nodeDataPtr->name, "init", _nodeDataPtr->extension, "",
@@ -1107,7 +1107,7 @@ static int setEndState(const char *_signal, const SeqNodeDataPtr _nodeDataPtr) {
 
   char filename[SEQ_MAXFIELD], filename1[SEQ_MAXFIELD];
   char *extName = NULL, *nptExt = NULL, *containerLoopExt = NULL;
-  int ret = 0, isEndContainerExist = 1;
+  int isEndContainerExist = 1;
 
   SeqNameValuesPtr newArgs = SeqNameValues_clone(_nodeDataPtr->loop_args);
   extName = (char *)SeqNode_extension(_nodeDataPtr);
@@ -1131,7 +1131,7 @@ static int setEndState(const char *_signal, const SeqNodeDataPtr _nodeDataPtr) {
   clearAllOtherStates(_nodeDataPtr, extName, "maestro.setEndState()", "end");
 
   /* Obtain a lock to protect end state */
-  ret = _lock(filename, _nodeDataPtr->datestamp, _nodeDataPtr->expHome);
+  _lock(filename, _nodeDataPtr->datestamp, _nodeDataPtr->expHome);
 
   /* Handling multiple concurrent "endx" submissions of a container
      The above lock will ensure that only one child is executing
@@ -1173,7 +1173,7 @@ static int setEndState(const char *_signal, const SeqNodeDataPtr _nodeDataPtr) {
                     _nodeDataPtr->expHome);
   }
 
-  ret = _unlock(filename, _nodeDataPtr->datestamp, _nodeDataPtr->expHome);
+  _unlock(filename, _nodeDataPtr->datestamp, _nodeDataPtr->expHome);
 
   free(extName);
   SeqNameValues_deleteWholeList(&newArgs);
@@ -1198,10 +1198,9 @@ originating function that called this
 static void clearAllOtherStates(const SeqNodeDataPtr _nodeDataPtr,
                                 char *fullNodeName, char *originator,
                                 char *current_state) {
-
-  int ret;
   char filename[SEQ_MAXFIELD];
-  char *extension = NULL, *tmpExt = NULL;
+  char *extension = NULL;
+  char *tmpExt = NULL;
   SeqNameValuesPtr newArgs = NULL;
 
   memset(filename, '\0', sizeof filename);
@@ -1218,7 +1217,7 @@ static void clearAllOtherStates(const SeqNodeDataPtr _nodeDataPtr,
         TL_FULL_TRACE,
         "maestro.maestro.clearAllOtherStates() %s removed lockfile %s\n",
         originator, filename);
-    ret = _removeFile(filename, _nodeDataPtr->expHome);
+    _removeFile(filename, _nodeDataPtr->expHome);
   }
   memset(filename, '\0', sizeof filename);
   sprintf(filename, "%s/%s/%s.end", _nodeDataPtr->workdir,
@@ -1228,7 +1227,7 @@ static void clearAllOtherStates(const SeqNodeDataPtr _nodeDataPtr,
     SeqUtil_TRACE(TL_FULL_TRACE,
                   "maestro.clearAllOtherStates() %s removed lockfile %s\n",
                   originator, filename);
-    ret = _removeFile(filename, _nodeDataPtr->expHome);
+    _removeFile(filename, _nodeDataPtr->expHome);
   }
 
   memset(filename, '\0', sizeof filename);
@@ -1239,7 +1238,7 @@ static void clearAllOtherStates(const SeqNodeDataPtr _nodeDataPtr,
     SeqUtil_TRACE(TL_FULL_TRACE,
                   "maestro.clearAllOtherStates() %s removed lockfile %s\n",
                   originator, filename);
-    ret = _removeFile(filename, _nodeDataPtr->expHome);
+    _removeFile(filename, _nodeDataPtr->expHome);
   }
 
   memset(filename, '\0', sizeof filename);
@@ -1252,7 +1251,7 @@ static void clearAllOtherStates(const SeqNodeDataPtr _nodeDataPtr,
     SeqUtil_TRACE(TL_FULL_TRACE,
                   "maestro.clearAllOtherStates() %s removed lockfile %s\n",
                   originator, filename);
-    ret = _removeFile(filename, _nodeDataPtr->expHome);
+    _removeFile(filename, _nodeDataPtr->expHome);
   }
 
   memset(filename, '\0', sizeof filename);
@@ -1263,7 +1262,7 @@ static void clearAllOtherStates(const SeqNodeDataPtr _nodeDataPtr,
     SeqUtil_TRACE(TL_FULL_TRACE,
                   "maestro.clearAllOtherStates() %s removed lockfile %s\n",
                   originator, filename);
-    ret = _removeFile(filename, _nodeDataPtr->expHome);
+    _removeFile(filename, _nodeDataPtr->expHome);
   }
 
   /* NPASS(i) will delete NPASS.end in all states */
@@ -1293,7 +1292,7 @@ static void clearAllOtherStates(const SeqNodeDataPtr _nodeDataPtr,
         SeqUtil_TRACE(TL_FULL_TRACE,
                       "maestro.clearAllOtherStates() %s removed lockfile %s\n",
                       originator, filename);
-        ret = _removeFile(filename, _nodeDataPtr->expHome);
+        _removeFile(filename, _nodeDataPtr->expHome);
       }
       SeqNameValues_deleteWholeList(&newArgs);
       free(extension);
@@ -1312,7 +1311,7 @@ static void clearAllOtherStates(const SeqNodeDataPtr _nodeDataPtr,
       SeqUtil_TRACE(TL_FULL_TRACE,
                     "maestro.clearAllOtherStates() %s removed lockfile %s\n",
                     originator, filename);
-      ret = _removeFile(filename, _nodeDataPtr->expHome);
+      _removeFile(filename, _nodeDataPtr->expHome);
     }
 
     memset(filename, '\0', sizeof filename);
@@ -1323,7 +1322,7 @@ static void clearAllOtherStates(const SeqNodeDataPtr _nodeDataPtr,
       SeqUtil_TRACE(TL_FULL_TRACE,
                     "maestro.clearAllOtherStates() %s removed lockfile %s\n",
                     originator, filename);
-      ret = _removeFile(filename, _nodeDataPtr->expHome);
+      _removeFile(filename, _nodeDataPtr->expHome);
     }
   }
 }
@@ -1547,9 +1546,10 @@ processForEachTarget(const SeqNodeDataPtr _nodeDataPtr) {
   SeqNameValuesPtr iterationListToReturn = NULL;
   SeqNodeDataPtr targetNodeDataPtr = NULL;
   char *target_datestamp = NULL;
-  char statePattern[SEQ_MAXFIELD], seqPath[SEQ_MAXFIELD];
-  LISTNODEPTR returnedExtensionList = NULL, tempIterator = NULL;
-  int status = 0;
+  char statePattern[SEQ_MAXFIELD];
+  char seqPath[SEQ_MAXFIELD];
+  LISTNODEPTR returnedExtensionList = NULL;
+  LISTNODEPTR tempIterator = NULL;
 
   /* Check type of target, LOOP or Switch vs NPT or FE */
   target_datestamp = SeqDatesUtil_getPrintableDate(
@@ -1592,9 +1592,9 @@ processForEachTarget(const SeqNodeDataPtr _nodeDataPtr) {
   sprintf(seqPath, "%s/sequencing/status", _nodeDataPtr->forEachTarget->exp);
 
   if (_access(seqPath, W_OK, _nodeDataPtr->expHome) == 0) {
-    status = prepFEFile(_nodeDataPtr, "end", target_datestamp);
+    prepFEFile(_nodeDataPtr, "end", target_datestamp);
   } else {
-    status = prepInterUserFEFile(_nodeDataPtr, "end", target_datestamp);
+    prepInterUserFEFile(_nodeDataPtr, "end", target_datestamp);
   }
 
   SeqListNode_deleteWholeList(&returnedExtensionList);
@@ -1605,8 +1605,9 @@ int prepFEFile(const SeqNodeDataPtr _nodeDataPtr, char *_target_state,
                char *_target_datestamp) {
 
   char filename[SEQ_MAXFIELD];
-  char *loopArgs = NULL, *depBase = NULL;
-  int status = 0, ret;
+  char *loopArgs = NULL;
+  char *depBase = NULL;
+  int status = 0;
   loopArgs = (char *)SeqLoops_getLoopArgs(_nodeDataPtr->loop_args);
 
   memset(filename, '\0', sizeof filename);
@@ -1651,7 +1652,7 @@ int prepFEFile(const SeqNodeDataPtr _nodeDataPtr, char *_target_state,
     break;
   case 9:
     status = 0;
-    ret = _removeFile(filename, _nodeDataPtr->expHome);
+    _removeFile(filename, _nodeDataPtr->expHome);
     break;
   default:
     raiseError("Unknown switch case value in prepFEFile:%d (prepFEFile)\n",
@@ -1921,21 +1922,29 @@ Returns the error status of the ord_soumet call.
 
 static int go_submit(const char *_signal, char *_flow,
                      const SeqNodeDataPtr _nodeDataPtr, int ignoreAllDeps) {
-  char tmpfile[SEQ_MAXFIELD], noendwrap[12], immediateMode[11],
-      nodeFullPath[SEQ_MAXFIELD], workerEndFile[SEQ_MAXFIELD],
-      workerAbortFile[SEQ_MAXFIELD], submissionDir[SEQ_MAXFIELD];
-  char listingDir[SEQ_MAXFIELD], defFile[SEQ_MAXFIELD],
-      nodetracercmd[SEQ_MAXFIELD];
+  char tmpfile[SEQ_MAXFIELD];
+  char noendwrap[12];
+  char immediateMode[11];
+  char nodeFullPath[SEQ_MAXFIELD];
+  char workerEndFile[SEQ_MAXFIELD];
+  char workerAbortFile[SEQ_MAXFIELD];
+  char submissionDir[SEQ_MAXFIELD];
+  char listingDir[SEQ_MAXFIELD];
+  char defFile[SEQ_MAXFIELD];
+  char nodetracercmd[SEQ_MAXFIELD];
   char cmd[SEQ_MAXFIELD];
   char pidbuf[100];
   char *cpu = NULL, *tmpdir = NULL;
   char *tmpCfgFile = NULL, *tmpTarPath = NULL, *tarFile = NULL,
        *movedTmpName = NULL, *movedTarFile = NULL, *readyFile = NULL,
        *prefix = NULL, *jobName = NULL, *workq = NULL;
-  char *loopArgs = NULL, *extName = NULL, *fullExtName = NULL,
-       *containerMethod = NULL;
+  char *loopArgs = NULL;
+  char *extName = NULL;
+  char *fullExtName = NULL;
+  char *containerMethod = NULL;
   int catchup = CatchupNormal;
-  int error_status = 0, nodetracer_status = 0, ret;
+  int error_status = 0;
+  int nodetracer_status = 0;
   SeqNodeDataPtr workerDataPtr = NULL;
   char mpi_flag[5];
 
@@ -2019,7 +2028,7 @@ static int go_submit(const char *_signal, char *_flow,
     SeqUtil_stringAppend(&tmpCfgFile, ".cfg");
 
     if (_access(tmpCfgFile, R_OK, _nodeDataPtr->expHome) == 0)
-      ret = _removeFile(tmpCfgFile, _nodeDataPtr->expHome);
+      _removeFile(tmpCfgFile, _nodeDataPtr->expHome);
 
     SeqNode_generateConfig(_nodeDataPtr, _flow, tmpCfgFile);
     cpu = (char *)SeqUtil_cpuCalculate(_nodeDataPtr->npex, _nodeDataPtr->npey,
@@ -2112,9 +2121,9 @@ static int go_submit(const char *_signal, char *_flow,
           raiseError("OutOfMemory exception in maestro.go_submit()\n");
         }
 
-        ret = _removeFile(tarFile, _nodeDataPtr->expHome);
-        ret = _removeFile(movedTarFile, _nodeDataPtr->expHome);
-        ret = _removeFile(readyFile, _nodeDataPtr->expHome);
+        _removeFile(tarFile, _nodeDataPtr->expHome);
+        _removeFile(movedTarFile, _nodeDataPtr->expHome);
+        _removeFile(readyFile, _nodeDataPtr->expHome);
 
         sprintf(cmd,
                 "%s %s -sys maestro_%s -jobfile %s -node %s -jn %s -d %s -q %s "
@@ -2234,7 +2243,7 @@ static int go_submit(const char *_signal, char *_flow,
         }
         if (_access(tmpfile, R_OK, _nodeDataPtr->expHome) == 0) {
           SeqUtil_TRACE(TL_MEDIUM, "removing dependency file:%s\n", tmpfile);
-          ret = unlink(tmpfile);
+          unlink(tmpfile);
         }
       }
 
@@ -2977,8 +2986,9 @@ static int writeNodeWaitedFile(const SeqNodeDataPtr _nodeDataPtr,
                                SeqDependsScope _dep_scope,
                                const char *statusfile) {
   char filename[SEQ_MAXFIELD];
-  char *loopArgs = NULL, *depBase = NULL;
-  int status = 1, ret;
+  char *loopArgs = NULL;
+  char *depBase = NULL;
+  int status = 1;
 
   memset(filename, '\0', sizeof filename);
 
@@ -3038,7 +3048,7 @@ static int writeNodeWaitedFile(const SeqNodeDataPtr _nodeDataPtr,
     break;
   case 9:
     status = 0;
-    ret = _removeFile(filename, _nodeDataPtr->expHome);
+    _removeFile(filename, _nodeDataPtr->expHome);
     break;
   default:
     raiseError("Unknown switch case value in writeNodeWaitedFile:%d "

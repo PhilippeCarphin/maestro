@@ -47,7 +47,7 @@ int main(int argc, char *argv[])
 
   char *node = NULL, *signal = NULL, *message = NULL, *loops = NULL,
        *datestamp = NULL, *seq_exp_home = NULL, *tmpDate = NULL;
-  int hasSignal = 0, hasNode = 0, hasDate = 0, hasLoops = 0;
+  int hasSignal = 0, hasNode = 0, hasLoops = 0;
   int r, i;
   int errflg = 0;
 
