@@ -1,5 +1,7 @@
 #!/bin/ksh
 
+assert_x11_forwarding_is_enabled || exit 1
+
 [[ "$1" = --help || "$1" = -h ]] && set -h
 # check tcl/tk installation: 
 [[ -z ${SEQ_MAESTRO_DOMAIN} ]] && echo "SEQ_MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 
@@ -40,8 +42,24 @@ test "${nosubmitpopup}" != "" && nosubmitpopup_opt="-nosubmitpopup ${nosubmitpop
 
 date_opt=""
 if [[ "${d}" != "" ]] ; then
-   print "\n starting $(basename $0) with date ${d}"
-   date_opt="-date ${d}"
+
+	datestamp_regex='^[0-9]{8,14}$'
+	if ! [[ $d =~ $datestamp_regex ]] ; then
+		echo "Aborted. Bad '-d' option. Datestamps must be 8 to 14 digits for YYYYMMDDhhmmss like:
+	20200401
+	2020040112
+	20200401120000"
+		exit 1
+	fi
+
+	# Transform datestamps like YYYYMMDD or YYYYMMDDhh into YYYYMMDDhhmmss by adding zeroes.
+	# First add lots of extra zeroes.
+	d=${d}000000
+	# Take just the first 14 characters.
+	d=${d:0:14}
+
+     	print "\n starting $(basename $0) with date ${d}"
+     	date_opt="-date ${d}"
 fi
 exp_opt=""
 if [[ "${exp}" != "" ]] ; then

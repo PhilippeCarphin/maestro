@@ -10,8 +10,7 @@ Here are some of the main tools in the Maestro suite:
 * The [sequencer](https://wiki.cmc.ec.gc.ca/wiki/Maestro/sequencer) manages the sequenced execution of task nodes.
 * [xm](https://wiki.cmc.ec.gc.ca/wiki/Maestro/xm) is a visual tool used to create new Maestro experiments.
 * [heimdall](src/python3/HEIMDALL.md) is a maestro suite scanner. Scan for errors, warnings, recommendations, and installation issues.
-
-* Finally, many commandline tools.
+* Finally, many commandline tools. As of version `1.8.0` you can type `m. <tab> <tab>` to see a list of most maestro commandline tools.
 
 ## Community & Resources
 
@@ -23,11 +22,15 @@ Here are some of the main tools in the Maestro suite:
 
 Do you have a bug to report, feature request, or want to write and review code? See the [contributing guide](CONTRIBUTING.md).
 
-Developers can contribute changes to the git repo using [this git branching model](https://nvie.com/posts/a-successful-git-branching-model/). In summary:
+Developers can contribute changes to the git repo roughly using [this git branching model](https://nvie.com/posts/a-successful-git-branching-model/). In summary:
 
-* Create release branches named `release-*` like `release-1.6`.
-* Create feature branches named `add-button-xyz-to-abc-window`.
-* Submit [merge requests](https://www.youtube.com/watch?v=0AT7JxqoIps&list=PLRf-PfhVvwFA7tGxwEgxgnJIY7aVevqqo&index=5) when your branch is ready.
+* The `integration` branch is the latest development branch to start from.
+* Only documentation updates can be pushed directly to integration, otherwise use merge requests.
+* Create a new issue describing the feature or bug before doing any work.
+* Create feature branches named `feature-*` like `feature-xflow-refresh-button` with all commits for that feature.
+* Create bugfix branches named `bugfix-*` like `bugfix-empty-catchup-xml` with all commits for that bugfix.
+* Submit [merge requests](https://www.youtube.com/watch?v=0AT7JxqoIps&list=PLRf-PfhVvwFA7tGxwEgxgnJIY7aVevqqo&index=5) when your branch is ready. Start the title of the merge request with "WIP" for "work in progress" if it's not ready to merge, but you want feedback.
+* Release branches named `release-*` like `release-1.6` can be used to cherry-pick hotfixes and publish another SSM, without releasing a new major version.
 
 ## History
 
@@ -58,10 +61,10 @@ To compile Maestro and create an SSM package simply use the makefile by typing:
 If you want the build to have a specific version label:
 
 ```bash
-make VERSION=1.6-rc4
+make VERSION=1.6-dev5
 ```
 
-If no `VERSION` is provided, the build process uses the version or tags of your git repo to version the Maestro SSM package. If no tags (like 0.1.6) are present, it will use the first portion of the latest commit hash. This makes it difficult to release different Maestro SSM packages with the same version name. To see your current version:
+If no `VERSION` is provided, the build process uses the version or tags of your git repo to version the Maestro SSM package. If no tags (like 1.6.0) are present, it will use the first portion of the latest commit hash. This makes it difficult to release different Maestro SSM packages with the same version name. To see your current version:
 
 ```bash
 git describe
@@ -72,8 +75,6 @@ If there are no tags, you'll need to either create one, or pull tags from the re
 ```bash
 git fetch --tags
 ```
-
-The first compile may take awhile because of compiling Tcl and its libraries. At this time, running make on Tcl always recompiles all files which is slow.
 
 ### Install
 
