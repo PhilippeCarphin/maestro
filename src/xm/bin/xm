@@ -6,8 +6,8 @@ assert_x11_forwarding_is_enabled || exit 1
 
 [[ -z ${MAESTRO_DOMAIN} ]] && echo "MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 
 
-if ! [[ -f ${SEQ_TCL_BIN}/maestro_wish8.5 ]] ; then 
-    echo "Installation incomplete. tcl/tk bin not found. SEQ_TCL_BIN='${SEQ_TCL_BIN}'" 
+if ! [[ -f ${MAESTRO_TCL_BIN}/maestro_wish8.5 ]] ; then 
+    echo "Installation incomplete. tcl/tk bin not found. MAESTRO_TCL_BIN='${MAESTRO_TCL_BIN}'" 
     exit 1 
 fi 
 
