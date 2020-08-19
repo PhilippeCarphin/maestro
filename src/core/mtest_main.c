@@ -199,50 +199,6 @@ int test_checkValidityData() {
   return 0;
 }
 
-int test_Resource_createContext() {
-  header("Resource_createContext");
-
-  /* SETUP : We need nodeDataPtr, an XML filename, and a defFile */
-  SeqUtil_setTraceFlag(TRACE_LEVEL, TL_FULL_TRACE);
-  SeqNodeDataPtr ndp = SeqNode_createNode("Phil");
-
-  const char *expHome = "/home/ops/afsi/phc/Documents/Experiences/sample";
-  const char *nodePath = NULL;
-  const char *xmlFile = NULL;
-  const char *defFile = SeqUtil_resourceDefFilename(expHome);
-  const char *expected = NULL;
-
-  /* TEST 1 : With the node having type Loop */
-  ndp->type = Loop;
-  nodePath = "/sample_module/Loop_Examples/outerloop";
-  xmlFile = xmlResourceFilename(expHome, nodePath, Loop);
-  expected = "/home/ops/afsi/phc/Documents/Experiences/sample/resources/"
-             "sample_module/Loop_Examples/outerloop/container.xml";
-  if (strcmp(xmlFile, expected) != 0) {
-    SeqUtil_TRACE(TL_FULL_TRACE, " xmlFile=%s\nexpected=%s\n", xmlFile,
-                  expected);
-    raiseError("TEST FAILED");
-  }
-  free(xmlFile);
-
-  /* TEST 2 : With the node being of type Task */
-  ndp->type = Task;
-  nodePath = "/sample_module/Loop_Examples/outerloop/outerloopTask";
-  xmlFile = xmlResourceFilename(expHome, nodePath, Task);
-  expected =
-      "/home/ops/afsi/phc/Documents/Experiences/sample/resources/resources.def";
-  if (strcmp(defFile, expected) != 0) {
-    SeqUtil_TRACE(TL_FULL_TRACE, " defFile=%s\nexpected=%s\n", defFile,
-                  expected);
-    raiseError("TEST FAILED");
-  }
-
-  SeqNode_freeNode(ndp);
-  free((char *)xmlFile);
-  free((char *)defFile);
-  return 0;
-}
-
 ResourceVisitorPtr createTestResourceVisitor(SeqNodeDataPtr ndp,
                                              const char *nodePath,
                                              const char *xmlFile,
@@ -523,24 +479,6 @@ int test_Resource_parseWorkerPath() {
   return 0;
 }
 
-int test_SeqLoops_getNodeLoopContainersExtensionsInReverse() {
-  const char *exp = "/home/ops/afsi/phc/Documents/Experiences/sample-loops_bug";
-  const char *node = "/sample_1.4.3/BadNames/outer_loop/inner_loop/END/SET";
-  SeqNodeDataPtr ndp =
-      nodeinfo(node, NI_SHOW_ALL, NULL, exp, NULL, "20160102030000", NULL);
-  SeqNode_printNode(ndp, NI_SHOW_ALL, NULL);
-  LISTNODEPTR extensions = SeqLoops_getLoopContainerExtensionsInReverse(
-      ndp, "outer_loop=*,inner_loop=*,END=*");
-  SeqListNode_deleteWholeList(&extensions);
-
-  extensions = SeqLoops_getLoopContainerExtensionsInReverse(
-      ndp, "outer_loop=1,inner_loop=2,END=3");
-  SeqListNode_deleteWholeList(&extensions);
-  extensions = SeqLoops_getLoopContainerExtensionsInReverse(ndp, "");
-  SeqListNode_deleteWholeList(&extensions);
-  return 0;
-}
-
 const char *getVarName(const char *, const char *, const char *);
 int test_getVarName() {
   header("getVarName()");
@@ -682,14 +620,12 @@ int runTests(const char *seq_exp_home, const char *node,
   test_xml_fallback();
   test_getIncrementedDatestamp();
   test_checkValidityData();
-  test_Resource_createContext();
   test_nodeStackFunctions();
   test_getValidityData();
   test_isValid();
   test_Resource_getLoopAttributes();
   test_parseNodeDFS();
   test_Resource_parseWorkerPath();
-  /* test_SeqLoops_getNodeLoopContainersExtensionsInReverse(); */
   test_getVarName();
 
   test_Flow_setPathToModule();
