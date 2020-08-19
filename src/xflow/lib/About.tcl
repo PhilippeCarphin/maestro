@@ -13,8 +13,8 @@ proc About_show { parent } {
    ${scrolledW} setwidget ${textW}
 
    set maestroVersion "unknown"
-   if { [info exists env(SEQ_MAESTRO_VERSION)] } {
-      set maestroVersion $env(SEQ_MAESTRO_VERSION)
+   if { [info exists env(MAESTRO_VERSION)] } {
+      set maestroVersion $env(MAESTRO_VERSION)
    }
    ${textW} insert end "\n\nMaestro version: ${maestroVersion}" BOLD_TXT
 

@@ -1705,8 +1705,8 @@ int prepInterUserFEFile(const SeqNodeDataPtr _nodeDataPtr, char *_target_state,
            ptm);
 
   /* get maestro version & shortcut : what to do when cannot have it ???? */
-  if ((maestro_version = getenv("SEQ_MAESTRO_VERSION")) == NULL) {
-    raiseError("Could not get maestro version from SEQ_MAESTRO_VERSION env "
+  if ((maestro_version = getenv("MAESTRO_VERSION")) == NULL) {
+    raiseError("Could not get maestro version from MAESTRO_VERSION env "
                "variable.\n");
   }
 
@@ -2130,7 +2130,7 @@ static int go_submit(const char *_signal, char *_flow,
                 "%s -c %s -shell %s -m %s -w %d -v -listing %s -wrapdir "
                 "%s/sequencing -jobcfg %s -nosubmit -step work_unit -jobtar %s "
                 "-altcfgdir %s %s -args \"%s\" %s",
-                submit_tool, workq, getenv("SEQ_MAESTRO_VERSION"), nodeFullPath,
+                submit_tool, workq, getenv("MAESTRO_VERSION"), nodeFullPath,
                 _nodeDataPtr->name, jobName, _nodeDataPtr->machine,
                 _nodeDataPtr->queue, mpi_flag, cpu, _nodeDataPtr->shell,
                 _nodeDataPtr->memory, _nodeDataPtr->wallclock, listingDir,
@@ -2190,7 +2190,7 @@ static int go_submit(const char *_signal, char *_flow,
                 "%s %s -sys maestro_%s -jobfile %s -node %s -jn %s -d %s -q %s "
                 "%s -c %s -shell %s -m %s -w %d -v -listing %s -wrapdir "
                 "%s/sequencing -jobcfg %s -altcfgdir %s %s -args \"%s\" %s",
-                submit_tool, workq, getenv("SEQ_MAESTRO_VERSION"), nodeFullPath,
+                submit_tool, workq, getenv("MAESTRO_VERSION"), nodeFullPath,
                 _nodeDataPtr->name, jobName, _nodeDataPtr->machine,
                 _nodeDataPtr->queue, mpi_flag, cpu, _nodeDataPtr->shell,
                 _nodeDataPtr->memory, _nodeDataPtr->wallclock, listingDir,
@@ -2275,7 +2275,7 @@ static int go_submit(const char *_signal, char *_flow,
             "%s %s -sys maestro_%s -jobfile %s -node %s -jn %s -d %s -q %s %s "
             "-c %s -shell %s -m %s -w %d -v -listing %s -wrapdir %s/sequencing "
             "-immediate %s -jobcfg %s -altcfgdir %s -args \"%s\" %s",
-            submit_tool, workq, getenv("SEQ_MAESTRO_VERSION"), tmpfile,
+            submit_tool, workq, getenv("MAESTRO_VERSION"), tmpfile,
             _nodeDataPtr->name, jobName, getenv("TRUE_HOST"),
             _nodeDataPtr->queue, mpi_flag, cpu, _nodeDataPtr->shell,
             _nodeDataPtr->memory, _nodeDataPtr->wallclock, listingDir,
@@ -2289,7 +2289,7 @@ static int go_submit(const char *_signal, char *_flow,
                  "%s %s -sys maestro_%s -jobfile %s -node %s -jn %s -d %s -q "
                  "%s %s -c %s -shell %s -m %s -w %d -v -listing %s -wrapdir "
                  "%s/sequencing %s -jobcfg %s -altcfgdir %s -args \"%s\" %s",
-                 submit_tool, workq, getenv("SEQ_MAESTRO_VERSION"), tmpfile,
+                 submit_tool, workq, getenv("MAESTRO_VERSION"), tmpfile,
                  _nodeDataPtr->name, jobName, _nodeDataPtr->machine,
                  _nodeDataPtr->queue, mpi_flag, cpu, _nodeDataPtr->shell,
                  _nodeDataPtr->memory, _nodeDataPtr->wallclock, listingDir,
@@ -2304,7 +2304,7 @@ static int go_submit(const char *_signal, char *_flow,
             "%s %s -sys maestro_%s -jobfile %s -node %s -jn %s -d %s -q %s %s "
             "-c %s -shell %s -m %s -w %d -v -listing %s -wrapdir %s/sequencing "
             "-immediate %s -jobcfg %s -altcfgdir %s -args \"%s\" %s",
-            submit_tool, workq, getenv("SEQ_MAESTRO_VERSION"), tmpfile,
+            submit_tool, workq, getenv("MAESTRO_VERSION"), tmpfile,
             _nodeDataPtr->name, jobName, getenv("TRUE_HOST"),
             _nodeDataPtr->queue, mpi_flag, cpu, _nodeDataPtr->shell,
             _nodeDataPtr->memory, _nodeDataPtr->wallclock, listingDir,
@@ -2318,7 +2318,7 @@ static int go_submit(const char *_signal, char *_flow,
             "%s %s -sys maestro_%s -jobfile %s -node %s -jn %s -d %s -q %s %s "
             "-c %s -shell %s -m %s -w %d -v -listing %s -wrapdir %s/sequencing "
             "-immediate %s -jobcfg %s -altcfgdir %s -args \"%s\" %s",
-            submit_tool, workq, getenv("SEQ_MAESTRO_VERSION"), tmpfile,
+            submit_tool, workq, getenv("MAESTRO_VERSION"), tmpfile,
             _nodeDataPtr->name, jobName, getenv("TRUE_HOST"),
             _nodeDataPtr->queue, mpi_flag, cpu, _nodeDataPtr->shell,
             _nodeDataPtr->memory, _nodeDataPtr->wallclock, listingDir,
@@ -3481,8 +3481,8 @@ int writeInterUserNodeWaitedFile(const SeqNodeDataPtr _nodeDataPtr,
            ptm);
 
   /* get maestro version & shortcut : what to do when cannot have it ???? */
-  if ((maestro_version = getenv("SEQ_MAESTRO_VERSION")) == NULL) {
-    raiseError("Could not get maestro version from SEQ_MAESTRO_VERSION env "
+  if ((maestro_version = getenv("MAESTRO_VERSION")) == NULL) {
+    raiseError("Could not get maestro version from MAESTRO_VERSION env "
                "variable.\n");
   }
 
