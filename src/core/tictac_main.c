@@ -68,24 +68,23 @@ EXAMPLES:\n\
   printf("%s", usage);
 }
 
-main(int argc, char *argv[]) {
-  char *short_opts = "s:f:e:d:hv";
-  extern char *optarg;
-  extern int optind;
-  struct option long_opts[] = {
-      /*  NAME        ,    has_arg       , flag  val(ID) */
-      {"exp", required_argument, 0, 'e'}, /* Used everywhere */
-      {"datestamp", required_argument, 0,
-       'd'}, /* Used in logreader maestro nodeinfo nodelogger */
-      {"set-date", required_argument, 0, 's'}, /* Used in tictac */
-      {"format", required_argument, 0, 'f'},   /* tictac */
-      {"help", no_argument, 0, 'h'},           /* Not everywhere */
-      {"verbose", no_argument, 0, 'v'},        /* Everywhere */
-      {NULL, 0, 0, 0}                          /* End indicator */
-  };
-  int opt_index, c = 0;
-  int i = 0;
-
+int main (int argc, char * argv [])
+{
+   char * short_opts = "s:f:e:d:hv";
+   extern char *optarg;
+   extern int   optind;
+   struct       option long_opts[] =
+   { /*  NAME        ,    has_arg       , flag  val(ID) */
+      {"exp"         , required_argument,   0,     'e'}, /* Used everywhere */
+      {"datestamp"   , required_argument,   0,     'd'}, /* Used in logreader maestro nodeinfo nodelogger */
+      {"set-date"    , required_argument,   0,     's'}, /* Used in tictac */
+      {"format"      , required_argument,   0,     'f'}, /* tictac */
+      {"help"        , no_argument      ,   0,     'h'}, /* Not everywhere */
+      {"verbose"     , no_argument      ,   0,     'v'}, /* Everywhere */
+      {NULL,0,0,0} /* End indicator */
+   };
+   int opt_index, c = 0;
+   int i = 0;
   char *datestamp = NULL, *expHome = NULL, *format = NULL, *tmpDate = NULL;
   int setDate = 0, r;
   struct sigaction act;
