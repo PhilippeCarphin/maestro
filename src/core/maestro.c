@@ -2135,7 +2135,7 @@ static int go_submit(const char *_signal, char *_flow,
                 _nodeDataPtr->queue, mpi_flag, cpu, _nodeDataPtr->shell,
                 _nodeDataPtr->memory, _nodeDataPtr->wallclock, listingDir,
                 _nodeDataPtr->expHome, tmpCfgFile, movedTmpName,
-                getenv("SEQ_WRAPPERS"), immediateMode, _nodeDataPtr->args,
+                getenv("MAESTRO_WRAPPERS"), immediateMode, _nodeDataPtr->args,
                 _nodeDataPtr->soumetArgs);
 
         /*check if the running worker has not ended. If it has, launch another
@@ -2194,7 +2194,7 @@ static int go_submit(const char *_signal, char *_flow,
                 _nodeDataPtr->name, jobName, _nodeDataPtr->machine,
                 _nodeDataPtr->queue, mpi_flag, cpu, _nodeDataPtr->shell,
                 _nodeDataPtr->memory, _nodeDataPtr->wallclock, listingDir,
-                _nodeDataPtr->expHome, tmpCfgFile, getenv("SEQ_WRAPPERS"),
+                _nodeDataPtr->expHome, tmpCfgFile, getenv("MAESTRO_WRAPPERS"),
                 immediateMode, _nodeDataPtr->args, _nodeDataPtr->soumetArgs);
       }
 
@@ -2280,7 +2280,7 @@ static int go_submit(const char *_signal, char *_flow,
             _nodeDataPtr->queue, mpi_flag, cpu, _nodeDataPtr->shell,
             _nodeDataPtr->memory, _nodeDataPtr->wallclock, listingDir,
             _nodeDataPtr->expHome, noendwrap, tmpCfgFile,
-            getenv("SEQ_WRAPPERS"), _nodeDataPtr->args,
+            getenv("MAESTRO_WRAPPERS"), _nodeDataPtr->args,
             _nodeDataPtr->soumetArgs);
 
       } else if (strcmp(containerMethod, "submit") == 0) {
@@ -2294,7 +2294,7 @@ static int go_submit(const char *_signal, char *_flow,
                  _nodeDataPtr->queue, mpi_flag, cpu, _nodeDataPtr->shell,
                  _nodeDataPtr->memory, _nodeDataPtr->wallclock, listingDir,
                  _nodeDataPtr->expHome, noendwrap, tmpCfgFile,
-                 getenv("SEQ_WRAPPERS"), _nodeDataPtr->args,
+                 getenv("MAESTRO_WRAPPERS"), _nodeDataPtr->args,
                  _nodeDataPtr->soumetArgs);
 
       } else if (strcmp(containerMethod, "exec") == 0) {
@@ -2309,7 +2309,7 @@ static int go_submit(const char *_signal, char *_flow,
             _nodeDataPtr->queue, mpi_flag, cpu, _nodeDataPtr->shell,
             _nodeDataPtr->memory, _nodeDataPtr->wallclock, listingDir,
             _nodeDataPtr->expHome, noendwrap, tmpCfgFile,
-            getenv("SEQ_WRAPPERS"), _nodeDataPtr->args,
+            getenv("MAESTRO_WRAPPERS"), _nodeDataPtr->args,
             _nodeDataPtr->soumetArgs);
       } else {
         /* default: use immediate for containers on TRUE_HOST */
@@ -2323,7 +2323,7 @@ static int go_submit(const char *_signal, char *_flow,
             _nodeDataPtr->queue, mpi_flag, cpu, _nodeDataPtr->shell,
             _nodeDataPtr->memory, _nodeDataPtr->wallclock, listingDir,
             _nodeDataPtr->expHome, noendwrap, tmpCfgFile,
-            getenv("SEQ_WRAPPERS"), _nodeDataPtr->args,
+            getenv("MAESTRO_WRAPPERS"), _nodeDataPtr->args,
             _nodeDataPtr->soumetArgs);
       }
       strcat(cmd, " > \"");
