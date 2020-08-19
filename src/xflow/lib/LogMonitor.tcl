@@ -200,7 +200,7 @@ proc LogMonitor_getNewestDatestamp { _exp_path } {
    global env
    set newestFile ""
    
-   catch { set newestFile [eval exec -ignorestderr $env(SEQ_SRC)/xflow/etc/getNewestDatestamp ${_exp_path}] }
+   catch { set newestFile [eval exec -ignorestderr $env(MAESTRO_SRC)/xflow/etc/getNewestDatestamp ${_exp_path}] }
    return ${newestFile}
 }
 

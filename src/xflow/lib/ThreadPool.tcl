@@ -34,15 +34,15 @@ proc ThreadPool_createThread { {is_init false} } {
 
    set threadId [thread::create {
       global env
-      source $env(SEQ_SRC)/xflow/lib/utils.tcl
-      source $env(SEQ_SRC)/xflow/lib/FileLogger.tcl
-      source $env(SEQ_SRC)/xflow/lib/FlowXml.tcl
-      source $env(SEQ_SRC)/xflow/lib/LogReader.tcl
+      source $env(MAESTRO_SRC)/xflow/lib/utils.tcl
+      source $env(MAESTRO_SRC)/xflow/lib/FileLogger.tcl
+      source $env(MAESTRO_SRC)/xflow/lib/FlowXml.tcl
+      source $env(MAESTRO_SRC)/xflow/lib/LogReader.tcl
       
-      source $env(SEQ_SRC)/xflow/lib/TsvInfo.tcl
-      source $env(SEQ_SRC)/xflow/lib/SharedData.tcl
-      source $env(SEQ_SRC)/xflow/lib/SharedFlowNode.tcl
-      source $env(SEQ_SRC)/xflow/lib/ThreadPool.tcl
+      source $env(MAESTRO_SRC)/xflow/lib/TsvInfo.tcl
+      source $env(MAESTRO_SRC)/xflow/lib/SharedData.tcl
+      source $env(MAESTRO_SRC)/xflow/lib/SharedFlowNode.tcl
+      source $env(MAESTRO_SRC)/xflow/lib/ThreadPool.tcl
 
       Utils_logInit
       thread::wait
