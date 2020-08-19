@@ -2,7 +2,7 @@
 
 
 
-global SEQ_BIN
+global MAESTRO_BIN
 global SEQ_MANAGER_SRC
 global env
 global MUSER 
@@ -13,7 +13,7 @@ global List_Exps
 set List_Exps {}
 set ListAllExperiments {}
 
-set SEQ_BIN $env(SEQ_BIN)
+set MAESTRO_BIN $env(MAESTRO_BIN)
 set SEQ_MANAGER_SRC $env(SEQ_MANAGER_SRC)
 
 # -- get user
@@ -21,7 +21,7 @@ set MUSER [exec id -nu]
 
 namespace eval XPManager {
 
-    global SEQ_BIN SEQ_MANAGER_SRC
+    global MAESTRO_BIN SEQ_MANAGER_SRC
 
     variable _wfont
 
@@ -78,7 +78,7 @@ namespace eval XPManager {
 }
 
 proc XPManager::create { {startup_exp ""} } {
-    global SEQ_BIN SEQ_MANAGER_SRC MUSER startupExp
+    global MAESTRO_BIN SEQ_MANAGER_SRC MUSER startupExp
     
     variable _wfont
     variable notebook
@@ -188,7 +188,7 @@ proc XPManager::update_font { newfont } {
 
 proc XPManager::_create_intro { } {
     
-    global SEQ_BIN SEQ_MANAGER_SRC
+    global MAESTRO_BIN SEQ_MANAGER_SRC
 
     set top [toplevel .intro -relief raised -borderwidth 2]
 
@@ -258,7 +258,7 @@ proc XPManager::parseCmdOptions {} {
 
 proc XPManager::main {} {
    
-    global SEQ_BIN SEQ_MANAGER_SRC
+    global MAESTRO_BIN SEQ_MANAGER_SRC
 
     lappend ::auto_path ${SEQ_MANAGER_SRC}
     lappend ::auto_path ${SEQ_MANAGER_SRC}/lib/common
@@ -356,7 +356,7 @@ proc XPManager::ListExperiments {} {
 
 proc XPManager::ParseOpParExpDepot {} {
            
-           global SEQ_BIN SEQ_MANAGER_SRC
+           global MAESTRO_BIN SEQ_MANAGER_SRC
 
            set prefDparser [interp create -safe]
            $prefDparser alias ExpOpsRepository    XPManager::set_prefs_cmd_ExpOpsRepository

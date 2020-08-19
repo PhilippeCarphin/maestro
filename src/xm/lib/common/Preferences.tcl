@@ -1052,7 +1052,7 @@ proc Preferences::MaestroEventsCreateWidget { frm } {
 
 proc Preferences::WallPaperIconsCreateWidget { frm } {
 
-      global SEQ_BIN SEQ_MANAGER_SRC
+      global MAESTRO_BIN SEQ_MANAGER_SRC
       variable  _WallPaper
       variable  SaveBI
       variable  CancelBI
@@ -1546,7 +1546,7 @@ proc Preferences::ParseUserMaestrorc { } {
 
 proc Preferences::setPrefValues { PName name args } {
           
-          global SEQ_BIN SEQ_MANAGER_SRC
+          global MAESTRO_BIN SEQ_MANAGER_SRC
 	
           set word [join $args " "]
 	  switch $PName {
@@ -1671,7 +1671,7 @@ proc Preferences::GetTabListDepots { nbk type} {
 
 
 proc Preferences::set_liste_Wall_Papers {} {
-          global SEQ_BIN SEQ_MANAGER_SRC
+          global MAESTRO_BIN SEQ_MANAGER_SRC
 
      # does user have access to images ?
      if {[catch {file stat ${SEQ_MANAGER_SRC}/etc/bg_templates entry} err]} {
@@ -1685,7 +1685,7 @@ proc Preferences::set_liste_Wall_Papers {} {
 
 proc Preferences::set_prefs_default {} {
 
-     global SEQ_BIN
+     global MAESTRO_BIN
 
               set listPref {}
 
@@ -1723,7 +1723,7 @@ proc Preferences::set_prefs_default {} {
 	              lappend listPref "flow_geometry=800x600"
 	      }
 	      if {[info exists Preferences::background_image] == 0} {
-	              lappend listPref "background_image=$SEQ_BIN/../etc/bg_templates/artist_canvas_darkblue.gif"
+	              lappend listPref "background_image=$MAESTRO_BIN/../etc/bg_templates/artist_canvas_darkblue.gif"
 	      }
 	      if {[info exists Preferences::exp_icon] == 0} {
 	              set  Preferences::exp_icon_img [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/xp.gif]

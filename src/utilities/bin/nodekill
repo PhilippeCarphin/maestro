@@ -27,11 +27,11 @@ if [ ! -d "${SEQ_EXP_HOME}/sequencing/jobinfo" ]; then
 fi
 
 if [[ "${d}" = "" ]]; then
-   d=$(${SEQ_BIN}/tictac -f %Y%M%D%H%Min%S)
+   d=$(${MAESTRO_BIN}/tictac -f %Y%M%D%H%Min%S)
 fi
 
-if [[ -n "${SEQ_BIN}" ]] ; then
-   nodeinfo=${SEQ_BIN}/nodeinfo
+if [[ -n "${MAESTRO_BIN}" ]] ; then
+   nodeinfo=${MAESTRO_BIN}/nodeinfo
 else
    nodeinfo=$(which nodeinfo)
 fi

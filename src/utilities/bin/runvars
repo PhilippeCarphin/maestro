@@ -19,6 +19,6 @@ if [[ $v != "" ]] ; then
 fi
 
 ksh -n $i || (echo "Syntax error in input file."; exit 1)
-$SEQ_BIN/varsed.py -i $i 1>$TMPDIR/tmpvarsed.$$
+$MAESTRO_BIN/varsed.py -i $i 1>$TMPDIR/tmpvarsed.$$
 while read LINE ; do eval echo $LINE ; done < $TMPDIR/tmpvarsed.$$ > $o 2>/dev/null
 rm -f $TMPDIR/tmpvarsed.$$

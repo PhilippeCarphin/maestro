@@ -2339,12 +2339,12 @@ static int go_submit(const char *_signal, char *_flow,
     if (strlen(loopArgs) > 0) {
       sprintf(nodetracercmd,
               "%s/nodetracer -n %s -l %s -d %s -e %s -type submission -i %s -c",
-              getenv("SEQ_BIN"), _nodeDataPtr->name, loopArgs,
+              getenv("MAESTRO_BIN"), _nodeDataPtr->name, loopArgs,
               _nodeDataPtr->datestamp, _nodeDataPtr->expHome, submissionDir);
     } else {
       sprintf(nodetracercmd,
               "%s/nodetracer -n %s -d %s -e %s -type submission -i %s -c",
-              getenv("SEQ_BIN"), _nodeDataPtr->name, _nodeDataPtr->datestamp,
+              getenv("MAESTRO_BIN"), _nodeDataPtr->name, _nodeDataPtr->datestamp,
               _nodeDataPtr->expHome, submissionDir);
     }
     nodetracer_status = system(nodetracercmd);

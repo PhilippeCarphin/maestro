@@ -36,13 +36,13 @@ in
      ;;
 esac
 
-if [[ "${SEQ_BIN}" = "" ]]; then
+if [[ "${MAESTRO_BIN}" = "" ]]; then
    test $(which nodeinfo) || (echo nodeinfo not found; exit 1)
 
    taskPath=$(nodeinfo -n $node -f task)
 else
-   taskPath=$($SEQ_BIN/nodeinfo -n $node -f task)
-   $SEQ_BIN/nodeinfo -n $node -f task
+   taskPath=$($MAESTRO_BIN/nodeinfo -n $node -f task)
+   $MAESTRO_BIN/nodeinfo -n $node -f task
 fi
 
 eval taskPath=${taskPath##*=}

@@ -2,9 +2,9 @@
 
 
 export SEQ_EXP_HOME=$1
-if [[ "${SEQ_BIN}" == "" ]]; then 
-   echo "SEQ_BIN not defined..."
-   errMsg="SEQ_BIN not defined, cannot start xflow!"
+if [[ "${MAESTRO_BIN}" == "" ]]; then 
+   echo "MAESTRO_BIN not defined..."
+   errMsg="MAESTRO_BIN not defined, cannot start xflow!"
    kdialogFound=0
    test $(which kdialog) && kdialogFound=1
    if [[ ${kdialogFound} == "1"  ]] ; then
@@ -14,5 +14,5 @@ if [[ "${SEQ_BIN}" == "" ]]; then
    fi
    exit 1
 else
-   ${SEQ_BIN}/xflow
+   ${MAESTRO_BIN}/xflow
 fi

@@ -1877,9 +1877,9 @@ proc ModuleFlow_checkNodeExists { _expPath _node } {
    global env
    set nodeinfoExec nodeinfo
    set isExists false
-   # get nodeinfo from SEQ_BIN if exists
-   if { [info exists env(SEQ_BIN)] } {
-      set nodeinfoExec $env(SEQ_BIN)/nodeinfo
+   # get nodeinfo from MAESTRO_BIN if exists
+   if { [info exists env(MAESTRO_BIN)] } {
+      set nodeinfoExec $env(MAESTRO_BIN)/nodeinfo
    }
    if { [ catch { 
       set execArgs "export SEQ_EXP_HOME=${_expPath} ; ${nodeinfoExec} -n ${_node} -f type > /dev/null 2>&1"

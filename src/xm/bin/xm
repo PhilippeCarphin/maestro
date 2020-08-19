@@ -4,7 +4,7 @@ assert_x11_forwarding_is_enabled || exit 1
 
 [[ "$1" = --help || "$1" = -h ]] && set -h
 
-[[ -z ${SEQ_MAESTRO_DOMAIN} ]] && echo "SEQ_MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 
+[[ -z ${MAESTRO_DOMAIN} ]] && echo "MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 
 
 if ! [[ -f ${SEQ_TCL_BIN}/maestro_wish8.5 ]] ; then 
     echo "Installation incomplete. tcl/tk bin not found. SEQ_TCL_BIN='${SEQ_TCL_BIN}'" 
@@ -29,8 +29,8 @@ fi
        export CMCLNG=english
 #fi
 
-# -- export SEQ_BIN
-test "${SEQ_BIN}" == "" && print "\nSEQ_BIN not defined! Exiting...\n" && exit 1
+# -- export MAESTRO_BIN
+test "${MAESTRO_BIN}" == "" && print "\nMAESTRO_BIN not defined! Exiting...\n" && exit 1
 
 # create default depot if not exist
 [ -d $HOME/.suites ] || mkdir $HOME/.suites

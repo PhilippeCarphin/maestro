@@ -694,7 +694,7 @@ proc NewExp::FinalCheck { win path name entrmod arlocation arvalues new} {
 
 proc NewExp::CreateNew {parent path name entrymod arrloc arrentry} {
 
-       global SEQ_BIN
+       global MAESTRO_BIN
        global ArrayTabsDepot
 
 

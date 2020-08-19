@@ -4662,7 +4662,7 @@ proc xflow_parseCmdOptions {} {
    }
    # this section is only executed when xflow is run as a standalone application
    if { ${XFLOW_STANDALONE} == 1 } {
-      puts "SEQ_BIN=$env(SEQ_BIN)"
+      puts "MAESTRO_BIN=$env(MAESTRO_BIN)"
       SharedData_init
 
       if { ! ($params(rc) == "") } {
@@ -4975,8 +4975,8 @@ proc xflow_checkExpPermission { {exp_path ""} } {
 }
 
 if { ! [info exists XFLOW_STANDALONE] || ${XFLOW_STANDALONE} == "1" } {
-   if { ! [info exists env(SEQ_BIN) ] } {
-      puts "SEQ_BIN must be defined!"
+   if { ! [info exists env(MAESTRO_BIN) ] } {
+      puts "MAESTRO_BIN must be defined!"
       exit
    }
    set lib_dir $env(SEQ_SRC)/xflow/lib
