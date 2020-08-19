@@ -130,7 +130,7 @@ proc ResourceView_updateDepTableWidgets { _expPath _moduleNode _flowNode } {
 proc ResourceView_updateExpEntryWidget { _tableListWidget _cellRow  _cellColumn _cellWidget } {
    ::log::log debug "ResourceView_updateExpEntryWidget  $_tableListWidget $_cellRow  $_cellColumn $_cellWidget"
    global MAESTRO_BIN
-   set buttonImg [image create photo ${_tableListWidget}.open_img -file ${SEQ_MANAGER_SRC}/etc/images/folder_16.png]
+   set buttonImg [image create photo ${_tableListWidget}.open_img -file ${MAESTRO_MANAGER_SRC}/etc/images/folder_16.png]
    Button ${_cellWidget} -image ${buttonImg} -command [list ResourceView_depExpChooseDir $_tableListWidget $_cellRow  $_cellColumn $_cellWidget]
 }
 

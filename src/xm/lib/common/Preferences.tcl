@@ -1052,7 +1052,7 @@ proc Preferences::MaestroEventsCreateWidget { frm } {
 
 proc Preferences::WallPaperIconsCreateWidget { frm } {
 
-      global MAESTRO_BIN SEQ_MANAGER_SRC
+      global MAESTRO_BIN MAESTRO_MANAGER_SRC
       variable  _WallPaper
       variable  SaveBI
       variable  CancelBI
@@ -1070,7 +1070,7 @@ proc Preferences::WallPaperIconsCreateWidget { frm } {
       set licn     [label $subfwall.lbicn -text $Dialogs::Pref_exp_icon    -font 8]
      
       # -- This is where the default images resides
-      set PathImages "${SEQ_MANAGER_SRC}/etc/bg_templates"
+      set PathImages "${MAESTRO_MANAGER_SRC}/etc/bg_templates"
 
       set CtrlButton [frame $frm.ctrlbuttons -border 2 -relief flat]
 
@@ -1546,7 +1546,7 @@ proc Preferences::ParseUserMaestrorc { } {
 
 proc Preferences::setPrefValues { PName name args } {
           
-          global MAESTRO_BIN SEQ_MANAGER_SRC
+          global MAESTRO_BIN MAESTRO_MANAGER_SRC
 	
           set word [join $args " "]
 	  switch $PName {
@@ -1577,27 +1577,27 @@ proc Preferences::setPrefValues { PName name args } {
 		 "exp_icon"          { 
                                        switch $name {
                                          "xp"    {
-                                                set  Preferences::exp_icon_img [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/xp.gif] 
+                                                set  Preferences::exp_icon_img [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/xp.gif] 
                                  		set  Preferences::exp_icon "xp"
                                                  }
                                          "note1" {
-                                                 set  Preferences::exp_icon_img [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/xp.note.gif] 
+                                                 set  Preferences::exp_icon_img [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/xp.note.gif] 
                                  		 set  Preferences::exp_icon "note1"
                                                  }
                                          "rain"  {
-                                                set  Preferences::exp_icon_img [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/Thunderstorms.gif]
+                                                set  Preferences::exp_icon_img [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/Thunderstorms.gif]
                                 		set  Preferences::exp_icon "rain"
                                                  }
                                         "thunder" {
-                                                 set  Preferences::exp_icon_img [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/Thunder.gif]
+                                                 set  Preferences::exp_icon_img [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/Thunder.gif]
                                 		 set  Preferences::exp_icon "thunder"
                                                 }
                                         "sunny" {
-                                                set  Preferences::exp_icon_img [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/Sunny.gif]
+                                                set  Preferences::exp_icon_img [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/Sunny.gif]
                                 		set  Preferences::exp_icon "sunny"
                                                 }
                                         default {
-                                                set  Preferences::exp_icon_img [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/xp.gif] 
+                                                set  Preferences::exp_icon_img [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/xp.gif] 
                                 		set  Preferences::exp_icon "xp"
 						puts ">>>>>Preferences::exp_icon_img in default name=$name"
                                                 }
@@ -1671,13 +1671,13 @@ proc Preferences::GetTabListDepots { nbk type} {
 
 
 proc Preferences::set_liste_Wall_Papers {} {
-          global MAESTRO_BIN SEQ_MANAGER_SRC
+          global MAESTRO_BIN MAESTRO_MANAGER_SRC
 
      # does user have access to images ?
-     if {[catch {file stat ${SEQ_MANAGER_SRC}/etc/bg_templates entry} err]} {
-            puts "Couldn't stat ${SEQ_MANAGER_SRC}/etc/bg_templates "
+     if {[catch {file stat ${MAESTRO_MANAGER_SRC}/etc/bg_templates entry} err]} {
+            puts "Couldn't stat ${MAESTRO_MANAGER_SRC}/etc/bg_templates "
      } else {
-            foreach wfile [glob -nocomplain -type { f r} -path ${SEQ_MANAGER_SRC}/etc/bg_templates/ *.gif] {
+            foreach wfile [glob -nocomplain -type { f r} -path ${MAESTRO_MANAGER_SRC}/etc/bg_templates/ *.gif] {
 		lappend Preferences::ListWallPapers [file tail $wfile]
             }
      }
@@ -1726,7 +1726,7 @@ proc Preferences::set_prefs_default {} {
 	              lappend listPref "background_image=$MAESTRO_BIN/../etc/bg_templates/artist_canvas_darkblue.gif"
 	      }
 	      if {[info exists Preferences::exp_icon] == 0} {
-	              set  Preferences::exp_icon_img [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/xp.gif]
+	              set  Preferences::exp_icon_img [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/xp.gif]
 		      set  Preferences::exp_icon "xp"
 		      set  Preferences::ChosenIcon $Preferences::exp_icon
 	              lappend listPref "exp_icon=xp"

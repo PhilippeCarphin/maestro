@@ -42,7 +42,7 @@ test "${MAESTRO_BIN}" == "" && print "\nMAESTRO_BIN not defined! Exiting...\n" &
 
 if [ ! -s $HOME/.maestrorc ];then
    # -- have to create one and Populate it with minimum data
-   cp ${SEQ_MANAGER_SRC}/etc/config/maestrorc $HOME/.maestrorc
+   cp ${MAESTRO_MANAGER_SRC}/etc/config/maestrorc $HOME/.maestrorc
 fi
 
 arguments=$*
@@ -50,4 +50,4 @@ eval `cclargs $0 "[xm]" \
   -exp          ""      ""      "[experiment path]" \
   ++ $arguments`
 
-$TCLSH ${SEQ_MANAGER_SRC}/lib/x_manager/XPManager.tcl $arguments &
+$TCLSH ${MAESTRO_MANAGER_SRC}/lib/x_manager/XPManager.tcl $arguments &
