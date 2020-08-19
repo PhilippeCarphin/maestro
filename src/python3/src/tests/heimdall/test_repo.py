@@ -34,8 +34,18 @@ class TestRepo(unittest.TestCase):
 
         results = get_links_source_and_target(MAESTRO_ROOT)
         self.assertTrue(results)
+        
+        ignores=[MAESTRO_ROOT+"python_venv/",MAESTRO_ROOT+"build/"]
+        def should_ignore(path):
+            for ignore in ignores:
+                if ignore in path:
+                    return True
+            return False                
 
         for d in results:
+            
+            if should_ignore(d["source"]):
+                continue
 
             if any([a for a in allowed_sources if d["source"].startswith(a)]):
                 continue

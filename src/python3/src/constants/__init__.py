@@ -1,5 +1,6 @@
 from constants.colors import *
 from constants.curses import *
+from constants.deprecated import *
 from constants.heimdall import *
 from constants.io import *
 from constants.json import *

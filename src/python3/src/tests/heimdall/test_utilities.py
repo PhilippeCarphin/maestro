@@ -6,7 +6,7 @@ import unittest
 import os.path
 
 from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES
-from tests.temp_file_builder import setup_tmp_git_author_repo
+from tests.test_file_builder import setup_tmp_git_author_repo
 
 from constants import SCANNER_CONTEXT
 from utilities import get_dictionary_list_from_csv
