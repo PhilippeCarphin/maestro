@@ -1009,6 +1009,15 @@ proc ::DrawUtils::getLineDeltaSpace { exp_path node datestamp display_pref {delt
    return $value
 }
 
+# Given a list of strings, returns the numeric length of the longest string.
+proc getLengthOfLongestString { strings } {
+	set sizes [list]
+	foreach item [split $strings] {
+		lappend sizes [string length $item]
+        }
+  	return [tcl::mathfunc::max {*}$sizes]
+}
+
 proc ::DrawUtils::getNodeDeltaX { exp_path node datestamp canvas } {
    set deltax 0
    
@@ -1019,6 +1028,27 @@ proc ::DrawUtils::getNodeDeltaX { exp_path node datestamp canvas } {
       foreach { nx1 ny1 nx2 ny2 } [${canvas} bbox index_widget_${node}] { break }
       if { ${nx2} > ${px2} } {
          set deltax [expr ${nx2} - ${px2}]
+      }
+
+      set indexListW [::DrawUtils::getIndexWidgetName $node ${canvas}]
+      if { [winfo exists ${indexListW}] } {
+	      set nodeName [tsv::keylget SharedFlowNode_${exp_path}_${datestamp} ${node} name]
+	      set nptAvailableChoices [SharedFlowNode_getNptExtensions ${exp_path} ${node} ${datestamp}]
+	      set longestIndexLength [getLengthOfLongestString [list latest $nptAvailableChoices]]
+	      set nodeLabelLength [expr [string length nodeName] + [string length [${indexListW} get]]]
+	      set charPadding [expr (10 + $longestIndexLength - $nodeLabelLength) * ([SharedData_getMiscData FONT_SIZE] / 2)]
+	      puts "
+	node = $node
+	nptAvailableChoices = $nptAvailableChoices
+	longestIndexLength = $longestIndexLength
+	nodeLabelLength = $nodeLabelLength
+	nodeName = '$nodeName'
+	nodeLabelLength = $nodeLabelLength
+	charPadding = $charPadding"
+	      if { [expr $charPadding > 0] } {
+		      puts "adding char padding"
+		      set deltax [expr ${deltax} + $charPadding]
+	      }
       }
    }
    return ${deltax}
