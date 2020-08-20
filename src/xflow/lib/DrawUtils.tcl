@@ -1009,13 +1009,34 @@ proc ::DrawUtils::getLineDeltaSpace { exp_path node datestamp display_pref {delt
    return $value
 }
 
-# Given a list of strings, returns the numeric length of the longest string.
+# Given a list of space delimited strings, returns the numeric length of the longest string.
 proc getLengthOfLongestString { strings } {
 	set sizes [list]
 	foreach item [split $strings] {
 		lappend sizes [string length $item]
         }
   	return [tcl::mathfunc::max {*}$sizes]
+}
+
+# The combo box for an NPT node may be very wide, because the available choices can be any string.
+# This returns a suggested 'delta x' padding, to make the horizontal arrow right of the node longer, if necessary.
+# For non-NPT or short combo boxes, returns 0.
+proc getDeltaXPaddingForNPT { exp_path node datestamp canvas } {
+	set indexListW [::DrawUtils::getIndexWidgetName $node ${canvas}]
+  	if { [winfo exists ${indexListW}] } {
+  		set nodeName [tsv::keylget SharedFlowNode_${exp_path}_${datestamp} ${node} name]
+  		set nptAvailableChoices [SharedFlowNode_getNptExtensions ${exp_path} ${node} ${datestamp}]
+  		set longestIndexLength [getLengthOfLongestString [list latest $nptAvailableChoices]]
+
+		# roughly how long the label text of this node, including its selected index (though not indexes of parents, too complicated)
+  		set nodeLabelLength [expr [string length nodeName] + [string length [${indexListW} get]]]
+
+  		set charPadding [expr (10 + $longestIndexLength - $nodeLabelLength) * ([SharedData_getMiscData FONT_SIZE] / 2)]
+  		if { [expr $charPadding > 0] } {
+			return $charPadding
+		}
+      }
+      return 0
 }
 
 proc ::DrawUtils::getNodeDeltaX { exp_path node datestamp canvas } {
@@ -1030,26 +1051,9 @@ proc ::DrawUtils::getNodeDeltaX { exp_path node datestamp canvas } {
          set deltax [expr ${nx2} - ${px2}]
       }
 
-      set indexListW [::DrawUtils::getIndexWidgetName $node ${canvas}]
-      if { [winfo exists ${indexListW}] } {
-	      set nodeName [tsv::keylget SharedFlowNode_${exp_path}_${datestamp} ${node} name]
-	      set nptAvailableChoices [SharedFlowNode_getNptExtensions ${exp_path} ${node} ${datestamp}]
-	      set longestIndexLength [getLengthOfLongestString [list latest $nptAvailableChoices]]
-	      set nodeLabelLength [expr [string length nodeName] + [string length [${indexListW} get]]]
-	      set charPadding [expr (10 + $longestIndexLength - $nodeLabelLength) * ([SharedData_getMiscData FONT_SIZE] / 2)]
-	      puts "
-	node = $node
-	nptAvailableChoices = $nptAvailableChoices
-	longestIndexLength = $longestIndexLength
-	nodeLabelLength = $nodeLabelLength
-	nodeName = '$nodeName'
-	nodeLabelLength = $nodeLabelLength
-	charPadding = $charPadding"
-	      if { [expr $charPadding > 0] } {
-		      puts "adding char padding"
-		      set deltax [expr ${deltax} + $charPadding]
-	      }
-      }
+      # Some NPT nodes need longer horizontal arrows.
+      set nptPadding [getDeltaXPaddingForNPT $exp_path $node $datestamp $canvas]
+      set deltax [expr ${deltax} + $nptPadding]
    }
    return ${deltax}
 }
