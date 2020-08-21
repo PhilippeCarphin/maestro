@@ -927,7 +927,7 @@ class ExperimentScanner():
 
                 self.add_message(code, **kwargs)
 
-            elif node_type == NODE_TYPE.LOOP:
+            elif node_type in (NODE_TYPE.LOOP, NODE_TYPE.SWITCH):
                 self.add_message("w002",
                                       node_path=node_path,
                                       resource_path=resource_path)
@@ -1274,9 +1274,19 @@ class ExperimentScanner():
         "all tsk, cfg, flow, xml files explicitly declared by the main flow"
         self.declared_files=sls(declared_files)
 
-    def get_report_text(self):
+    def get_report_text(self,
+                        max_repeat=0):
         lines = []
+        shown_code_count={}
         for m in self.messages:
+            
+            code=m["code"]
+            if code not in shown_code_count:
+                shown_code_count[code]=0
+            shown_code_count[code]+=1
+            if max_repeat and shown_code_count[code]>max_repeat:
+                continue
+            
             line = "%s: %s\n%s" % (m["code"], m["label"], m["description"])
             lines.append(line)
         return "\n\n".join(lines)
@@ -1295,7 +1305,7 @@ class ExperimentScanner():
 
         levels = "cewib"
         if level not in levels:
-            raise ValueError("Bad level '%s', but be one of '%s'" % (level, levels))
+            raise ValueError("Bad level '%s', must be one of '%s'" % (level, levels))
 
         "keep track of how many times we've shown each code"
         code_count = {code: 0 for code in self.codes}

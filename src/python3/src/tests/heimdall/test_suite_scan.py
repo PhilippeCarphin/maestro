@@ -103,7 +103,7 @@ class TestSuiteScan(unittest.TestCase):
         Even good suites may have these codes so ignore them.
         This may also be due to real path is a test suite, or git repo stuff.
         """
-        ignore_codes = ["w001", "i002", "e016", "i004", "b009", "i006", "b014", "b017"]
+        ignore_codes = ["w001", "w002", "i002", "e016", "i004", "b009", "i006", "b014", "b017"]
 
         """
         key is experiment path
@@ -119,7 +119,7 @@ class TestSuiteScan(unittest.TestCase):
                                         critical_error_is_exception=False,
                                         debug_qstat_output_override=QSTAT_CMD_OUTPUT)
             msg = "Experiment path: '%s'" % path
-            msg += "\n\n"+scanner.get_report_text()
+            msg += "\n\n"+scanner.get_report_text(max_repeat=5)
 
             "never look for codes we want to ignore"
             result = scanner.codes

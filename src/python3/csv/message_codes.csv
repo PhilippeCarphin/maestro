@@ -35,7 +35,7 @@ i002	Module name and path differ	The module folder ‘{folder_name}’ differs f
 i003	Text editor swap files	Text editor swap files were found, for example for vim or emacs. If your editor is closed, you may want to recover or delete these:\n{swaps}		
 i004	Git repo has uncommited changes	There are uncommited changes in the git repo.		
 w001	Missing resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
-w002	Missing loop resource file	The loop ‘{node_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
+w002	Missing loop resource file	The loop or switch ‘{node_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
 w003	Deprecated site1/site2	The paths site1 and site2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains:\n{matching_string}		
 w004	Deprecated hall1/hall2	The paths hall1 and hall2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains:\n{matching_string}		
 w005	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be considered too unstable to install operationally. Run realpath on these links:\n{bad_links}		
