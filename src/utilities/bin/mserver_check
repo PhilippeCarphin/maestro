@@ -1,28 +1,55 @@
-#!/bin/ksh93
+#!/bin/bash
 
+# Check mserver status on target machine, launch if it's not running.
 
-
-
-#simple script to check the status of the mserver on a given machine, then launch an mserver on a target machine if it is not currently online. 
 arguments=$*
 
 eval `cclargs $0 "[For complete and up to date information on this command, see the man page by typing 'man mserver_check']" \
   -m        ""                    "$TRUE_HOST"                 "[Machine on which to launch server ]" \
-  -v        ""                    "1"                          "[Verbose            ]" \
   -h        ""                    ""                           "[Display help       ]" \
   ++ $arguments` 
 
-
-if [[ $v != "" ]] ; then  
-  set -x
-fi 
-
-ping -q -c 1 $m || exit 1
-madmin -i 2>/dev/null 
-isInactive=$?
-if [[ $isInactive -ne 0 ]] ; then 
-  echo "Mserver unavailable on $m, restarting..."
-  ssh  $m  -t bash -l -c \"$SEQ_MAESTRO_SHORTCUT\; export SEQ_MAESTRO_SHORTCUT=\'$SEQ_MAESTRO_SHORTCUT\'\; mserver\; sleep 1\; madmin -i\"  
-else
-  echo "Server active on $m. No action taken." 
+# Verify CLI arguments
+MACHINE=$m
+if [[ $MACHINE == "" ]] ; then
+	echo "Must provide a machine '-m' argument."
+	exit 1
 fi
+
+LOG_FOLDER=$HOME/logs/maestro
+LOG_FILE=$LOG_FOLDER/mserver_check.log
+mkdir -p $LOG_FOLDER
+date > $LOG_FILE
+SCRIPT_NAME=$(basename $0)
+echo "$SCRIPT_NAME log file: '$LOG_FILE'"
+
+# Does machine exist
+ping -q -c 1 $MACHINE >> $LOG_FILE
+ping_status=$?
+if [[ $ping_status != 0 ]] ; then
+	echo "Could not connect to machine '$MACHINE'"
+	exit 1
+fi
+
+# Get mserver status
+echo "Running madmin on '$MACHINE'"
+# The LogLevel QUIET removes the 'Connection to eccc-ppp4 closed.' messages.
+ssh $MACHINE -t -o LogLevel=QUIET bash -l -c \"$SEQ_MAESTRO_SHORTCUT\; export SEQ_MAESTRO_SHORTCUT=\'$SEQ_MAESTRO_SHORTCUT\'\; madmin -i\" >> $LOG_FILE
+exit_status=$?
+
+# Start mserver if necessary
+if [[ $exit_status != 0 ]] ; then
+  echo "mserver not running. Starting..."
+  ssh $MACHINE  -t -o LogLevel=QUIET bash -l -c \"$SEQ_MAESTRO_SHORTCUT\; export SEQ_MAESTRO_SHORTCUT=\'$SEQ_MAESTRO_SHORTCUT\'\; mserver\; sleep 1\; madmin -i\" >> $LOG_FILE
+  mserver_status=$?
+  if [[ $mserver_status == 0 ]] ; then
+	  echo "Successfully started mserver on '$MACHINE'"
+  else
+	  echo "Failed to start mserver. See log '$LOG_FILE'"
+	  exit 1
+  fi
+else
+  echo "No action taken: mserver is already active on $MACHINE"
+fi
+
+echo "Done."
