@@ -49,7 +49,7 @@ if [[ $exit_status != 0 ]] ; then
 	  exit 1
   fi
 else
-  echo "No action taken: mserver is already active on $MACHINE"
+  echo "No action taken: mserver is already active on '$MACHINE'"
 fi
 
 echo "Done."
