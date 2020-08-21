@@ -9,11 +9,38 @@ Captured group 1 is '-s' argument.
 """
 NODELOGGER_SIGNAL_REGEX = re.compile(r".*nodelogger.*-s[ ]+([^ \n]+).*")
 
+"""
+Captures strings like 'ABC_DEF=123' where group 1 is "ABC_DEF"
+"""
+CONSTANT_VARIABLE_REGEX = re.compile(r"^[ ]*([A-Z]+[A-Z_]*)[ ]*=")
 
 def get_nodelogger_signals_from_task_path(path):
     data = file_cache.open(path)
     return get_nodelogger_signals_from_task_text(data)
 
+
+def get_constant_definition_count(text):
+    """
+    Given text content like:        
+        ABC=55
+        ABC=66
+        CAT=1
+        # CAT=2
+    returns counts of all variables:
+        {"ABC":2, "CAT":1}
+    """
+    
+    constants={}
+    lines=text.split("\n")
+    for line in lines:
+        match=CONSTANT_VARIABLE_REGEX.match(line)
+        if not match:
+            continue
+        name=match.group(1)
+        if name not in constants:
+            constants[name]=0
+        constants[name]+=1  
+    return constants
 
 def get_resource_limits_from_batch_element(batch_element):
     """

@@ -5,3 +5,6 @@ FRONTEND_XFER_Q=this-is-not-a-queue-uh-oh
 FRONTEND_DAEMON_Q=prod_daemon
 BACKEND_DEFAULT_Q=development
 BACKEND_XFER_Q=xfer 
+
+DEFINED_TWICE=1
+DEFINED_TWICE=2

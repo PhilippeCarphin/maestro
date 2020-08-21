@@ -11,10 +11,11 @@ from heimdall.message_manager import hmm
 from home_logger import logger
 from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text, get_commented_pseudo_xml_lines
 from utilities.heimdall.critical_errors import find_critical_errors
-from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile
 from utilities.heimdall.git import scan_git_authors
+from utilities.generic import BASH_VARIABLE_DECLARE_REGEX
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip, remove_chars_in_text
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target, iterative_deepening_search
 from utilities.qstat import get_qstat_data_from_text, get_qstat_data, get_resource_limits_from_qstat_data
@@ -104,6 +105,7 @@ class ExperimentScanner():
         self.scan_all_task_content()
         self.scan_broken_symlinks()
         self.scan_config_files()
+        self.scan_constant_redefines()
         self.scan_containers()
         self.scan_declared_files()
         self.scan_deprecated_files_folders()
@@ -121,6 +123,7 @@ class ExperimentScanner():
         self.scan_overview_xmls()
         self.scan_required_files()
         self.scan_required_folders()
+        self.scan_resource_definitions()
         self.scan_resource_files()
         self.scan_resource_queues()
         self.scan_root_links()
@@ -675,7 +678,28 @@ class ExperimentScanner():
             self.add_message("b007",
                                   file_path=path,
                                   count=len(commented_lines))
-
+            
+    def scan_resource_definitions(self):
+        for path in self.maestro_experiment.resource_definition_paths:
+            self.scan_resource_definition(path)
+    
+    def scan_resource_definition(self,path):
+        content=file_cache.open_without_comments(path)
+        lines=content.split("\n")
+        variable_count={}
+        for line in lines:
+            match=BASH_VARIABLE_DECLARE_REGEX.match(line)
+            if not match:
+                continue
+            name=match.group(1)
+            if name not in variable_count:
+                variable_count[name]=0
+            variable_count[name]+=1
+        
+        for variable,count in variable_count.items():
+            if count>1:
+                self.add_message("e021",variable=variable,path=path)
+        
     def scan_resource_files(self):
         "scan the content of resource files (see scan_file_content for CSV content scan)"
 
@@ -1146,6 +1170,26 @@ class ExperimentScanner():
         is_op = self.is_context_operational()
         if not support_status and is_op:
             self.add_message("w007", xml_path=xml_path)
+    
+    def scan_constant_redefines(self):
+        """
+        Look at bash-like files (tsk, cfg) for variable definition issues.
+        """
+        for node_path, node_data in self.maestro_experiment.node_datas.items():
+            task_path = node_data["task_path"]
+            config_path = node_data["config_path"]
+            for path in (task_path,config_path):
+                self.scan_constant_redefine(path)
+
+    def scan_constant_redefine(self, path):
+        """
+        Look at a bash-like file (tsk, cfg) for variable definition issues.
+        """
+        content_without_comments = file_cache.open_without_comments(path)
+        constants=get_constant_definition_count(content_without_comments)
+        for variable,count in constants.items():
+            if count>1:
+                self.add_message("b018", variable=variable,path=path)
 
     def scan_xmls(self):
         code = "e002"

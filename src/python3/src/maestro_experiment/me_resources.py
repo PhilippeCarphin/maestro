@@ -127,9 +127,10 @@ class ME_Resources():
             return self.resource_cache[key]
 
         "starting with highest priority"
-        paths = [self.user_home+".suites/overrides.def",
-                 self.path+"resources/resources.def",
-                 self.user_home+".suites/default_resources.def"]
+        self.resource_definition_paths = [self.user_home+".suites/overrides.def",
+                                   self.path+"resources/resources.def",
+                                   self.user_home+".suites/default_resources.def"]
+        paths=self.resource_definition_paths
         for path in paths:
             if path not in self.path_to_resource_declares:
                 self.path_to_resource_declares[path] = get_key_values_from_path(path)

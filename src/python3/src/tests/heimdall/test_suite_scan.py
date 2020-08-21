@@ -103,7 +103,7 @@ class TestSuiteScan(unittest.TestCase):
         Even good suites may have these codes so ignore them.
         This may also be due to real path is a test suite, or git repo stuff.
         """
-        ignore_codes = ["w001", "w002", "i002", "e016", "i004", "b009", "i006", "b014", "b017"]
+        ignore_codes = ["w001", "w002", "i002", "e016", "i004", "b009", "i006", "b014", "b017", "e021"]
 
         """
         key is experiment path

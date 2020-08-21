@@ -11,7 +11,7 @@ from tests.test_file_builder import setup_tmp_git_author_repo
 from constants import SCANNER_CONTEXT
 from utilities import get_dictionary_list_from_csv
 from utilities.heimdall.context import guess_scanner_context_from_path
-from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs, get_constant_definition_count
 from utilities.heimdall.path import is_editor_swapfile
 from utilities.heimdall.git import scan_git_authors
 from utilities import guess_user_home_from_path, pretty
@@ -30,6 +30,19 @@ class TestUtilities(unittest.TestCase):
         path = MOCK_FILES+"suites_with_codes/e004/modules/main/broken-symlink"
         result = file_cache.is_broken_symlink(path)
         self.assertTrue(result)
+        
+    def test_get_constant_definition_count(self):
+        text="""
+ABC=123
+ABC=456
+        
+   CAT=123
+        
+# CAT=123
+echo 123 = 123"""
+        expected={"ABC":2,"CAT":1}
+        result=get_constant_definition_count(text)
+        self.assertEqual(result,expected)
 
     def test_csv_dictionary(self):
         result = get_dictionary_list_from_csv(CSV_DICTIONARY)
