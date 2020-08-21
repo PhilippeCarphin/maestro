@@ -1026,6 +1026,8 @@ proc getDeltaXPaddingForNPT { exp_path node datestamp canvas } {
   	if { [winfo exists ${indexListW}] } {
   		set nodeName [tsv::keylget SharedFlowNode_${exp_path}_${datestamp} ${node} name]
   		set nptAvailableChoices [SharedFlowNode_getNptExtensions ${exp_path} ${node} ${datestamp}]
+
+		# the character length of the longest available NPT index we might select, which helps guess the ComboBox width after it is populated.
   		set longestIndexLength [getLengthOfLongestString [list latest $nptAvailableChoices]]
 
 		# roughly how long the label text of this node, including its selected index (though not indexes of parents, too complicated)
@@ -1051,7 +1053,7 @@ proc ::DrawUtils::getNodeDeltaX { exp_path node datestamp canvas } {
          set deltax [expr ${nx2} - ${px2}]
       }
 
-      # Some NPT nodes need longer horizontal arrows.
+      # Some NPT nodes need longer horizontal arrows to make space for the full ComboBox width.
       set nptPadding [getDeltaXPaddingForNPT $exp_path $node $datestamp $canvas]
       set deltax [expr ${deltax} + $nptPadding]
    }
