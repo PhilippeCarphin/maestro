@@ -391,7 +391,7 @@ class ExperimentScanner():
             self.add_message("i003", swaps=filenames)
 
         "Random files should not be adjacent to any maestro files like tsk, cfg, resource xml"
-        maestro_files = self.task_files+self.config_files+self.resource_files+self.flow_files
+        maestro_files = self.task_files+self.config_files+self.resource_files+self.flow_files+self.internal_var_files
         maestro_files = sorted(list(set(maestro_files)))
         explored = set()
 
@@ -1274,7 +1274,15 @@ class ExperimentScanner():
                     "also add resource XMLs that were not discovered by using the flow"
                     if path.startswith(rpath) and path.endswith(".xml"):
                         resource_files.add(path)
-                        
+        
+        "internal.var files"
+        internal_var_files=[]
+        module_folder=self.path+"modules/"
+        for subfolder in file_cache.listdir(module_folder):
+            path=module_folder+subfolder+"/internal.var"
+            if file_cache.exists(path):
+                internal_var_files.append(path)
+                
         "index tsk cfg xml"
         task_files = []
         config_files = []
@@ -1312,6 +1320,9 @@ class ExperimentScanner():
 
         "all flow.xml files"
         self.flow_files = sls(flow_files)
+        
+        "all internal.var files"
+        self.internal_var_files=sls(internal_var_files)
 
         "all resource xml files"
         self.resource_files = sls(resource_files)
