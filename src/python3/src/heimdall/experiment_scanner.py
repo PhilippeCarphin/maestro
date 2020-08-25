@@ -3,7 +3,7 @@ import re
 from collections import OrderedDict
 import Levenshtein
 
-from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS, EXPERIMENT_LOG_FOLDERS, OPERATIONAL_USERNAME, OLD_SEQ_VARIABLES
+from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS, EXPERIMENT_LOG_FOLDERS, REQUIRED_LOG_FOLDERS, OPERATIONAL_USERNAME, OLD_SEQ_VARIABLES
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
@@ -1083,14 +1083,21 @@ class ExperimentScanner():
                                       attribute_name=attribute_name)
 
     def scan_required_folders(self):
-        required_folders = EXPERIMENT_LOG_FOLDERS
         missing = []
-        for folder in required_folders:
+        for folder in REQUIRED_LOG_FOLDERS:
             if not file_cache.isdir(self.path+folder):
                 missing.append(folder)
         if missing:
             folders_msg = ", ".join(missing)
             self.add_message("e001", folders=folders_msg)
+        
+        me=self.maestro_experiment
+        value1=me.get_resource_value_from_key("SEQ_RUN_STATS_ON")
+        value2=me.get_resource_value_from_key("SEQ_AVERAGE_WINDOW")
+        is_stats_required=value1 or value2
+        folder=self.path+"stats"
+        if is_stats_required and not file_cache.isdir(folder):
+            self.add_message("e022", required=folder)
 
     def scan_broken_symlinks(self):
         for path in self.files:

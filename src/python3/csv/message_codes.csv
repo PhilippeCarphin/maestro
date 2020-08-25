@@ -14,7 +14,7 @@ c002	Bad EntryModule	EntryModule is not a link: ‘{entry_module}’	https://wik
 c003	No experiment here	Could not find an experiment for path: '{path}'. A valid experiment folder contains an 'EntryModule' link.	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
 c004	No EntryModule flow.xml	The required EntryModule flow.xml file does not exist: ‘{flow_xml}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
 c005	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to parse as XML: ‘{flow_xml}’		
-e001	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders	
+e001	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders	
 e002	Bad XML	Failed to parse XML: ‘{xml}’		
 e003	Invalid node name	Invalid node name ‘{node_name}’ in flow XML ‘{flow_path}’. Node names must be alphanumeric with dot, dash, or underscores. Must match the regex: {regex}	https://regex101.com/	
 e004	Broken symlink	The target of soft link ‘{link}’ does not exist.		
@@ -73,3 +73,4 @@ w023	Operational user can overwrite experiment	The operational user ‘{user}’
 b017	Found SEQ_ instead of MAESTRO_	The deprecated variable ‘{old}’ was found in ‘{path}’. Consider using the equivalent variable ‘{new}’ instead. This helps newbies understand your project since they will know this variable is related to maestro.		
 e021	Duplicate resource definitions	The variable ‘{variable}’ is defined more than once in the file ‘{path}’. Tools like getdef may behave unexpectedly.		
 b018	Uppercase variable is redefined	The uppercase variable ‘{variable}’ is defined more than once in the file ‘{path}’. Uppercase variables in bash should be considered constant and not changed.	https://google.github.io/styleguide/shellguide.html#s7.3-constants-and-environment-variable-names	
+e022	Missing stats folder	The ‘stats’ folder is missing but required because the resource variables SEQ_RUN_STATS_ON and SEQ_AVERAGE_WINDOW are used: ‘{required}’	https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/stats	

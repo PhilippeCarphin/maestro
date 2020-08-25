@@ -8,3 +8,7 @@ BACKEND_XFER_Q=xfer
 
 DEFINED_TWICE=1
 DEFINED_TWICE=2
+
+# these variables means the 'stats' folder is required
+SEQ_RUN_STATS_ON=1
+SEQ_AVERAGE_WINDOW=7
