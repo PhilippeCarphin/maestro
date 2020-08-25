@@ -5,7 +5,7 @@ import os
 import unittest
 import os.path
 
-from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES
+from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES, SUITES_WITHOUT_CODES
 from tests.test_file_builder import setup_tmp_git_author_repo
 
 from constants import SCANNER_CONTEXT
@@ -16,7 +16,7 @@ from utilities.heimdall.path import is_editor_swapfile
 from utilities.heimdall.git import scan_git_authors
 from utilities import guess_user_home_from_path, pretty
 from utilities.path import iterative_deepening_search
-from utilities.maestro import get_weird_assignments_from_config_path
+from utilities.maestro import get_weird_assignments_from_config_path, get_commented_pseudo_xml_lines
 from heimdall.file_cache import file_cache
 
 
@@ -30,6 +30,13 @@ class TestUtilities(unittest.TestCase):
         path = MOCK_FILES+"suites_with_codes/e004/modules/main/broken-symlink"
         result = file_cache.is_broken_symlink(path)
         self.assertTrue(result)
+        
+    def test_get_commented_pseudo_xml_lines(self):
+        path=SUITES_WITHOUT_CODES+"b007/modules/module1/task1.cfg"
+        with open(path,"r") as f:
+            content=f.read()
+        lines=get_commented_pseudo_xml_lines(content)
+        self.assertFalse(lines)
         
     def test_get_constant_definition_count(self):
         text="""
