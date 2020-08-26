@@ -121,6 +121,7 @@ class ExperimentScanner():
         self.scan_node_names()
         self.scan_operational_file_permissions()
         self.scan_overview_xmls()
+        self.scan_readme_files()
         self.scan_required_files()
         self.scan_required_folders()
         self.scan_resource_definitions()
@@ -217,6 +218,20 @@ class ExperimentScanner():
 
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+                
+    def scan_readme_files(self):
+        for path in self.readme_files:
+            if path.endswith(".md"):
+                continue
+            
+            suggested=os.path.basename(path)
+            if "." in suggested:
+                suggested=suggested.split(".")[0]
+            suggested+=".md"
+            
+            self.add_message("b019",
+                             readme=path,
+                             suggested=suggested)
             
     def scan_log_folder_permissions(self):        
         "log folders with inconsistent user/group/permissions"
@@ -1283,6 +1298,8 @@ class ExperimentScanner():
         internal_var_files=[]
         readme_files=[]
         module_folder=self.path+"modules/"
+        def is_readme(basename):
+            return basename.lower().startswith("readme")
         for subfolder in file_cache.listdir(module_folder):
             path=module_folder+subfolder+"/internal.var"
             if file_cache.exists(path):
@@ -1290,8 +1307,11 @@ class ExperimentScanner():
             
             for basename in file_cache.listdir(module_folder+subfolder):
                 path=module_folder+subfolder+"/"+basename
-                if basename.lower().startswith("readme") and file_cache.isfile(path):                    
+                if is_readme(basename) and file_cache.isfile(path):                    
                     readme_files.append(path)
+        for basename in file_cache.listdir(self.path):
+            if is_readme(basename):
+                readme_files.append(self.path+basename)
                 
         "index tsk cfg xml"
         task_files = []
