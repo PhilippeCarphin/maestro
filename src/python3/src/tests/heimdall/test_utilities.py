@@ -5,8 +5,8 @@ import os
 import unittest
 import os.path
 
-from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES, SUITES_WITHOUT_CODES
-from tests.test_file_builder import setup_tmp_git_author_repo
+from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES, SUITES_WITHOUT_CODES, ABSOLUTE_SYMLINK_EXISTS_PATH
+from tests.test_file_builder import setup_tmp_git_author_repo, setup_tricky_mock_files
 
 from constants import SCANNER_CONTEXT
 from utilities import get_dictionary_list_from_csv
@@ -30,6 +30,10 @@ class TestUtilities(unittest.TestCase):
         path = MOCK_FILES+"suites_with_codes/e004/modules/main/broken-symlink"
         result = file_cache.is_broken_symlink(path)
         self.assertTrue(result)
+        
+        setup_tricky_mock_files()
+        result = file_cache.is_broken_symlink(ABSOLUTE_SYMLINK_EXISTS_PATH)
+        self.assertFalse(result)
         
         not_broken=("folder1","link-to-folder1",
                     "file1","link-to-file1")

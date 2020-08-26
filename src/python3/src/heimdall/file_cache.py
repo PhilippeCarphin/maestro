@@ -137,7 +137,7 @@ class FileCache():
         if not self.islink(path):
             return False
 
-        link = os.path.dirname(path)+"/"+os.readlink(path)
+        link = os.path.join(os.path.dirname(path),os.readlink(path))
         return not self.exists(link)
 
     @cache

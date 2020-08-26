@@ -5,6 +5,7 @@ import os.path
 from constants import MAESTRO_ROOT
 from utilities.shell import safe_check_output_with_status
 from utilities.path import get_links_source_and_target
+from tests.path import ABSOLUTE_SYMLINK_EXISTS_PATH
 
 """
 Test the actual files of the maestro repo.
@@ -37,7 +38,8 @@ class TestRepo(unittest.TestCase):
         
         ignores=[MAESTRO_ROOT+"python_venv/",
                 MAESTRO_ROOT+"src/venv/",
-                MAESTRO_ROOT+"build/"]
+                MAESTRO_ROOT+"build/",
+                ABSOLUTE_SYMLINK_EXISTS_PATH]
         def should_ignore(path):
             for ignore in ignores:
                 if ignore in path:

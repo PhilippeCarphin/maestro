@@ -14,7 +14,7 @@ from lxml import etree
 from utilities.shell import safe_check_output_with_status
 from utilities.xml import xml_cache
 
-from tests.path import MOCK_FILES, TMP_FOLDER, TURTLE_ME_PATH
+from tests.path import MOCK_FILES, TMP_FOLDER, TURTLE_ME_PATH, ABSOLUTE_SYMLINK_EXISTS_PATH
 
 def setup_tricky_mock_files():
     """
@@ -29,6 +29,14 @@ def setup_tricky_mock_files():
         empty=folder+"/empty-file"
         with open(empty,"w") as f:
             f.write(" ")
+    
+    "create a symlink with an absolute path to a file that exists"
+    source=ABSOLUTE_SYMLINK_EXISTS_PATH
+    target=TURTLE_ME_PATH+"experiment.cfg"
+    try:
+        os.symlink(target,source)
+    except FileExistsError:
+        pass
 
 def setup_tmp_git_author_repo(always_recreate=False):
     """
