@@ -1,0 +1,4 @@
+<NODE_RESOURCES>
+    <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}"/>
+    <LOOP expression="1:2:3:bad-loop-expression" />
+</NODE_RESOURCES>
