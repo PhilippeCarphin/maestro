@@ -31,6 +31,14 @@ class TestUtilities(unittest.TestCase):
         result = file_cache.is_broken_symlink(path)
         self.assertTrue(result)
         
+        not_broken=("folder1","link-to-folder1",
+                    "file1","link-to-file1")
+        for basename in not_broken:
+            path = MOCK_FILES+"symlinks/"+basename
+            self.assertTrue(os.path.exists(path))
+            result = file_cache.is_broken_symlink(path)
+            self.assertFalse(result)
+        
     def test_get_commented_pseudo_xml_lines(self):
         path=SUITES_WITHOUT_CODES+"b007/modules/module1/task1.cfg"
         with open(path,"r") as f:
