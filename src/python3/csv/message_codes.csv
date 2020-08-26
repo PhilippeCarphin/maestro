@@ -19,7 +19,7 @@ e002	Bad XML	Failed to parse XML: ‘{xml}’
 e003	Invalid node name	Invalid node name ‘{node_name}’ in flow XML ‘{flow_path}’. Node names must be alphanumeric with dot, dash, or underscores. Must match the regex: {regex}	https://regex101.com/	
 e004	Broken symlink	The target of soft link ‘{link}’ does not exist.		
 e005	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML:\n{flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290	
-i005	Unknown nodelogger signal	The executable ‘nodelogger’ was given a signal for its ‘-s’ argument that is a known signal: {signals}. This message won’t appear in the message center. If you don’t want it to appear in the message center, use ‘infox’. \n{details}	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
+i005	Unknown nodelogger signal	The executable ‘nodelogger’ was given a signal for its ‘-s’ argument that is not a known signal: {signals}. This message won’t appear in the message center. If you don’t want it to appear in the message center, use ‘infox’. \n{details}	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
 e007	Missing required resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. This is required for the ‘{context}’ context.		
 e008	Missing curly brackets in resource xml	Variables in resource XMLs must use curly brackets like ‘${{ABC}}’ not ‘$ABC’. The file ‘{file_path}’ contains:\n{matching_string}		
 e009	Unbalanced curly brackets in resource xml	Found an uneven number of curly brackets ‘{attribute_value}’ in a resource file: ‘{file_path}’		
