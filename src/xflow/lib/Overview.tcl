@@ -9,12 +9,12 @@ package require img::png
 package require autoscroll
 
 global env
-if { ! [info exists env(SEQ_BIN) ] } {
-   puts "Environment variable SEQ_BIN must be defined!"
+if { ! [info exists env(MAESTRO_BIN) ] } {
+   puts "Environment variable MAESTRO_BIN must be defined!"
    exit
 }
 
-set lib_dir $env(SEQ_SRC)/xflow/lib
+set lib_dir $env(MAESTRO_SRC)/xflow/lib
 set auto_path [linsert $auto_path 0 $lib_dir ]
 
 proc Overview_setTkOptions {} {
@@ -2828,7 +2828,7 @@ proc Overview_init {} {
    set NODE_DISPLAY_PREF [SharedData_getMiscData NODE_DISPLAY_PREF]
    set FLOW_SCALE [SharedData_getMiscData FLOW_SCALE]
    set COLLAPSE_DISABLED_NODES [SharedData_getMiscData COLLAPSE_DISABLED_NODES]
-   SharedData_setMiscData IMAGE_DIR $env(SEQ_SRC)/xflow/etc/images
+   SharedData_setMiscData IMAGE_DIR $env(MAESTRO_SRC)/xflow/etc/images
 
    set SHOW_MSGBAR false
    set LIST_TAG    ""
@@ -4096,7 +4096,7 @@ proc out {} {
 # intercep clock commands to allow
 # testing with different time values
 global env
-source $env(SEQ_SRC)/xflow/lib/ClockWrapper.tcl
+source $env(MAESTRO_SRC)/xflow/lib/ClockWrapper.tcl
 package require ClockWrapper
 interp alias {} ::clock {} ::ClockWrapper
 ::ClockWrapper::setDelta "4 hour"

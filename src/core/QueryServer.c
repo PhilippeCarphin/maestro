@@ -249,7 +249,7 @@ int OpenConnectionToMLLServer(const char *node, const char *signal,
   char *m5sum = NULL;
   char authorization_file[256];
 
-  if ((mversion = getenv("SEQ_MAESTRO_VERSION")) == NULL) {
+  if ((mversion = getenv("MAESTRO_VERSION")) == NULL) {
     fprintf(stderr, "Could not get maestro version env variable ...\n");
     return (-1);
   }

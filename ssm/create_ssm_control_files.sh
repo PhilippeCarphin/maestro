@@ -34,4 +34,5 @@ echo "{
 		\"version\": \"${VERSION}\"
 }" > ${TARGET_FOLDER}/control.json
 
-echo "export SEQ_MAESTRO_VERSION=${VERSION}" > ${TARGET_FOLDER}/profile.sh
+echo "export SEQ_MAESTRO_VERSION=${VERSION}
+export MAESTRO_VERSION=${VERSION}" > ${TARGET_FOLDER}/profile.sh

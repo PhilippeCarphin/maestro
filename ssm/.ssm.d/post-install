@@ -109,6 +109,21 @@ mkdir -p \${TMPDIR}
 export TRUE_HOST=\${TRUE_HOST:-\$(hostname)}
 export MANPATH=\$MANPATH:${PACKAGE_HOME}/man:
 
+# Eventually many old style SEQ_* variables should be removed and replaced by these MAESTRO_* variables.
+export MAESTRO_PACKAGE_HOME=${PACKAGE_HOME}
+export MAESTRO_DOMAIN=${DOMAIN_HOME}
+export MAESTRO_SHORTCUT=\". ssmuse-sh -d ${DOMAIN_HOME}\"
+
+export MAESTRO_BIN=${BIN_FOLDER}
+export MAESTRO_TCL_BIN=${TCL_BIN_FOLDER}
+export MAESTRO_SRC=${PACKAGE_HOME}/src
+export MAESTRO_MANAGER_SRC=${PACKAGE_HOME}/src/xm
+export MAESTRO_TCL_SRC=${PACKAGE_HOME}/src/tcl
+export MAESTRO_TCL_LIB=${PACKAGE_HOME}/src/tcl/lib
+
+# This is the folder which contains the 'wrappers' folders
+export MAESTRO_WRAPPERS=${PACKAGE_HOME}/src/core
+
 " >> ${PROFILE_SCRIPT}
 
 chmod 644 ${PROFILE_SCRIPT}

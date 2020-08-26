@@ -17,8 +17,8 @@ if [ ! -d "${SEQ_EXP_HOME}" ]; then
    exit 1
 fi
 
-if [[ -n "${SEQ_BIN}" ]] ; then
-   nodeinfo=${SEQ_BIN}/nodeinfo
+if [[ -n "${MAESTRO_BIN}" ]] ; then
+   nodeinfo=${MAESTRO_BIN}/nodeinfo
 else
    nodeinfo=$(which nodeinfo)
 fi

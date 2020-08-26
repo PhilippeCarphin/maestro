@@ -4,11 +4,11 @@ package require autoscroll
 package require tooltip
 package require log
 
-global env SEQ_BIN
+global env MAESTRO_BIN
 
-lappend ::auto_path [file dirname ${SEQ_MANAGER_SRC}]
-lappend ::auto_path [file dirname ${SEQ_MANAGER_SRC}]/lib/common
-lappend ::auto_path [file dirname ${SEQ_MANAGER_SRC}]/lib/f_manager
+lappend ::auto_path [file dirname ${MAESTRO_MANAGER_SRC}]
+lappend ::auto_path [file dirname ${MAESTRO_MANAGER_SRC}]/lib/common
+lappend ::auto_path [file dirname ${MAESTRO_MANAGER_SRC}]/lib/f_manager
 
 namespace eval ::dkfFontSel {
     # Use the tile package if it is present...
@@ -631,7 +631,7 @@ namespace eval ::dkfFontSel {
     # based on the current filename.
     proc 'load_resources {filebase} {
         global env
-        set dirbase $env(SEQ_SRC)/xm/etc/config/
+        set dirbase $env(MAESTRO_SRC)/xm/etc/config/
 	set filebase [file rootname $filebase]
         set filebase [file tail $filebase]
 	option readfile ${dirbase}${filebase}.ad widgetDefault

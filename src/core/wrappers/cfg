@@ -11,11 +11,11 @@ test "{jn}"  = ""  && FatalError "job name is mandatory with maestro"
 # This line can be removed in the future if we stop using PBS, or this restriction changes in a future PBS version.
 jn=$(echo $jn | sed 's/\^/-/g')
 
-if [[ "${SEQ_BIN}" = "" ]]; then
-   test $(which maestro) && SEQ_BIN=$(dirname `which maestro`) || FatalError "SEQ_BIN not set properly, can't find path to sequencer binaries!"
+if [[ "${MAESTRO_BIN}" = "" ]]; then
+   test $(which maestro) && MAESTRO_BIN=$(dirname `which maestro`) || FatalError "MAESTRO_BIN not set properly, can't find path to sequencer binaries!"
 fi
 
-echo "Using SEQ_BIN=${SEQ_BIN}"
+echo "Using MAESTRO_BIN=${MAESTRO_BIN}"
 
 eval "$(grep SEQ_DATE ${jobcfg})"
 if [[ "${SEQ_DATE}" = "" ]]; then
@@ -24,7 +24,7 @@ fi
 
 function Sys_ErrorTrap
 {
-   printf "${SEQ_BIN}/nodelogger -n ${node} -s abort -m \"ord_soumet failed status=$1 on `hostname`\" LastErrorMessage=${LastErrorMessage}"
+   printf "${MAESTRO_BIN}/nodelogger -n ${node} -s abort -m \"ord_soumet failed status=$1 on `hostname`\" LastErrorMessage=${LastErrorMessage}"
    loopArgs=""
    # fetch the SEQ_LOOP_ARGS from the given job cfg file
    if [[ -r "${jobcfg}" ]] ; then
@@ -32,7 +32,7 @@ function Sys_ErrorTrap
       loopArgs=$(grep SEQ_LOOP_ARGS ${jobcfg} | cut -d '=' -f 2- | cut -d '"' -f 2)
    fi
 
-   ${SEQ_BIN}/nodelogger -n "${node}" ${loopArgs} -s abort -m "ord_soumet failed on `hostname`. Check submission listing. ${LastErrorMessage}"
+   ${MAESTRO_BIN}/nodelogger -n "${node}" ${loopArgs} -s abort -m "ord_soumet failed on `hostname`. Check submission listing. ${LastErrorMessage}"
    exit 1
 }
 
@@ -104,8 +104,8 @@ function Sys_AddWrapper
    config_dir=$6
    set -ex 
    Sys_AddWrapperHeader ${jobname} ${dest_file} ${listing_dir}
-   seqBegin="\${SEQ_BIN}/maestro -s begin -n \${SEQ_NODE} -f \${SEQ_XFER} \${SEQ_LOOP_ARGS}"
-   seqEnd="\${SEQ_BIN}/maestro -s end -n \${SEQ_NODE} -f \${SEQ_XFER} \${SEQ_LOOP_ARGS}"
+   seqBegin="\${MAESTRO_BIN}/maestro -s begin -n \${SEQ_NODE} -f \${SEQ_XFER} \${SEQ_LOOP_ARGS}"
+   seqEnd="\${MAESTRO_BIN}/maestro -s end -n \${SEQ_NODE} -f \${SEQ_XFER} \${SEQ_LOOP_ARGS}"
    [[ -f ${WRAPDIR}/${sys}.${trap_arch}.trap_top ]] && topWrapper=${WRAPDIR}/${sys}.${trap_arch}.trap_top || topWrapper=${altcfgdir}/wrappers/${sys}.${trap_arch}.trap_top
    [[ -f ${WRAPDIR}/${sys}.${trap_arch}.trap_bottom ]] && bottomWrapper=${WRAPDIR}/${sys}.${trap_arch}.trap_bottom || bottomWrapper=${altcfgdir}/wrappers/${sys}.${trap_arch}.trap_bottom
 
@@ -117,16 +117,16 @@ function Sys_AddWrapper
    printf "\n cd \${TMPDIR}" >> ${dest_file}
    printf "\n${seqBegin}" >> ${dest_file}
 
-   if [[ -f ${SEQ_BIN}/chaindot.py ]] ; then 
+   if [[ -f ${MAESTRO_BIN}/chaindot.py ]] ; then 
 
        #check if task setup must be run
-       printf "\n SEQ_NODE_TYPE=\$(\${SEQ_BIN}/nodeinfo -n \$SEQ_NODE -f type)" >>  ${dest_file}
+       printf "\n SEQ_NODE_TYPE=\$(\${MAESTRO_BIN}/nodeinfo -n \$SEQ_NODE -f type)" >>  ${dest_file}
        printf "\n if [[ \${SEQ_NODE_TYPE} = 'node.type=Task' ||  \${SEQ_NODE_TYPE} = 'node.type=NpassTask' ]] ; then " >>  ${dest_file}
 
        [[ "immediate" = "${immediate}" ]] && printf "\n \t export JOB_IMMEDIATE_MODE=1" >>  ${dest_file}
 
        # add the task setup and chaindot utilities
-       printf "\n \t \${SEQ_BIN}/chaindot.py -e \${SEQ_EXP_HOME} -n \${SEQ_NODE} -o \${SEQ_TMP_CFG}.complete" >>  ${dest_file}
+       printf "\n \t \${MAESTRO_BIN}/chaindot.py -e \${SEQ_EXP_HOME} -n \${SEQ_NODE} -o \${SEQ_TMP_CFG}.complete" >>  ${dest_file}
        #default workbase value
        printf "\n \t export SEQ_WORKBASE=\$(nodework -n \${SEQ_NODE} \${SEQ_LOOP_ARGS} -base | cut -d ':' -f 2)" >> ${dest_file}
 
@@ -137,7 +137,7 @@ function Sys_AddWrapper
        printf "\n fi" >> ${dest_file}
 
        #run task_setup
-       printf "\n \t . \${SEQ_BIN}/task_setup.dot -f \${SEQ_TMP_CFG}.complete --base \$(nodework -n \${SEQ_NODE} \${SEQ_LOOP_ARGS} | cut -d ':' -f 2) --clean --verbose --force" >>  ${dest_file}
+       printf "\n \t . \${MAESTRO_BIN}/task_setup.dot -f \${SEQ_TMP_CFG}.complete --base \$(nodework -n \${SEQ_NODE} \${SEQ_LOOP_ARGS} | cut -d ':' -f 2) --clean --verbose --force" >>  ${dest_file}
        printf "\n \t cd \${TASK_WORK} " >>  ${dest_file}
 
        #end of task_setup check
@@ -201,7 +201,7 @@ function Sys_SetWrapFiles
    else
       fullname=$seqname.$seqext
    fi 
-   jnPrefix=`${SEQ_BIN}/getdef resources SEQ_JOBNAME_PREFIX 2>/dev/null` || jnPrefix=""
+   jnPrefix=`${MAESTRO_BIN}/getdef resources SEQ_JOBNAME_PREFIX 2>/dev/null` || jnPrefix=""
    jnNoPrefix=${jn##$jnPrefix}
    job_with_wrapper=${job_with_wrapper_dir}${container}/${fullname}.wrapped.${SEQ_DATE}.${ppid}-${mach}-$(date +%F%T | sed 's/[-:]//g')
    job_batch=${job_batch_dir}${container}/${fullname}.${SEQ_DATE}.${ppid}-${mach}-$(date +%F%T | sed 's/[-:]//g')

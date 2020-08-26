@@ -238,7 +238,7 @@ int main(int argc, char *argv[]) {
   }
 
   /* The main program goes here.  */
-  if ((mversion = getenv("SEQ_MAESTRO_VERSION")) == NULL) {
+  if ((mversion = getenv("MAESTRO_VERSION")) == NULL) {
     fprintf(stderr, "Cannot get maestro version, please do a proper ssmuse\n");
     exit(1);
   }

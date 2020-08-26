@@ -4,17 +4,17 @@ assert_x11_forwarding_is_enabled || exit 1
 
 [[ "$1" = --help || "$1" = -h ]] && set -h
 
-[[ -z ${SEQ_MAESTRO_DOMAIN} ]] && echo "SEQ_MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 
+[[ -z ${MAESTRO_DOMAIN} ]] && echo "MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 
 
-if ! [[ -f ${SEQ_TCL_BIN}/maestro_wish8.5 ]] ; then 
-    echo "Installation incomplete. tcl/tk bin not found. SEQ_TCL_BIN='${SEQ_TCL_BIN}'" 
+if ! [[ -f ${MAESTRO_TCL_BIN}/maestro_wish8.5 ]] ; then 
+    echo "Installation incomplete. tcl/tk bin not found. MAESTRO_TCL_BIN='${MAESTRO_TCL_BIN}'" 
     exit 1 
 fi 
 
-export PATH=${PATH}:${SEQ_SRC}/tcl/bin
-export TCL_LIBRARY=${TCL_LIBRARY}:${SEQ_SRC}/tcl/lib/tcl8.5
-export TK_LIBRARY=${TK_LIBRARY}:${SEQ_SRC}/tcl/lib/tk8.5
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$SEQ_TCL_LIB
+export PATH=${PATH}:${MAESTRO_SRC}/tcl/bin
+export TCL_LIBRARY=${TCL_LIBRARY}:${MAESTRO_SRC}/tcl/lib/tcl8.5
+export TK_LIBRARY=${TK_LIBRARY}:${MAESTRO_SRC}/tcl/lib/tk8.5
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MAESTRO_TCL_LIB
 
 TCLSH=$(which maestro_wish8.5)
 
@@ -29,8 +29,8 @@ fi
        export CMCLNG=english
 #fi
 
-# -- export SEQ_BIN
-test "${SEQ_BIN}" == "" && print "\nSEQ_BIN not defined! Exiting...\n" && exit 1
+# -- export MAESTRO_BIN
+test "${MAESTRO_BIN}" == "" && print "\nMAESTRO_BIN not defined! Exiting...\n" && exit 1
 
 # create default depot if not exist
 [ -d $HOME/.suites ] || mkdir $HOME/.suites
@@ -42,7 +42,7 @@ test "${SEQ_BIN}" == "" && print "\nSEQ_BIN not defined! Exiting...\n" && exit 1
 
 if [ ! -s $HOME/.maestrorc ];then
    # -- have to create one and Populate it with minimum data
-   cp ${SEQ_MANAGER_SRC}/etc/config/maestrorc $HOME/.maestrorc
+   cp ${MAESTRO_MANAGER_SRC}/etc/config/maestrorc $HOME/.maestrorc
 fi
 
 arguments=$*
@@ -50,4 +50,4 @@ eval `cclargs $0 "[xm]" \
   -exp          ""      ""      "[experiment path]" \
   ++ $arguments`
 
-$TCLSH ${SEQ_MANAGER_SRC}/lib/x_manager/XPManager.tcl $arguments &
+$TCLSH ${MAESTRO_MANAGER_SRC}/lib/x_manager/XPManager.tcl $arguments &

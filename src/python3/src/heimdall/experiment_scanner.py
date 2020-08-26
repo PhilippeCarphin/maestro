@@ -3,7 +3,7 @@ import re
 from collections import OrderedDict
 import Levenshtein
 
-from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS, EXPERIMENT_LOG_FOLDERS, OPERATIONAL_USERNAME
+from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS, EXPERIMENT_LOG_FOLDERS, OPERATIONAL_USERNAME, OLD_SEQ_VARIABLES
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
@@ -885,6 +885,11 @@ class ExperimentScanner():
                 self.add_message(check_data["code"],
                                       matching_string=matching_string.strip(),
                                       file_path=path)
+        
+        "deprecated SEQ_ variables"
+        for old,new in OLD_SEQ_VARIABLES.items():
+            if old in content_without_comments:
+                self.add_message("b017",old=old,new=new,path=path)
                 
     def scan_declared_files(self):
         cmcconst=os.path.realpath(os.environ.get("CMCCONST",""))

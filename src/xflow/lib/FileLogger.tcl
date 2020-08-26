@@ -7,8 +7,8 @@ proc FileLogger_createThread { logfile } {
 
       global env this_id
       package require log
-      source $env(SEQ_SRC)/xflow/lib/SharedData.tcl
-      source $env(SEQ_SRC)/xflow/lib/FileLogger.tcl
+      source $env(MAESTRO_SRC)/xflow/lib/SharedData.tcl
+      source $env(MAESTRO_SRC)/xflow/lib/FileLogger.tcl
 
       if {  [SharedData_getMiscData OVERVIEW_MODE] == true } {
          puts "FileLoggerCreated set FileLoggerCreated true"

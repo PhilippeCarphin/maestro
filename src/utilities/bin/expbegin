@@ -27,10 +27,10 @@ if [[ -z $e ]]; then
    fi
 fi
 
-if [[ -n "${SEQ_BIN}" ]] ; then
-   nodeinfo=${SEQ_BIN}/nodeinfo
-   tictac=${SEQ_BIN}/tictac
-   maestro=${SEQ_BIN}/maestro
+if [[ -n "${MAESTRO_BIN}" ]] ; then
+   nodeinfo=${MAESTRO_BIN}/nodeinfo
+   tictac=${MAESTRO_BIN}/tictac
+   maestro=${MAESTRO_BIN}/maestro
 else
    nodeinfo=$(which nodeinfo)
    tictac=$(which tictac)

@@ -15,9 +15,9 @@ eval `cclargs $0 \
 
 [[ $v == 1 ]] && set -x 
 
-if [[ -n "${SEQ_BIN}" ]] ; then
-    nodeinfo=${SEQ_BIN}/nodeinfo
-    tictac=${SEQ_BIN}/tictac
+if [[ -n "${MAESTRO_BIN}" ]] ; then
+    nodeinfo=${MAESTRO_BIN}/nodeinfo
+    tictac=${MAESTRO_BIN}/tictac
 else
     nodeinfo=$(which nodeinfo)
     tictac=$(which tictac)

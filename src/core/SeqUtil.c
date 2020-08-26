@@ -1397,8 +1397,8 @@ int lock_nfs(const char *filename, const char *datestamp,
             "lock_nfs: Cannot bad SEQ_EXP_HOME received as argument ...\n");
   }
 
-  if ((mversion = getenv("SEQ_MAESTRO_VERSION")) == NULL) {
-    fprintf(stderr, "lock_nfs: Cannot get env. var SEQ_MAESTRO_VERSION\n");
+  if ((mversion = getenv("MAESTRO_VERSION")) == NULL) {
+    fprintf(stderr, "lock_nfs: Cannot get env. var MAESTRO_VERSION\n");
   }
 
   snprintf(lpath, sizeof(lpath), "%s/sequencing/sync/%s/v%s", _seq_exp_home,
@@ -1454,8 +1454,8 @@ int unlock_nfs(const char *filename, const char *datestamp,
     fprintf(stderr, "lock_nfs: bad SEQ_EXP_HOME received as argument\n");
   }
 
-  if ((mversion = getenv("SEQ_MAESTRO_VERSION")) == NULL) {
-    fprintf(stderr, "lock_nfs: Cannot get SEQ_MAESTRO_VERSION variable\n");
+  if ((mversion = getenv("MAESTRO_VERSION")) == NULL) {
+    fprintf(stderr, "lock_nfs: Cannot get MAESTRO_VERSION variable\n");
   }
 
   snprintf(lpath, sizeof(lpath), "%s/sequencing/sync/%s/v%s", _seq_exp_home,

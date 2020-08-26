@@ -4,6 +4,8 @@ Some tests require paths to be inserted into files before running. For example,
 inserting the absolute mock test folder into an XML, which changes for whoever runs
 the tests.
 
+Also, some files are not easily added to git repos, like fake '.git' folders.
+
 These functions prepare those files.
 """
 import shutil
@@ -14,10 +16,23 @@ from utilities.xml import xml_cache
 
 from tests.path import MOCK_FILES, TMP_FOLDER, TURTLE_ME_PATH
 
+def setup_tricky_mock_files():
+    """
+    Create files in 'mock_files' not easily added to a git repo, like '.git'
+    """
+    
+    folders=(MOCK_FILES+"suites_with_codes/w018/.git",
+             MOCK_FILES+"suites_with_codes/e005/.git")
+    for folder in folders:
+        if not os.path.exists(folder):
+            os.mkdir(folder)
+        empty=folder+"/empty-file"
+        with open(empty,"w") as f:
+            f.write(" ")
 
 def setup_tmp_git_author_repo(always_recreate=False):
     """
-    It
+    This git repo is used for the lead developers scan.
     """
     path = TMP_FOLDER+"git-author-repo"
     if not always_recreate and os.path.exists(path):

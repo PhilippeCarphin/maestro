@@ -1508,7 +1508,7 @@ int main(int argc, char *argv[]) {
   L2D2.clean_times = L2D2_cleantimes;
 
   /* get maestro current version and shortcut */
-  if ((L2D2.mversion = getenv("SEQ_MAESTRO_VERSION")) == NULL) {
+  if ((L2D2.mversion = getenv("MAESTRO_VERSION")) == NULL) {
     fprintf(stderr, "maestro_server(),Could not get maestro current version. "
                     "Please do a proper ssmuse \n");
     exit(1);

@@ -37,12 +37,12 @@ in
 esac
 
 filter=cfg
-if [[ "${SEQ_BIN}" = "" ]]; then
+if [[ "${MAESTRO_BIN}" = "" ]]; then
    test $(which nodeinfo) || (echo nodeinfo not found; exit 1)
    taskCfg=$(nodeinfo -n $node -f $filter)
 else
-   taskCfg=$($SEQ_BIN/nodeinfo -n $node -f $filter)
-   $SEQ_BIN/nodeinfo -n $node -f $filter
+   taskCfg=$($MAESTRO_BIN/nodeinfo -n $node -f $filter)
+   $MAESTRO_BIN/nodeinfo -n $node -f $filter
 fi
 
 eval taskCfg=${taskCfg##*=}

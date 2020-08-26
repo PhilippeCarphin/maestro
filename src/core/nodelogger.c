@@ -475,8 +475,8 @@ static int sync_nodelog_over_nfs(const char *node, const char *type,
   }
 
   /* env MAESTRO_VERSION */
-  if ((mversion = getenv("SEQ_MAESTRO_VERSION")) == NULL) {
-    fprintf(stderr, "Nodelogger::Cannot get env. var SEQ_MAESTRO_VERSION\n");
+  if ((mversion = getenv("MAESTRO_VERSION")) == NULL) {
+    fprintf(stderr, "Nodelogger::Cannot get env. var MAESTRO_VERSION\n");
   }
 
   /* env SEQ_EXP_HOME */

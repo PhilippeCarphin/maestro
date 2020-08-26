@@ -260,14 +260,14 @@ class T_Chain:
 
         if (s_switchType == 'datestamp_hour'):
             try:
-                proc = subprocess.Popen([os.getenv('SEQ_BIN') + "/tictac","-f","%H"], stdout=subprocess.PIPE)
+                proc = subprocess.Popen([os.getenv('MAESTRO_BIN') + "/tictac","-f","%H"], stdout=subprocess.PIPE)
                 out = proc.stdout.read().rstrip('\n')
             except OSError:
                 print("tictac not found. Please load your maestro ssm package.\n")
                 sys.exit(1)
         if (s_switchType == "day_of_week"):
             try:
-                proc = subprocess.Popen([os.getenv('SEQ_BIN') + "/tictac","-f","%Y%M%D"], stdout=subprocess.PIPE)
+                proc = subprocess.Popen([os.getenv('MAESTRO_BIN') + "/tictac","-f","%Y%M%D"], stdout=subprocess.PIPE)
                 yyyymmdd = proc.stdout.read().rstrip('\n')
                 y=int(str(yyyymmdd)[0:4])
                 m=int(str(yyyymmdd)[4:6])

@@ -5,7 +5,7 @@ from constants import SCANNER_CONTEXT
 from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, OPERATIONAL_HOME, PARALLEL_HOME, TMP_FOLDER, QSTAT_OUTPUT1_PATH, CMCCONST_OVERRIDE
 from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
-from tests.temp_file_builder import setup_tmp_experiment1, setup_tmp_smco501_home, setup_tmp_git_author_repo
+from tests.test_file_builder import setup_tricky_mock_files, setup_tmp_experiment1, setup_tmp_smco501_home, setup_tmp_git_author_repo
 from tests.cache import QSTAT_CMD_OUTPUT
 
 
@@ -20,6 +20,7 @@ class TestSuiteScan(unittest.TestCase):
         Also, almost all codes must have an example suite in this folder.
         """
 
+        setup_tricky_mock_files()
         setup_tmp_experiment1()
         setup_tmp_smco501_home()
         setup_tmp_git_author_repo(always_recreate=True)
@@ -60,7 +61,7 @@ class TestSuiteScan(unittest.TestCase):
                                         debug_qstat_output_override=QSTAT_CMD_OUTPUT,
                                         debug_cmcconst_override=CMCCONST_OVERRIDE)
 
-            msg = "Experiment path: '%s'" % path
+            msg = "Experiment path: '%s'\n" % path
             self.assertIn(code, scanner.codes, msg=msg)
 
     def test_suites_without_codes(self):
@@ -102,7 +103,7 @@ class TestSuiteScan(unittest.TestCase):
         Even good suites may have these codes so ignore them.
         This may also be due to real path is a test suite, or git repo stuff.
         """
-        ignore_codes = ["w001", "i002", "e016", "i004", "b009", "i006", "b014"]
+        ignore_codes = ["w001", "i002", "e016", "i004", "b009", "i006", "b014", "b017"]
 
         """
         key is experiment path

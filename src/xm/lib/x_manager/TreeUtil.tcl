@@ -225,7 +225,7 @@ proc TreeUtil::ExpandNode { tree } {
 #---------------------------------------------------
 proc TreeUtil::RunGit { frm tree } {
 
-    global SEQ_BIN
+    global MAESTRO_BIN
 
     set node  [$tree selection get]
     set ilyla [ $tree exists "$node"]
@@ -234,7 +234,7 @@ proc TreeUtil::RunGit { frm tree } {
            set data [$tree itemcget $node -data]
            if {[string compare $data "root"] != 0 } {
                    set path [XTree::getPath $tree $node]
-	           catch {[exec ${SEQ_BIN}/Exec_Gitk.ksh $path/.git &]}
+	           catch {[exec ${MAESTRO_BIN}/Exec_Gitk.ksh $path/.git &]}
 	   }
     }
 }

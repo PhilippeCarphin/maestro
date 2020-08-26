@@ -31,4 +31,8 @@ for package in $packages ; do
 done
 
 echo
-echo "Created SSM packages: '$packages'"
+echo "Created SSM packages:
+
+$packages
+
+"

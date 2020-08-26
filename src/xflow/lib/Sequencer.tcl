@@ -112,7 +112,7 @@ proc Sequencer_runCommand { exp_path datestamp out_file command run_remote {list
        default { if { $remote_host != "" && ${run_remote} > 0} {
                    lappend LISTJOB_TO_SUB "`echo \"${cmd}\" | ssh ${remote_host} ${remote_user} >> ${out_file}`"
                    if {$list_item == "true"} {
-                      catch { eval [exec -ignorestderr $env(SEQ_BIN)/submit_listcmd -l ${LISTJOB_TO_SUB} -o ${out_file} &]}
+                      catch { eval [exec -ignorestderr $env(MAESTRO_BIN)/submit_listcmd -l ${LISTJOB_TO_SUB} -o ${out_file} &]}
                       ::log::log debug "Sequencer_runCommand ksh -c $LISTJOB_TO_SUB"
                     }
                  } else {
@@ -120,7 +120,7 @@ proc Sequencer_runCommand { exp_path datestamp out_file command run_remote {list
                    set prefix "$prefix;export SEQ_EXP_HOME=${exp_path}"
                    lappend LISTJOB_TO_SUB "`${prefix}; echo \"### ${command}\" >> ${out_file}; $command >> $out_file `"
                    if {$list_item == "true"} {
-                      catch { eval [exec -ignorestderr $env(SEQ_BIN)/submit_listcmd -l ${LISTJOB_TO_SUB} -o ${out_file} &]}
+                      catch { eval [exec -ignorestderr $env(MAESTRO_BIN)/submit_listcmd -l ${LISTJOB_TO_SUB} -o ${out_file} &]}
                       ::log::log debug "Sequencer_runCommand ksh -c $LISTJOB_TO_SUB"
                    }
                  }

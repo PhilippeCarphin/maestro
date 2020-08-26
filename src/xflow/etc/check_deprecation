@@ -10,7 +10,7 @@
 # are removed and the names of the packages.
 
 #set -x
-deprecateFile=${SEQ_SRC}/xflow/etc/.deprecated
+deprecateFile=${MAESTRO_SRC}/xflow/etc/.deprecated
 if [[ -f ${deprecateFile} ]] ; then
    #echo "deprecated file found"
    beginMsg="The current maestro package is deprecated and will be removed shortly.\n\n"

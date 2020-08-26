@@ -2,8 +2,8 @@
 
 
 
-global SEQ_BIN
-global SEQ_MANAGER_SRC
+global MAESTRO_BIN
+global MAESTRO_MANAGER_SRC
 global env
 global MUSER 
 global array ExperimentInode
@@ -13,15 +13,15 @@ global List_Exps
 set List_Exps {}
 set ListAllExperiments {}
 
-set SEQ_BIN $env(SEQ_BIN)
-set SEQ_MANAGER_SRC $env(SEQ_MANAGER_SRC)
+set MAESTRO_BIN $env(MAESTRO_BIN)
+set MAESTRO_MANAGER_SRC $env(MAESTRO_MANAGER_SRC)
 
 # -- get user
 set MUSER [exec id -nu]
 
 namespace eval XPManager {
 
-    global SEQ_BIN SEQ_MANAGER_SRC
+    global MAESTRO_BIN MAESTRO_MANAGER_SRC
 
     variable _wfont
 
@@ -47,38 +47,38 @@ namespace eval XPManager {
 
     # -- buttons icones
     foreach img {bug XpSel FoldXp Tool Refresh Ok Cancel Close Add Stop Remove Save Next Previous Apply Help Quit Notify Up font} {
-               eval variable img_$img [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/$img.gif]
+               eval variable img_$img [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/$img.gif]
     }
 
     # -- Audit
-    variable img_clsdFolderImg     [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/clsdFolder.gif]
-    variable img_openFolderImg     [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/openFolder.gif]
-    variable img_fileImg           [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/file.gif]
+    variable img_clsdFolderImg     [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/clsdFolder.gif]
+    variable img_openFolderImg     [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/openFolder.gif]
+    variable img_fileImg           [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/file.gif]
 
     # -- Palacard
-    variable img_placard [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/placard.gif]
+    variable img_placard [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/placard.gif]
     
     # -- Exp Icons
-    variable img_ExpIcon           [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/xp.gif]
-    variable img_ExpNoteIcon       [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/xp.note.gif]
-    variable img_ExpSunny          [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/Sunny.gif]
-    variable img_ExpThunder        [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/Thunder.gif]
-    variable img_ExpThunderstorms  [image create photo -file ${SEQ_MANAGER_SRC}/etc/images/Thunderstorms.gif]
+    variable img_ExpIcon           [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/xp.gif]
+    variable img_ExpNoteIcon       [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/xp.note.gif]
+    variable img_ExpSunny          [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/Sunny.gif]
+    variable img_ExpThunder        [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/Thunder.gif]
+    variable img_ExpThunderstorms  [image create photo -file ${MAESTRO_MANAGER_SRC}/etc/images/Thunderstorms.gif]
 
     foreach script {Dialogs.tcl XTree.tcl TreeUtil.tcl NewExp.tcl Audit.tcl Import.tcl XpBrowser.tcl SubmitBug.tcl About.tcl} {
-	namespace inscope :: source ${SEQ_MANAGER_SRC}/lib/x_manager/$script
+	namespace inscope :: source ${MAESTRO_MANAGER_SRC}/lib/x_manager/$script
     }
 
     foreach script { Preferences.tcl XpOptions.tcl dkffont.tcl } {
-	namespace inscope :: source ${SEQ_MANAGER_SRC}/lib/common/$script
+	namespace inscope :: source ${MAESTRO_MANAGER_SRC}/lib/common/$script
     }
    
     # this is for the exp's configs *.cfg files
-     namespace inscope :: source ${SEQ_MANAGER_SRC}/lib/f_manager/ExpModTreeView.tcl
+     namespace inscope :: source ${MAESTRO_MANAGER_SRC}/lib/f_manager/ExpModTreeView.tcl
 }
 
 proc XPManager::create { {startup_exp ""} } {
-    global SEQ_BIN SEQ_MANAGER_SRC MUSER startupExp
+    global MAESTRO_BIN MAESTRO_MANAGER_SRC MUSER startupExp
     
     variable _wfont
     variable notebook
@@ -103,9 +103,9 @@ proc XPManager::create { {startup_exp ""} } {
    
 
    if { [info exists ::env(CMCLNG)] == 0 || [string compare "$::env(CMCLNG)" "english"] == 0 } {
-              source ${SEQ_MANAGER_SRC}/lib/x_manager/menu_english.tcl
+              source ${MAESTRO_MANAGER_SRC}/lib/x_manager/menu_english.tcl
    } else {
-              source ${SEQ_MANAGER_SRC}/lib/x_manager/menu_francais.tcl
+              source ${MAESTRO_MANAGER_SRC}/lib/x_manager/menu_francais.tcl
    }
 
    set prgtext   "Creating MainFrame..."
@@ -188,7 +188,7 @@ proc XPManager::update_font { newfont } {
 
 proc XPManager::_create_intro { } {
     
-    global SEQ_BIN SEQ_MANAGER_SRC
+    global MAESTRO_BIN MAESTRO_MANAGER_SRC
 
     set top [toplevel .intro -relief raised -borderwidth 2]
 
@@ -197,7 +197,7 @@ proc XPManager::_create_intro { } {
 
 
     set ximg  [label $top.x -image $XPManager::img_placard -background white]
-    set bwimg [label $ximg.bw -bitmap @${SEQ_MANAGER_SRC}/etc/images/xm.xbm -foreground grey90 -background white]
+    set bwimg [label $ximg.bw -bitmap @${MAESTRO_MANAGER_SRC}/etc/images/xm.xbm -foreground grey90 -background white]
     
     
     set frame [frame $ximg.f -background white]
@@ -258,11 +258,11 @@ proc XPManager::parseCmdOptions {} {
 
 proc XPManager::main {} {
    
-    global SEQ_BIN SEQ_MANAGER_SRC
+    global MAESTRO_BIN MAESTRO_MANAGER_SRC
 
-    lappend ::auto_path ${SEQ_MANAGER_SRC}
-    lappend ::auto_path ${SEQ_MANAGER_SRC}/lib/common
-    lappend ::auto_path ${SEQ_MANAGER_SRC}/lib/f_manager
+    lappend ::auto_path ${MAESTRO_MANAGER_SRC}
+    lappend ::auto_path ${MAESTRO_MANAGER_SRC}/lib/common
+    lappend ::auto_path ${MAESTRO_MANAGER_SRC}/lib/f_manager
 
     namespace inscope :: package require BWidget 1.9
 
@@ -356,7 +356,7 @@ proc XPManager::ListExperiments {} {
 
 proc XPManager::ParseOpParExpDepot {} {
            
-           global SEQ_BIN SEQ_MANAGER_SRC
+           global MAESTRO_BIN MAESTRO_MANAGER_SRC
 
            set prefDparser [interp create -safe]
            $prefDparser alias ExpOpsRepository    XPManager::set_prefs_cmd_ExpOpsRepository
@@ -365,7 +365,7 @@ proc XPManager::ParseOpParExpDepot {} {
            $prefDparser alias DefaultModDepot XPManager::set_prefs_cmd_DefaultModDepot
 
            set cmd {
-                   set fid [open [file join ${SEQ_MANAGER_SRC}/etc/config/ xm.cfg ] r]
+                   set fid [open [file join ${MAESTRO_MANAGER_SRC}/etc/config/ xm.cfg ] r]
                    set script [read $fid]
                    close $fid
                    $prefDparser eval $script
