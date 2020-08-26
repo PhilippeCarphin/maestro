@@ -124,14 +124,15 @@ def get_loop_composite_data_from_expression(expression, logger=None):
 
     chunks = expression.split(",")
     data = []
+    
     for chunk in chunks:
         numbers = chunk.split(":")
 
         "numbers must be 4 integers"
         for i, number in enumerate(numbers[:]):
-            if number.isdigit():
+            try:
                 numbers[i] = int(number)
-            else:
+            except ValueError:
                 numbers = []
                 break
         if len(numbers) != 4:
