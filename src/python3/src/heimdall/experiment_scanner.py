@@ -916,9 +916,10 @@ class ExperimentScanner():
                 self.add_message("b017",old=old,new=new,path=path)
                 
     def scan_declared_files(self):
-        cmcconst=os.path.realpath(os.environ.get("CMCCONST",""))
+        cmcconst=os.environ.get("CMCCONST","")
         if not cmcconst:
             return
+        cmcconst=os.path.realpath(cmcconst)
         
         for path in self.declared_files:
             realpath=file_cache.realpath(path)
