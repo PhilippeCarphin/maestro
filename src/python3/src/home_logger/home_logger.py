@@ -35,11 +35,12 @@ class LogConfigTui(LogConfig):
 "logging configs when running heimdall"
 class LogConfigHeimdall(LogConfig):
     LOG_FOLDER_COMPONENT="heimdall"
+    WRITE_TO_STDOUT=False
 
 "logging configs when running search utility"
 class LogConfigSearch(LogConfig):
     LOG_FOLDER_COMPONENT="search"
-    LEVEL=logging.CRITICAL+100
+    WRITE_TO_STDOUT=False
 
 def get_log_config_from_environment():    
     status=os.environ.get("MAESTRO_PYTHON3_LOGGING_CONFIG","").lower()
