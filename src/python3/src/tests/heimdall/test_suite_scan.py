@@ -42,11 +42,14 @@ class TestSuiteScan(unittest.TestCase):
 
             "override the context, if necessary"
             context = None
+            debug_op_username_override = None
             if code in ["e007", "e010", "w007", "w011", "w012", "e014", 
                         "e016", "w015", "w022", "w023"]:
                 context = SCANNER_CONTEXT.OPERATIONAL
             if code in ["i001"]:
                 context = SCANNER_CONTEXT.DEVELOPMENT
+            if code in ["w023"]:
+                debug_op_username_override=os.environ["USER"]
 
             "override op/par homes, if necessary"
             parallel_home = PARALLEL_HOME
@@ -59,7 +62,8 @@ class TestSuiteScan(unittest.TestCase):
                                         parallel_home=parallel_home,
                                         critical_error_is_exception=False,
                                         debug_qstat_output_override=QSTAT_CMD_OUTPUT,
-                                        debug_cmcconst_override=CMCCONST_OVERRIDE)
+                                        debug_cmcconst_override=CMCCONST_OVERRIDE,
+                                        debug_op_username_override=debug_op_username_override)
 
             msg = "Experiment path: '%s'\n" % path
             self.assertIn(code, scanner.codes, msg=msg)
