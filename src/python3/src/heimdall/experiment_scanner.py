@@ -1160,11 +1160,12 @@ class ExperimentScanner():
         support_status = self.maestro_experiment.get_support_status()
         url_regex = re.compile(r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)")
 
-        "multiple support info elements"
+        "multiple support info elements in the same parent element"
         root = file_cache.etree_parse(xml_path)
         if root is not None:
             support_infos = root.xpath("//SupportInfo")
-            if len(support_infos) > 1:
+            parents=[e.getparent() for e in support_infos]
+            if len(parents) != len(set(parents)):
                 self.add_message("w008", xml_path=xml_path)
 
         if support_status:
