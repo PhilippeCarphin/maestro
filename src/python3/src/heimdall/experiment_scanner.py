@@ -299,6 +299,11 @@ class ExperimentScanner():
             return
         
         for path in self.files:
+            
+            "The exp-catchup-icon in xflow requires that this file can be modified by the user"
+            if path==self.path+"resources/catchup.xml":
+                continue
+            
             if file_cache.can_user_write_to_path(self.operational_username,path):
                 self.add_message("w023",
                                  user=self.operational_username,
