@@ -391,7 +391,7 @@ class ExperimentScanner():
             self.add_message("i003", swaps=filenames)
 
         "Random files should not be adjacent to any maestro files like tsk, cfg, resource xml"
-        maestro_files = self.task_files+self.config_files+self.resource_files+self.flow_files+self.internal_var_files
+        maestro_files = self.task_files+self.config_files+self.resource_files+self.flow_files+self.internal_var_files+self.readme_files
         maestro_files = sorted(list(set(maestro_files)))
         explored = set()
 
@@ -1276,13 +1276,22 @@ class ExperimentScanner():
                     if path.startswith(rpath) and path.endswith(".xml"):
                         resource_files.add(path)
         
-        "internal.var files"
+        """
+        Other files at the root of a module folder.
+        Like README, internal.var
+        """
         internal_var_files=[]
+        readme_files=[]
         module_folder=self.path+"modules/"
         for subfolder in file_cache.listdir(module_folder):
             path=module_folder+subfolder+"/internal.var"
             if file_cache.exists(path):
                 internal_var_files.append(path)
+            
+            for basename in file_cache.listdir(module_folder+subfolder):
+                path=module_folder+subfolder+"/"+basename
+                if basename.lower().startswith("readme") and file_cache.isfile(path):                    
+                    readme_files.append(path)
                 
         "index tsk cfg xml"
         task_files = []
@@ -1324,6 +1333,9 @@ class ExperimentScanner():
         
         "all internal.var files"
         self.internal_var_files=sls(internal_var_files)
+        
+        "all readme files"
+        self.readme_files=sls(readme_files)
 
         "all resource xml files"
         self.resource_files = sls(resource_files)
