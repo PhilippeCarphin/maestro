@@ -228,12 +228,15 @@ class ExperimentScanner():
                              readme=path,
                              suggested=suggested)
             
-    def scan_log_folder_permissions(self):        
-        "log folders with inconsistent user/group/permissions"
+    def scan_log_folder_permissions(self):
+        
+        "lookup the user-group-permission (ugp) for the log paths"
         ugp_to_paths={}
+        path_to_ugp={}
         for folder in EXPERIMENT_LOG_FOLDERS:
             path=self.path+folder
             ugp=get_ugp_string(path)
+            path_to_ugp[path]=ugp
             
             if not ugp:
                 continue
@@ -242,15 +245,21 @@ class ExperimentScanner():
                 ugp_to_paths[ugp]=[]
             ugp_to_paths[ugp].append(path)
             
-        if len(ugp_to_paths)==1:
-            return
+        "log folders with inconsistent user/group/permissions"
+        if len(ugp_to_paths)>1:
+            for ugp,paths in ugp_to_paths.items():
+                for path in paths:
+                    self.add_message("e020",
+                                     path=path,
+                                     ugp=ugp,
+                                     folders=", ".join(EXPERIMENT_LOG_FOLDERS))
         
-        for ugp,paths in ugp_to_paths.items():
-            for path in paths:
-                self.add_message("e020",
-                                 path=path,
-                                 ugp=ugp,
-                                 folders=", ".join(EXPERIMENT_LOG_FOLDERS))
+        "op/preop/par log folders should be 775 or 755"
+        if self.is_context_monitored():
+            for path,ugp in path_to_ugp.items():
+                expected="775"
+                if expected not in ugp and "755" not in ugp:
+                    self.add_message("e024",folder=path,expected=expected,ugp=ugp)                    
     
     def scan_file_permissions(self):        
         "experiment files with inconsistent user/group/permissions"

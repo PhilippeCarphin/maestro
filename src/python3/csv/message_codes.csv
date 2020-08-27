@@ -79,3 +79,4 @@ e023	Bad loop expression	The file ‘{path}’ has a bad loop expression ‘{loo
 b020	Literal path instead of CMCPROD	Literal paths to ‘hall3’ or ‘hall4’ were found. Consider using the CMCPROD variable instead so your project follows switchover configurations. The file ‘{file_path}’ contains:\n{matching_string}		
 w024	Parallel user in operational context	The experiment seems to have the ‘{context}’ context but the file ‘{file_path}’ references the parallel systems with the string ‘{par_string}’.		
 b021	Absolute path in config instead of getdef	The configuration file ‘{config}’ should use getdef instead of absolute hard coded paths. For example: ABC=$(getdef resources ABC)\nAbsolute paths:\n{values}	https://wiki.cmc.ec.gc.ca/wiki/User:Lims/projects/tech_transfer_improvements#Making_variables_configurable_from_high_level	
+e024	Bad permissions on operational log folders	The log folder ‘{folder}’ should have ‘{expected}’ permissions but instead it has ‘{ugp}’.		
