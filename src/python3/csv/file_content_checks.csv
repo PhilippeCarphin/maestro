@@ -10,3 +10,4 @@ e008	resource_xml	yes		[a-zA-Z]+=['"]\$[a-zA-Z_]+.['"]
 b011	tsk,cfg	yes		\n[^#].+(\${?CMCCONST}?\/[^\/\n ]+)(?!.*\/)
 e018	flow_xml			<SUBMITS[^>]+\sname\b[^>]*>
 e019	flow_xml			<(?!!--)(?!SUBMITS)[^>]+\ssub_name\b[^>]*>
+b020	tsk,cfg	yes		/space/hall[34]/
