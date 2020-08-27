@@ -8,6 +8,18 @@ VIM_SWAP_REGEX = re.compile(r"^\..+?\.sw[n-p]$")
 EMACS_SWAP_REGEX1 = re.compile(r"^\#.+\#$")
 EMACS_SWAP_REGEX2 = re.compile(r"^\.\#.+$")
 
+"""
+Matches Linux paths that are named reasonbly, without characters like "+"
+"""
+r="\/?([a-zA-Z0-9-_.]\/?)+"
+DECENT_LINUX_PATH_REGEX_WITH_START_END = re.compile("^"+r+"$")
+DECENT_LINUX_PATH_REGEX = re.compile(r)
+
+"""
+Matches reasonably named Linux paths with variables like:
+    /home/$ABC/${CAT}/123
+"""    
+DECENT_LINUX_PATH_REGEX_WITH_DOLLAR = re.compile("^\/?(\$?{?[a-zA-Z0-9-_.]}?\/?)+$")
 
 def get_ancestor_folders(folder, experiment_path):
     """

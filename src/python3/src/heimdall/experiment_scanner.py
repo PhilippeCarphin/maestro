@@ -13,7 +13,7 @@ from utilities.maestro import is_empty_module, get_weird_assignments_from_config
 from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count
 from utilities.heimdall.context import guess_scanner_context_from_path
-from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path
+from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path, DECENT_LINUX_PATH_REGEX_WITH_START_END, DECENT_LINUX_PATH_REGEX, DECENT_LINUX_PATH_REGEX_WITH_DOLLAR
 from utilities.heimdall.git import scan_git_authors
 from utilities.generic import BASH_VARIABLE_DECLARE_REGEX
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip, remove_chars_in_text
@@ -25,13 +25,6 @@ from utilities.shell import safe_check_output_with_status
 Matches codes like 'e001' and 'c010'
 """
 CODE_REGEX = re.compile("[cewib][0-9]{3}")
-
-"""
-Matches Linux paths that are named reasonbly, without characters like "+"
-"""
-r="\/?([a-zA-Z0-9-_.]\/?)+"
-DECENT_LINUX_PATH_REGEX_WITH_START_END = re.compile("^"+r+"$")
-DECENT_LINUX_PATH_REGEX = re.compile(r)
 
 class ExperimentScanner():
     def __init__(self,
@@ -694,12 +687,21 @@ class ExperimentScanner():
                                   context=self.context,
                                   cfg_path=path,
                                   unexpected=msg)
-
+            
+        "commented code-like lines in pseudo xml"
         commented_lines = get_commented_pseudo_xml_lines(content)
         if commented_lines:
             self.add_message("b007",
                                   file_path=path,
                                   count=len(commented_lines))
+            
+        "hard coded paths instead of getdef"
+        values=[]
+        for key,value in key_values.items():
+            if value.startswith("/") and DECENT_LINUX_PATH_REGEX_WITH_DOLLAR.match(value):
+                values.append(value)
+        if values:
+            self.add_message("b021",config=path,values="\n".join(values))
             
     def scan_resource_definitions(self):
         for path in self.maestro_experiment.resource_definition_paths:
