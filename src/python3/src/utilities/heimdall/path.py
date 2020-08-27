@@ -29,6 +29,32 @@ def get_ancestor_folders(folder, experiment_path):
     return sorted(list(set(folders)))
 
 
+def is_parallel_path(path):
+    """
+    Checks if this path string seems to be related to parallel systems (as opposed to operational).
+    If so, returns the string segment used to diagnose this.
+    If not, returns False.
+    For example: 'smco501' or 'hubs/ade/par'
+    """
+    
+    substring="/smco501/"
+    if substring in path:
+        return substring
+    
+    folders=["/hubs/suites/par",
+             "/hubs/gridpt/par"
+             "/hubs/scribe/par"
+             "/hubs/banco/par"
+             "/products/products_dbase/par"
+             "/hubs/verif/par"
+             "/hubs/umos/par"
+             "/hubs/ade/par"]
+    for folder in folders:
+        if folder in path:
+            return folder
+        
+    return False
+
 def is_editor_swapfile(path):
     """
     Returns true if this path appears to be a swapfile for vim, emacs, etc.

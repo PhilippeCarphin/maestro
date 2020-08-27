@@ -13,7 +13,7 @@ from utilities.maestro import is_empty_module, get_weird_assignments_from_config
 from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count
 from utilities.heimdall.context import guess_scanner_context_from_path
-from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile
+from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path
 from utilities.heimdall.git import scan_git_authors
 from utilities.generic import BASH_VARIABLE_DECLARE_REGEX
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip, remove_chars_in_text
@@ -29,8 +29,9 @@ CODE_REGEX = re.compile("[cewib][0-9]{3}")
 """
 Matches Linux paths that are named reasonbly, without characters like "+"
 """
-DECENT_LINUX_PATH_REGEX = re.compile("^\/?([a-zA-Z0-9-_.]\/?)+$")
-
+r="\/?([a-zA-Z0-9-_.]\/?)+"
+DECENT_LINUX_PATH_REGEX_WITH_START_END = re.compile("^"+r+"$")
+DECENT_LINUX_PATH_REGEX = re.compile(r)
 
 class ExperimentScanner():
     def __init__(self,
@@ -662,12 +663,12 @@ class ExperimentScanner():
 
                 name=replace_bash_variables(key)
                 
-                if not DECENT_LINUX_PATH_REGEX.match(name):
+                if not DECENT_LINUX_PATH_REGEX_WITH_START_END.match(name):
                     dollar_msg="(using ${} is not what caused this error)" if "$" in key else ""
                     self.add_message("b010",
                                      bad=key,
                                      config_path=path,
-                                     regex=DECENT_LINUX_PATH_REGEX.pattern,
+                                     regex=DECENT_LINUX_PATH_REGEX_WITH_START_END.pattern,
                                      dollar_msg=dollar_msg)
 
         "variables that should only be in experiment.cfg"
@@ -877,9 +878,31 @@ class ExperimentScanner():
         self.parse_file_content_checks_csv()
 
         for path in self.files:
+            self.scan_file_content_using_csv(path)
             self.scan_file_content(path)
+            
+    def scan_file_content(self,path):
 
-    def scan_file_content(self, path):
+        content_without_comments = file_cache.open_without_comments(path)
+        
+        "deprecated SEQ_ variables"
+        for old,new in OLD_SEQ_VARIABLES.items():
+            if old in content_without_comments:
+                self.add_message("b017",old=old,new=new,path=path)
+        
+        "parallel content in operational"
+        should_scan_paths=path in self.config_files or path in self.task_files or path in self.resource_files
+        if should_scan_paths and self.is_context_operational():
+            for match in DECENT_LINUX_PATH_REGEX.finditer(content_without_comments):
+                path_string=match.group(0)
+                par_string=is_parallel_path(path_string)
+                if par_string:
+                    self.add_message("w024",
+                                     context=self.context,
+                                     file_path=path,
+                                     par_string=par_string)
+
+    def scan_file_content_using_csv(self, path):
         """
         Use the file content CSV to scan for substrings and regexes in file content.
 
@@ -930,11 +953,6 @@ class ExperimentScanner():
                 self.add_message(check_data["code"],
                                       matching_string=matching_string.strip(),
                                       file_path=path)
-        
-        "deprecated SEQ_ variables"
-        for old,new in OLD_SEQ_VARIABLES.items():
-            if old in content_without_comments:
-                self.add_message("b017",old=old,new=new,path=path)
                 
     def scan_declared_files(self):
         cmcconst=os.environ.get("CMCCONST","")
