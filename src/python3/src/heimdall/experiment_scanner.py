@@ -9,7 +9,7 @@ from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
 from home_logger import logger
-from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text, get_commented_pseudo_xml_lines
+from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text, get_commented_pseudo_xml_lines, get_loop_indexes_from_expression
 from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count
 from utilities.heimdall.context import guess_scanner_context_from_path
@@ -106,7 +106,8 @@ class ExperimentScanner():
         self.scan_broken_symlinks()
         self.scan_config_files()
         self.scan_constant_redefines()
-        self.scan_containers()
+        self.scan_container_elements()
+        self.scan_container_xml_files()
         self.scan_declared_files()
         self.scan_deprecated_files_folders()
         self.scan_exp_options()
@@ -748,7 +749,7 @@ class ExperimentScanner():
                 self.add_message("w016",
                                       resource_path=path,
                                       catchup=catchup)
-
+        
         "resources.def variable name typo"
         standard_resource_defines = ["FRONTEND",
                                      "BACKEND",
@@ -1000,12 +1001,34 @@ class ExperimentScanner():
                              details="\n".join(msg_lines),
                              signals=str(NODELOGGER_SIGNALS))
             
-    def scan_containers(self):
-        for container in self.maestro_experiment.container_elements:
-            self.scan_container(container)
+    def scan_container_xml_files(self):
+        for path in self.container_xml_files:
+            self.scan_container_xml_file(path)
     
-    def scan_container(self,container):
+    def scan_container_xml_file(self,path):
+        root=file_cache.etree_parse(path)
+        
+        "lxml is silly and prints a warning to stdout unless the check is done this way"
+        if not (root is not None):
+            return
+        
+        loop_elements=root.xpath("//LOOP")
+        for loop_element in loop_elements:
+            expression=loop_element.attrib.get("expression")
+            if not expression:
+                continue
+            result=get_loop_indexes_from_expression(expression)
+            if not result:
+                self.add_message("e023",path=path,loop_expression=expression)
+    
+    def scan_container_elements(self):
+        for container in self.maestro_experiment.container_elements:
+            self.scan_container_element(container)
+    
+    def scan_container_element(self,container):
         container_name=container.attrib.get("name",container.tag)
+        
+        "loop expressions"
         
         "find children in containers with duplicate name/subname"
         names=[]
@@ -1323,6 +1346,7 @@ class ExperimentScanner():
         task_files = []
         config_files = []
         xml_files = []
+        container_xml_files = []
         for path in paths:
             if path.endswith(".tsk"):
                 task_files.append(path)
@@ -1330,6 +1354,8 @@ class ExperimentScanner():
                 config_files.append(path)
             elif path.endswith(".xml"):
                 xml_files.append(path)
+                if path.endswith("container.xml"):
+                    container_xml_files.append(path)
         
         """
         hub files
@@ -1350,6 +1376,9 @@ class ExperimentScanner():
 
         "all cfg files"
         self.config_files = sls(config_files)
+        
+        "all container.xml files"
+        self.container_xml_files = sls(container_xml_files)
         
         "all, or many hub files to some depth"
         self.hub_files = sls(hub_files)
