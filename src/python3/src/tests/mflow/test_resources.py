@@ -92,7 +92,7 @@ class TestMaestroResources(unittest.TestCase):
     def test_resource_variable_insert(self):
         """
         Sometimes we see multiple inserts like:
-            machine="${ABC}x${ABC}"
+            machine="${ABC}x$ABC"
         """
 
         me = STRANGE_RESOURCES_ME
