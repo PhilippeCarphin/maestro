@@ -13,7 +13,7 @@ from utilities.maestro import is_empty_module, get_weird_assignments_from_config
 from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count
 from utilities.heimdall.context import guess_scanner_context_from_path
-from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path, DECENT_LINUX_PATH_REGEX_WITH_START_END, DECENT_LINUX_PATH_REGEX, DECENT_LINUX_PATH_REGEX_WITH_DOLLAR
+from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path, DECENT_LINUX_PATH_REGEX_WITH_START_END, DECENT_LINUX_PATH_REGEX, DECENT_LINUX_PATH_REGEX_WITH_DOLLAR, is_non_operational_home
 from utilities.heimdall.git import scan_git_authors
 from utilities.generic import BASH_VARIABLE_DECLARE_REGEX
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip, remove_chars_in_text
@@ -705,13 +705,22 @@ class ExperimentScanner():
                                   count=len(commented_lines))
             
         "hard coded paths instead of getdef"
-        values=[]
+        absolute_paths=[]
         for key,value in key_values.items():
             if value.startswith("/") and DECENT_LINUX_PATH_REGEX_WITH_DOLLAR.match(value):
-                values.append(value)
-        if values:
-            self.add_message("b021",config=path,values="\n".join(values))
+                absolute_paths.append(value)
+        if absolute_paths:
+            self.add_message("b021",config=path,values="\n".join(absolute_paths))
             
+        "absolute paths to developer paths/homes"
+        non_op_homes=[a for a in absolute_paths if is_non_operational_home(a)]
+        if non_op_homes:
+            bad="\n".join(non_op_homes)
+            if self.is_context_operational():
+                self.add_message("e025",context=self.context,path=path,bad=bad)
+            else:
+                self.add_message("i007",path=path,bad=bad)
+        
     def scan_resource_definitions(self):
         for path in self.maestro_experiment.resource_definition_paths:
             self.scan_resource_definition(path)

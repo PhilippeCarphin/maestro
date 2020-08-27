@@ -40,6 +40,23 @@ def get_ancestor_folders(folder, experiment_path):
         parent = os.path.dirname(parent)
     return sorted(list(set(folders)))
 
+def is_non_operational_home(path):
+    """
+    Returns true if this path is a non operational home, like a developer:
+        /home/abc123/.suites/zdps
+    These paths should not be referenced in operational projects.
+    """
+    
+    if not path.startswith("/home/") and not path.startswith("/fs/home"):
+        return False    
+    
+    op_users=["smco500","smco501","smco502"]
+    op_folders=["/home/"+user for user in op_users]
+    op_folders+=[os.path.realpath(folder) for folder in op_folders]
+    for folder in op_folders:
+        if path.startswith(folder):
+            return False
+    return True
 
 def is_parallel_path(path):
     """
