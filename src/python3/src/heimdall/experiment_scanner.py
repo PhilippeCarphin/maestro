@@ -2,6 +2,7 @@ import os.path
 import re
 from collections import OrderedDict
 import Levenshtein
+import json
 
 from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS, EXPERIMENT_LOG_FOLDERS, REQUIRED_LOG_FOLDERS, OPERATIONAL_USERNAME, OLD_SEQ_VARIABLES
 
@@ -128,6 +129,23 @@ class ExperimentScanner():
         self.scan_xmls()
 
         self.sort_messages()
+        
+        self.write_codes_log()
+        
+    def write_codes_log(self):
+        """
+        Write a summary of the scan codes found to the home log.
+        This permits future audits of user homes to understand code frequencies.
+        """
+        
+        code_count = {code: 0 for code in self.codes}
+        for message in self.messages:
+            code_count[message["code"]]+=1
+        total=sum(code_count.values())
+        
+        line="Performed a scan on '%s' and found %s message codes: "%(self.path,total)
+        line+=json.dumps(code_count,sort_keys=1)
+        logger.info(line)
 
     def sort_messages(self):
 
