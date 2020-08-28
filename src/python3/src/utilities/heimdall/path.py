@@ -40,6 +40,53 @@ def get_ancestor_folders(folder, experiment_path):
         parent = os.path.dirname(parent)
     return sorted(list(set(folders)))
 
+def get_latest_ssm_path_from_path(path,include_betas=False):
+    """
+    Given a path like:
+        /fs/ssm/eccc/cmo/isst/maestro/1.5.8
+    returns the latest version at that path with a similar version format.
+    """
+    
+    ssm_path=os.path.dirname(path)
+    version_folders=[]
+    for version_folder in os.listdir(ssm_path):
+        etc_dir=ssm_path+"/"+version_folder+"/etc"
+        is_ssm=os.path.isdir(etc_dir)
+        if is_ssm:
+            version_folders.append(version_folder)
+    
+    reference_version=os.path.basename(path)
+    return get_latest_ssm_version(reference_version,version_folders,include_betas=include_betas)
+
+def get_latest_ssm_version(reference_version,versions,include_betas=False):
+    """
+    Return the latest version with similar syntax to the reference_version
+    Given '1.3.1' and:
+        1.5.3
+        1.6.8
+        1.6.9-beta
+        1.7
+    returns '1.6.8'
+    or '1.6.9-beta' if include_betas
+    """
+    
+    r=re.compile("[0-9]+")    
+    def count_numeric_sections(text):
+        "count the number of separate numeric sections in this text"
+        return len(r.findall(text.strip()))
+    
+    section_count=count_numeric_sections(reference_version)
+    latest=reference_version
+    for version in sorted(versions):
+        
+        if not include_betas and "beta" in version:
+            continue
+        
+        if count_numeric_sections(version)==section_count:
+            latest=version
+            
+    return latest
+
 def is_non_operational_home(path):
     """
     Returns true if this path is a non operational home, like a developer:

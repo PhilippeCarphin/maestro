@@ -18,6 +18,36 @@ def get_nodelogger_signals_from_task_path(path):
     data = file_cache.open(path)
     return get_nodelogger_signals_from_task_text(data)
 
+def get_ssm_domains_from_string(text):
+    """
+    Given strings like:
+        . ssmuse-sh -d abc -d def
+        . ssmuse-sh -x abc
+        . r.load.dot abc def
+    returns ["abc","def"]
+    """
+    text=text.strip()
+    domains=[]
+    
+    if text.startswith("#"):
+        return []
+    
+    if text.startswith(". ssmuse"):
+        last_stub_was_option=False
+        for stub in re.split("[ ]+",text):
+            if last_stub_was_option:
+                last_stub_was_option=False
+                domains.append(stub)
+            if stub in ("-d","+d","-p","+p","-x"):
+                last_stub_was_option=True
+    elif text.startswith(". r.load"):
+        chunks=re.split("[ ]+",text)
+        for i,chunk in enumerate(chunks[:]):
+            if chunk.startswith("r.load") or chunk.startswith("r.shortcut"):
+                domains=chunks[i+1:]
+                break
+    
+    return domains
 
 def get_constant_definition_count(text):
     """

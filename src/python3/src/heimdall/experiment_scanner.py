@@ -11,9 +11,9 @@ from heimdall.message_manager import hmm
 from home_logger import logger
 from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text, get_commented_pseudo_xml_lines, get_loop_indexes_from_expression
 from utilities.heimdall.critical_errors import find_critical_errors
-from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count, get_ssm_domains_from_string
 from utilities.heimdall.context import guess_scanner_context_from_path
-from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path, DECENT_LINUX_PATH_REGEX_WITH_START_END, DECENT_LINUX_PATH_REGEX, DECENT_LINUX_PATH_REGEX_WITH_DOLLAR, is_non_operational_home
+from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path, DECENT_LINUX_PATH_REGEX_WITH_START_END, DECENT_LINUX_PATH_REGEX, DECENT_LINUX_PATH_REGEX_WITH_DOLLAR, is_non_operational_home, get_latest_ssm_path_from_path
 from utilities.heimdall.git import scan_git_authors
 from utilities.generic import BASH_VARIABLE_DECLARE_REGEX
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip, remove_chars_in_text
@@ -124,6 +124,7 @@ class ExperimentScanner():
         self.scan_resource_files()
         self.scan_resource_queues()
         self.scan_root_links()
+        self.scan_ssm_uses()
         self.scan_xmls()
 
         self.sort_messages()
@@ -970,7 +971,28 @@ class ExperimentScanner():
                                      context=self.context,
                                      file_path=path,
                                      par_string=par_string)
-
+    
+    def scan_ssm_uses(self):
+        for path in self.task_files+self.config_files:
+            self.scan_ssm_uses_in_file(path)
+    
+    def scan_ssm_uses_in_file(self,path):
+        content_without_comments = file_cache.open_without_comments(path)
+        lines=content_without_comments.split("\n")
+        domains=[]
+        for line in lines:
+            domains+=get_ssm_domains_from_string(line)
+        
+        for domain in domains:
+            if not domain.startswith("/"):
+                continue
+            if "$" in domain:
+                continue
+            if file_cache.exists(domain):
+                latest=get_latest_ssm_path_from_path(domain)
+                if latest != domain:
+                    self.add_message("i008",path=path,old=domain,new=latest)
+            
     def scan_file_content_using_csv(self, path):
         """
         Use the file content CSV to scan for substrings and regexes in file content.

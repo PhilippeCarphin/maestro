@@ -11,8 +11,8 @@ from tests.test_file_builder import setup_tmp_git_author_repo, setup_tricky_mock
 from constants import SCANNER_CONTEXT
 from utilities import get_dictionary_list_from_csv
 from utilities.heimdall.context import guess_scanner_context_from_path
-from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs, get_constant_definition_count
-from utilities.heimdall.path import is_editor_swapfile
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs, get_constant_definition_count, get_ssm_domains_from_string
+from utilities.heimdall.path import is_editor_swapfile, get_latest_ssm_path_from_path
 from utilities.heimdall.git import scan_git_authors
 from utilities import guess_user_home_from_path, pretty
 from utilities.path import iterative_deepening_search
@@ -42,6 +42,45 @@ class TestUtilities(unittest.TestCase):
             self.assertTrue(os.path.exists(path))
             result = file_cache.is_broken_symlink(path)
             self.assertFalse(result)
+            
+    def test_latest_ssm_version(self):
+        folder=MOCK_FILES+"ssm-versions/"
+        
+        path=folder+"1.5"
+        result=get_latest_ssm_path_from_path(path)
+        self.assertEqual(result,"1.7")
+        
+        path=folder+"1.5"
+        result=get_latest_ssm_path_from_path(path,include_betas=True)
+        self.assertEqual(result,"1.7-beta")
+        
+        path=folder+"1.5.5"
+        result=get_latest_ssm_path_from_path(path)
+        self.assertEqual(result,"1.6.2")
+        
+    def test_get_ssm_domains_from_string(self):
+        line=". ssmuse-sh -d abc -d def"
+        result=get_ssm_domains_from_string(line)
+        expected=["abc","def"]
+        self.assertEqual(result,expected)
+        
+        line=". ssmuse-sh -x abc"
+        result=get_ssm_domains_from_string(line)
+        expected=["abc"]
+        self.assertEqual(result,expected)
+        
+        line="  . r.load.dot abc def"
+        result=get_ssm_domains_from_string(line)
+        expected=["abc","def"]
+        self.assertEqual(result,expected)
+        
+        line="#  . r.load.dot abc def"
+        result=get_ssm_domains_from_string(line)
+        self.assertFalse(result)
+        
+        line="   echo 123 | grep 123"
+        result=get_ssm_domains_from_string(line)
+        self.assertFalse(result)
         
     def test_get_commented_pseudo_xml_lines(self):
         path=SUITES_WITHOUT_CODES+"b007/modules/module1/task1.cfg"
