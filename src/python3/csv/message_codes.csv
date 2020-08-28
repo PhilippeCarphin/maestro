@@ -82,4 +82,4 @@ b021	Absolute path in config instead of getdef	The configuration file ‘{config
 e024	Bad permissions on operational log folders	The log folder ‘{folder}’ should have ‘{expected}’ permissions but instead it has ‘{ugp}’.		
 e025	Operational experiment with developer paths	The experiment seems to have the ‘{context}’ context but the file ‘{path}’ contains references to a non-operational user’s home:\n{bad}		
 i007	Absolute developer paths	The file ‘{path}’ contains absolute paths to a non-operational user’s home. This cannot be installed operationally:\n{bad}		
-w025	Operational files have incorrect owner	The experiment seems to have the ‘{context}’ context but the file ‘{path}’ has permissions ‘{ugp}’ whereas ‘{expected}’ is expected.		
+w025	Operational files have incorrect owner	The experiment seems to have the ‘{context}’ context but the file ‘{path}’ is owned by ‘{owner}’ whereas ‘{expected}’ is expected.		

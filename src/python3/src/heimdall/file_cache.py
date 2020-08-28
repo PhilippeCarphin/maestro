@@ -83,6 +83,17 @@ class FileCache():
         permissions=long_permissions[-3:]
         return (owner,group,permissions,long_permissions)
     
+    def get_ugp_string(self,path):
+        """
+        Returns a string like:
+            zulban:zulban:755
+        for the user, group, and permissions of this file.
+        """
+        name,group,permissions,long_permissions=file_cache.get_user_group_permissions(path)
+        if not name or not group or not permissions or not long_permissions:
+            return ""
+        return "%s:%s:%s"%(name,group,permissions)
+    
     def can_user_write_to_path(self,user,path):
         realpath = self.realpath(path)
         return self.can_user_write_to_realpath(user,realpath)

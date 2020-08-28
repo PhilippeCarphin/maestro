@@ -235,7 +235,7 @@ class ExperimentScanner():
         path_to_ugp={}
         for folder in EXPERIMENT_LOG_FOLDERS:
             path=self.path+folder
-            ugp=get_ugp_string(path)
+            ugp=file_cache.get_ugp_string(path)
             path_to_ugp[path]=ugp
             
             if not ugp:
@@ -265,7 +265,7 @@ class ExperimentScanner():
         "experiment files with inconsistent user/group/permissions"
         ugp_to_paths={}
         for path in self.files:
-            ugp=get_ugp_string(path)
+            ugp=file_cache.get_ugp_string(path)
             
             if not ugp:
                 continue
@@ -313,10 +313,10 @@ class ExperimentScanner():
                                  user=self.operational_username,
                                  path=path)
             
-            ugp=get_ugp_string(path)
+            owner,_,_,_=file_cache.get_user_group_permissions(path)
             expected="smco502"
-            if expected not in ugp:
-                self.add_message("w025",context=self.context,path=path,ugp=ugp,expected=expected)
+            if expected != owner:
+                self.add_message("w025",context=self.context,path=path,owner=owner,expected=expected)
                 
     
     def scan_root_links(self):
@@ -1546,17 +1546,6 @@ def strip_batch_variable(variable):
         is_one=True
         variable=superstrip(variable,"${}")
     return variable,is_one
-
-def get_ugp_string(path):
-    """
-    Returns a string like:
-        zulban:zulban:755
-    for the user, group, and permissions of this file.
-    """
-    name,group,permissions,long_permissions=file_cache.get_user_group_permissions(path)
-    if not name or not group or not permissions or not long_permissions:
-        return ""
-    return "%s:%s:%s"%(name,group,permissions)
 
 BASH_VARIABLE_REGEX=re.compile("\\${[\\w]+}")
 def replace_bash_variables(text):
