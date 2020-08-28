@@ -10,6 +10,7 @@ same-name functions instead.
 
 import os
 import os.path
+import hashlib
 from pwd import getpwuid, getpwnam
 from grp import getgrgid, getgrall
 from lxml import etree
@@ -126,6 +127,23 @@ class FileCache():
             pass
 
         return permissions[2] in write_digits
+    
+    @cache
+    def md5_from_realpath(self,realpath,empty_file_is_empty_string=True,strip_whitespace=True):
+        content=self.open_realpath(realpath)
+        if strip_whitespace:
+            content=content.strip()
+        if empty_file_is_empty_string and not content:
+            return ""
+        encoding="iso-8859-1"
+        md5=hashlib.md5(content.encode(encoding)).hexdigest()
+        return md5
+    
+    def md5(self,path,empty_file_is_empty_string=True,strip_whitespace=True):
+        realpath = self.realpath(path)
+        return self.md5_from_realpath(realpath,
+                                      empty_file_is_empty_string=True,
+                                      strip_whitespace=True)
 
     @cache
     def open_without_comments(self, path):

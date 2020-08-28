@@ -6,6 +6,7 @@ import re
 import os
 import gzip
 import os.path
+import json
 from constants import ENCODINGS
 from utilities.colors import print_green
 from utilities.path import get_matching_paths_recursively
@@ -34,12 +35,13 @@ def cache(function):
     """
     memo = {}
 
-    def wrapper(*args):
-        if args in memo:
-            return memo[args]
+    def wrapper(*args, **kwargs):
+        key=(str(args),json.dumps(kwargs,sort_keys=1))
+        if key in memo:
+            return memo[key]
         else:
-            rv = function(*args)
-            memo[args] = rv
+            rv = function(*args,**kwargs)
+            memo[key] = rv
             return rv
     return wrapper
 

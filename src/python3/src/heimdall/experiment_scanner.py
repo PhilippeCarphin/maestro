@@ -111,6 +111,7 @@ class ExperimentScanner():
         self.scan_gitignore()
         self.scan_home_soft_links()
         self.scan_hub()
+        self.scan_identical_files()
         self.scan_log_folder_permissions()
         self.scan_modules()
         self.scan_node_names()
@@ -449,7 +450,49 @@ class ExperimentScanner():
                 self.add_message("b006",
                                       folder=folder,
                                       filenames=filenames)
-
+                
+    def scan_identical_files(self): 
+        
+        "key is md5sum string, value is list of paths with that sum"
+        sums={}
+        for path in self.files:
+            if "/modules/" not in path:
+                continue
+            
+            if file_cache.islink(path):
+                continue
+            
+            md5=file_cache.md5(path)
+            
+            "empty file"
+            if not md5:
+                continue
+            
+            if md5 not in sums:
+                sums[md5]=[]
+                
+            sums[md5].append(path)
+        
+        "for each folder in 'modules' find duplicate files"
+        for md5,paths in sums.items():
+            if len(paths)<2:
+                continue
+            
+            """
+            key is module name, a folder in 'modules'
+            value is path to files in that folder with same md5
+            """
+            module_breakdown={}
+            for path in paths:
+                module_name=path.split("/modules/")[1].split("/")[0]
+                if module_name not in module_breakdown:
+                    module_breakdown[module_name]=[]
+                module_breakdown[module_name].append(path)
+            
+            for module_name,paths in module_breakdown.items():
+                if len(paths)>1:
+                    self.add_message("b022",paths="\n".join(paths))
+        
     def scan_hub(self):
         "scan links and targets of hub folder"
 
@@ -1320,14 +1363,17 @@ class ExperimentScanner():
         declared_files=set()
         rpath = self.path+"resources/"
         mpath = self.path+"modules/"
+        
+        "full path to all folders in the 'modules' folder"
+        self.module_folders=[f for f in file_cache.listdir(mpath) if file_cache.isdir(f)]
 
         "flow.xml files in modules folder"
-        for folder in file_cache.listdir(mpath):
+        for folder in self.module_folders:
             flow = mpath+"flow.xml"
             if file_cache.isfile(flow):
                 paths.add(flow)
                 flow_files.add(flow)
-                declared_files.add(flow)
+                declared_files.add(flow)        
 
         "find maestro files discovered through flow.xml"
         for node_path in self.maestro_experiment.get_node_datas():

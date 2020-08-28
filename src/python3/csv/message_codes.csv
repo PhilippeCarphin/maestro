@@ -83,3 +83,4 @@ e024	Bad permissions on operational log folders	The log folder ‘{folder}’ sh
 e025	Operational experiment with developer paths	The experiment seems to have the ‘{context}’ context but the file ‘{path}’ contains references to a non-operational user’s home:\n{bad}		
 i007	Absolute developer paths	The file ‘{path}’ contains absolute paths to a non-operational user’s home. This cannot be installed operationally:\n{bad}		
 w025	Operational files have incorrect owner	The experiment seems to have the ‘{context}’ context but the file ‘{path}’ is owned by ‘{owner}’ whereas ‘{expected}’ is expected.		
+b022	Identical files in module	The content of files in the same module are identical. Consider replacing duplicate files with soft links to one file, so fixing and updating one fixes and updates all. Or distinguish the files with comments. Files:\n{paths}		
