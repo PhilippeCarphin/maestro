@@ -61,7 +61,7 @@ class TestSuiteScan(unittest.TestCase):
             debug_op_username_override = None
             if code in ["e007", "e010", "w007", "w011", "w012", "e014", 
                         "e016", "w015", "w022", "w023", "w024", "e024",
-                        "e025"]:
+                        "e025", "w025"]:
                 context = SCANNER_CONTEXT.OPERATIONAL
             if code in ["i001", "i007"]:
                 context = SCANNER_CONTEXT.DEVELOPMENT

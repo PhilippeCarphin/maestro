@@ -312,6 +312,12 @@ class ExperimentScanner():
                 self.add_message("w023",
                                  user=self.operational_username,
                                  path=path)
+            
+            ugp=get_ugp_string(path)
+            expected="smco502"
+            if expected not in ugp:
+                self.add_message("w025",context=self.context,path=path,ugp=ugp,expected=expected)
+                
     
     def scan_root_links(self):
         """
