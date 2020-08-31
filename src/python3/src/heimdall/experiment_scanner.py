@@ -10,7 +10,7 @@ from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
 from home_logger import logger
-from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text, get_commented_pseudo_xml_lines, get_loop_indexes_from_expression
+from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text, get_commented_pseudo_xml_lines, get_loop_indexes_from_expression, NodeLogParser
 from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count, get_ssm_domains_from_string
 from utilities.heimdall.context import guess_scanner_context_from_path
@@ -116,6 +116,7 @@ class ExperimentScanner():
         self.scan_log_folder_permissions()
         self.scan_modules()
         self.scan_node_names()
+        self.scan_node_log()
         self.scan_operational_file_permissions()
         self.scan_overview_xmls()
         self.scan_readme_files()
@@ -1275,6 +1276,45 @@ class ExperimentScanner():
             if file_cache.is_broken_symlink(path):
                 self.add_message("e004",
                                  link=path)
+
+    def scan_node_log(self):
+        me=self.maestro_experiment
+        
+        latest_nodelog=me.get_latest_node_log()
+        if not latest_nodelog:
+            return
+        nlp=NodeLogParser(me.get_latest_node_log())
+        
+        "wallclock too big, based on nodelog"
+        threshold_factor=5
+        for node_path,node_data in me.node_datas.items():
+            latest_success_seconds=nlp.get_successful_execution_duration(node_path)
+            if not latest_success_seconds:
+                continue
+            
+            rpath=node_data["resource_path"]
+            data = me.get_batch_data_from_xml(rpath)
+            if not data:
+                continue
+            
+            try:
+                wallclock_seconds=int(data.get("wallclock",0))
+            except ValueError:
+                continue
+            if not wallclock_seconds:
+                continue
+            
+            if wallclock_seconds>latest_success_seconds*threshold_factor:
+                timestamp=nlp.latest_execution_timestamp.get(node_path,"unknown")
+                factor=round(wallclock_seconds/latest_success_seconds,2)
+                self.add_message("w026",
+                                 node_path=node_path,
+                                 wallclock_seconds=wallclock_seconds,
+                                 resource_xml=rpath,
+                                 datestamp=timestamp,
+                                 latest_seconds=latest_success_seconds,
+                                 factor=factor,
+                                 threshold=threshold_factor)
 
     def scan_node_names(self):        
         required_regex = re.compile(r"^(?i)[a-z](?:[a-z0-9]+[._-]?)*[a-z0-9]+$")

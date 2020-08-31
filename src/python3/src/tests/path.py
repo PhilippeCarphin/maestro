@@ -36,6 +36,7 @@ NODE_PATHS_G1 = get_lines_from_file(MOCK_FILES+"node_paths_g1")
 NODE_PATHS_COMP_EXP = get_lines_from_file(MOCK_FILES+"node_paths_comp_exp")
 
 NODE_LOG_UTF8_ERROR = MOCK_FILES+"20200604120000_nodelog_utf8_error"
+NODE_LOG_TURTLE_DURATION = MOCK_FILES+"nodelog_turtle_duration"
 ABSOLUTE_SYMLINK_EXISTS_PATH=TMP_FOLDER+"symlink-to-absolute-existing-target"
 
 RESOURCES_HOME1 = MOCK_FILES+"resources-home1/"

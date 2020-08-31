@@ -23,7 +23,7 @@ from heimdall.file_cache import file_cache
 class TestUtilities(unittest.TestCase):
 
     def test_file_cache(self):
-        path = MOCK_FILES+"suites_without_codes/w003/modules/module1/link-to-task1.tsk"
+        path = MOCK_FILES+"suites_without_codes/w003/modules/module1/link-to-loop1.tsk"
         result = file_cache.is_broken_symlink(path)
         self.assertFalse(result)
 

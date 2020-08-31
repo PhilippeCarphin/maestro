@@ -5,10 +5,29 @@ This code handles log/listing path and parsing functions for the MaestroExperime
 This abstract class is not meant to be instantiated, only inherited.
 """
 
+import os
+import re
 from collections import OrderedDict
 
+"""
+Matches a nodelog filename like:
+    20200826000000_nodelog
+"""
+nodelog_filename_regex=re.compile("^[0-9]{14}_nodelog$")
 
 class ME_Logs():
+    
+    def get_latest_node_log(self):
+        """
+        Return the full path to the latest '_nodelog' file in the 'logs' folder.
+        """
+        folder=self.path+"logs/"
+        if not os.path.isdir(folder):
+            return ""
+        nodelogs=sorted([n for n in os.listdir(folder) if nodelog_filename_regex.match(n)])
+        if not nodelogs:
+            return ""
+        return folder+nodelogs[-1]        
 
     def get_latest_abort_log(self, node_path, loop_indexes_selected=None):
         return self.get_latest_log(node_path, "abort", loop_indexes_selected=loop_indexes_selected)
