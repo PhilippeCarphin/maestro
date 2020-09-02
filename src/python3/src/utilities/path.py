@@ -47,7 +47,9 @@ def get_link_chain_from_link(start_link):
         lstat("/home/123/b", {st_mode=S_IFDIR|0775, st_size=4096, ...}) = 0
         ...
     """
+    
     output,status=safe_check_output_with_status("strace realpath "+start_link)
+    
     if status!=0:
         return []
     
@@ -60,10 +62,11 @@ def get_link_chain_from_link(start_link):
         "/home/123"
     so remove those.
     """
-    if start_link not in paths:
-        return []
-    paths=paths[paths.index(start_link):]
-    return paths
+    basename=os.path.basename(start_link)
+    for i,path in enumerate(paths):
+        if path.endswith(basename):
+            break
+    return paths[i:]
 
 def get_links_source_and_target(path,max_depth=0):
     """

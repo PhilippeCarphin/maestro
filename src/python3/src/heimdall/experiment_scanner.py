@@ -963,12 +963,12 @@ class ExperimentScanner():
         "realpath is okay, but not linkchain"
         if self.is_context_operational():
             for path in self.files:
-                
                 "no need to report a complicated chain link if the realpath is simply wrong too, as above"
                 if path in bad_links:
                     continue
                 
                 link_chain=file_cache.get_link_chain_from_link(path)
+                
                 for link_path in link_chain:
                     if link_path.startswith(home_root):
                         continue
