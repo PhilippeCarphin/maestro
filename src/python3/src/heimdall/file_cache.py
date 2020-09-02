@@ -139,9 +139,12 @@ class FileCache():
             content=content.strip()
         if empty_file_is_empty_string and not content:
             return ""
-        encoding="iso-8859-1"
-        md5=hashlib.md5(content.encode(encoding)).hexdigest()
-        return md5
+        for encoding in ENCODINGS:
+            try:
+                return hashlib.md5(content.encode(encoding)).hexdigest()
+            except UnicodeEncodeError:
+                pass
+        return ""
     
     def md5(self,path,empty_file_is_empty_string=True,strip_whitespace=True):
         realpath = self.realpath(path)
