@@ -959,6 +959,23 @@ class ExperimentScanner():
             self.add_message(code,
                                   real_home=home_root,
                                   bad_links=msg)
+        
+        "realpath is okay, but not linkchain"
+        if self.is_context_operational():
+            for path in self.files:
+                
+                "no need to report a complicated chain link if the realpath is simply wrong too, as above"
+                if path in bad_links:
+                    continue
+                
+                link_chain=file_cache.get_link_chain_from_link(path)
+                for link_path in link_chain:
+                    if link_path.startswith(home_root):
+                        continue
+                    self.add_message("e026",
+                                     context=self.context,
+                                     path=path,
+                                     bad="\n".join(link_chain))
 
     def scan_all_file_content(self):
         """
@@ -1512,12 +1529,16 @@ class ExperimentScanner():
             if is_readme(basename):
                 readme_files.append(self.path+basename)
                 
-        "index tsk cfg xml"
+        "index tsk cfg xml links"
         task_files = []
         config_files = []
         xml_files = []
         container_xml_files = []
+        links = []
         for path in paths:
+            if file_cache.islink(path):
+                links.append(path)
+            
             if path.endswith(".tsk"):
                 task_files.append(path)
             elif path.endswith(".cfg"):
@@ -1540,6 +1561,9 @@ class ExperimentScanner():
 
         "all full paths to all files to scan"
         self.files = sls(paths)
+        
+        "all file or folder symlinks"
+        self.links = sls(links)
 
         "all folders containing files to scan"
         self.folders = sls(folders)
@@ -1549,6 +1573,9 @@ class ExperimentScanner():
         
         "all container.xml files"
         self.container_xml_files = sls(container_xml_files)
+        
+        "all tsk, cfg, flow, xml files explicitly declared by the main flow"
+        self.declared_files=sls(declared_files)
         
         "all, or many hub files to some depth"
         self.hub_files = sls(hub_files)
@@ -1570,9 +1597,6 @@ class ExperimentScanner():
 
         "all xml files"
         self.xml_files = sls(xml_files)
-        
-        "all tsk, cfg, flow, xml files explicitly declared by the main flow"
-        self.declared_files=sls(declared_files)
 
     def get_report_text(self,
                         max_repeat=0):

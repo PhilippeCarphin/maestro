@@ -14,13 +14,25 @@ from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs, get_constant_definition_count, get_ssm_domains_from_string
 from utilities.heimdall.path import is_editor_swapfile, get_latest_ssm_path_from_path
 from utilities.heimdall.git import scan_git_authors
-from utilities import guess_user_home_from_path, pretty
-from utilities.path import iterative_deepening_search
+from utilities import guess_user_home_from_path, pretty, pretty_kwargs
+from utilities.path import iterative_deepening_search, get_link_chain_from_link
 from utilities.maestro import get_weird_assignments_from_config_path, get_commented_pseudo_xml_lines
 from heimdall.file_cache import file_cache
 
 
 class TestUtilities(unittest.TestCase):
+    
+    def test_link_chain(self):
+        expected=[MOCK_FILES+"link-chain/link4",
+                  MOCK_FILES+"link-chain/folder1",
+                  MOCK_FILES+"link-chain/folder1/link3",
+                  MOCK_FILES+"link-chain/link2",
+                  MOCK_FILES+"link-chain/link1",
+                  MOCK_FILES+"link-chain/link-chain-target"]
+        start=expected[0]
+        result=get_link_chain_from_link(start)
+        msg=pretty_kwargs(expected=expected,result=result)
+        self.assertEqual(expected,result,msg=msg)
 
     def test_file_cache(self):
         path = MOCK_FILES+"suites_without_codes/w003/modules/module1/link-to-loop1.tsk"

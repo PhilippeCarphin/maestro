@@ -17,7 +17,7 @@ from lxml import etree
 
 from constants import ENCODINGS
 from utilities.generic import cache, safe_open, strip_comments_from_text, get_key_values_from_path
-
+from utilities.path import get_link_chain_from_link
 
 class FileCache():
     """
@@ -44,7 +44,11 @@ class FileCache():
     def get_key_values_from_path(self, path):
         realpath = self.realpath(path)
         return self.get_key_values_from_realpath(realpath)
-
+    
+    @cache
+    def get_link_chain_from_link(self, path):
+        return get_link_chain_from_link(path)
+        
     @cache
     def etree_parse_from_realpath(self, realpath):
         try:

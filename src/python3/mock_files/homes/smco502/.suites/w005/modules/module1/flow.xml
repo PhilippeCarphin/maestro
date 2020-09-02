@@ -1,4 +1,6 @@
 <MODULE name="module1">
+    <SUBMITS name="task2"/>
+    <TASK name="task2"/>            
     <SUBMITS name="loop1"/>
     <LOOP name="loop1"/>
     <SUBMITS sub_name="module2"/>

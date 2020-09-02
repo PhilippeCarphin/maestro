@@ -26,6 +26,44 @@ def list_files_recursively(path):
     output, error = process.communicate()
     return output.strip().decode("utf8").split("\n")
 
+def get_link_chain_from_link(start_link):
+    """
+    Returns a list of all links followed to resolve this link.
+    
+    Given a link "a" in a folder with links:
+        a -> b
+        b -> c
+        c -> d
+    returns:
+        ["a","b","c","d"]
+    where each string will be the full path.
+    """
+    
+    """
+    output will be something like this:
+        ...
+        lstat("/home/123/a", {st_mode=S_IFLNK|0777, st_size=13, ...}) = 0
+        ...
+        lstat("/home/123/b", {st_mode=S_IFDIR|0775, st_size=4096, ...}) = 0
+        ...
+    """
+    output,status=safe_check_output_with_status("strace realpath "+start_link)
+    if status!=0:
+        return []
+    
+    lstat_lines=[line for line in output.split("\n") if line.startswith("lstat(")]
+    paths=[line.split("\"")[1] for line in lstat_lines]
+    
+    """
+    If start_link is "/home/123/a" then the first strings in paths will be:
+        "/home"
+        "/home/123"
+    so remove those.
+    """
+    if start_link not in paths:
+        return []
+    paths=paths[paths.index(start_link):]
+    return paths
 
 def get_links_source_and_target(path,max_depth=0):
     """
