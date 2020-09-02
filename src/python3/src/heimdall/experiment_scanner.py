@@ -868,7 +868,7 @@ class ExperimentScanner():
             group 2 is the value between double quotes.
         """
         attribute_regex = re.compile(r"""([a-zA-Z_]+)[ ]*=[ ]*["']([^'"]+)["']""")
-        
+        time_dependent_resources=[]
         for path in self.resource_files:
             content = file_cache.open(path)
             for match in attribute_regex.finditer(content):
@@ -890,6 +890,13 @@ class ExperimentScanner():
                                           context=self.context,
                                           machine_value=attribute_value,
                                           resource_path=path)
+                
+                "time dependent resources"
+                if attribute_name in ("valid_hour","valid_dow"):
+                    time_dependent_resources.append(path)
+        if time_dependent_resources:
+            self.add_message("i009",
+                             paths="\n".join(time_dependent_resources))
                     
         "DEPENDS_ON element"
         for path in self.resource_files:

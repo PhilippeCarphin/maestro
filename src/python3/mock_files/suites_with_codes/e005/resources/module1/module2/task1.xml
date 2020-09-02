@@ -1,4 +1,4 @@
 <NODE_RESOURCES>
   <BATCH machine="hard-coded-machine-is-bad" queue="dev" memory="${VARIABLE_DOES_NOT_EXIST}" wallclock="361" catchup="4" cpu="$CPU}" />
-  <DEPENDS_ON dep_name="/node/path/does/not/exist" status="end" type="node" exp="/home/abc123/maestro_suites/zdps"/>
+  <DEPENDS_ON dep_name="/node/path/does/not/exist" status="end" type="node" valid_hour="12" exp="/home/abc123/maestro_suites/zdps"/>
 </NODE_RESOURCES>
