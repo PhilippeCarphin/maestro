@@ -1041,8 +1041,47 @@ class ExperimentScanner():
                                      par_string=par_string)
     
     def scan_ssm_uses(self):
+        
+        "key is path to a file, value is list of SSM domains SSM used in that file"
+        self.path_to_ssm_domains={}
+        
         for path in self.task_files+self.config_files:
             self.scan_ssm_uses_in_file(path)
+                
+        "key is domain, value is set of files that SSM use it"
+        domain_to_paths={}
+        "key is package, value is set of files that SSM use it"
+        package_to_paths={}
+        "key is package, value is set of domains"
+        package_to_domains={}
+        
+        for path,domains in self.path_to_ssm_domains.items():
+                            
+            for domain in domains:
+                if domain not in domain_to_paths:
+                    domain_to_paths[domain]=set()
+                domain_to_paths[domain].add(path)
+                
+                package=os.path.dirname(domain)
+                if package not in package_to_paths:
+                    package_to_paths[package]=set()
+                package_to_paths[package].add(path)
+                
+                if package not in package_to_domains:
+                    package_to_domains[package]=set()
+                package_to_domains[package].add(domain)
+        
+        "find cases where different versions of the same SSM are used"
+        for package,domains in package_to_domains.items():
+            if len(domains)<2:
+                continue
+            
+            versions=sorted([os.path.basename(d) for d in package_to_domains[package]])
+            paths="    "+"\n    ".join(package_to_paths[package])
+            self.add_message("w027",
+                             package=package,
+                             versions=versions,
+                             paths=paths)
     
     def scan_ssm_uses_in_file(self,path):
         content_without_comments = file_cache.open_without_comments(path)
@@ -1051,7 +1090,10 @@ class ExperimentScanner():
         for line in lines:
             domains+=get_ssm_domains_from_string(line)
         
+        self.path_to_ssm_domains[path]=domains
+        
         for domain in domains:
+            
             if not domain.startswith("/"):
                 continue
             if "$" in domain:
@@ -1060,6 +1102,7 @@ class ExperimentScanner():
                 latest=get_latest_ssm_path_from_path(domain)
                 if latest != domain:
                     self.add_message("i008",path=path,old=domain,new=latest)
+        
             
     def scan_file_content_using_csv(self, path):
         """
