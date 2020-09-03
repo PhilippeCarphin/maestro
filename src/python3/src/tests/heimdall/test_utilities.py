@@ -11,7 +11,7 @@ from tests.test_file_builder import setup_tmp_git_author_repo, setup_tricky_mock
 from constants import SCANNER_CONTEXT
 from utilities import get_dictionary_list_from_csv
 from utilities.heimdall.context import guess_scanner_context_from_path
-from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs, get_constant_definition_count, get_ssm_domains_from_string
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs, get_constant_definition_count, get_ssm_domains_from_string, get_etiket_variables_used_from_path
 from utilities.heimdall.path import is_editor_swapfile, get_latest_ssm_path_from_path
 from utilities.heimdall.git import scan_git_authors
 from utilities import guess_user_home_from_path, pretty, pretty_kwargs
@@ -21,6 +21,19 @@ from heimdall.file_cache import file_cache
 
 
 class TestUtilities(unittest.TestCase):
+    
+    def test_find_etiket(self):
+        path = MOCK_FILES+"suites_with_codes/e005/modules/module1/task1.tsk"
+        result=get_etiket_variables_used_from_path(path)
+        expected=["CMCGANAETIK",
+                  "CMCRDPSETIK",
+                  "ETIK",
+                  "E_TIKET_DEFINED_IN_BAD_PLACE_ETIK"]
+        self.assertEqual(result,expected)
+        
+        path = MOCK_FILES+"suites_with_codes/e005/experiment.cfg"
+        result=get_etiket_variables_used_from_path(path,require_etiket_programs=True)
+        self.assertFalse(result)
     
     def test_link_chain(self):
         expected=[MOCK_FILES+"link-chain/link4",

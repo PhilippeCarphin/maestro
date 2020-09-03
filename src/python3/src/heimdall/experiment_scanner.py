@@ -12,7 +12,7 @@ from heimdall.message_manager import hmm
 from home_logger import logger
 from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text, get_commented_pseudo_xml_lines, get_loop_indexes_from_expression, NodeLogParser
 from utilities.heimdall.critical_errors import find_critical_errors
-from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count, get_ssm_domains_from_string
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count, get_ssm_domains_from_string, is_etiket_variable, get_etiket_variables_used_from_text
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path, DECENT_LINUX_PATH_REGEX_WITH_START_END, DECENT_LINUX_PATH_REGEX, DECENT_LINUX_PATH_REGEX_WITH_DOLLAR, is_non_operational_home, get_latest_ssm_path_from_path
 from utilities.heimdall.git import scan_git_authors
@@ -105,6 +105,7 @@ class ExperimentScanner():
         self.scan_container_xml_files()
         self.scan_declared_files()
         self.scan_deprecated_files_folders()
+        self.scan_etikets()
         self.scan_exp_options()
         self.scan_extra_files()
         self.scan_file_permissions()
@@ -234,7 +235,31 @@ class ExperimentScanner():
 
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
-                
+    
+    def scan_etikets(self):        
+        "find etikets defined in bad places"
+
+        paths=self.task_files+self.config_files+[self.path+"experiment.cfg"]
+        etikets_cfg_path=self.path+"etikets.cfg"
+        
+        "find etikets variable names used anywhere"
+        etikets_used=[]
+        for path in paths:
+            text=file_cache.open_without_comments(path)
+            etikets_used+=get_etiket_variables_used_from_text(text,require_etiket_programs=True)
+        etikets_used=set(etikets_used)
+        
+        "find etikets defined outside etikets.cfg"
+        for path in paths:
+            values=file_cache.get_key_values_from_path(path)
+            bad_etikets=set(values.keys()).intersection(etikets_used)
+            bad_etikets=sorted(list(bad_etikets))
+            if bad_etikets:
+                self.add_message("b023",
+                             etikets=str(bad_etikets),
+                             good_path=etikets_cfg_path,
+                             bad_path=path)
+        
     def scan_readme_files(self):
         for path in self.readme_files:
             if path.endswith(".md"):
@@ -1704,7 +1729,7 @@ def strip_batch_variable(variable):
         variable=superstrip(variable,"${}")
     return variable,is_one
 
-BASH_VARIABLE_REGEX=re.compile("\\${[\\w]+}")
+BASH_VARIABLE_CURLY_REGEX=re.compile("\\${[\\w]+}")
 def replace_bash_variables(text):
     """
     Some source paths in CFG files may be complex.
@@ -1715,6 +1740,6 @@ def replace_bash_variables(text):
     which is useful for non-standard character verification.
     """
     
-    return BASH_VARIABLE_REGEX.sub("a",text)
+    return BASH_VARIABLE_CURLY_REGEX.sub("a",text)
                 
                 

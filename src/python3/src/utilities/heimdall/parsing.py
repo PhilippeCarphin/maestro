@@ -2,6 +2,7 @@
 import Levenshtein
 import re
 from heimdall.file_cache import file_cache
+from utilities.generic import superstrip
 
 """
 Regex to capture the entire line that seems to be a call to nodelogger with -s argument.
@@ -13,6 +14,47 @@ NODELOGGER_SIGNAL_REGEX = re.compile(r".*nodelogger.*-s[ ]+([^ \n]+).*")
 Captures strings like 'ABC_DEF=123' where group 1 is "ABC_DEF"
 """
 CONSTANT_VARIABLE_REGEX = re.compile(r"^[ ]*([A-Z]+[A-Z_]*)[ ]*=")
+
+"""
+Matches:
+    $ABC
+    ${ABC}
+"""
+BASH_VARIABLE_OPTIONAL_CURLY_REGEX=re.compile("\\$({[\\w]+}|[\\w]+)")
+
+def is_etiket_variable(bash_variable_name):
+    """
+    Returns true if this bash variable name appears to be an etiket variable name.
+    """
+    lower=bash_variable_name.lower()
+    return (lower.startswith("etik") or 
+            lower.endswith("etik") or 
+            lower.endswith("etiket") or 
+            lower.endswith("eticket"))
+
+def get_etiket_variables_used_from_path(path,require_etiket_programs=True):
+    "See get_etiket_variables_used_from_text"
+    with open(path,"r") as f:
+        text=f.read()
+    return get_etiket_variables_used_from_text(text,
+                                               require_etiket_programs=require_etiket_programs)
+
+def get_etiket_variables_used_from_text(text,require_etiket_programs=True):
+    """
+    Return a list of all variables used in this text that appear to be etiket related.
+    """
+    
+    "return [] if no etiket-like programs are found."
+    if require_etiket_programs and "/pgsm " not in text and "/editfst " not in text:
+        return []
+    
+    variables=BASH_VARIABLE_OPTIONAL_CURLY_REGEX.findall(text)
+    
+    "strip curly brackets"
+    variables=[superstrip(v,"{}") for v in variables]
+    
+    etikets=[v for v in variables if is_etiket_variable(v)]
+    return sorted(list(set(etikets)))
 
 def get_nodelogger_signals_from_task_path(path):
     data = file_cache.open(path)

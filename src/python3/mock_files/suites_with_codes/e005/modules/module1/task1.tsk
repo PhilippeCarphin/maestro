@@ -17,3 +17,30 @@
 
             
 some_command -a 123 ${CMCCONST}/abc.txt --verbose
+
+# code that uses an etiket variable, including $E_TIKET_DEFINED_IN_BAD_PLACE_ETIK
+cat<<EOT >editfstdir
+  DESIRE(-1,-1,'G0${CMCGANAETIK}',-1,40994464,-1,-1)
+  ZAP(-1,-1,'${CMCRDPSETIK}',-1,100,-1,-1)
+  STDCOPI(-1)
+  DESIRE(-1,-1,'G0${E_TIKET_DEFINED_IN_BAD_PLACE_ETIK}',-1,41044464,-1,-1)
+  ZAP(-1,-1,'${CMCRDPSETIK}',-1,150,-1,-1)
+  STDCOPI(-1)
+  DESIRE(-1,-1,'G0${CMCGANAETIK}',-1,41094464,-1,-1)
+  ZAP(-1,-1,'${CMCRDPSETIK}',-1,200,-1,-1)
+  STDCOPI(-1)
+EOT
+${TASK_BIN}/editfst -s out_$PROG -d outtmp_$PROG -i editfstdir
+
+if [ $PROG == 000 ]; then
+  ${TASK_BIN}/pgsm -iment $fichTM -ozsrt stdf_local -i << ENDPGSMTM
+ SORTIE(STD,400,A)
+ $grid_hires
+ SETINTX(LINEAIR)
+ HEURE(${PROG})
+ ETIKENT=${QUOTE}${ETIK}${QUOTE}
+ COMPAC=-9
+ CHAMP('TM',0)
+ LIRES('TM',-1,$RUNSTAMP,0,-1,-1,-1,${QUOTE}${ETIK}${QUOTE})
+ ECRITS(-1,-9,$RUNSTAMP,-1,-1,-1,-1,-1,'',-1)
+ENDPGSMTM
