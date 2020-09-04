@@ -178,8 +178,12 @@ def timeout_search(rootdir,depth,max_seconds,follow_links=True):
         return output.strip().split("\n")
     return []
 
-def get_matching_paths_recursively(rootdir, extension="", verbose=0,
-                                   path_blacklist=None, path_whitelist=None, follow_links=True,
+def get_matching_paths_recursively(rootdir, 
+                                   extension="", 
+                                   verbose=0,
+                                   path_blacklist=None, 
+                                   path_whitelist=None, 
+                                   follow_links=True,
                                    include_folders_in_results=False):
     """
     Searches 'rootdir' recursively and returns a list of full paths matching these conditions.

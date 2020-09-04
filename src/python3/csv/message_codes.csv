@@ -94,3 +94,4 @@ b024	Defined but unused configuration variables	The configuration file ‘{confi
 w028	Suite path in resources without datestamp	The resource file ‘{resource_path}’ has generic references to maestro project paths which don’t use datestamps like ‘_20200401’. This may cause issues with troubleshooting, history, and transfers. Paths:\n{bad}		
 b025	Bad git remote origin	The experiment seems to have the ‘{context}’ context but the git remote ‘origin’ points to ‘{bad}’. Instead the remote should start with ‘{good}’.		
 w029	No soft link on operational home	The experiment path ‘{target}’ is where operational suites are installed, however there is no soft link ‘{source}’ pointing to it.		
+i010	No hcrons	No active configuration files for ‘{suite_name}’ were found in ‘{hcron_folder}’. The suite will not run automatically.		

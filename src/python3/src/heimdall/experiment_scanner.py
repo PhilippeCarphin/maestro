@@ -14,7 +14,7 @@ from utilities.maestro import is_empty_module, get_weird_assignments_from_config
 from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count, get_ssm_domains_from_string, get_etiket_variables_used_from_text
 from utilities.heimdall.context import guess_scanner_context_from_path
-from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path, DECENT_LINUX_PATH_REGEX_WITH_START_END, DECENT_LINUX_PATH_REGEX, DECENT_LINUX_PATH_REGEX_WITH_DOLLAR, is_non_operational_home, get_latest_ssm_path_from_path
+from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path, DECENT_LINUX_PATH_REGEX_WITH_START_END, DECENT_LINUX_PATH_REGEX, DECENT_LINUX_PATH_REGEX_WITH_DOLLAR, get_latest_ssm_path_from_path, has_active_hcron_files
 from utilities.heimdall.git import scan_git_authors
 from utilities.parsing import BASH_VARIABLE_DECLARE_REGEX
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip
@@ -66,9 +66,21 @@ class ExperimentScanner():
             raise ValueError("Home path for parallel user does not exist: '%s'" % parallel_home)
         if operational_suites_home and not os.path.exists(operational_suites_home):
             raise ValueError("Home path for operational suites owner does not exist: '%s'" % operational_suites_home)
-        self.operational_home = operational_home
-        self.parallel_home = parallel_home
-        self.operational_suites_home=operational_suites_home
+        def append_slash_if_necessary(path):
+            if not path:
+                return path
+            return path if path.endswith("/") else path+"/"
+        self.operational_home = append_slash_if_necessary(operational_home)
+        self.parallel_home = append_slash_if_necessary(parallel_home)
+        self.operational_suites_home=append_slash_if_necessary(operational_suites_home)
+        
+        """
+        If path is:
+            /home/smco500/.suites/123
+        home_root is guessed to be:
+            /home/smco500
+        """
+        self.home_root = guess_user_home_from_path(self.path)
 
         """
         Instead of running the qstat shell command, use this output instead.
@@ -124,6 +136,7 @@ class ExperimentScanner():
         self.scan_git_repo()
         self.scan_gitignore()
         self.scan_external_soft_links()
+        self.scan_hcrons()
         self.scan_hub()
         self.scan_identical_files()
         self.scan_install_soft_links()
@@ -179,6 +192,27 @@ class ExperimentScanner():
         return self.context in (SCANNER_CONTEXT.OPERATIONAL,
                                 SCANNER_CONTEXT.PREOPERATIONAL,
                                 SCANNER_CONTEXT.PARALLEL)
+
+    def is_non_operational_home(self,path):
+        """
+        Returns true if this path is within a non operational home, like a developer:
+            /home/abc123/.suites/zdps
+        These paths should not be referenced in operational projects.
+        
+        The path does not have to exist to return True.
+        """
+        
+        if not path.startswith("/home/") and not path.startswith("/fs/home"):
+            return False
+        
+        if os.path.exists(path):
+            path=os.path.realpath(path)
+        
+        folders=[self.operational_home,self.parallel_home,self.operational_suites_home]
+        for folder in folders:
+            if folder and path.startswith(folder):
+                return False
+        return True
 
     def add_message(self, code, **kwargs):
         """
@@ -249,6 +283,25 @@ class ExperimentScanner():
 
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+    
+    def scan_hcrons(self):
+        "are there active hcrons for this suite"
+        
+        "if path is 502, look in 500 for hcrons"
+        if self.home_root == self.operational_suites_home:
+            hcron_folder=self.operational_home+".hcron"
+        else:
+            hcron_folder=self.home_root+".hcron"
+            
+        suite_name1=self.maestro_experiment.name.split("/")[-1]
+        suite_name2=file_cache.realpath(self.path).split("/")[-1]
+        
+        for suite_name in (suite_name1,suite_name2):
+            if has_active_hcron_files(hcron_folder,suite_name):
+                return
+        self.add_message("i010",
+                         suite_name=suite_name,
+                         hcron_folder=hcron_folder)
     
     def scan_unused_variables(self):        
         "find all variable defines in config files"
@@ -869,7 +922,7 @@ class ExperimentScanner():
             self.add_message("b021",config=path,values="\n".join(absolute_paths))
             
         "absolute paths to developer paths/homes"
-        non_op_homes=[a for a in absolute_paths if is_non_operational_home(a)]
+        non_op_homes=[a for a in absolute_paths if self.is_non_operational_home(a)]
         if non_op_homes:
             bad="\n".join(non_op_homes)
             if self.is_context_operational():
@@ -1085,18 +1138,17 @@ class ExperimentScanner():
         """
         
         "find core maestro files with a realpath outside the user home containing this project."
-        home_root = guess_user_home_from_path(self.path)
         bad_links = []
         for path in self.files:
             realpath = file_cache.realpath(path)
-            if not realpath.startswith(home_root):
+            if not realpath.startswith(self.home_root):
                 bad_links.append(path)
         if bad_links:
             is_op = self.is_context_operational()
             code = "w005" if is_op else "i001"
             msg = "\n".join(bad_links)
             self.add_message(code,
-                                  real_home=home_root,
+                                  real_home=self.home_root,
                                   bad_links=msg)
         
         "cases where realpath is okay, but within not linkchain"
@@ -1109,7 +1161,7 @@ class ExperimentScanner():
                 link_chain=file_cache.get_link_chain_from_link(path)
                 
                 for link_path in link_chain:
-                    if link_path.startswith(home_root):
+                    if link_path.startswith(self.home_root):
                         continue
                     self.add_message("e026",
                                      context=self.context,

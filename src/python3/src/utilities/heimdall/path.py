@@ -1,5 +1,7 @@
 import re
 import os.path
+from utilities.shell import safe_check_output_with_status
+from utilities.path import get_matching_paths_recursively
 
 "matches the basename filename of most vim swap files"
 VIM_SWAP_REGEX = re.compile(r"^\..+?\.sw[n-p]$")
@@ -39,6 +41,23 @@ def get_ancestor_folders(folder, experiment_path):
             folders.add(parent)
         parent = os.path.dirname(parent)
     return sorted(list(set(folders)))
+
+def has_active_hcron_files(hcron_folder,suite_name):
+    """
+    Returns true if this ".hcron" folder contains at least one active (not hidden)
+    hcron configuration file like "12_22h20" for a suite_name like "g1"
+    """
+    
+    query="/"+suite_name+"/"
+    for path in get_matching_paths_recursively(hcron_folder):
+        "ignore hidden '.' files/folders but allow '.hcron'  "
+        filter_path=path.replace("/.hcron/","/")
+        if "/." in filter_path:
+            continue
+        
+        if query in path:
+            return True
+    return False
 
 def get_latest_ssm_path_from_path(path,include_betas=False):
     """
@@ -86,24 +105,6 @@ def get_latest_ssm_version(reference_version,versions,include_betas=False):
             latest=version
             
     return latest
-
-def is_non_operational_home(path):
-    """
-    Returns true if this path is a non operational home, like a developer:
-        /home/abc123/.suites/zdps
-    These paths should not be referenced in operational projects.
-    """
-    
-    if not path.startswith("/home/") and not path.startswith("/fs/home"):
-        return False    
-    
-    op_users=["smco500","smco501","smco502"]
-    op_folders=["/home/"+user for user in op_users]
-    op_folders+=[os.path.realpath(folder) for folder in op_folders]
-    for folder in op_folders:
-        if path.startswith(folder):
-            return False
-    return True
 
 def is_parallel_path(path):
     """

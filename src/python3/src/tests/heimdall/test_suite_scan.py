@@ -6,7 +6,7 @@ from constants import SCANNER_CONTEXT
 from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, OPERATIONAL_HOME, PARALLEL_HOME, OPERATIONAL_SUITES_HOME, TMP_FOLDER, QSTAT_OUTPUT1_PATH, CMCCONST_OVERRIDE
 from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
-from tests.test_file_builder import setup_tricky_mock_files, setup_tmp_experiment1, setup_tmp_smco501_home, setup_tmp_git_author_repo
+from tests.test_file_builder import setup_tricky_mock_files, setup_tmp_experiment1, setup_tmp_experiment2, setup_tmp_smco501_home, setup_tmp_git_author_repo
 from tests.cache import QSTAT_CMD_OUTPUT
 
 @lru_cache(maxsize=1000)
@@ -92,7 +92,9 @@ class TestSuiteScan(unittest.TestCase):
 
         Tor example, 'suites_without_codes/e7' experiment does not have 'e7' code
         """
-
+        
+        setup_tmp_experiment2()
+        
         unused_folders = [p for p in os.listdir(SUITES_WITHOUT_CODES) if os.path.isdir(SUITES_WITHOUT_CODES+p)]
 
         for code in hmm.codes:
@@ -131,7 +133,7 @@ class TestSuiteScan(unittest.TestCase):
         This may also be due to real path is a test suite, or git repo stuff.
         """
         ignore_codes = ["w001", "w002", "i002", "e016", "i004", "b009", "i006", 
-                        "b014", "b017", "e021", "i009", "b025"]
+                        "b014", "b017", "e021", "i009", "b025", "i010"]
 
         """
         like ignore_codes, but suite specific

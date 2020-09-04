@@ -14,7 +14,7 @@ from lxml import etree
 from utilities.shell import safe_check_output_with_status
 from utilities.xml import xml_cache
 
-from tests.path import MOCK_FILES, TMP_FOLDER, TURTLE_ME_PATH, ABSOLUTE_SYMLINK_EXISTS_PATH
+from tests.path import MOCK_FILES, TMP_FOLDER, TURTLE_ME_PATH, ABSOLUTE_SYMLINK_EXISTS_PATH, OPERATIONAL_HOME
 
 def setup_tricky_mock_files():
     """
@@ -135,15 +135,20 @@ def setup_tmp_experiment1():
         f.write(data)
     
     "ssm use line with old ssm domain"
-    ssm_line=". ssmuse-sh -d "+MOCK_FILES+"ssm-versions/1.6"
+    line=". ssmuse-sh -d "+MOCK_FILES+"ssm-versions/1.6"
     with open(cfg_path,"a") as f:
-        f.write("\n\n"+ssm_line)
+        f.write("\n\n"+line)
         
     "add line to resources.def to a full path to an experiment that exists"
-    res_line="PATH_TO_NOT_DATESTAMPED_SUITE="+MOCK_FILES+"suites_with_codes/w001"
+    line="PATH_TO_NOT_DATESTAMPED_SUITE="+MOCK_FILES+"suites_with_codes/w001"
     with open(resource_path,"a") as f:
-        f.write("\n\n"+res_line)
-
+        f.write("\n\n"+line)
+        
+    "add an absolute path to an operational file"
+    line="ABSOLUTE_PATH_TO_OP_USER="+OPERATIONAL_HOME+"smco500/maestro_suites/zdps/modules/module1/task1.tsk"
+    with open(cfg_path,"a") as f:
+        f.write("\n\n"+line)
+        
     "create new git repo so there are uncommited changes for w15"
     cmd = "cd %s ; git init ; sleep 0.1" % target
     output, status = safe_check_output_with_status(cmd)
@@ -161,5 +166,27 @@ def setup_tmp_experiment1():
     cmd = "cd %s ; chmod 700 listings" % target
     output, status = safe_check_output_with_status(cmd)
     assert status == 0
+
+    return target
+
+
+def setup_tmp_experiment2():
+    """
+    Returns a path to an experiment that produces the i007 code.
+    """
+
+    source = MOCK_FILES+"suites_with_codes/b007"
+    target = TMP_FOLDER+"i007"
+
+    if os.path.exists(target):
+        shutil.rmtree(target)
+    shutil.copytree(source, target, symlinks=True)
+
+    cfg_path = target+"/modules/module1/task1.cfg"
+        
+    "add an absolute path to an operational file"
+    line="ABSOLUTE_PATH_TO_OP_USER="+OPERATIONAL_HOME+"smco500/maestro_suites/zdps/modules/module1/task1.tsk"
+    with open(cfg_path,"a") as f:
+        f.write("\n\n"+line)
 
     return target
