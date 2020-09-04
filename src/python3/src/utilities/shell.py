@@ -1,7 +1,7 @@
 import subprocess
 import os
 import shlex
-
+import re
 
 def run_shell_cmd(cmd):
     """
@@ -10,6 +10,37 @@ def run_shell_cmd(cmd):
     """
     subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE)
 
+def get_git_remotes(path_to_repo):
+    """
+    Return a dictionary of all remotes like:
+        {"origin":{"fetch":"git@gitlab.com:zulban/maestro.git",
+                   "push":"git@gitlab.com:zulban/maestro.git"}
+        }
+    """
+    
+    cmd="cd %s ; git remote -v"%path_to_repo
+    output,status=safe_check_output_with_status(cmd)
+    
+    if status!=0:
+        return {}
+    
+    whitespace_regex=re.compile("[ \t]+")
+    lines=output.strip().split("\n")
+    results={}
+    for line in lines:
+        "line example:   origin  git@gitlab.com:zulban/maestro.git (fetch)"
+        split=whitespace_regex.split(line.strip())
+        
+        if len(split)!=3:
+            continue
+        name,target,remote_type=split
+        remote_type=remote_type[1:-1]
+        
+        if name not in results:
+            results[name]={"fetch":"","push":""}
+        results[name][remote_type]=target
+    
+    return results
 
 def safe_check_output(cmd):
     "subprocess.check_output can raise an exception. This always returns shell output string."

@@ -20,7 +20,7 @@ from utilities.parsing import BASH_VARIABLE_DECLARE_REGEX
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target, iterative_deepening_search
 from utilities.qstat import get_qstat_data_from_text, get_qstat_data, get_resource_limits_from_qstat_data
-from utilities.shell import safe_check_output_with_status
+from utilities.shell import safe_check_output_with_status, get_git_remotes
 
 """
 Matches codes like 'e001' and 'c010'
@@ -464,9 +464,7 @@ class ExperimentScanner():
 
     def scan_git_repo(self):
 
-        must_have_repo = self.context in (SCANNER_CONTEXT.OPERATIONAL,
-                                          SCANNER_CONTEXT.PREOPERATIONAL,
-                                          SCANNER_CONTEXT.PARALLEL)
+        must_have_repo = self.is_context_monitored()
         must_be_clean = must_have_repo
         cmd = "cd %s ; git status --porcelain" % self.path
         output, status = safe_check_output_with_status(cmd)
@@ -499,6 +497,20 @@ class ExperimentScanner():
 
             if authors:
                 self.add_message("i006", developers=developers)
+        
+        "remote origin not gitlab"
+        if has_repo:
+            gitlab="git@gitlab.science.gc.ca"
+            remotes=get_git_remotes(self.path)
+            origin_fetch=remotes.get("origin",{}).get("fetch","")
+            origin_push=remotes.get("origin",{}).get("push","")
+            for origin in (origin_fetch,origin_push):
+                if origin and not origin.startswith(gitlab):
+                    self.add_message("b025",
+                                     context=self.context,
+                                     bad=origin,
+                                     good=gitlab)
+                    break
 
     def scan_extra_files(self):
         """

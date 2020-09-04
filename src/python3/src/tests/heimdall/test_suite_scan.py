@@ -61,7 +61,7 @@ class TestSuiteScan(unittest.TestCase):
             debug_op_username_override = None
             if code in ["e007", "e010", "w007", "w011", "w012", "e014", 
                         "e016", "w015", "w022", "w023", "w024", "e024",
-                        "e025", "w025"]:
+                        "e025", "w025", "w028"]:
                 context = SCANNER_CONTEXT.OPERATIONAL
             if code in ["i001", "i007"]:
                 context = SCANNER_CONTEXT.DEVELOPMENT
@@ -127,7 +127,7 @@ class TestSuiteScan(unittest.TestCase):
         This may also be due to real path is a test suite, or git repo stuff.
         """
         ignore_codes = ["w001", "w002", "i002", "e016", "i004", "b009", "i006", 
-                        "b014", "b017", "e021", "i009"]
+                        "b014", "b017", "e021", "i009", "b025"]
 
         """
         like ignore_codes, but suite specific
