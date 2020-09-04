@@ -1,16 +1,11 @@
 import unittest
 
 from tests.path import TURTLE_ME_PATH
-from utilities import get_variable_value_from_file, superstrip
+from utilities import superstrip
 from utilities.maestro import get_latest_yyyymmddhh_from_experiment_path, get_yyyymmddhh, get_day_of_week
 
 
 class TestUtilities(unittest.TestCase):
-
-    def test_get_variable_value_from_file(self):
-        path = TURTLE_ME_PATH+"/resources/resources.def"
-        result = get_variable_value_from_file(path, "FRONTEND")
-        self.assertEqual(result, "turtle-frontend")
 
     def test_get_day_of_week(self):
         expected = 4

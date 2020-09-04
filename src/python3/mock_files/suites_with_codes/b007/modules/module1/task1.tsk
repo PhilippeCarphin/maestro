@@ -15,7 +15,8 @@
                 ssh ${destination%%:*} mkdir -p ${destination##*:}/${ENVAR_output_banco_name}/postalt
             fi
 
-            
+# this is here so that the ABC is considered a "used" variable
+echo $ABC
             
 $SEQ_BIN/nodelogger -n $SEQ_NODE -s $some_unknown_variable_name -m  "Put ${target} in ${destination} (remote copy)"
 

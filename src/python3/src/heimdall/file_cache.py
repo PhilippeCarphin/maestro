@@ -17,6 +17,7 @@ from lxml import etree
 
 from constants import ENCODINGS
 from utilities.generic import cache, safe_open, strip_comments_from_text, get_key_values_from_path
+from utilities.parsing import get_bash_variables_used_in_text
 from utilities.path import get_link_chain_from_link
 
 class FileCache():
@@ -44,6 +45,15 @@ class FileCache():
     def get_key_values_from_path(self, path):
         realpath = self.realpath(path)
         return self.get_key_values_from_realpath(realpath)
+    
+    @cache
+    def get_bash_variables_used_in_realpath(self, realpath):
+        text=self.open(realpath)
+        return get_bash_variables_used_in_text(text)
+    
+    def get_bash_variables_used_in_path(self, path):
+        realpath = self.realpath(path)
+        return self.get_bash_variables_used_in_realpath(realpath)
     
     @cache
     def get_link_chain_from_link(self, path):

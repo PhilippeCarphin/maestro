@@ -128,6 +128,7 @@ class ExperimentScanner():
         self.scan_resource_queues()
         self.scan_root_links()
         self.scan_ssm_uses()
+        self.scan_unused_variables()
         self.scan_xmls()
 
         self.sort_messages()
@@ -235,6 +236,42 @@ class ExperimentScanner():
 
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+    
+    def scan_unused_variables(self):        
+        "find all variable defines in config files"
+        
+        defines=set()
+        
+        "key is bash variable name, path is list of config files where it is defined."
+        variable_to_paths={}
+        
+        for path in self.config_files:
+            values=file_cache.get_key_values_from_path(path)
+            defines.update(values.keys())
+            for variable in values:
+                if variable not in variable_to_paths:
+                    variable_to_paths[variable]=[]
+                variable_to_paths[variable].append(path)
+                
+        "for each task and config file, remove used variables from 'unused'"
+        unused=defines
+        paths=self.config_files+self.task_files+self.resource_files
+        for path in paths:
+            variables=file_cache.get_bash_variables_used_in_path(path)
+            unused=unused.difference(set(variables))
+            
+        "key is path to config file, value is list of variables it defines but which are unused"
+        path_to_unused={}
+        for variable in unused:
+            for path in variable_to_paths[variable]:
+                if path not in path_to_unused:
+                    path_to_unused[path]=[]
+                path_to_unused[path].append(variable)
+        
+        for path,variables in  path_to_unused.items():
+            self.add_message("b024",
+                             config=path,
+                             unused=str(variables))
     
     def scan_etikets(self):        
         "find etikets defined in bad places"
@@ -920,6 +957,7 @@ class ExperimentScanner():
                 if attribute_name in ("valid_hour","valid_dow"):
                     time_dependent_resources.append(path)
         if time_dependent_resources:
+            time_dependent_resources=sorted(list(set(time_dependent_resources)))
             self.add_message("i009",
                              paths="\n".join(time_dependent_resources))
                     

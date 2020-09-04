@@ -3,6 +3,7 @@ import Levenshtein
 import re
 from heimdall.file_cache import file_cache
 from utilities.generic import superstrip
+from utilities.parsing import get_bash_variables_used_in_text
 
 """
 Regex to capture the entire line that seems to be a call to nodelogger with -s argument.
@@ -14,13 +15,6 @@ NODELOGGER_SIGNAL_REGEX = re.compile(r".*nodelogger.*-s[ ]+([^ \n]+).*")
 Captures strings like 'ABC_DEF=123' where group 1 is "ABC_DEF"
 """
 CONSTANT_VARIABLE_REGEX = re.compile(r"^[ ]*([A-Z]+[A-Z_]*)[ ]*=")
-
-"""
-Matches:
-    $ABC
-    ${ABC}
-"""
-BASH_VARIABLE_OPTIONAL_CURLY_REGEX=re.compile("\\$({[\\w]+}|[\\w]+)")
 
 def is_etiket_variable(bash_variable_name):
     """
@@ -48,11 +42,7 @@ def get_etiket_variables_used_from_text(text,require_etiket_programs=True):
     if require_etiket_programs and "/pgsm " not in text and "/editfst " not in text:
         return []
     
-    variables=BASH_VARIABLE_OPTIONAL_CURLY_REGEX.findall(text)
-    
-    "strip curly brackets"
-    variables=[superstrip(v,"{}") for v in variables]
-    
+    variables=get_bash_variables_used_in_text(text)
     etikets=[v for v in variables if is_etiket_variable(v)]
     return sorted(list(set(etikets)))
 

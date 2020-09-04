@@ -150,25 +150,6 @@ def recursive_replace_in_files(before, after, folder):
             pass
 
 
-def get_variable_value_from_file(path, name):
-    """
-    If name is "FRONTEND"
-    finds the first line like "FRONTEND=123" and returns "123"
-    """
-
-    try:
-        with open(path, "r") as f:
-            lines = f.readlines()
-    except:
-        lines = []
-
-    for line in lines:
-        if line.startswith(name+"="):
-            return line[line.index("=")+1:].strip()
-
-    return ""
-
-
 def remove_chars_in_text(chars,text):
     """
     Return text where all chars have been removed.

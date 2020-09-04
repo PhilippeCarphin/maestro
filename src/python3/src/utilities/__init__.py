@@ -14,6 +14,7 @@ from utilities.json_utils import *
 from utilities.generic import *
 from utilities.geometry import *
 from utilities.path import *
+from utilities.parsing import *
 from utilities.pretty import *
 from utilities.qstat import *
 from utilities.shell import *

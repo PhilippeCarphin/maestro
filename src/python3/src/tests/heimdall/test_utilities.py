@@ -5,7 +5,7 @@ import os
 import unittest
 import os.path
 
-from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES, SUITES_WITHOUT_CODES, ABSOLUTE_SYMLINK_EXISTS_PATH
+from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES, SUITES_WITHOUT_CODES, ABSOLUTE_SYMLINK_EXISTS_PATH, TURTLE_ME_PATH
 from tests.test_file_builder import setup_tmp_git_author_repo, setup_tricky_mock_files
 
 from constants import SCANNER_CONTEXT
@@ -17,10 +17,17 @@ from utilities.heimdall.git import scan_git_authors
 from utilities import guess_user_home_from_path, pretty, pretty_kwargs
 from utilities.path import iterative_deepening_search, get_link_chain_from_link
 from utilities.maestro import get_weird_assignments_from_config_path, get_commented_pseudo_xml_lines
+from utilities.parsing import get_bash_variables_used_in_path
 from heimdall.file_cache import file_cache
 
 
 class TestUtilities(unittest.TestCase):
+    
+    def test_used_bash_variables(self):
+        path=TURTLE_ME_PATH+"modules/turtle/turtleTask1.tsk"
+        result=get_bash_variables_used_in_path(path)
+        expected=["SUPER"]
+        self.assertEqual(result,expected)
     
     def test_find_etiket(self):
         path = MOCK_FILES+"suites_with_codes/e005/modules/module1/task1.tsk"
