@@ -918,7 +918,7 @@ class ExperimentScanner():
             if not is_experiment:
                 continue
             
-            if not DATESTAMP_PATH_REGEX.match(value):
+            if not DATESTAMP_PATH_REGEX.search(value):
                 not_datestamped.append(value)
         
         if not_datestamped:
