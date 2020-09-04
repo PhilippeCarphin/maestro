@@ -21,6 +21,7 @@ Options:
     --home=<folder>              The home folder used to lookup files like '~/.suites/overrides.def'. By default, use the home of the owner of the maestro experiment.
     --op-home=<path>             Path to the home of the operational user. [default: /home/smco500]
     --par-home=<path>            Path to the home of the parallel user. [default: /home/smco501]
+    --op-suites-home=<path>       Path to the home of owner of operational maestro suite files. [default: /home/smco502]
     
     --count=<count>              How many top maintainers to show in heimdall blame. [default: 5]
     
@@ -72,6 +73,7 @@ def scan_cli(args):
                                 context=context,
                                 operational_home=args["--op-home"],
                                 parallel_home=args["--par-home"],
+                                operational_suites_home=args["--op-suites-home"],
                                 critical_error_is_exception=False)
 
     try:

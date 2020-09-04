@@ -41,6 +41,7 @@ class ExperimentScanner():
                  context=None,
                  operational_home=None,
                  parallel_home=None,
+                 operational_suites_home=None,
                  critical_error_is_exception=True,
                  debug_qstat_output_override="",
                  debug_cmcconst_override="",
@@ -63,8 +64,11 @@ class ExperimentScanner():
             raise ValueError("Home path for operational user does not exist: '%s'" % operational_home)
         if parallel_home and not os.path.exists(parallel_home):
             raise ValueError("Home path for parallel user does not exist: '%s'" % parallel_home)
+        if operational_suites_home and not os.path.exists(operational_suites_home):
+            raise ValueError("Home path for operational suites owner does not exist: '%s'" % operational_suites_home)
         self.operational_home = operational_home
         self.parallel_home = parallel_home
+        self.operational_suites_home=operational_suites_home
 
         """
         Instead of running the qstat shell command, use this output instead.
@@ -119,9 +123,10 @@ class ExperimentScanner():
         self.scan_file_permissions()
         self.scan_git_repo()
         self.scan_gitignore()
-        self.scan_home_soft_links()
+        self.scan_external_soft_links()
         self.scan_hub()
         self.scan_identical_files()
+        self.scan_install_soft_links()
         self.scan_log_folder_permissions()
         self.scan_modules()
         self.scan_node_names()
@@ -1053,21 +1058,39 @@ class ExperimentScanner():
                                          resource_path=path,
                                          attribute_value=attribute_value,
                                          recommended=", ".join(recommended))
-            
+    
+    def scan_install_soft_links(self):        
+        "is there a link on 500 pointing to 502"
+        
+        if not self.operational_suites_home:
+            return
+        
+        realpath=file_cache.realpath(self.path)
+        suites_realpath=file_cache.realpath(self.operational_suites_home)+"/.suites/"
+        
+        if not realpath or not suites_realpath:
+            return
+        
+        if realpath.startswith(suites_realpath):
+            no_slash=realpath[:-1] if realpath.endswith("/") else realpath
+            expected=self.operational_home+"/.suites/"+os.path.basename(no_slash)
+            if not file_cache.islink(expected):
+                self.add_message("w029",
+                                 target=self.path,
+                                 source=expected)
 
-    def scan_home_soft_links(self):
+    def scan_external_soft_links(self):
         """
-        Find core maestro files with a realpath outside the user home containing this project.
+        Find maestro files which are links to paths outside the project.
         """
-
+        
+        "find core maestro files with a realpath outside the user home containing this project."
         home_root = guess_user_home_from_path(self.path)
         bad_links = []
-
         for path in self.files:
             realpath = file_cache.realpath(path)
             if not realpath.startswith(home_root):
                 bad_links.append(path)
-
         if bad_links:
             is_op = self.is_context_operational()
             code = "w005" if is_op else "i001"
@@ -1076,7 +1099,7 @@ class ExperimentScanner():
                                   real_home=home_root,
                                   bad_links=msg)
         
-        "realpath is okay, but not linkchain"
+        "cases where realpath is okay, but within not linkchain"
         if self.is_context_operational():
             for path in self.files:
                 "no need to report a complicated chain link if the realpath is simply wrong too, as above"

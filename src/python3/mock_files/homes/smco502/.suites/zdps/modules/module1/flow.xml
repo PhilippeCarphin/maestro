@@ -1,0 +1,7 @@
+<MODULE name="module1">
+    <SUBMITS name="task2"/>
+    <TASK name="task2"/>            
+    <SUBMITS name="task1"/>
+    <TASK name="task1"/>            
+</MODULE>
+
