@@ -17,16 +17,21 @@ from utilities.heimdall.git import scan_git_authors
 from utilities import guess_user_home_from_path, pretty, pretty_kwargs
 from utilities.path import iterative_deepening_search, get_link_chain_from_link
 from utilities.maestro import get_weird_assignments_from_config_path, get_commented_pseudo_xml_lines
-from utilities.parsing import get_bash_variables_used_in_path
+from utilities.parsing import get_bash_variables_used_in_text
 from heimdall.file_cache import file_cache
 
 
 class TestUtilities(unittest.TestCase):
     
     def test_used_bash_variables(self):
-        path=TURTLE_ME_PATH+"modules/turtle/turtleTask1.tsk"
-        result=get_bash_variables_used_in_path(path)
-        expected=["SUPER"]
+        text="""
+        
+        ABC=123
+        echo $CAT ${DOG}
+        # echo $TURTLE
+        """
+        result=get_bash_variables_used_in_text(text)
+        expected=["CAT","DOG"]
         self.assertEqual(result,expected)
     
     def test_find_etiket(self):

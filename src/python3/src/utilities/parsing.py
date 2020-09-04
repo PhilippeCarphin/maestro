@@ -112,13 +112,17 @@ def strip_comments_from_text(text):
     lines = [i for i in lines if not i.strip().startswith("#")]
     return "\n".join(lines)
 
-def get_bash_variables_used_in_text(text):
+def get_bash_variables_used_in_text(text,strip_comments=True):
     """
     Given text like:
         echo 123 $ABC ${CAT}
     returns:
         ["ABC","CAT"]
     """
+    
+    if strip_comments:
+        text=strip_comments_from_text(text)
+        
     variables=BASH_VARIABLE_OPTIONAL_CURLY_REGEX.findall(text)
     
     "strip curly brackets"
