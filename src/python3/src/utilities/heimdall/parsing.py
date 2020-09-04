@@ -2,8 +2,7 @@
 import Levenshtein
 import re
 from heimdall.file_cache import file_cache
-from utilities.generic import superstrip
-from utilities.parsing import get_bash_variables_used_in_text
+from utilities.parsing import get_bash_variables_used_in_text, superstrip
 
 """
 Regex to capture the entire line that seems to be a call to nodelogger with -s argument.

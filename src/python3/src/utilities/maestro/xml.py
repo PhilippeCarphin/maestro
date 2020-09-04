@@ -11,7 +11,7 @@ import lxml
 from lxml import etree
 from utilities.pretty import pretty, pprint_kwargs
 from utilities.xml import xml_cache
-from utilities.generic import cache, safe_open
+from utilities.io import safe_open
 from home_logger import logger
 from constants import NODE_TYPES, CONTAINER_TAGS
 

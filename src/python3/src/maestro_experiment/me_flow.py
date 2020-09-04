@@ -13,7 +13,7 @@ from constants import NODE_TYPE, SWITCH_TYPE
 from utilities.maestro.xml import get_combined_flow_for_experiment_path, get_node_type_from_element, get_submits_from_flow_element, \
     get_flow_children_from_flow_element, get_module_name_from_flow_xml, get_paths_from_element, get_module_name_for_element, is_container
 from utilities.pretty import pretty_kwargs
-from utilities.generic import superstrip
+from utilities.parsing import superstrip
 from home_logger import logger
 
 

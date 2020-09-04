@@ -4,7 +4,7 @@ from datetime import datetime
 
 from constants.maestro import NODE_STATUS
 from constants import ENCODINGS
-from utilities.generic import safe_open
+from utilities.io import safe_open
 
 
 class NodeLogParser():

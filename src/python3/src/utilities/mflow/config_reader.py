@@ -1,7 +1,7 @@
 import os.path
 from constants.mflow import KEYBOARD_NAVIGATION_TYPE
 from constants import DEFAULT_CONFIG_PATH
-from utilities.generic import clamp
+from utilities.math import clamp
 
 def get_unknown_mflow_config_keys(config):
     """

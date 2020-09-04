@@ -12,12 +12,13 @@ import os
 import os.path
 import hashlib
 from pwd import getpwuid, getpwnam
-from grp import getgrgid, getgrall
+from grp import getgrgid
 from lxml import etree
 
 from constants import ENCODINGS
-from utilities.generic import cache, safe_open, strip_comments_from_text, get_key_values_from_path
-from utilities.parsing import get_bash_variables_used_in_text
+from utilities.decorators import cache
+from utilities.io import safe_open
+from utilities.parsing import get_bash_variables_used_in_text, strip_comments_from_text, get_key_values_from_path
 from utilities.path import get_link_chain_from_link
 
 class FileCache():
