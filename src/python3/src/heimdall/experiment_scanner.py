@@ -906,25 +906,26 @@ class ExperimentScanner():
                 self.add_message("e021",variable=variable,path=path)
         
         "suite paths without datestamps"
-        variables=file_cache.get_key_values_from_path(path)
-        not_datestamped=[]
-        for name,value in variables.items():
+        if self.is_context_monitored():
+            variables=file_cache.get_key_values_from_path(path)
+            not_datestamped=[]
+            for name,value in variables.items():
+                
+                if not value.startswith("/"):
+                    continue
+                
+                entry_module=value+"/EntryModule"
+                is_experiment=file_cache.exists(entry_module)
+                if not is_experiment:
+                    continue
+                
+                if not DATESTAMP_PATH_REGEX.search(value):
+                    not_datestamped.append(value)
             
-            if not value.startswith("/"):
-                continue
-            
-            entry_module=value+"/EntryModule"
-            is_experiment=file_cache.exists(entry_module)
-            if not is_experiment:
-                continue
-            
-            if not DATESTAMP_PATH_REGEX.search(value):
-                not_datestamped.append(value)
-        
-        if not_datestamped:
-            self.add_message("w028",
-                             resource_path=path,
-                             bad="\n".join(not_datestamped))
+            if not_datestamped:
+                self.add_message("w028",
+                                 resource_path=path,
+                                 bad="\n".join(not_datestamped))
         
     def scan_resource_xml_files(self):
         "scan the content of resource XML files (see scan_file_content for CSV content scan)"
