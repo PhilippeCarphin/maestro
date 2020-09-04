@@ -27,6 +27,14 @@ Matches codes like 'e001' and 'c010'
 """
 CODE_REGEX = re.compile("[cewib][0-9]{3}")
 
+"""
+Matches datestamp substring in suite paths like:
+    /home/smco500/.suites/gdps_20200401/g1
+but not:
+    /home/smco500/.suites/gdps/g1
+"""
+DATESTAMP_PATH_REGEX = re.compile("_[0-9]{8}")
+
 class ExperimentScanner():
     def __init__(self,
                  path,
@@ -124,7 +132,7 @@ class ExperimentScanner():
         self.scan_required_files()
         self.scan_required_folders()
         self.scan_resource_definitions()
-        self.scan_resource_files()
+        self.scan_resource_xml_files()
         self.scan_resource_queues()
         self.scan_root_links()
         self.scan_ssm_uses()
@@ -853,11 +861,36 @@ class ExperimentScanner():
                 self.add_message("i007",path=path,bad=bad)
         
     def scan_resource_definitions(self):
+        "scan files like resources.def, overrides.def, etc"
+        
         for path in self.maestro_experiment.resource_definition_paths:
             self.scan_resource_definition(path)
+        
+        "resources.def variable name typo"
+        standard_resource_defines = ["FRONTEND",
+                                     "BACKEND",
+                                     "FRONTEND_DEFAULT_Q",
+                                     "FRONTEND_XFER_Q",
+                                     "FRONTEND_DAEMON_Q",
+                                     "BACKEND_DEFAULT_Q",
+                                     "BACKEND_XFER_Q"]
+        
+        me=self.maestro_experiment
+        for name in standard_resource_defines:
+            for path, declares in me.path_to_resource_declares.items():
+                if name in declares:
+                    continue
+                for maybe_typo in declares:
+                    d = Levenshtein.distance(name, maybe_typo)
+                    if d == 1:
+                        self.add_message("w009",
+                                         maybe_typo=maybe_typo,
+                                         expected=name)
     
     def scan_resource_definition(self,path):
         content=file_cache.open_without_comments(path)
+        
+        "find duplicate declares"
         lines=content.split("\n")
         variable_count={}
         for line in lines:
@@ -867,14 +900,34 @@ class ExperimentScanner():
             name=match.group(1)
             if name not in variable_count:
                 variable_count[name]=0
-            variable_count[name]+=1
-        
+            variable_count[name]+=1        
         for variable,count in variable_count.items():
             if count>1:
                 self.add_message("e021",variable=variable,path=path)
         
-    def scan_resource_files(self):
-        "scan the content of resource files (see scan_file_content for CSV content scan)"
+        "suite paths without datestamps"
+        variables=file_cache.get_key_values_from_path(path)
+        not_datestamped=[]
+        for name,value in variables.items():
+            
+            if not value.startswith("/"):
+                continue
+            
+            entry_module=value+"/EntryModule"
+            is_experiment=file_cache.exists(entry_module)
+            if not is_experiment:
+                continue
+            
+            if not DATESTAMP_PATH_REGEX.match(value):
+                not_datestamped.append(value)
+        
+        if not_datestamped:
+            self.add_message("w028",
+                             resource_path=path,
+                             bad="\n".join(not_datestamped))
+        
+    def scan_resource_xml_files(self):
+        "scan the content of resource XML files (see scan_file_content for CSV content scan)"
 
         me = self.maestro_experiment
 
@@ -883,8 +936,8 @@ class ExperimentScanner():
         if d:
             for path, variables in d.items():
                 self.add_message("e012",
-                                      resource_path=path,
-                                      variable_names=str(variables))
+                                 resource_path=path,
+                                 variable_names=str(variables))
 
         "run_orji must be enabled"
         for path in self.resource_files:
@@ -901,26 +954,6 @@ class ExperimentScanner():
                 self.add_message("w016",
                                       resource_path=path,
                                       catchup=catchup)
-        
-        "resources.def variable name typo"
-        standard_resource_defines = ["FRONTEND",
-                                     "BACKEND",
-                                     "FRONTEND_DEFAULT_Q",
-                                     "FRONTEND_XFER_Q",
-                                     "FRONTEND_DAEMON_Q",
-                                     "BACKEND_DEFAULT_Q",
-                                     "BACKEND_XFER_Q"]
-
-        for name in standard_resource_defines:
-            for path, declares in me.path_to_resource_declares.items():
-                if name in declares:
-                    continue
-                for maybe_typo in declares:
-                    d = Levenshtein.distance(name, maybe_typo)
-                    if d == 1:
-                        self.add_message("w009",
-                                              maybe_typo=maybe_typo,
-                                              expected=name)
 
         """
         this regex matches strings like:

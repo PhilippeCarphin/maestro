@@ -108,7 +108,7 @@ def setup_tmp_smco501_home():
 
 def setup_tmp_experiment1():
     """
-    Returns a path to an experiment that produces the b001, w015, i008 codes.
+    Returns a path to an experiment that produces the b001, w015, i008, w028 codes.
     
     For example, dynamic values will change depending on who runs the test suite and from where.
     """
@@ -122,6 +122,7 @@ def setup_tmp_experiment1():
 
     xml_path = target+"/resources/module1/module2/task1.xml"
     cfg_path = target+"/resources/module1/task1.cfg"
+    resource_path = target+"/resources/resources.def"
 
     root = xml_cache.get(xml_path)
     
@@ -137,6 +138,11 @@ def setup_tmp_experiment1():
     ssm_line=". ssmuse-sh -d "+MOCK_FILES+"ssm-versions/1.6"
     with open(cfg_path,"a") as f:
         f.write("\n\n"+ssm_line)
+        
+    "add line to resources.def to a full path to an experiment that exists"
+    res_line="PATH_TO_NOT_DATESTAMPED_SUITE="+MOCK_FILES+"suites_with_codes/w001"
+    with open(resource_path,"a") as f:
+        f.write("\n\n"+res_line)
 
     "create new git repo so there are uncommited changes for w15"
     cmd = "cd %s ; git init ; sleep 0.1" % target
