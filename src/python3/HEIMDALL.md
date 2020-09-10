@@ -92,6 +92,6 @@ The project structure and tests could be flattened/merged in some future release
 
 # Myth
 
-In North mythology, Heimdall or Heimdallr is attested as possessing foreknowledge, keen eyesight and hearing, and keeps watch for invaders and the onset of Ragnarök. Heimdall sees all.
+In Norse mythology, Heimdall or Heimdallr is attested as possessing foreknowledge, keen eyesight and hearing, and keeps watch for invaders and the onset of Ragnarök. Heimdall sees all.
 
 ![heimdall avatar](/src/python3/screenshots/heimdall-avatar.jpg)
