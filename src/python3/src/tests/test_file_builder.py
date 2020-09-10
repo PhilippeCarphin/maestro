@@ -108,6 +108,8 @@ def setup_tmp_smco501_home():
 
 def setup_tmp_experiment1():
     """
+    Deletes then creates files for testing.
+    
     Returns a path to an experiment that produces the b001, w015, i008, w028 codes.
     
     For example, dynamic values will change depending on who runs the test suite and from where.
@@ -172,6 +174,8 @@ def setup_tmp_experiment1():
 
 def setup_tmp_experiment2():
     """
+    Deletes then creates files for testing.
+    
     Returns a path to an experiment that produces the i007 code.
     """
 

@@ -1,97 +1,97 @@
-# This is a tab delimited spreadsheet (TSV) for all Heimdall messages.				
-# The message levels are best practice (b), info (i), warning (w), error (e), and critical (c).				
-code	label	description	url	notes
-b001	Hard coded dependency path	The ‘exp’ attribute ‘{exp_value}’ in the resources file ‘{resource_path}’ is hard coded. This is less portable and more fragile. Consider using a variable instead.		
-b002	SupportInfo is too long	The SupportInfo attribute in the XML ‘{xml_path}’ is ‘{char_count}’ characters long but it should be shorter. The recommended maximum is {max_chars} characters.		
-b003	SupportInfo has no URL	The SupportInfo attribute in the XML ‘{xml_path}’ should contain a URL. This is the recommended way to provide detailed support status info and troubleshooting steps.		
-b004	SupportInfo missing standard substring	The SupportInfo attribute in the XML ‘{xml_path}’ should start with a value like ‘Full Support’. Recommended start strings:\n{substrings}		
-b005	Deprecated file or folder	The file or folder ‘{path}’ is deprecated and should be deleted.		
-b006	Non-maestro files in maestro folders	The maestro folder ‘{folder}’ should only contain maestro files like tsk, cfg, xml. These files were found:\n{filenames}		
-b007	Comments in config file	The pseudo-xml section (containing input, executables, and output) of the config file ‘{file_path}’ contains {count} commented lines starting with “##”. These seem to be configuration lines and not comments, and should be removed.		
-b008	Hidden queue alias used	The value ‘{value}’ for the resource variable ‘{name}’ is a hidden queue alias not easily visible in qstat. Consider using one of these queues instead:\n{queues}		
-c001	No EntryModule	EntryModule link does not exist: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
-c002	Bad EntryModule	EntryModule is not a link: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
-c003	No experiment here	Could not find an experiment for path: '{path}'. A valid experiment folder contains an 'EntryModule' link.	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
-c004	No EntryModule flow.xml	The required EntryModule flow.xml file does not exist: ‘{flow_xml}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
-c005	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to parse as XML: ‘{flow_xml}’		
-e001	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders	
-e002	Bad XML	Failed to parse XML: ‘{xml}’		
-e003	Invalid node name	Invalid node name ‘{node_name}’ in flow XML ‘{flow_path}’. Node names must be alphanumeric with dot, dash, or underscores. Must match the regex: {regex}	https://regex101.com/	
-e004	Broken symlink	The target of soft link ‘{link}’ does not exist.		
-e005	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML:\n{flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290	
-i005	Unknown nodelogger signal	The executable ‘nodelogger’ was given a signal for its ‘-s’ argument that is not a known signal: {signals}. This message won’t appear in the message center. If you don’t want it to appear in the message center, use ‘infox’. \n{details}	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
-e007	Missing required resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. This is required for the ‘{context}’ context.		
-e008	Missing curly brackets in resource xml	Variables in resource XMLs must use curly brackets like ‘${{ABC}}’ not ‘$ABC’. The file ‘{file_path}’ contains:\n{matching_string}		
-e009	Unbalanced curly brackets in resource xml	Found an uneven number of curly brackets ‘{attribute_value}’ in a resource file: ‘{file_path}’		
-e010	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a less portable and more fragile way to configure an experiment.		
-e011	Dependency experiment does not exist	The ‘exp’ attribute ‘{exp_value}’ in the resources file ‘{resource_path}’ is not a path to a folder that exists.		
-e012	Undefined resource XML variables	The resource XML ‘{resource_path}’ uses variables that are not defined in any resource files like ‘resources/resources.def’. Variables:\n{variable_names}		
-e013	Dissemination state does not match context	The experiment seems to have the ‘{context}’ context but variables in ‘{cfg_path}’ do not match what is expected: {unexpected}		
-e014	Non-links in hub	Experiments with the ‘{context}’ context can only have soft link folders in their ‘hub’ folder:\n{bad}		
-e015	Resource value higher than maximum	The resource value ‘{value}’ for ‘{attribute}’ in ‘{xml_path}’ is higher than the maximum of ‘{maximum}’ defined in jobctl-qstat for queue ‘{queue}’.		
-e016	No git repo	There is no git repo tracking this experiment. Experiments with the ‘{context}’ context should always be version controlled with git.		
-i001	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable. Links:\n{bad_links}		
-i002	Module name and path differ	The module folder ‘{folder_name}’ differs from the module name ‘{attribute_name}’ in the flow XML ‘{xml_path}’. This can help organize a project, but it may also be confusing.		
-i003	Text editor swap files	Text editor swap files were found, for example for vim or emacs. If your editor is closed, you may want to recover or delete these:\n{swaps}		
-i004	Git repo has uncommited changes	There are uncommited changes in the git repo.		
-w001	Missing resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
-w002	Missing loop resource file	The loop or switch ‘{node_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
-w003	Deprecated site1/site2	The paths site1 and site2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains:\n{matching_string}		
-w004	Deprecated hall1/hall2	The paths hall1 and hall2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains:\n{matching_string}		
-w005	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be considered too unstable to install operationally. Run realpath on these links:\n{bad_links}		
-w006	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a less portable and more fragile way to configure an experiment.		
-w007	No support status in operational experiment	There is no SupportInfo attribute in the XML ‘{xml_path}’ or the XML does not exist. This is required for operational experiments.		
-w008	Multiple support statuses	The XML ‘{xml_path}’ has more than one SupportInfo element.		
-w009	Resource variable typo	The resource variable ‘{maybe_typo}’ is defined but the standard variable name ‘{expected}’ is not. Did you mean that instead?	https://wiki.cmc.ec.gc.ca/wiki/User:Lims/projects/tech_transfer_improvements#Using_standard_variables_for_machine_and_queue_definitions	
-w010	Bad queue value for resource variable	The value ‘{value}’ for the resource variable ‘{name}’ is not a queue available in qstat. Queues:\n{queues}		
-w011	Experiment not in overview XML	The experiment seems to have the ‘{context}’ context but it was not found in the {exp_count} experiments in the overview XML: {xml_path}		
-w012	Experiment in unexpected overview XML	The experiment seems to have the ‘{context}’ context but it was found in the {exp_count} experiments in the ‘{xml_context}’ context overview XML: {xml_path}		
-w013	Misplaced dissemination variables	The variables {variables} belong only in ‘experiment.cfg’ files but were found in: ‘{cfg_path}’		
-w014	Hub pairs have dissimilar targets	The hub folder links ‘{folder1}’ and ‘{folder2}’ are expected to have similar targets. Instead they are very different:\n{target1}\n{target2}		
-w015	Git repo has uncommited changes	There are uncommited changes in the git repo. Experiments with the ‘{context}’ context should always have nothing to commit and a clean working tree from ‘git status’.		
-b009	Deprecated attribute in SUBMITS element	The file ‘{xml_path}’ has the attribute ‘type’ in a SUBMITS element. This is deprecated and can be removed.		
-b010	Non-standard characters in executable name	The config path ‘{bad}’ in ‘{config_path}’ has non-standard characters that do not match regex ‘{regex}’. This can cause bugs with tools, operating systems, and parsers. Consider renaming them. {dollar_msg}	https://regex101.com/	
-b011	Top-level file or folder in CMCCONST	There are references to files or folders in the root level of the CMCCONST folder. It is recommended instead to use folders in CMCCONST. The file ‘{file_path}’ contains:\n{matching_string}	https://gitlab.science.gc.ca/CMOI/best-practices/blob/master/en/constants.md	
-i006	Lead developers from git history	Based on the git history for this project (commit frequency, recency, continuity) these seem to be the lead developers:\n{developers}		
-w016	The task run_orji is disabled	The task resource ‘{resource_path}’ has a catchup value of ‘{catchup}’ but ‘run_orji’ tasks should always be enabled. This way, users get to decide whether to subscribe or unsubscribe.	https://wiki.cmc.ec.gc.ca/wiki/orji	
-w017	Archive file is not a link	The archive file ‘{bad}’ is not a link. Files named ‘.protocole_*’ or ‘.archive_monitor_*’ must be links so that the maintainers of the archive system can more easily manage its settings.		
-b012	Deprecated archive file	The file ‘{bad}’ is a deprecated archive file and should be deleted. If the hub has no other archive files, its archiving status should be examined.		
-w018	Bad items in gitignore	The gitignore file ‘{gitignore_path}’ should not contain line ‘{line}’. It’s important that this pattern is in the git repository so a full working suite can be shared.		
-w019	Missing items in gitignore	The gitignore file ‘{gitignore_path}’ should contain {content}. This will ignore files generated when running this suite which do not belong in the version controlled project.		
-w020	No gitignore	There should be a gitignore file here: ‘{gitignore_path}’. No gitignore means large amounts of unimportant files may be accidentally shared or added to the project.		
-w021	Suite file in $CMCCONST	The realpath for file ‘{path}’ is in the $CMCCONST folder ‘{cmcconst}’. Task, config, flow, and resource XML files used in a suite should not be in the $CMCCONST folder.	https://gitlab.science.gc.ca/CMOI/best-practices/blob/master/en/constants.md	
-b013	Unclear folder name	The folder ‘{unclear}’ should have a descriptive soft link next to it. For example ‘forecast -> e1’. This gives newbies one less thing to memorize when getting started.	https://wiki.cmc.ec.gc.ca/wiki/Obfuscation	
-b014	Bad node name	Bad node name ‘{node_name}’ in flow XML ‘{flow_path}’. This name works, but the recommendation is to match this regex: {regex}	https://regex101.com/	
-e017	Duplicate name in flow container	The container ‘{container_name}’ in a flow XML has more than one element with the name or subname ‘{duplicate_name}’. All direct children in a container must have a unique name or subname.		
-e018	Submits element has name attribute	All SUBMITS elements should have a ‘sub_name’ attribute not a ‘name’ attribute. The file ‘{file_path}’ contains:\n{matching_string}		
-e019	Non-submits element has sub_name attribute	Only SUBMITS elements should have a ‘sub_name’ attribute. You may need to use the ‘name’ attribute instead. The file ‘{file_path}’ contains:\n{matching_string}		
-w022	Machine resource is hard coded	The experiment seems to have the ‘{context}’ context but the value ‘{machine_value}’ of ‘machine’ in ‘{resource_path}’ is hard coded. A switchover may break this suite. Use a variable like $FRONTEND instead.		
-b015	Non-standard variables in batch resource	The BATCH attribute ‘{attribute_name}’ in ‘{resource_path}’ uses a non-standard variable ‘{attribute_value}’. Consider using a standard variable instead so configuration is easier to track and change: {recommended}		
-b016	Inconsistent file owners or permissions	The file ‘{path}’ has ownership and permissions ‘{ugp}’ but most experiment files have ‘{expected}’. The owner, group, and permissions of permanent experiment files should be the same.		
-e020	Inconsistent log folder owners or permissions	The log folder ‘{path}’ has ownership and permissions ‘{ugp}’ which is different from the other log folders. The permissions of the temporary log folders should be the same: {folders}		
-w023	Operational user can overwrite experiment	The operational user ‘{user}’ has write permissions on the permanent project file ‘{path}’. For safety during operational runs, ‘{user}’ should only have read and execution permissions for permanent project files.		
-b017	Found SEQ_ instead of MAESTRO_	The deprecated variable ‘{old}’ was found in ‘{path}’. Consider using the equivalent variable ‘{new}’ instead. This helps newbies understand your project since they will know this variable is related to maestro.		
-e021	Duplicate resource definitions	The variable ‘{variable}’ is defined more than once in the file ‘{path}’. Tools like getdef may behave unexpectedly.		
-b018	Uppercase variable is redefined	The uppercase variable ‘{variable}’ is defined more than once in the file ‘{path}’. Uppercase variables in bash should be considered constant and not changed.	https://google.github.io/styleguide/shellguide.html#s7.3-constants-and-environment-variable-names	
-e022	Missing stats folder	The ‘stats’ folder is missing but required because the resource variables SEQ_RUN_STATS_ON and SEQ_AVERAGE_WINDOW are used: ‘{required}’	https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/stats	
-b019	Readme is not markdown	The file ‘{readme}’ looks like a ‘read me’ file. Consider writing it in markdown and renaming it to ‘{suggested}’ so that it appears automatically and formatted on platforms like GitLab.		
-e023	Bad loop expression	The file ‘{path}’ has a bad loop expression ‘{loop_expression}’. This should be comma delimited sets of numbers in the format ‘start:end:step:set’.	https://wiki.cmc.ec.gc.ca/wiki/Maestro/1.5.0/Release_Notes#Multi-definition_numeric_loops	
-b020	Literal path instead of CMCPROD	Literal paths to ‘hall3’ or ‘hall4’ were found. Consider using the CMCPROD variable instead so your project follows switchover configurations. The file ‘{file_path}’ contains:\n{matching_string}		
-w024	Parallel user in operational context	The experiment seems to have the ‘{context}’ context but the file ‘{file_path}’ references the parallel systems with the string ‘{par_string}’.		
-b021	Absolute path in config instead of getdef	The configuration file ‘{config}’ should use getdef instead of absolute hard coded paths. For example: ABC=$(getdef resources ABC)\nAbsolute paths:\n{values}	https://wiki.cmc.ec.gc.ca/wiki/User:Lims/projects/tech_transfer_improvements#Making_variables_configurable_from_high_level	
-e024	Bad permissions on operational log folders	The log folder ‘{folder}’ should have ‘{expected}’ permissions but instead it has ‘{ugp}’.		
-e025	Realpath link is non-operational path	The experiment seems to have the ‘{context}’ context but the file ‘{path}’ contains references to a non-operational user’s home:\n{bad}		
-i007	Absolute developer paths	The file ‘{path}’ contains absolute paths to a non-operational user’s home. This cannot be installed operationally:\n{bad}		
-w025	Operational files have incorrect owner	The experiment seems to have the ‘{context}’ context but the file ‘{path}’ is owned by ‘{owner}’ whereas ‘{expected}’ is expected.		
-b022	Identical files in module	The content of files in the same module are identical. Consider replacing duplicate files with soft links to one file, so fixing and updating one fixes and updates all. Or distinguish the files with comments. Files:\n{paths}		
-i008	Old SSM version	The file ‘{path}’ uses an SSM package ‘{old}’ but a newer version ‘{new}’ is available.		
-w026	Wallclock much bigger than history requires	The wallclock for ‘{node_path}’ is set to ‘{wallclock_seconds}’ seconds in ‘{resource_xml}’ but the latest successful run on ‘{datestamp}’ only took ‘{latest_seconds}’ seconds. This is {factor} times bigger (the threshold for this message is {threshold}). The wallclock should probably be lowered.		
-e026	Link chain contains non-operational path	The experiment seems to have the ‘{context}’ context but the file ‘{path}’ is a chain of links, which contains a non-operational user’s home. The realpath for the link is okay, but traversing it is not:\n{bad}		
-i009	Resources with valid hours	Tasks in this project have resource configurations which change depending on time of day. Look for the ‘valid_hour’ or ‘valid_dow’ attributes:\n{paths}		
-b023	Etiket variables not defined in etikets.cfg	The etiket variables {etikets} were defined in ‘{bad_path}’ but they should be defined in ‘{good_path}’. Etiket variables are discovered by this scanner based on their “ETIK” name and the use of ‘pgsm’ and ‘editfst’.	https://wiki.cmc.ec.gc.ca/wiki/Etikets.cfg	
-w027	Clobbered SSM packages	Different versions of the SSM package ‘{package}’ are used: {versions}. The same version should be used by all, or the package should only be added to the environment in one root place. Files:\n{paths}		
-b024	Defined but unused configuration variables	The configuration file ‘{config}’ defines the variables ‘{unused}’ but they are not used. Consider removing them.		
-w028	Suite path in resources without datestamp	The resource file ‘{resource_path}’ has generic references to maestro project paths which don’t use datestamps like ‘_20200401’. This may cause issues with troubleshooting, history, and transfers. Paths:\n{bad}		
-b025	Bad git remote origin	The experiment seems to have the ‘{context}’ context but the git remote ‘origin’ points to ‘{bad}’. Instead the remote should start with ‘{good}’.		
-w029	No soft link on operational home	The experiment path ‘{target}’ is where operational suites are installed, however there is no soft link ‘{source}’ pointing to it.		
-i010	No hcrons	No active configuration files for ‘{suite_name}’ were found in ‘{hcron_folder}’. The suite will not run automatically.		
+# This is a tab delimited spreadsheet (TSV) for all Heimdall messages.			
+# The message levels are best practice (b), info (i), warning (w), error (e), and critical (c).			
+code	label	description	url
+b001	Hard coded dependency path	The ‘exp’ attribute ‘{exp_value}’ in the resources file ‘{resource_path}’ is hard coded. This is less portable and more fragile. Consider using a variable instead.	
+b002	SupportInfo is too long	The SupportInfo attribute in the XML ‘{xml_path}’ is ‘{char_count}’ characters long but it should be shorter. The recommended maximum is {max_chars} characters.	
+b003	SupportInfo has no URL	The SupportInfo attribute in the XML ‘{xml_path}’ should contain a URL. This is the recommended way to provide detailed support status info and troubleshooting steps.	
+b004	SupportInfo missing standard substring	The SupportInfo attribute in the XML ‘{xml_path}’ should start with a value like ‘Full Support’. Recommended start strings:\n{substrings}	
+b005	Deprecated file or folder	The file or folder ‘{path}’ is deprecated and should be deleted.	
+b006	Non-maestro files in maestro folders	The maestro folder ‘{folder}’ should only contain maestro files like tsk, cfg, xml. These files were found:\n{filenames}	
+b007	Comments in config file	The pseudo-xml section (containing input, executables, and output) of the config file ‘{file_path}’ contains {count} commented lines starting with “##”. These seem to be configuration lines and not comments, and should be removed.	
+b008	Hidden queue alias used	The value ‘{value}’ for the resource variable ‘{name}’ is a hidden queue alias not easily visible in qstat. Consider using one of these queues instead:\n{queues}	
+b009	Deprecated attribute in SUBMITS element	The file ‘{xml_path}’ has the attribute ‘type’ in a SUBMITS element. This is deprecated and can be removed.	
+b010	Non-standard characters in executable name	The config path ‘{bad}’ in ‘{config_path}’ has non-standard characters that do not match regex ‘{regex}’. This can cause bugs with tools, operating systems, and parsers. Consider renaming them. {dollar_msg}	https://regex101.com/
+b011	Top-level file or folder in CMCCONST	There are references to files or folders in the root level of the CMCCONST folder. It is recommended instead to use folders in CMCCONST. The file ‘{file_path}’ contains:\n{matching_string}	https://gitlab.science.gc.ca/CMOI/best-practices/blob/master/en/constants.md
+b012	Deprecated archive file	The file ‘{bad}’ is a deprecated archive file and should be deleted. If the hub has no other archive files, its archiving status should be examined.	
+b013	Unclear folder name	The folder ‘{unclear}’ should have a descriptive soft link next to it. For example ‘forecast -> e1’. This gives newbies one less thing to memorize when getting started.	https://wiki.cmc.ec.gc.ca/wiki/Obfuscation
+b014	Bad node name	Bad node name ‘{node_name}’ in flow XML ‘{flow_path}’. This name works, but the recommendation is to match this regex: {regex}	https://regex101.com/
+b015	Non-standard variables in batch resource	The BATCH attribute ‘{attribute_name}’ in ‘{resource_path}’ uses a non-standard variable ‘{attribute_value}’. Consider using a standard variable instead so configuration is easier to track and change: {recommended}	
+b016	Inconsistent file owners or permissions	The file ‘{path}’ has ownership and permissions ‘{ugp}’ but most experiment files have ‘{expected}’. The owner, group, and permissions of permanent experiment files should be the same.	
+b017	Found SEQ_ instead of MAESTRO_	The deprecated variable ‘{old}’ was found in ‘{path}’. Consider using the equivalent variable ‘{new}’ instead. This helps newbies understand your project since they will know this variable is related to maestro.	
+b018	Uppercase variable is redefined	The uppercase variable ‘{variable}’ is defined more than once in the file ‘{path}’. Uppercase variables in bash should be considered constant and not changed.	https://google.github.io/styleguide/shellguide.html#s7.3-constants-and-environment-variable-names
+b019	Readme is not markdown	The file ‘{readme}’ looks like a ‘read me’ file. Consider writing it in markdown and renaming it to ‘{suggested}’ so that it appears automatically and formatted on platforms like GitLab.	
+b020	Literal path instead of CMCPROD	Literal paths to ‘hall3’ or ‘hall4’ were found. Consider using the CMCPROD variable instead so your project follows switchover configurations. The file ‘{file_path}’ contains:\n{matching_string}	
+b021	Absolute path in config instead of getdef	The configuration file ‘{config}’ should use getdef instead of absolute hard coded paths. For example: ABC=$(getdef resources ABC)\nAbsolute paths:\n{values}	https://wiki.cmc.ec.gc.ca/wiki/User:Lims/projects/tech_transfer_improvements#Making_variables_configurable_from_high_level
+b022	Identical files in module	The content of files in the same module are identical. Consider replacing duplicate files with soft links to one file, so fixing and updating one fixes and updates all. Or distinguish the files with comments. Files:\n{paths}	
+b023	Etiket variables not defined in etikets.cfg	The etiket variables {etikets} were defined in ‘{bad_path}’ but they should be defined in ‘{good_path}’. Etiket variables are discovered by this scanner based on their “ETIK” name and the use of ‘pgsm’ and ‘editfst’.	https://wiki.cmc.ec.gc.ca/wiki/Etikets.cfg
+b024	Defined but unused configuration variables	The configuration file ‘{config}’ defines the variables ‘{unused}’ but they are not used. Consider removing them.	
+b025	Bad git remote origin	The experiment seems to have the ‘{context}’ context but the git remote ‘origin’ points to ‘{bad}’. Instead the remote should start with ‘{good}’.	
+c001	No EntryModule	EntryModule link does not exist: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
+c002	Bad EntryModule	EntryModule is not a link: ‘{entry_module}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
+c003	No experiment here	Could not find an experiment for path: '{path}'. A valid experiment folder contains an 'EntryModule' link.	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
+c004	No EntryModule flow.xml	The required EntryModule flow.xml file does not exist: ‘{flow_xml}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule
+c005	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to parse as XML: ‘{flow_xml}’	
+e001	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders
+e002	Bad XML	Failed to parse XML: ‘{xml}’	
+e003	Invalid node name	Invalid node name ‘{node_name}’ in flow XML ‘{flow_path}’. Node names must be alphanumeric with dot, dash, or underscores. Must match the regex: {regex}	https://regex101.com/
+e004	Broken symlink	The target of soft link ‘{link}’ does not exist.	
+e005	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML:\n{flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290
+e007	Missing required resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. This is required for the ‘{context}’ context.	
+e008	Missing curly brackets in resource xml	Variables in resource XMLs must use curly brackets like ‘${{ABC}}’ not ‘$ABC’. The file ‘{file_path}’ contains:\n{matching_string}	
+e009	Unbalanced curly brackets in resource xml	Found an uneven number of curly brackets ‘{attribute_value}’ in a resource file: ‘{file_path}’	
+e010	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a less portable and more fragile way to configure an experiment.	
+e011	Dependency experiment does not exist	The ‘exp’ attribute ‘{exp_value}’ in the resources file ‘{resource_path}’ is not a path to a folder that exists.	
+e012	Undefined resource XML variables	The resource XML ‘{resource_path}’ uses variables that are not defined in any resource files like ‘resources/resources.def’. Variables:\n{variable_names}	
+e013	Dissemination state does not match context	The experiment seems to have the ‘{context}’ context but variables in ‘{cfg_path}’ do not match what is expected: {unexpected}	
+e014	Non-links in hub	Experiments with the ‘{context}’ context can only have soft link folders in their ‘hub’ folder:\n{bad}	
+e015	Resource value higher than maximum	The resource value ‘{value}’ for ‘{attribute}’ in ‘{xml_path}’ is higher than the maximum of ‘{maximum}’ defined in jobctl-qstat for queue ‘{queue}’.	
+e016	No git repo	There is no git repo tracking this experiment. Experiments with the ‘{context}’ context should always be version controlled with git.	
+e017	Duplicate name in flow container	The container ‘{container_name}’ in a flow XML has more than one element with the name or subname ‘{duplicate_name}’. All direct children in a container must have a unique name or subname.	
+e018	Submits element has name attribute	All SUBMITS elements should have a ‘sub_name’ attribute not a ‘name’ attribute. The file ‘{file_path}’ contains:\n{matching_string}	
+e019	Non-submits element has sub_name attribute	Only SUBMITS elements should have a ‘sub_name’ attribute. You may need to use the ‘name’ attribute instead. The file ‘{file_path}’ contains:\n{matching_string}	
+e020	Inconsistent log folder owners or permissions	The log folder ‘{path}’ has ownership and permissions ‘{ugp}’ which is different from the other log folders. The permissions of the temporary log folders should be the same: {folders}	
+e021	Duplicate resource definitions	The variable ‘{variable}’ is defined more than once in the file ‘{path}’. Tools like getdef may behave unexpectedly.	
+e022	Missing stats folder	The ‘stats’ folder is missing but required because the resource variables SEQ_RUN_STATS_ON and SEQ_AVERAGE_WINDOW are used: ‘{required}’	https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/stats
+e023	Bad loop expression	The file ‘{path}’ has a bad loop expression ‘{loop_expression}’. This should be comma delimited sets of numbers in the format ‘start:end:step:set’.	https://wiki.cmc.ec.gc.ca/wiki/Maestro/1.5.0/Release_Notes#Multi-definition_numeric_loops
+e024	Bad permissions on operational log folders	The log folder ‘{folder}’ should have ‘{expected}’ permissions but instead it has ‘{ugp}’.	
+e025	Realpath link is non-operational path	The experiment seems to have the ‘{context}’ context but the file ‘{path}’ contains references to a non-operational user’s home:\n{bad}	
+e026	Link chain contains non-operational path	The experiment seems to have the ‘{context}’ context but the file ‘{path}’ is a chain of links, which contains a non-operational user’s home. The realpath for the link is okay, but traversing it is not:\n{bad}	
+i001	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be unstable. Links:\n{bad_links}	
+i002	Module name and path differ	The module folder ‘{folder_name}’ differs from the module name ‘{attribute_name}’ in the flow XML ‘{xml_path}’. This can help organize a project, but it may also be confusing.	
+i003	Text editor swap files	Text editor swap files were found, for example for vim or emacs. If your editor is closed, you may want to recover or delete these:\n{swaps}	
+i004	Git repo has uncommited changes	There are uncommited changes in the git repo.	
+i005	Unknown nodelogger signal	The executable ‘nodelogger’ was given a signal for its ‘-s’ argument that is not a known signal: {signals}. This message won’t appear in the message center. If you don’t want it to appear in the message center, use ‘infox’. \n{details}	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger
+i006	Lead developers from git history	Based on the git history for this project (commit frequency, recency, continuity) these seem to be the lead developers:\n{developers}	
+i007	Absolute developer paths	The file ‘{path}’ contains absolute paths to a non-operational user’s home. This cannot be installed operationally:\n{bad}	
+i008	Old SSM version	The file ‘{path}’ uses an SSM package ‘{old}’ but a newer version ‘{new}’ is available.	
+i009	Resources with valid hours	Tasks in this project have resource configurations which change depending on time of day. Look for the ‘valid_hour’ or ‘valid_dow’ attributes:\n{paths}	
+i010	No hcrons	No active configuration files for ‘{suite_name}’ were found in ‘{hcron_folder}’. The suite will not run automatically.	
+w001	Missing resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.	
+w002	Missing loop resource file	The loop or switch ‘{node_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.	
+w003	Deprecated site1/site2	The paths site1 and site2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains:\n{matching_string}	
+w004	Deprecated hall1/hall2	The paths hall1 and hall2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains:\n{matching_string}	
+w005	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be considered too unstable to install operationally. Run realpath on these links:\n{bad_links}	
+w006	Hard coded path in config file	The path ‘{bad_path}’ defined in ‘{config_path}’ is absolute and does not start with a variable like ‘${{SEQ_EXP_HOME}}’. This is a less portable and more fragile way to configure an experiment.	
+w007	No support status in operational experiment	There is no SupportInfo attribute in the XML ‘{xml_path}’ or the XML does not exist. This is required for operational experiments.	
+w008	Multiple support statuses	The XML ‘{xml_path}’ has more than one SupportInfo element.	
+w009	Resource variable typo	The resource variable ‘{maybe_typo}’ is defined but the standard variable name ‘{expected}’ is not. Did you mean that instead?	https://wiki.cmc.ec.gc.ca/wiki/User:Lims/projects/tech_transfer_improvements#Using_standard_variables_for_machine_and_queue_definitions
+w010	Bad queue value for resource variable	The value ‘{value}’ for the resource variable ‘{name}’ is not a queue available in qstat. Queues:\n{queues}	
+w011	Experiment not in overview XML	The experiment seems to have the ‘{context}’ context but it was not found in the {exp_count} experiments in the overview XML: {xml_path}	
+w012	Experiment in unexpected overview XML	The experiment seems to have the ‘{context}’ context but it was found in the {exp_count} experiments in the ‘{xml_context}’ context overview XML: {xml_path}	
+w013	Misplaced dissemination variables	The variables {variables} belong only in ‘experiment.cfg’ files but were found in: ‘{cfg_path}’	
+w014	Hub pairs have dissimilar targets	The hub folder links ‘{folder1}’ and ‘{folder2}’ are expected to have similar targets. Instead they are very different:\n{target1}\n{target2}	
+w015	Git repo has uncommited changes	There are uncommited changes in the git repo. Experiments with the ‘{context}’ context should always have nothing to commit and a clean working tree from ‘git status’.	
+w016	The task run_orji is disabled	The task resource ‘{resource_path}’ has a catchup value of ‘{catchup}’ but ‘run_orji’ tasks should always be enabled. This way, users get to decide whether to subscribe or unsubscribe.	https://wiki.cmc.ec.gc.ca/wiki/orji
+w017	Archive file is not a link	The archive file ‘{bad}’ is not a link. Files named ‘.protocole_*’ or ‘.archive_monitor_*’ must be links so that the maintainers of the archive system can more easily manage its settings.	
+w018	Bad items in gitignore	The gitignore file ‘{gitignore_path}’ should not contain line ‘{line}’. It’s important that this pattern is in the git repository so a full working suite can be shared.	
+w019	Missing items in gitignore	The gitignore file ‘{gitignore_path}’ should contain {content}. This will ignore files generated when running this suite which do not belong in the version controlled project.	
+w020	No gitignore	There should be a gitignore file here: ‘{gitignore_path}’. No gitignore means large amounts of unimportant files may be accidentally shared or added to the project.	
+w021	Suite file in $CMCCONST	The realpath for file ‘{path}’ is in the $CMCCONST folder ‘{cmcconst}’. Task, config, flow, and resource XML files used in a suite should not be in the $CMCCONST folder.	https://gitlab.science.gc.ca/CMOI/best-practices/blob/master/en/constants.md
+w022	Machine resource is hard coded	The experiment seems to have the ‘{context}’ context but the value ‘{machine_value}’ of ‘machine’ in ‘{resource_path}’ is hard coded. A switchover may break this suite. Use a variable like $FRONTEND instead.	
+w023	Operational user can overwrite experiment	The operational user ‘{user}’ has write permissions on the permanent project file ‘{path}’. For safety during operational runs, ‘{user}’ should only have read and execution permissions for permanent project files.	
+w024	Parallel user in operational context	The experiment seems to have the ‘{context}’ context but the file ‘{file_path}’ references the parallel systems with the string ‘{par_string}’.	
+w025	Operational files have incorrect owner	The experiment seems to have the ‘{context}’ context but the file ‘{path}’ is owned by ‘{owner}’ whereas ‘{expected}’ is expected.	
+w026	Wallclock much bigger than history requires	The wallclock for ‘{node_path}’ is set to ‘{wallclock_seconds}’ seconds in ‘{resource_xml}’ but the latest successful run on ‘{datestamp}’ only took ‘{latest_seconds}’ seconds. This is {factor} times bigger (the threshold for this message is {threshold}). The wallclock should probably be lowered.	
+w027	Clobbered SSM packages	Different versions of the SSM package ‘{package}’ are used: {versions}. The same version should be used by all, or the package should only be added to the environment in one root place. Files:\n{paths}	
+w028	Suite path in resources without datestamp	The resource file ‘{resource_path}’ has generic references to maestro project paths which don’t use datestamps like ‘_20200401’. This may cause issues with troubleshooting, history, and transfers. Paths:\n{bad}	
+w029	No soft link on operational home	The experiment path ‘{target}’ is where operational suites are installed, however there is no soft link ‘{source}’ pointing to it.	
