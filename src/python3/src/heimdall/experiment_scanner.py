@@ -21,6 +21,7 @@ from utilities import print_red, print_orange, print_yellow, print_green, print_
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target, iterative_deepening_search
 from utilities.qstat import get_qstat_data_from_text, get_qstat_data, get_resource_limits_from_qstat_data
 from utilities.shell import safe_check_output_with_status, get_git_remotes
+from utilities.heimdall.language import get_language_from_environment
 
 """
 Matches codes like 'e001' and 'c010'
@@ -43,6 +44,7 @@ class ExperimentScanner():
                  parallel_home=None,
                  operational_suites_home=None,
                  critical_error_is_exception=True,
+                 language=None,
                  debug_qstat_output_override="",
                  debug_cmcconst_override="",
                  debug_op_username_override=""):
@@ -54,6 +56,10 @@ class ExperimentScanner():
         self.maestro_experiment = None
         self.codes = set()
         self.messages = []
+        
+        if not language:
+            language=get_language_from_environment()
+        self.language=language
 
         """
         Some scans like suite in the overview XML requires knowing the op/par home.
@@ -226,8 +232,10 @@ class ExperimentScanner():
         if not CODE_REGEX.match(code):
             raise ValueError("ExperimentScanner code '%s' does not match regex code regex:\n    %s" % (code, CODE_REGEX.pattern))
 
-        label = hmm.get_label(code)
-        url = hmm.get_url(code)
+        label = hmm.get_label(code, language=self.language)
+        url = hmm.get_url(code, language=self.language)
+        if "language" not in kwargs:
+            kwargs["language"]=self.language
         description = hmm.get(code,**kwargs)
 
         message = {"code": code, "label": label, "description": description, "url": url}

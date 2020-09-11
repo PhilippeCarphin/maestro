@@ -25,6 +25,7 @@ Options:
     
     --count=<count>              How many top maintainers to show in heimdall blame. [default: 5]
     
+    --language=<language>        Choose the language of the result messages. The default uses the value of $LANG and whether the first two letters are "en" or "fr". [default: %s]
     --verbose                    Enable verbose debug logging in the "$HOME/logs/mflow" files.
     -h --help   Show this description.
 """
@@ -74,6 +75,7 @@ def scan_cli(args):
                                 operational_home=args["--op-home"],
                                 parallel_home=args["--par-home"],
                                 operational_suites_home=args["--op-suites-home"],
+                                language=args["--language"],
                                 critical_error_is_exception=False)
 
     try:

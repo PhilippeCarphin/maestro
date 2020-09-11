@@ -36,3 +36,6 @@ HUB_PAIRS = [["banting", "daley"],
              ["hare", "brooks"]]
 
 OPERATIONAL_USERNAME="smco500"
+
+DEFAULT_LANGUAGE="en"
+LANGUAGES=["en","fr"]

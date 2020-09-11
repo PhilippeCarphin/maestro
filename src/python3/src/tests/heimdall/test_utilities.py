@@ -155,7 +155,7 @@ echo 123 = 123"""
         self.maxDiff=None
         
         path=MOCK_FILES+"iterative_deepening_search/folder1/"
-        max_seconds=0.1
+        max_seconds=0.2
         debug_sleep_seconds=0.04
         result=iterative_deepening_search(path,max_seconds,
                                           debug_sleep_seconds=debug_sleep_seconds)
@@ -163,7 +163,7 @@ echo 123 = 123"""
                   path+"file1b",
                   path+"folder2/file2a",
                   path+"folder2/file2b"]
-        msg="\nresult =\n"+"\n".join(result)
+        msg=pretty_kwargs(result=result,expected=expected)
         self.assertEqual(result,expected,msg=msg)
 
     def test_git_authors(self):
