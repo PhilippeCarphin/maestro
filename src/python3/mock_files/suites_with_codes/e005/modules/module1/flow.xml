@@ -10,5 +10,7 @@
     </MODULE>
     <SUBMITS sub_name="bad-node-name" name="bad-attribute"/>
     <TASK name="bad-node-name" sub_name="bad-attribute"/>
+    <SUBMITS name="task2"/>
+    <TASK name="task2"/>
 </MODULE>
 

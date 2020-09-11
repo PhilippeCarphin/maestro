@@ -159,6 +159,7 @@ class ExperimentScanner():
         self.scan_resource_xml_files()
         self.scan_resource_queues()
         self.scan_root_links()
+        self.scan_shell_scripts()
         self.scan_ssm_uses()
         self.scan_unused_variables()
         self.scan_xmls()
@@ -292,6 +293,39 @@ class ExperimentScanner():
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
     
+    def scan_shell_scripts(self):
+        "run shell script syntax checks like 'bash -n' and 'ksh -n' on all tsk and cfg files."
+        
+        for path in self.task_files+self.config_files:
+            content=file_cache.open(path)
+            
+            if "\n" not in content:
+                continue
+            
+            "identify shell interpreter from #! line"
+            if content.startswith("#!"):
+                first_line=content[:content.index("\n")]
+                interpreter=first_line.split("/")[-1]
+                if interpreter not in ["bash","ksh"]:
+                    continue
+            else:
+                interpreter="bash"
+            verify_cmd=interpreter+" -n"
+            cmd = verify_cmd+" "+path
+            output,status=safe_check_output_with_status(cmd)
+            if output:
+                lines=output.split("\n")
+                max_lines=10
+                if len(lines)>max_lines:
+                    last_line="... (%s more)"%(len(lines)-max_lines)
+                    lines=lines[:max_lines]+[last_line]
+                code="b026" if status==0 else "e027"
+                trimmed_output="\n".join(lines)
+                self.add_message(code,
+                                 path=path,
+                                 verify_cmd=verify_cmd,
+                                 output=trimmed_output)
+                
     def scan_hcrons(self):
         "are there active hcrons for this suite"
         

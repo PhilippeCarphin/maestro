@@ -83,7 +83,7 @@ class TestSuiteScan(unittest.TestCase):
                                         debug_cmcconst_override=CMCCONST_OVERRIDE,
                                         debug_op_username_override=debug_op_username_override)
 
-            msg = "Experiment path:\n    %s\nrealpath:\n    %s\n" % (path,realpath)
+            msg = "\n\nexperiment path:\n    %s\nrealpath:\n    %s\n" % (path,realpath)
             self.assertIn(code, scanner.codes, msg=msg)
 
     def test_suites_without_codes(self):

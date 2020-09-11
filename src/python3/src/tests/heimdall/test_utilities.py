@@ -156,7 +156,7 @@ echo 123 = 123"""
         
         path=MOCK_FILES+"iterative_deepening_search/folder1/"
         max_seconds=0.2
-        debug_sleep_seconds=0.04
+        debug_sleep_seconds=0.09
         result=iterative_deepening_search(path,max_seconds,
                                           debug_sleep_seconds=debug_sleep_seconds)
         expected=[path+"file1a",
