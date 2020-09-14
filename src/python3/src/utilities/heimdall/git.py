@@ -15,7 +15,7 @@ class GitUserTracker():
     def __init__(self):
         self.name_to_key = {}
         self.email_prefix_to_key = {}
-        self.next_key = 0
+        self.next_key = 1
 
         "all emails starting with those encountered first"
         self.emails = []
