@@ -1212,6 +1212,7 @@ class ExperimentScanner():
                                      context=self.context,
                                      path=path,
                                      bad="\n".join(link_chain))
+                    break
 
     def scan_all_file_content(self):
         """
