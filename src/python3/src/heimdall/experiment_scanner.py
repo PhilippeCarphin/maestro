@@ -20,7 +20,7 @@ from utilities.parsing import BASH_VARIABLE_DECLARE_REGEX
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target, iterative_deepening_search
 from utilities.qstat import get_qstat_data_from_text, get_qstat_data, get_resource_limits_from_qstat_data
-from utilities.shell import safe_check_output_with_status, get_git_remotes
+from utilities.shell import safe_check_output_with_status, get_git_remotes, get_all_repo_files
 from utilities.heimdall.language import get_language_from_environment
 
 """
@@ -590,7 +590,9 @@ class ExperimentScanner():
             authors = scan_git_authors(self.path,
                                        include_current_branch=include_current_branch)
             for author in authors:
-                line = "%s <%s>" % (author["name"], author["emails"][0])
+                line=author["name"]
+                if author["emails"]:
+                    line+=" <%s>"%author["emails"][0]
                 lines.append(line)
             dev_count = 5
             developers = "    "+"\n    ".join(lines[:dev_count])
@@ -895,7 +897,7 @@ class ExperimentScanner():
 
     def scan_config_file(self, path):
         "scan the content of config files (see scan_file_content for CSV content scan)"
-
+        
         key_values = file_cache.get_key_values_from_path(path)
         expected_config = EXPECTED_CONFIG_STATES.get(self.context, {})
 
@@ -925,6 +927,7 @@ class ExperimentScanner():
                                      dollar_msg=dollar_msg)
 
         "variables that should only be in experiment.cfg"
+        unexpected=[]
         if not path.endswith("experiment.cfg"):
             only_in_exp_config = ["DISSEM_STATE", "PREOP_STATE"]
             unexpected = [key for key in only_in_exp_config if key in key_values]
@@ -967,7 +970,7 @@ class ExperimentScanner():
         non_op_homes=[a for a in absolute_paths if self.is_non_operational_home(a)]
         if non_op_homes:
             bad="\n".join(non_op_homes)
-            if self.is_context_operational():
+            if self.is_context_monitored():
                 self.add_message("e025",context=self.context,path=path,bad=bad)
             else:
                 self.add_message("i007",path=path,bad=bad)
@@ -1654,7 +1657,7 @@ class ExperimentScanner():
         if support_status:
 
             "max length"
-            max_chars = 50
+            max_chars = 150
             if len(support_status) > max_chars:
                 self.add_message("b002",
                                  xml_path=xml_path,
@@ -1729,14 +1732,14 @@ class ExperimentScanner():
         lead to massive folders outside the experiment.
         """
 
-        paths = set()
+        paths = set(get_all_repo_files(self.path))
         folders = set()
         resource_files = set()
         flow_files = set()
         declared_files=set()
         rpath = self.path+"resources/"
         mpath = self.path+"modules/"
-        
+                
         "full path to all folders in the 'modules' folder"
         self.module_folders=[f for f in file_cache.listdir(mpath) if file_cache.isdir(f)]
 

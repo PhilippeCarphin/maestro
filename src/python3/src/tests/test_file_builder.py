@@ -194,3 +194,32 @@ def setup_tmp_experiment2():
         f.write("\n\n"+line)
 
     return target
+
+
+def setup_tmp_experiment3():
+    """
+    Deletes then creates files for testing.
+    
+    Returns a path to an experiment that produces the e025 code.
+    """
+
+    source = MOCK_FILES+"suites_with_codes/b007"
+    target = TMP_FOLDER+"e025-b"
+
+    if os.path.exists(target):
+        shutil.rmtree(target)
+    shutil.copytree(source, target, symlinks=True)
+    
+    os.mkdir(target+"/config")
+
+    link = target+"/config/grib2.naefs_ncep_0p5_deg.cfg"
+    link_target="../../../mock_files/cmcconst/grib2.naefs_ncep_0p5_deg.cfg"
+    
+    os.symlink(link_target,link)
+    
+    msg="setup_tmp_experiment3 first commit"
+    cmd = "cd %s ; git init ; git add . ; git commit -am \"%s\" ; sleep 0.1" % (target,msg)
+    output, status = safe_check_output_with_status(cmd)
+    assert status == 0
+
+    return target

@@ -48,7 +48,8 @@ def get_link_chain_from_link(start_link):
         ...
     """
     
-    output,status=safe_check_output_with_status("strace realpath "+start_link)
+    cmd="strace realpath "+start_link
+    output,status=safe_check_output_with_status(cmd)
     
     if status!=0:
         return []

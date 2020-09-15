@@ -6,7 +6,7 @@ from constants import SCANNER_CONTEXT
 from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, OPERATIONAL_HOME, PARALLEL_HOME, OPERATIONAL_SUITES_HOME, TMP_FOLDER, QSTAT_OUTPUT1_PATH, CMCCONST_OVERRIDE
 from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
-from tests.test_file_builder import setup_tricky_mock_files, setup_tmp_experiment1, setup_tmp_experiment2, setup_tmp_smco501_home, setup_tmp_git_author_repo
+from tests.test_file_builder import setup_tricky_mock_files, setup_tmp_experiment1, setup_tmp_experiment2, setup_tmp_experiment3, setup_tmp_smco501_home, setup_tmp_git_author_repo
 from tests.cache import QSTAT_CMD_OUTPUT
 
 @lru_cache(maxsize=1000)
@@ -37,54 +37,68 @@ class TestSuiteScan(unittest.TestCase):
 
         setup_tricky_mock_files()
         setup_tmp_experiment1()
+        setup_tmp_experiment3()
         setup_tmp_smco501_home()
         setup_tmp_git_author_repo(always_recreate=True)
-
+        
+        folders=os.listdir(SUITES_WITH_CODES)
+        
+        "iterate over every code"
         for code in hmm.codes:
-            path = SUITES_WITH_CODES+code
-            realpath=os.path.realpath(path)
-
-            if code == "e016":
+            
+            for folder in folders:
+                
                 """
-                ignore the git repo check, hard to guarantee tmp files setup
-                outside repo have no git repo
+                Some codes have more than one folder, like 'e025' and 'e025-b'
+                For every code, check if every folder starts with it.
                 """
-                continue
-
-            if code != "c003":
-                "exclude c003 because that's the error we expect - the folder does not exist"
-                msg = "Mock experiment for code '%s' does not exist at path '%s'. All codes must have a test case." % (code, path)
-                self.assertTrue(os.path.isdir(path), msg=msg)
-
-            "override the context, if necessary"
-            context = None
-            debug_op_username_override = None
-            if code in ["e007", "e010", "w007", "w011", "w012", "e014", 
-                        "e016", "w015", "w022", "w023", "w024", "e024",
-                        "e025", "w025", "w028"]:
-                context = SCANNER_CONTEXT.OPERATIONAL
-            if code in ["i001", "i007"]:
-                context = SCANNER_CONTEXT.DEVELOPMENT
-            if code in ["w023"]:
-                debug_op_username_override=os.environ["USER"]
-
-            "override op/par homes, if necessary"
-            parallel_home = PARALLEL_HOME
-            if code == "w012":
-                parallel_home = TMP_FOLDER+"smco501"
-
-            scanner = get_scanner_from_cache(realpath,
-                                        context=context,
-                                        operational_home=OPERATIONAL_HOME,
-                                        parallel_home=parallel_home,
-                                        operational_suites_home=OPERATIONAL_SUITES_HOME,
-                                        critical_error_is_exception=False,
-                                        debug_qstat_output_override=QSTAT_CMD_OUTPUT,
-                                        debug_cmcconst_override=CMCCONST_OVERRIDE,
-                                        debug_op_username_override=debug_op_username_override)
-
-            msg = "\n\nexperiment path:\n    %s\nrealpath:\n    %s\n" % (path,realpath)
-            self.assertIn(code, scanner.codes, msg=msg)
+                if not folder.startswith(code):
+                    continue
+                
+                path=SUITES_WITH_CODES+folder
+                realpath=os.path.realpath(path)
+    
+                if code == "e016":
+                    """
+                    ignore the git repo check, hard to guarantee tmp files setup
+                    outside repo have no git repo
+                    """
+                    continue
+    
+                if code != "c003":
+                    "exclude c003 because that's the error we expect - the folder does not exist"
+                    msg = "Mock experiment for code '%s' does not exist at path '%s'. All codes must have a test case." % (code, path)
+                    self.assertTrue(os.path.isdir(path), msg=msg)
+    
+                "override the context, if necessary"
+                context = None
+                debug_op_username_override = None
+                if code in ["e007", "e010", "w007", "w011", "w012", "e014", 
+                            "e016", "w015", "w022", "w023", "w024", "e024",
+                            "e025", "w025", "w028"]:
+                    context = SCANNER_CONTEXT.OPERATIONAL
+                if code in ["i001", "i007"]:
+                    context = SCANNER_CONTEXT.DEVELOPMENT
+                if code in ["w023"]:
+                    debug_op_username_override=os.environ["USER"]
+    
+                "override op/par homes, if necessary"
+                parallel_home = PARALLEL_HOME
+                if code == "w012":
+                    parallel_home = TMP_FOLDER+"smco501"
+    
+                scanner = get_scanner_from_cache(realpath,
+                                            context=context,
+                                            operational_home=OPERATIONAL_HOME,
+                                            parallel_home=parallel_home,
+                                            operational_suites_home=OPERATIONAL_SUITES_HOME,
+                                            critical_error_is_exception=False,
+                                            debug_qstat_output_override=QSTAT_CMD_OUTPUT,
+                                            debug_cmcconst_override=CMCCONST_OVERRIDE,
+                                            debug_op_username_override=debug_op_username_override)
+    
+                msg = "\n\nexperiment path:\n    %s\nrealpath:\n    %s\n" % (path,realpath)
+                self.assertIn(code, scanner.codes, msg=msg)
 
     def test_suites_without_codes(self):
         """

@@ -5,8 +5,8 @@ import os
 import unittest
 import os.path
 
-from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES, SUITES_WITHOUT_CODES, ABSOLUTE_SYMLINK_EXISTS_PATH, TURTLE_ME_PATH
-from tests.test_file_builder import setup_tmp_git_author_repo, setup_tricky_mock_files
+from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES, SUITES_WITHOUT_CODES, ABSOLUTE_SYMLINK_EXISTS_PATH, TURTLE_ME_PATH, TMP_FOLDER
+from tests.test_file_builder import setup_tmp_git_author_repo, setup_tricky_mock_files, setup_tmp_experiment3
 
 from constants import SCANNER_CONTEXT
 from utilities import get_dictionary_list_from_csv
@@ -18,10 +18,21 @@ from utilities import guess_user_home_from_path, pretty, pretty_kwargs
 from utilities.path import iterative_deepening_search, get_link_chain_from_link
 from utilities.maestro import get_weird_assignments_from_config_path, get_commented_pseudo_xml_lines
 from utilities.parsing import get_bash_variables_used_in_text, get_key_values_from_text
+from utilities.shell import get_all_repo_files
 from heimdall.file_cache import file_cache
 
-
 class TestUtilities(unittest.TestCase):
+    
+    def test_get_all_repo_files(self):
+        setup_tmp_experiment3()
+        
+        repo_path=TMP_FOLDER+"e025-b"
+        expected=repo_path+"/config/grib2.naefs_ncep_0p5_deg.cfg"
+        results=get_all_repo_files(repo_path)
+        msg=pretty_kwargs(expected=expected,
+                          results=results,
+                          repo_path=repo_path)
+        self.assertIn(expected,results,msg=msg)
     
     def test_get_key_values(self):
         text="""

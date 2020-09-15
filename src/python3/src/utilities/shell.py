@@ -10,6 +10,34 @@ def run_shell_cmd(cmd):
     """
     subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE)
 
+def get_all_repo_files(path_to_repo):
+    """
+    Returns a list of the full path to all files in this git repo.
+    'path_to_repo' is a path to a folder that contains a '.git' folder.
+    """
+    
+    path_to_repo=os.path.realpath(path_to_repo)
+    cmd="cd %s ; git rev-parse --show-toplevel"%path_to_repo
+    output,status=safe_check_output_with_status(cmd)
+    
+    if status!=0:        
+        return []
+    
+    """
+    test mock files may have empty .git folders, in which case we don't
+    want to get repo files of the root project.
+    """
+    dot_git_path=output.strip()
+    if path_to_repo != dot_git_path:
+        return []
+    
+    cmd="cd %s ; git ls-tree --full-tree -r --name-only HEAD"%path_to_repo
+    output,status=safe_check_output_with_status(cmd)
+    if status!=0:
+        return []
+    paths=[path_to_repo+"/"+line for line in output.split("\n")]
+    return sorted(paths)
+
 def get_git_remotes(path_to_repo):
     """
     Return a dictionary of all remotes like:
