@@ -147,7 +147,8 @@ class TestSuiteScan(unittest.TestCase):
         This may also be due to real path is a test suite, or git repo stuff.
         """
         ignore_codes = ["w001", "w002", "i002", "e016", "i004", "b009", "i006", 
-                        "b014", "b017", "e021", "i009", "b025", "i010", "b027"]
+                        "b014", "b017", "e021", "i009", "b025", "i010", "b027",
+                        "b028"]
 
         """
         like ignore_codes, but suite specific

@@ -1525,6 +1525,17 @@ class ExperimentScanner():
         source_to_target = {}
 
         module_element_to_flow_path = {}
+        
+        "EntryModule target basename is 'main' "
+        entry_module=self.path+"EntryModule"
+        target=os.path.realpath(entry_module)
+        basename=os.path.basename(target)
+        good="main"
+        if basename != good:
+            self.add_message("b028",
+                             path=entry_module,
+                             good=good,
+                             bad=basename)
 
         "key is MODULE element at root of a flow, value is flow xml path"
         root_module_to_flow_path = {}
