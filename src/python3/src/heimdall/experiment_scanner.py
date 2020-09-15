@@ -302,14 +302,22 @@ class ExperimentScanner():
             if "\n" not in content:
                 continue
             
-            "identify shell interpreter from #! line"
+            """
+            Identify shell interpreter.
+            This may be difficult to get right, so take a guess.
+            It's unclear to me whether the project files, maestro code, or 
+            environment sets the shell interpreter for these files.
+            """
             if content.startswith("#!"):
                 first_line=content[:content.index("\n")]
                 interpreter=first_line.split("/")[-1]
                 if interpreter not in ["bash","ksh"]:
                     continue
+            elif path.endswith(".cfg"):
+                interpreter="ksh"
             else:
                 interpreter="bash"
+                
             verify_cmd=interpreter+" -n"
             cmd = verify_cmd+" "+path
             output,status=safe_check_output_with_status(cmd)
