@@ -638,11 +638,12 @@ class ExperimentScanner():
         maestro_files = sorted(list(set(maestro_files)))
         explored = set()
 
-        whitelist = [".gitignore"]
+        whitelist = [".gitignore",
+                     self.path+"resources/resources.def"]
 
-        for path in maestro_files:
+        for maestro_file in maestro_files:
 
-            folder = os.path.dirname(path)
+            folder = os.path.dirname(maestro_file)
             if folder in explored:
                 continue
             explored.add(folder)
@@ -650,18 +651,19 @@ class ExperimentScanner():
             extra = []
             for basename in file_cache.listdir(folder):
 
-                if basename in whitelist:
+                path = folder+"/"+basename
+                
+                if basename in whitelist or path in whitelist:
                     continue
 
-                path = folder+"/"+basename
                 if file_cache.isfile(path) and path not in maestro_files:
                     extra.append(path)
 
             if extra:
                 filenames = "\n".join(extra)
                 self.add_message("b006",
-                                      folder=folder,
-                                      filenames=filenames)
+                                 folder=folder,
+                                 filenames=filenames)
                 
     def scan_identical_files(self): 
         
@@ -1680,7 +1682,7 @@ class ExperimentScanner():
             "reasonable start string like 'full support' "
             found_substring = False
             stripped_status = re.sub("[ -_]+", "", support_status.lower())
-            substrings = ["Full", "Daytime", "Business", "Office", "None"]
+            substrings = ["Full", "Daytime", "Business", "Office", "None", "Experiment"]
             for substring in substrings:
                 if stripped_status.startswith(substring.lower()):
                     found_substring = True
