@@ -10,10 +10,10 @@ Matches:
 BASH_VARIABLE_OPTIONAL_CURLY_REGEX=re.compile("\\$({[\\w]+}|[\\w]+)")
 
 "matches lines that declare a bash variable, group(1) is the variable name"
-BASH_VARIABLE_DECLARE_REGEX=re.compile("^([a-zA-Z]+[a-zA-Z0-9_]*)[ ]*=")
+BASH_VARIABLE_DECLARE_REGEX=re.compile("^[ \t]*([a-zA-Z]+[a-zA-Z0-9_]*)[ ]*=")
 
 "matches lines that declare a bash variable, with optional 'export' "
-BASH_VARIABLE_DECLARE_REGEX_WITH_EXPORT=re.compile("^(export )?[a-zA-Z]+[a-zA-Z0-9_]*[ ]*=")
+BASH_VARIABLE_DECLARE_REGEX_WITH_EXPORT=re.compile("^[ \t]*(export )?[a-zA-Z]+[a-zA-Z0-9_]*[ ]*=")
 
 def remove_chars_in_text(chars,text):
     """
@@ -54,11 +54,13 @@ def get_key_values_from_path(path, include_export_lines=True):
 def get_key_values_from_text(text, include_export_lines=True):
     """
     Given text with bash-like variable declares:
-stab        ABC=123
-        export DEF=456
+AAA=111
+    BBB=222
+    export CCC=333
+export DDD=444
+# GGG=111
     returns:
-        {"ABC":"123",
-         "DEF":"456"}
+        {"AAA":"111","BBB":"222","CCC":"333","DDD":"444"}
 
     Ignore export lines if include_export_lines is false.
     """
@@ -67,12 +69,11 @@ stab        ABC=123
 
     "select only var declare lines"
     if include_export_lines:
-        var_regex = BASH_VARIABLE_DECLARE_REGEX
-    else:
         var_regex = BASH_VARIABLE_DECLARE_REGEX_WITH_EXPORT
+    else:
+        var_regex = BASH_VARIABLE_DECLARE_REGEX
 
-    lines = [line.strip() for line in lines if var_regex.search(line)]
-
+    lines = [line.strip() for line in lines if var_regex.search(line.strip())]
     data = {}
     for line in lines:
         name = line.split("=")[0]

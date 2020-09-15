@@ -17,11 +17,28 @@ from utilities.heimdall.git import scan_git_authors
 from utilities import guess_user_home_from_path, pretty, pretty_kwargs
 from utilities.path import iterative_deepening_search, get_link_chain_from_link
 from utilities.maestro import get_weird_assignments_from_config_path, get_commented_pseudo_xml_lines
-from utilities.parsing import get_bash_variables_used_in_text
+from utilities.parsing import get_bash_variables_used_in_text, get_key_values_from_text
 from heimdall.file_cache import file_cache
 
 
 class TestUtilities(unittest.TestCase):
+    
+    def test_get_key_values(self):
+        text="""
+AAA=111
+
+    BBB=222
+
+    export CCC=333
+export DDD=444
+        
+echo 123
+# GGG=111
+        # export PPP=222"""
+        
+        expected={"AAA":"111","BBB":"222","CCC":"333","DDD":"444"}
+        result=get_key_values_from_text(text)
+        self.assertEqual(result,expected)
     
     def test_used_bash_variables(self):
         text="""
