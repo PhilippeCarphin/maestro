@@ -328,7 +328,7 @@ class ExperimentScanner():
                     last_line="... (%s more)"%(len(lines)-max_lines)
                     lines=lines[:max_lines]+[last_line]
                 code="b026" if status==0 else "e027"
-                trimmed_output="\n".join(lines)
+                trimmed_output="\n".join(lines).strip()
                 self.add_message(code,
                                  path=path,
                                  verify_cmd=verify_cmd,
@@ -1214,9 +1214,8 @@ class ExperimentScanner():
                     continue
                 
                 link_chain=file_cache.get_link_chain_from_link(path)
-                
                 for link_path in link_chain:
-                    if link_path.startswith(self.home_root):
+                    if link_path.startswith(self.home_root) or self.home_root.startswith(link_path):
                         continue
                     self.add_message("e026",
                                      context=self.context,
