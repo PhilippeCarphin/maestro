@@ -30,18 +30,16 @@ class TestHeimdallMessageManager(unittest.TestCase):
         "English and French in CSV match each other."
         
         "every label/description has both en/fr"
-        missing_en=[]
-        missing_fr=[]
+        missing=[]
         for code,data in hmm._code_to_csv.items():
             for prefix in ("label_","description_"):
-                en=data.get(prefix+"en")
-                fr=data.get(prefix+"fr")
-                if not en:
-                    missing_en.append(prefix)
-                if not fr:
-                    missing_fr.append(prefix)
-        self.assertFalse(missing_en)
-        self.assertFalse(missing_fr)
+                for language in ("en","fr"):
+                    key=prefix+language
+                    text=data.get(key)
+                    if not text:
+                        msg="'%s' missing text for code '%s'"%(key,code)
+                        missing.append(msg)
+        self.assertFalse(bool(missing),msg="\n".join(missing))
         
         "descriptions for en/fr have identical {} tokens"
         for code,data in hmm._code_to_csv.items():

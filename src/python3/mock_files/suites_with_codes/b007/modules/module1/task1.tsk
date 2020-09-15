@@ -22,3 +22,6 @@ $SEQ_BIN/nodelogger -n $SEQ_NODE -s $some_unknown_variable_name -m  "Put ${targe
 
 # another version of this ssm package is ssmused elsewhere in this project
 . ssmuse-sh -d /fs/ssm/eccc/cmo/cmoi/base/20200123
+
+# nodelogger without $SEQ_BIN
+nodelogger -n $SEQ_NODE -s info -m "message"

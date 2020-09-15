@@ -32,3 +32,6 @@ CONTAINER_TAGS = ("loop", "switch", "family", "module")
 
 REQUIRED_LOG_FOLDERS= ("listings", "logs", "sequencing")
 EXPERIMENT_LOG_FOLDERS = ("listings", "logs", "sequencing", "stats")
+
+"Maestro executables which are commonly used in tasks."
+TASK_MAESTRO_BINS=["maestro","nodeinfo","nodelogger"]

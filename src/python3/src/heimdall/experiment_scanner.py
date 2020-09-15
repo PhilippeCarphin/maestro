@@ -4,7 +4,7 @@ from collections import OrderedDict
 import Levenshtein
 import json
 
-from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS, EXPERIMENT_LOG_FOLDERS, REQUIRED_LOG_FOLDERS, OPERATIONAL_USERNAME, OLD_SEQ_VARIABLES
+from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS, EXPERIMENT_LOG_FOLDERS, REQUIRED_LOG_FOLDERS, OPERATIONAL_USERNAME, OLD_SEQ_VARIABLES, TASK_MAESTRO_BINS
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
@@ -12,7 +12,7 @@ from heimdall.message_manager import hmm
 from home_logger import logger
 from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text, get_commented_pseudo_xml_lines, get_loop_indexes_from_expression, NodeLogParser
 from utilities.heimdall.critical_errors import find_critical_errors
-from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count, get_ssm_domains_from_string, get_etiket_variables_used_from_text
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count, get_ssm_domains_from_string, get_etiket_variables_used_from_text, get_maestro_executables_from_bash_text
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path, DECENT_LINUX_PATH_REGEX_WITH_START_END, DECENT_LINUX_PATH_REGEX, DECENT_LINUX_PATH_REGEX_WITH_DOLLAR, get_latest_ssm_path_from_path, has_active_hcron_files
 from utilities.heimdall.git import scan_git_authors
@@ -1435,6 +1435,28 @@ class ExperimentScanner():
             self.add_message("i005", 
                              details="\n".join(msg_lines),
                              signals=str(NODELOGGER_SIGNALS))
+        
+        "maestro executables in task files without $SEQ_BIN prefix"
+        content=file_cache.open_without_comments(task_path)
+        executables=get_maestro_executables_from_bash_text(content)
+        prefix1="SEQ_BIN"
+        prefix2="MAESTRO_BIN"
+        for executable_path in executables:
+            basename=os.path.basename(executable_path)
+            dirname=os.path.dirname(executable_path)
+            if basename not in TASK_MAESTRO_BINS:
+                continue
+            stripped=superstrip(dirname,"${}")
+            if stripped in (prefix1,prefix2):
+                continue
+            expected="${SEQ_BIN}/"+basename
+            self.add_message("b027",
+                             cmd=executable_path,
+                             path=task_path,
+                             tool=basename,
+                             prefix1=prefix1,
+                             prefix2=prefix2,
+                             expected=expected)
             
     def scan_container_xml_files(self):
         for path in self.container_xml_files:

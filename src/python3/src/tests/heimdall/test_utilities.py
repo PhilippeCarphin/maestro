@@ -11,7 +11,7 @@ from tests.test_file_builder import setup_tmp_git_author_repo, setup_tricky_mock
 from constants import SCANNER_CONTEXT
 from utilities import get_dictionary_list_from_csv
 from utilities.heimdall.context import guess_scanner_context_from_path
-from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs, get_constant_definition_count, get_ssm_domains_from_string, get_etiket_variables_used_from_path
+from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs, get_constant_definition_count, get_ssm_domains_from_string, get_etiket_variables_used_from_path, get_maestro_executables_from_bash_text
 from utilities.heimdall.path import is_editor_swapfile, get_latest_ssm_path_from_path
 from utilities.heimdall.git import scan_git_authors
 from utilities import guess_user_home_from_path, pretty, pretty_kwargs
@@ -23,6 +23,19 @@ from heimdall.file_cache import file_cache
 
 class TestUtilities(unittest.TestCase):
     
+    
+    def test_get_maestro_executables_from_bash_text(self):
+        text="""
+                
+    echo 123
+    nodelogger -m 123
+    ${MAYBE_SEQ_BIN}/nodeinfo -a 123
+    du -sh 123
+    """
+        result=get_maestro_executables_from_bash_text(text)
+        expected=sorted(["nodelogger", "${MAYBE_SEQ_BIN}/nodeinfo"])
+        self.assertEqual(result,expected)
+        
     def test_get_all_repo_files(self):
         setup_tmp_experiment3()
         

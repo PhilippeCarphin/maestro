@@ -2,7 +2,8 @@
 import Levenshtein
 import re
 from heimdall.file_cache import file_cache
-from utilities.parsing import get_bash_variables_used_in_text, superstrip
+from utilities.parsing import get_bash_variables_used_in_text
+from constants import TASK_MAESTRO_BINS
 
 """
 Regex to capture the entire line that seems to be a call to nodelogger with -s argument.
@@ -14,6 +15,35 @@ NODELOGGER_SIGNAL_REGEX = re.compile(r".*nodelogger.*-s[ ]+([^ \n]+).*")
 Captures strings like 'ABC_DEF=123' where group 1 is "ABC_DEF"
 """
 CONSTANT_VARIABLE_REGEX = re.compile(r"^[ ]*([A-Z]+[A-Z_]*)[ ]*=")
+
+"""
+Captures the full path to maestro tools often used in tsk files, like:
+    ${MAYBE_SEQ_BIN}/nodelogger
+    maestro
+    $ABC/nodeinfo
+"""
+regex_suffix="("+"|".join(TASK_MAESTRO_BINS)+")"
+TASK_MAESTRO_BINS_REGEX = re.compile("\/?(([a-zA-Z0-9-_.${}]\/?)*)"+regex_suffix)
+
+def get_maestro_executables_from_bash_text(text):
+    """
+    Finds many maestro executables in this bash-like text.
+    
+    Given bash text like:
+        
+    echo 123
+    nodelogger -m 123
+    ${MAYBE_SEQ_BIN}/scanexp -a 123
+    du -sh 123
+    
+    returns:
+        ["nodelogger", "${MAYBE_SEQ_BIN}/scanexp"]
+    """
+    
+    "the join is necessary because of multiple regex groups returned"
+    results=[m.group(0) for m in TASK_MAESTRO_BINS_REGEX.finditer(text)]
+    
+    return sorted(list(set(results)))
 
 def is_etiket_variable(bash_variable_name):
     """
