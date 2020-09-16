@@ -46,21 +46,31 @@ The goal for all `heimdall` messages is that most people working on `maestro` pr
 
 ### Critical \(c)
 
+![color critical image](/src/python3/doc/color-critical.png)
+
 Critical errors prevent the viewing or launching of the entire experiment.
 
 ### Error (e)
+
+![color error image](/src/python3/doc/color-error.png)
 
 Errors likely prevent the viewing or launching of parts of the experiment.
 
 ### Warning (w)
 
+![color warning image](/src/python3/doc/color-warning.png)
+
 A warning message explains how something is technically correct, however it may cause problems or unexpected behaviour.
 
 ### Info (i)
 
+![color info image](/src/python3/doc/color-info.png)
+
 An info message identifies aspects of the experiment which are good to know for people with less experience with this experiment.
 
 ### Best Practice (b)
+
+![color best practices image](/src/python3/doc/color-best-practice.png)
 
 A best practice message suggests changes to the experiment so that it better follows [ISST](https://wiki.cmc.ec.gc.ca/wiki/ISST) standards and other industry standard practices. The goal is that most people working on `maestro` projects agree with these best practices.
 
