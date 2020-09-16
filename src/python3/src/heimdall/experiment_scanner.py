@@ -16,6 +16,7 @@ from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, ge
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path, DECENT_LINUX_PATH_REGEX_WITH_START_END, DECENT_LINUX_PATH_REGEX, DECENT_LINUX_PATH_REGEX_WITH_DOLLAR, get_latest_ssm_path_from_path, has_active_hcron_files
 from utilities.heimdall.git import scan_git_authors
+from utilities.heimdall.uspmadt import get_uspmadt_lines
 from utilities.parsing import BASH_VARIABLE_DECLARE_REGEX
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target, iterative_deepening_search
@@ -1253,6 +1254,11 @@ class ExperimentScanner():
                                      context=self.context,
                                      file_path=path,
                                      par_string=par_string)
+        
+        "using deprecated uspmadt system"
+        lines=get_uspmadt_lines(content_without_comments)
+        if lines:
+            self.add_message("w030",path=path,lines=lines)
     
     def scan_ssm_uses(self):
         

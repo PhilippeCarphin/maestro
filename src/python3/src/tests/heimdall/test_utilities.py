@@ -14,6 +14,7 @@ from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs, get_constant_definition_count, get_ssm_domains_from_string, get_etiket_variables_used_from_path, get_maestro_executables_from_bash_text
 from utilities.heimdall.path import is_editor_swapfile, get_latest_ssm_path_from_path
 from utilities.heimdall.git import scan_git_authors
+from utilities.heimdall.uspmadt import get_uspmadt_lines
 from utilities import guess_user_home_from_path, pretty, pretty_kwargs
 from utilities.path import iterative_deepening_search, get_link_chain_from_link
 from utilities.maestro import get_weird_assignments_from_config_path, get_commented_pseudo_xml_lines
@@ -22,7 +23,26 @@ from utilities.shell import get_all_repo_files
 from heimdall.file_cache import file_cache
 
 class TestUtilities(unittest.TestCase):
-    
+
+    def test_uspmadt(self):
+        
+        positive_lines=["FILENAME=`$FNAME -r $RUNMDL -t $PROG`",
+                        "FILENAME=$(fname -t $PROG -r $RUNMDL )",
+                        "nom_fichier_diag=`$FGEN -p ${PROG_REGDIAG} -t $RUN -s $PROG -e $PROG -c`",
+                        "nom_fichier_diag=$(fgen+ -p ${PROG_REGDIAG} -s $PROG -t $RUN -e $PROG -c)",
+                        "stamp=`dtstmp -r $RUNMDL`",
+                        "stamp=$(dtstmp -r $RUNMDL)"]
+        
+        negative_lines=["FILENAME=`$FGEN -t ${CMCSTAMP} -S -x $PROG`",
+                        "+nom_fichier_diag=`$FGEN -p ${PROG_REGDIAG} -t ${CMCSTAMP} -s $PROG -e $PROG -c`",
+                        "stamp=$(fgen+ -t ${CMCSTAMP} -S)"]
+        
+        text="\n".join(positive_lines)+"\n"+"\n".join(negative_lines)
+        
+        results=get_uspmadt_lines(text)
+        for line in results:
+            self.assertIn(line,positive_lines)
+            self.assertNotIn(line,negative_lines)
     
     def test_get_maestro_executables_from_bash_text(self):
         text="""
