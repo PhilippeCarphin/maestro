@@ -1258,7 +1258,7 @@ class ExperimentScanner():
         "using deprecated uspmadt system"
         lines=get_uspmadt_lines(content_without_comments)
         if lines:
-            self.add_message("w030",path=path,lines=lines)
+            self.add_message("w030",path=path,lines="\n".join(lines))
     
     def scan_ssm_uses(self):
         
