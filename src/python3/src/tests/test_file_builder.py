@@ -110,7 +110,7 @@ def setup_tmp_experiment1():
     """
     Deletes then creates files for testing.
     
-    Returns a path to an experiment that produces the b001, w015, i008, w028 codes.
+    Returns a path to an experiment that produces the b001, w015, i008, w028, w034 codes.
     
     For example, dynamic values will change depending on who runs the test suite and from where.
     """
@@ -177,6 +177,9 @@ def setup_tmp_experiment2():
     Deletes then creates files for testing.
     
     Returns a path to an experiment that produces the i007 code.
+    
+    This experiment also has different types of DEPENDS_ON but 
+    does NOT produce the w032 w033 and w034 codes.
     """
 
     source = MOCK_FILES+"suites_with_codes/b007"
@@ -192,7 +195,12 @@ def setup_tmp_experiment2():
     line="ABSOLUTE_PATH_TO_OP_USER="+OPERATIONAL_HOME+"smco500/maestro_suites/zdps/modules/module1/task1.tsk"
     with open(cfg_path,"a") as f:
         f.write("\n\n"+line)
-
+    
+    "TURTLE_ME_PATH in resources"
+    res_path=target+"/resources/resources.def"
+    with open(res_path,"a") as f:
+        f.write("TURTLE_ME_PATH="+TURTLE_ME_PATH)
+    
     return target
 
 
