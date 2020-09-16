@@ -40,7 +40,7 @@ class TestUtilities(unittest.TestCase):
         text="\n".join(positive_lines)+"\n"+"\n".join(negative_lines)
         
         results=get_uspmadt_lines(text)
-        for line in results:
+        for line in results+positive_lines:
             self.assertIn(line,positive_lines)
             self.assertNotIn(line,negative_lines)
     
