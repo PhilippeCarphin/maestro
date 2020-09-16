@@ -992,17 +992,17 @@ class ExperimentScanner():
         for path in self.maestro_experiment.resource_definition_paths:
             self.scan_resource_definition(path)
         
-        "resources.def variable name typo"
-        standard_resource_defines = ["FRONTEND",
-                                     "BACKEND",
-                                     "FRONTEND_DEFAULT_Q",
-                                     "FRONTEND_XFER_Q",
-                                     "FRONTEND_DAEMON_Q",
-                                     "BACKEND_DEFAULT_Q",
-                                     "BACKEND_XFER_Q"]
+        resource_variables = ["FRONTEND",
+                              "BACKEND",
+                              "FRONTEND_DEFAULT_Q",
+                              "FRONTEND_XFER_Q",
+                              "FRONTEND_DAEMON_Q",
+                              "BACKEND_DEFAULT_Q",
+                              "BACKEND_XFER_Q"]
         
+        "resources.def variable name typo"
         me=self.maestro_experiment
-        for name in standard_resource_defines:
+        for name in resource_variables:
             for path, declares in me.path_to_resource_declares.items():
                 if name in declares:
                     continue
@@ -1012,6 +1012,22 @@ class ExperimentScanner():
                         self.add_message("w009",
                                          maybe_typo=maybe_typo,
                                          expected=name)
+                
+        "required defines in resources.def"
+        required=set(resource_variables)
+        for path, declares in me.path_to_resource_declares.items():
+            if not path.endswith("resources.def"):
+                continue
+            if not file_cache.exists(path):
+                continue
+            result=set(declares.keys())
+            missing=required.difference(result)
+            if missing:
+                missing=sorted(list(missing))
+                self.add_message("w031",
+                                 path=path,
+                                 required=sorted(list(required)),
+                                 missing=missing)
     
     def scan_resource_definition(self,path):
         content=file_cache.open_without_comments(path)
