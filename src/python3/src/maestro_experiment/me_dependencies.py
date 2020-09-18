@@ -9,6 +9,7 @@ import os.path
 
 from utilities.pretty import pretty_kwargs
 from utilities.parsing import superstrip
+from utilities.maestro import resolve_dependency_path
 from home_logger import logger
 
 class ME_Dependencies():
@@ -56,37 +57,8 @@ def get_dependency_data_from_DEPENDS_ON_element(element,node_path):
                         status=element.attrib.get("status","end"),
                         type=element.attrib.get("type","node"),
                         valid_hour=element.attrib.get("valid_hour",""),
-                        valid_dow=element.attrib.get("valid_dow",""))
-
-def resolve_dependency_path(dep_name,node_path):
-    """
-    Given a dep_name like:
-        /module1/task1
-        ./task2
-        ../task3
-    and a node_path:
-        /module1/loop1
-    Returns the full, resolved node_path:
-        /module1/task1
-        /module1/loop1/task2
-        /module1/task3
-    """
-    
-    if dep_name.startswith("/"):
-        return dep_name
-    
-    if dep_name.endswith("/"):
-        node_folder=os.path.dirname(node_path[:-1])
-    else:
-        node_folder=os.path.dirname(node_path)
-    
-    if not node_folder.startswith("/"):
-        node_folder="/"+node_folder
-    
-    if dep_name.startswith("./"):
-        return node_folder+dep_name[1:]
-        
-    return os.path.normpath(node_folder+"/"+dep_name)
+                        valid_dow=element.attrib.get("valid_dow",""),
+                        dep_name=dep_name)
 
 def new_dep_data(**kwargs):
     data={"node_path":"",
@@ -94,7 +66,9 @@ def new_dep_data(**kwargs):
           "status":"end",
           "type":"node",
           "valid_hour":"",
-          "valid_dow":""}
+          "valid_dow":"",
+          "dep_name":"",
+          "node_folder":""}
     for key,value in kwargs.items():
         data[key]=value
     return data

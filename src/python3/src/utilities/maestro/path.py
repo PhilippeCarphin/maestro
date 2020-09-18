@@ -1,6 +1,45 @@
 import os
 import os.path
 
+def get_node_folder_from_node_path(node_path):
+    """
+    Given a node path like:
+        /module1/task1/
+        /module1/task1
+    Returns:
+        /module1
+    """
+    if node_path.endswith("/"):
+        node_path=node_path[:-1]
+    return os.path.dirname(node_path)
+
+def resolve_dependency_path(dep_name,node_path):
+    """
+    Given a dep_name like:
+        /module1/task1
+        ./task2
+        ../task3
+    and a node_path:
+        /module1/loop1
+    Returns the full, resolved node_path:
+        /module1/task1
+        /module1/loop1/task2
+        /module1/task3
+    """
+    
+    if dep_name.startswith("/"):
+        return dep_name
+    
+    node_folder=get_node_folder_from_node_path(node_path)
+    
+    if not node_folder.startswith("/"):
+        node_folder="/"+node_folder
+    
+    if dep_name.startswith("./"):
+        return node_folder+dep_name[1:]
+        
+    return os.path.normpath(node_folder+"/"+dep_name)
+
 
 def find_exp_home_in_path(path):
     """

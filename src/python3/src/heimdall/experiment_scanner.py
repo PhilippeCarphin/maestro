@@ -10,7 +10,7 @@ from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
 from home_logger import logger
-from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text, get_commented_pseudo_xml_lines, get_loop_indexes_from_expression, NodeLogParser
+from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text, get_commented_pseudo_xml_lines, get_loop_indexes_from_expression, NodeLogParser, get_node_folder_from_node_path
 from utilities.heimdall.critical_errors import find_critical_errors
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count, get_ssm_domains_from_string, get_etiket_variables_used_from_text, get_maestro_executables_from_bash_text
 from utilities.heimdall.context import guess_scanner_context_from_path
@@ -136,6 +136,7 @@ class ExperimentScanner():
         self.scan_container_xml_files()
         self.scan_declared_files()
         self.scan_deprecated_files_folders()
+        self.scan_dependencies()
         self.scan_etikets()
         self.scan_exp_options()
         self.scan_extra_files()
@@ -293,6 +294,39 @@ class ExperimentScanner():
 
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+    
+    def scan_dependencies(self):
+        me=self.maestro_experiment
+        
+        for node_path,node_data in me.node_datas.items():
+            dependencies=me.get_dependency_data_for_node_path(node_path)
+            
+            for dep_data in dependencies:
+            
+                "is the node_path absolute, or relative"
+                is_absolute=dep_data["dep_name"]==dep_data["node_path"]
+                
+                "is the experiment this one (local) or external"
+                is_local=not dep_data["experiment_path"]
+                
+                node_folder=get_node_folder_from_node_path(node_path)
+                
+                a=dep_data["node_path"]
+                no_slash_node_path=a[1:] if a.startswith("/") else a
+                dep_exists_locally=no_slash_node_path in me.node_datas
+                
+                if is_local and is_absolute and not dep_exists_locally:
+                    self.add_message("w032",
+                                     resource_path=node_data["resource_path"],
+                                     node_path=dep_data["dep_name"])
+                
+                if is_local and not is_absolute and not dep_exists_locally:
+                    self.add_message("w033",
+                                     resource_path=node_data["resource_path"],
+                                     dep_name=dep_data["dep_name"],
+                                     node_path=dep_data["node_path"],
+                                     node_folder=node_folder)
+                
     
     def scan_shell_scripts(self):
         "run shell script syntax checks like 'bash -n' and 'ksh -n' on all tsk and cfg files."

@@ -154,7 +154,7 @@ class TestSuiteScan(unittest.TestCase):
         like ignore_codes, but suite specific
         """
         expected_errors = {G0_MINI_ME_PATH: ["b006", "b008", "b016"],
-                           G1_MINI_ME_PATH: ["b006", "e005", "b008", "b016"],
+                           G1_MINI_ME_PATH: ["b006", "e005", "b008", "b016", "w032", "w033"],
                            GV_MINI_ME_PATH: ["b008", "b016"]}
         expected_errors = {key: set(value) for key, value in expected_errors.items()}
 
