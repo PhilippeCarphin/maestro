@@ -17,6 +17,7 @@ from utilities.maestro import find_exp_home_in_path, get_experiment_name, get_se
 from utilities import pretty, clamp
 from utilities.xml import xml_cache
 
+from maestro_experiment.me_dependencies import ME_Dependencies
 from maestro_experiment.me_flow import ME_Flow
 from maestro_experiment.me_indexes import ME_Indexes
 from maestro_experiment.me_logs import ME_Logs
@@ -27,7 +28,7 @@ from maestro_experiment.me_snapshot import ME_Snapshot
 from maestro_experiment.me_validation import ME_Validation
 
 
-class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus, ME_Resources, ME_Snapshot, ME_Validation):
+class MaestroExperiment(ME_Dependencies, ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus, ME_Resources, ME_Snapshot, ME_Validation):
     def __init__(self,
                  path,
                  datestamp=None,
@@ -71,6 +72,18 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
         value is the lxml element, where its attributes like machine=${ABC} are interpreted.
         """
         self.interpreted_resource_lxml_cache = {}
+        
+        """
+        key is a node path
+        value is a list of dictionaries describing dependencies:
+            {"node_path":"",
+             "experiment_path":"",
+             "status":"",
+             "type":"",
+             "valid_hour":"",
+             "valid_dow":""}
+        """
+        self.dependencies={}
 
         self.path = path
         self.name = get_experiment_name(path)

@@ -1,10 +1,11 @@
 <MODULE name="module1">
     <SUBMITS name="task1"/>
-    <TASK name="task1"/>
-    <SUBMITS sub_name="task2"/>
-    <TASK name="task2">
-        <SUBMITS sub_name="task3"/>
-        <TASK name="task3"/>
+    <TASK name="task1">
+        <SUBMITS sub_name="task2"/>
+        <TASK name="task2">
+            <SUBMITS sub_name="task3"/>
+            <TASK name="task3"/>
+        </TASK>
     </TASK>
 </MODULE>
 

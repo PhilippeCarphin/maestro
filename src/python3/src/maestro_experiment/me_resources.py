@@ -71,7 +71,7 @@ class ME_Resources():
                 text = text.replace(match.group(0), value)
             else:
                 undefined.append(name)
-
+                
         return text, undefined
 
     def insert_resources_into_xml(self, root):
