@@ -329,7 +329,7 @@ class ExperimentScanner():
                 
                 a=dep_data["node_path"]
                 no_slash_node_path=a[1:] if a.startswith("/") else a
-                dep_exists_locally=no_slash_node_path in me.node_datas
+                dep_exists_locally=me.is_node_path(no_slash_node_path)
                 
                 if is_local and is_absolute and not dep_exists_locally:
                     self.add_message("w032",

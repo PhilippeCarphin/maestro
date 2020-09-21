@@ -111,7 +111,7 @@ class ME_Flow():
     def is_node_path(self, node_path):
         if self.has_critical_errors:
             return False
-        return node_path in self.flow_datas
+        return node_path in self.node_path_to_no_index_node_path.values()
 
     def process_flow_element(self, element):
         """
