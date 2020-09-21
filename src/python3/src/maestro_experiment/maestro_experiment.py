@@ -33,11 +33,16 @@ class MaestroExperiment(ME_Dependencies, ME_Flow, ME_Indexes, ME_Logs, ME_NodeDa
                  path,
                  datestamp=None,
                  node_log_refresh_interval=10,
-                 user_home=None):
+                 user_home=None,
+                 raise_exception_for_critical_errors=True):
 
         path = find_exp_home_in_path(path)
-        if not path or has_critical_error(path):
-            raise ValueError("MaestroExperiment failed to find an experiment for path: '%s'" % path)
+        self.has_critical_errors=has_critical_error(path)
+        if not path or self.has_critical_errors:
+            if raise_exception_for_critical_errors:
+                raise ValueError("MaestroExperiment failed to find an experiment for path: '%s'" % path)
+            else:
+                return
 
         """
         A list of strings describing any errors in parsing or reading this experiment path.

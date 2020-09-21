@@ -11,7 +11,7 @@ from heimdall.file_cache import file_cache
 from heimdall.message_manager import hmm
 from home_logger import logger
 from utilities.maestro import is_empty_module, get_weird_assignments_from_config_text, get_commented_pseudo_xml_lines, get_loop_indexes_from_expression, NodeLogParser, get_node_folder_from_node_path
-from utilities.heimdall.critical_errors import find_critical_errors
+from utilities.heimdall.critical_errors import find_critical_errors, has_critical_error
 from utilities.heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count, get_ssm_domains_from_string, get_etiket_variables_used_from_text, get_maestro_executables_from_bash_text
 from utilities.heimdall.context import guess_scanner_context_from_path
 from utilities.heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path, DECENT_LINUX_PATH_REGEX_WITH_START_END, DECENT_LINUX_PATH_REGEX, DECENT_LINUX_PATH_REGEX_WITH_DOLLAR, get_latest_ssm_path_from_path, has_active_hcron_files
@@ -298,6 +298,9 @@ class ExperimentScanner():
     def scan_dependencies(self):
         me=self.maestro_experiment
         
+        "key is experiment path, value is MaestroExperiment instance"
+        me_cache={}
+        
         for node_path,node_data in me.node_datas.items():
             dependencies=me.get_dependency_data_for_node_path(node_path)
             
@@ -326,6 +329,23 @@ class ExperimentScanner():
                                      dep_name=dep_data["dep_name"],
                                      node_path=dep_data["node_path"],
                                      node_folder=node_folder)
+                
+                
+                if not is_local:
+                    
+                    path=dep_data["experiment_path"]
+                    if path not in me_cache:
+                        me_cache[path]=MaestroExperiment(path,
+                                raise_exception_for_critical_errors=False)
+                    external_me=me_cache[path]
+                    
+                    dep_exists_externally=external_me.is_node_path(no_slash_node_path)
+                    
+                    if not dep_exists_externally:
+                        self.add_message("w034",
+                                         resource_path=node_data["resource_path"],
+                                         node_path=dep_data["node_path"],
+                                         exp=path)
                 
     
     def scan_shell_scripts(self):

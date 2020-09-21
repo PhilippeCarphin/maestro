@@ -3,8 +3,7 @@ from utilities.xml import xml_cache
 
 
 def has_critical_error(path):
-    bool(find_critical_errors(path))
-
+    return bool(find_critical_errors(path))
 
 def find_critical_errors(path):
     """

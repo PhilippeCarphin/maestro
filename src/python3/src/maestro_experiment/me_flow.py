@@ -109,6 +109,8 @@ class ME_Flow():
         self.root_node_data = self.get_node_data(self.root_module_name)
 
     def is_node_path(self, node_path):
+        if self.has_critical_errors:
+            return False
         return node_path in self.flow_datas
 
     def process_flow_element(self, element):
