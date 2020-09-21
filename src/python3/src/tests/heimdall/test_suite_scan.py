@@ -56,7 +56,7 @@ class TestSuiteScan(unittest.TestCase):
                 continue
             
             path=SUITES_WITH_CODES+code
-            msg="\nExpected path: '%s'"%path
+            msg="\nEvery code must have a positive test case. Expected folder:\n   %s"%path
             self.assertIn(code,folders,msg=msg)
         
         "iterate over every code"
@@ -155,7 +155,7 @@ class TestSuiteScan(unittest.TestCase):
         """
         ignore_codes = ["w001", "w002", "i002", "e016", "i004", "b009", "i006", 
                         "b014", "b017", "e021", "i009", "b025", "i010", "b027",
-                        "b028", "w031", "w034"]
+                        "b028", "w031", "w034", "w035"]
 
         """
         like ignore_codes, but suite specific

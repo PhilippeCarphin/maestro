@@ -341,7 +341,11 @@ class ExperimentScanner():
                     
                     dep_exists_externally=external_me.is_node_path(no_slash_node_path)
                     
-                    if not dep_exists_externally:
+                    if external_me.has_critical_errors:
+                        self.add_message("w035",
+                                         resource_path=node_data["resource_path"],
+                                         exp=path)
+                    elif not dep_exists_externally:
                         self.add_message("w034",
                                          resource_path=node_data["resource_path"],
                                          node_path=dep_data["node_path"],
