@@ -301,10 +301,23 @@ class ExperimentScanner():
         "key is experiment path, value is MaestroExperiment instance"
         me_cache={}
         
+        """
+        Many DEPENDS_ON lines may have the same exp/dep_name combination because of loop indexes.
+        For w032 w033 w034 w035, each (exp,dep_name) combination should only trigger one code.
+        This set tracks which have been visited:
+            {(exp,dep_name), ...}
+        """
+        visited_exp_dep_names=set()
+        
         for node_path,node_data in me.node_datas.items():
             dependencies=me.get_dependency_data_for_node_path(node_path)
             
             for dep_data in dependencies:
+                
+                visited_key=(dep_data["experiment_path"],dep_data["dep_name"])
+                if visited_key in visited_exp_dep_names:
+                    continue
+                visited_exp_dep_names.add(visited_key)
             
                 "is the node_path absolute, or relative"
                 is_absolute=dep_data["dep_name"]==dep_data["node_path"]
