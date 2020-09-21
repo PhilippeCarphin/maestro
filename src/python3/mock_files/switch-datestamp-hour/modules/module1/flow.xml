@@ -1,4 +1,5 @@
 <MODULE name="module1">
+<SUBMITS sub_name="switch1"/>
 <SWITCH name="switch1" type="datestamp_hour">
    <SWITCH_ITEM name="00">
        <SUBMITS sub_name="task1"/>

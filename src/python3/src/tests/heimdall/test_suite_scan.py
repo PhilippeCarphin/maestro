@@ -116,29 +116,40 @@ class TestSuiteScan(unittest.TestCase):
         
         setup_tmp_experiment2()
         
-        unused_folders = [p for p in os.listdir(SUITES_WITHOUT_CODES) if os.path.isdir(SUITES_WITHOUT_CODES+p)]
+        folders=os.listdir(SUITES_WITHOUT_CODES)
+        unused_folders = folders[:]
 
         for code in hmm.codes:
-            path = SUITES_WITHOUT_CODES+code
-            realpath=os.path.realpath(path)
             
-            if not os.path.isdir(path):
-                continue
-
-            if code in unused_folders:
-                unused_folders.remove(code)
-
-                scanner = get_scanner_from_cache(realpath,
-                                            critical_error_is_exception=False,
-                                            operational_home=OPERATIONAL_HOME,
-                                            parallel_home=PARALLEL_HOME,
-                                            operational_suites_home=OPERATIONAL_SUITES_HOME,
-                                            debug_qstat_output_override=QSTAT_CMD_OUTPUT)
-
-                msg = "Experiment path:\n    %s\nrealpath:\n    %s\n" % (path,realpath)
-                msg += "\n\n"+scanner.get_report_text()
-
-                self.assertNotIn(code, scanner.codes, msg=msg)
+            for folder in folders:
+                
+                """
+                Some codes have more than one suite to test.
+                For code `e025` only continue for folders like 'e025' and 'e025-b'
+                """
+                if not folder.startswith(code):
+                    continue
+                
+                path = SUITES_WITHOUT_CODES+folder
+                realpath=os.path.realpath(path)
+                
+                if not os.path.isdir(path):
+                    continue
+    
+                if code in unused_folders:
+                    unused_folders.remove(code)
+    
+                    scanner = get_scanner_from_cache(realpath,
+                                                critical_error_is_exception=False,
+                                                operational_home=OPERATIONAL_HOME,
+                                                parallel_home=PARALLEL_HOME,
+                                                operational_suites_home=OPERATIONAL_SUITES_HOME,
+                                                debug_qstat_output_override=QSTAT_CMD_OUTPUT)
+    
+                    msg = "Experiment path:\n    %s\nrealpath:\n    %s\n" % (path,realpath)
+                    msg += "\n\n"+scanner.get_report_text()
+    
+                    self.assertNotIn(code, scanner.codes, msg=msg)
 
     def test_good_suite(self):
         """
