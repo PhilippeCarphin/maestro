@@ -43,32 +43,39 @@ class TestSuiteScan(unittest.TestCase):
         
         folders=os.listdir(SUITES_WITH_CODES)
         
+        """
+        exclude c003 because that's the error we expect - the folder does not exist
+        exclude e016 because git repo check, hard to guarantee tmp files setup outside repo have no git repo
+        """
+        do_not_test=["c003","e016"]
+        
+        "every code has a test example suite"
+        for code in hmm.codes:
+            
+            if code in do_not_test:
+                continue
+            
+            path=SUITES_WITH_CODES+code
+            msg="\nExpected path: '%s'"%path
+            self.assertIn(code,folders,msg=msg)
+        
         "iterate over every code"
         for code in hmm.codes:
             
+            if code in do_not_test:
+                continue
+                
             for folder in folders:
                 
                 """
-                Some codes have more than one folder, like 'e025' and 'e025-b'
-                For every code, check if every folder starts with it.
+                Some codes have more than one suite to test.
+                For code `e025` only continue for folders like 'e025' and 'e025-b'
                 """
                 if not folder.startswith(code):
                     continue
                 
                 path=SUITES_WITH_CODES+folder
-                realpath=os.path.realpath(path)
-    
-                if code == "e016":
-                    """
-                    ignore the git repo check, hard to guarantee tmp files setup
-                    outside repo have no git repo
-                    """
-                    continue
-    
-                if code != "c003":
-                    "exclude c003 because that's the error we expect - the folder does not exist"
-                    msg = "Mock experiment for code '%s' does not exist at path '%s'. All codes must have a test case." % (code, path)
-                    self.assertTrue(os.path.isdir(path), msg=msg)
+                realpath=os.path.realpath(path)    
     
                 "override the context, if necessary"
                 context = None
