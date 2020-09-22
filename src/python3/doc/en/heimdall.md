@@ -1,4 +1,4 @@
-((French))[../fr/heimdall.md]
+[(French)](../fr/heimdall.md)
 
 Heimdall is a maestro suite scanner. Scan for errors, warnings, recommendations, and installation issues.
 

@@ -1,4 +1,4 @@
-((English))[../en/heimdall.md]
+[(English)](../en/heimdall.md)
 
 Heimdall est un scanner de projet maestro. Trouvez les erreurs, les avertissements, les recommandations et les problèmes d'installation.
 
