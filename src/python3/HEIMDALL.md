@@ -5,6 +5,6 @@ Heimdall est un scanner de projet maestro. Trouvez les erreurs, les avertissemen
 
 Heimdall is a maestro suite scanner. Scan for errors, warnings, recommendations, and installation issues.
 
-## [English](en/heimdall.md)
+## [English](doc/en/heimdall.md)
 
-## [Français](fr/heimdall.md)
+## [Français](doc/fr/heimdall.md)
