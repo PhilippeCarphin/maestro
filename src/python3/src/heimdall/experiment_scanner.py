@@ -1719,6 +1719,7 @@ class ExperimentScanner():
         
         "wallclock too big, based on nodelog"
         threshold_factor=5
+        minimum_wallclock_seconds=30
         for node_path,node_data in me.node_datas.items():
             latest_success_seconds=nlp.get_successful_execution_duration(node_path)
             if not latest_success_seconds:
@@ -1734,6 +1735,9 @@ class ExperimentScanner():
             except ValueError:
                 continue
             if not wallclock_seconds:
+                continue
+            
+            if wallclock_seconds < minimum_wallclock_seconds:
                 continue
             
             if wallclock_seconds>latest_success_seconds*threshold_factor:
