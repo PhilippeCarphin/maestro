@@ -19,7 +19,7 @@ all: clean
 		cp -r ${MAESTRO_PROJECT_ROOT}/man/roff/* ${OFFLINE_MAN_BACKUP}/ ;\
 	else \
 		echo "Skipping generation of man pages, as there seems to be no internet. Using roff files generated from previous online builds instead." ;\
-		cp -r ${OFFLINE_MAN_BACKUP}/* ${MAN_FOLDER} ;\
+		cp -r ${OFFLINE_MAN_BACKUP}/* ${MAN_FOLDER} || echo "Did not find offline man page backup. Build has no man pages." ;\
 		sleep 2 ;\
 	fi
 
