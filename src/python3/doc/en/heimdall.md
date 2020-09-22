@@ -85,7 +85,7 @@ cd maestro/src/python3/bin
 ./run_heimdall_tests
 ```
 
-Every code in the [tab delimited messages CSV](csv/message_codes.csv) has at least one automated test. Suppose a new code `i999` is created. There must also be an example experiment that generates it in `maestro/src/python3/mock_files/suites_with_codes/i999` and optionally in `maestro/src/python3/mock_files/suites_without_codes/i999`. If this condition is not met, a supervisor test will fail.
+Every code in the [tab delimited messages CSV](/src/python3/csv/message_codes.csv) has at least one automated test. Suppose a new code `i999` is created. There must also be an example experiment that generates it in `maestro/src/python3/mock_files/suites_with_codes/i999` and optionally in `maestro/src/python3/mock_files/suites_without_codes/i999`. If this condition is not met, a supervisor test will fail.
 
 ### Utilities
 

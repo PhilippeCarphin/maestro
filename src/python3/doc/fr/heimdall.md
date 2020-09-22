@@ -16,7 +16,7 @@ Et beaucoup plus! Voir le [CSV délimité par des tabulations](csv/message_codes
 
 # Captures d'écran
 
-(La préférence de langue est automatiquement détectée.)
+(La préférence de langue est automatiquement détectée)
 
 ![heimdall screenshot](/src/python3/screenshots/heimdall1.png)
 
@@ -87,7 +87,7 @@ cd maestro/src/python3/bin
 ./run_heimdall_tests
 ```
 
-Chaque code du [CSV messages délimités par des tabulations](csv/message_codes.csv) a au moins un test automatisé. Supposons qu'un nouveau code "i999" soit créé. Il doit également y avoir un exemple du projet qui le génère dans `maestro/src/python3/mock_files/suites_with_codes/i999` et idéalement dans `maestro/src/python3/mock_files/suites_without_codes/i999`. Si cette condition n'est pas remplie, un autre test du échouera.
+Chaque code du [CSV messages délimités par des tabulations](/src/python3/csv/message_codes.csv) a au moins un test automatisé. Supposons qu'un nouveau code "i999" soit créé. Il doit également y avoir un exemple du projet qui le génère dans `maestro/src/python3/mock_files/suites_with_codes/i999` et idéalement dans `maestro/src/python3/mock_files/suites_without_codes/i999`. Si cette condition n'est pas remplie, un autre test du échouera.
 
 ### Utilitaires
 
@@ -97,10 +97,10 @@ Les fichiers au niveau racine de `maestro/src/python3/src/utilities` sont géné
 
 `heimdall` utilise des composants de `mflow`, comme la classe `MaestroExperiment`. Rarement, le développement dans `heimdall` implique la modification des dépendances de `mflow`. Dans ce cas, il est bon d'exécuter également les tests `mflow`:
 
-``
+```
 cd maestro/src/python3/bin
 ./run_mflow_tests
-``
+```
 
 La structure du projet et les tests pourraient être aplatis / fusionnés dans une version à l'avenir.
 
