@@ -356,7 +356,7 @@ class ExperimentScanner():
                     dep_exists_externally=external_me.is_node_path(no_slash_node_path)
                     
                     if not is_absolute:
-                        self.add_message("w036",
+                        self.add_message("e028",
                                          resource_path=node_data["resource_path"],
                                          dep_name=dep_data["dep_name"])
                     
