@@ -5,4 +5,5 @@
   <DEPENDS_ON dep_name="/not/a/path/in/this/exp" status="end" type="node"/>
   <DEPENDS_ON dep_name="../../not/a/relative/path/in/this/exp" status="end" type="node"/>
   <DEPENDS_ON dep_name="/not/a/path/in/external/exp" status="end" type="node" exp="${PATH_TO_NOT_DATESTAMPED_SUITE}"/>
+  <DEPENDS_ON dep_name="../relative/path" status="end" type="node" exp="${PATH_TO_NOT_DATESTAMPED_SUITE}"/>
 </NODE_RESOURCES>

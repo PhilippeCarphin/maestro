@@ -320,8 +320,8 @@ class ExperimentScanner():
                 visited_exp_dep_names.add(visited_key)
             
                 "is the node_path absolute, or relative"
-                is_absolute=dep_data["dep_name"]==dep_data["node_path"]
-                
+                is_absolute=not dep_data["dep_name"].startswith(".")
+                                
                 "is the experiment this one (local) or external"
                 is_local=not dep_data["experiment_path"]
                 
@@ -347,12 +347,18 @@ class ExperimentScanner():
                 if not is_local:
                     
                     path=dep_data["experiment_path"]
+                                        
                     if path not in me_cache:
                         me_cache[path]=MaestroExperiment(path,
                                 raise_exception_for_critical_errors=False)
                     external_me=me_cache[path]
                     
                     dep_exists_externally=external_me.is_node_path(no_slash_node_path)
+                    
+                    if not is_absolute:
+                        self.add_message("w036",
+                                         resource_path=node_data["resource_path"],
+                                         dep_name=dep_data["dep_name"])
                     
                     if external_me.has_critical_errors:
                         self.add_message("w035",
@@ -1349,6 +1355,8 @@ class ExperimentScanner():
     
     def scan_ssm_uses(self):
         
+        "key is path to a file, value is list of SSM domains SSM used in that file"
+        self.path_to_ssm_domains={}        
         for path in self.task_files+self.config_files:
             self.scan_ssm_uses_in_file(path)
                 
@@ -1391,9 +1399,6 @@ class ExperimentScanner():
                              paths=paths)
     
     def scan_ssm_uses_in_file(self,path):
-        
-        "key is path to a file, value is list of SSM domains SSM used in that file"
-        self.path_to_ssm_domains={}        
         
         content_without_comments = file_cache.open_without_comments(path)
         lines=content_without_comments.split("\n")
