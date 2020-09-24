@@ -93,6 +93,12 @@ def scan_cli(args):
 
     whitelist = [] if not args["--whitelist"] else args["--whitelist"].split(",")
     blacklist = [] if not args["--blacklist"] else args["--blacklist"].split(",")
+    
+    """
+    This next blacklist line can be removed once the MAESTRO_* 
+    merge has been released to operations.
+    """
+    blacklist.append("b017")
 
     scanner.print_report(level=level,
                          max_repeat=max_repeat,
