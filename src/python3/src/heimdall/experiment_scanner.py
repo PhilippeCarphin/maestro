@@ -1349,9 +1349,6 @@ class ExperimentScanner():
     
     def scan_ssm_uses(self):
         
-        "key is path to a file, value is list of SSM domains SSM used in that file"
-        self.path_to_ssm_domains={}
-        
         for path in self.task_files+self.config_files:
             self.scan_ssm_uses_in_file(path)
                 
@@ -1370,6 +1367,9 @@ class ExperimentScanner():
                 domain_to_paths[domain].add(path)
                 
                 package=os.path.dirname(domain)
+                if not package:
+                    continue
+                
                 if package not in package_to_paths:
                     package_to_paths[package]=set()
                 package_to_paths[package].add(path)
@@ -1391,6 +1391,10 @@ class ExperimentScanner():
                              paths=paths)
     
     def scan_ssm_uses_in_file(self,path):
+        
+        "key is path to a file, value is list of SSM domains SSM used in that file"
+        self.path_to_ssm_domains={}        
+        
         content_without_comments = file_cache.open_without_comments(path)
         lines=content_without_comments.split("\n")
         domains=[]
