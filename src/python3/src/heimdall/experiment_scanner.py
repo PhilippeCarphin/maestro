@@ -1432,8 +1432,14 @@ class ExperimentScanner():
         package_to_domains={}
         
         for path,domains in self.path_to_ssm_domains.items():
-                            
+            
+            domain_variables_without_ssm_prefix=[]
+            
             for domain in domains:
+                
+                if domain.startswith("$") and not superstrip(domain,"${}").lower().startswith("ssm_"):
+                    domain_variables_without_ssm_prefix.append(domain)
+                
                 if domain not in domain_to_paths:
                     domain_to_paths[domain]=set()
                 domain_to_paths[domain].add(path)
@@ -1449,6 +1455,11 @@ class ExperimentScanner():
                 if package not in package_to_domains:
                     package_to_domains[package]=set()
                 package_to_domains[package].add(domain)
+            
+            if domain_variables_without_ssm_prefix:
+                self.add_message("b030",
+                                 path=path,
+                                 variables="\n".join(domain_variables_without_ssm_prefix))
         
         "find cases where different versions of the same SSM are used"
         for package,domains in package_to_domains.items():
