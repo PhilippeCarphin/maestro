@@ -786,7 +786,6 @@ class ExperimentScanner():
                     self.add_message("b022",paths="\n".join(paths))
         
     def scan_hub(self):
-        "scan links and targets of hub folder"
 
         hub_items = [self.path+"hub/"+filename for filename in file_cache.listdir(self.path+"hub")]
 
@@ -803,7 +802,13 @@ class ExperimentScanner():
                 self.add_message("e014",
                                       context=self.context,
                                       bad=msg)
-                
+        
+        "deprecated products_dbase link"
+        for path in hub_items:
+            folder=path+"/products_dbase"
+            if file_cache.exists(path) and file_cache.islink(path):
+                self.add_message("b029",bad=folder)
+        
         "bad archive and protocol files"
         for path in self.hub_files:
             basename=os.path.basename(path)
