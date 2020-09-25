@@ -12,21 +12,20 @@ Usage:
     heimdall blame <path-to-git-repo> [--count=<count>]
 
 Options:
-    --exp=<experiment-path>      The path to a maestro experiment. By default, look in $PWD. [default: %s]
+    --blacklist=<codes>          Comma delimited list of codes like '--blacklist=c001,w001'. Never show these codes.
     --context=<context>          Heimdall will guess the context like operational, preoperational, or parallel. Or you can override the guess with this option.
+    --count=<count>              How many top maintainers to show in heimdall blame. [default: 5]
+    --exp=<experiment-path>      The path to a maestro experiment. By default, look in $PWD. [default: %s]
+    --home=<folder>              The home folder used to lookup files like '~/.suites/overrides.def'. By default, use the home of the owner of the maestro experiment.
+    --language=<language>        Choose the language of the result messages. The default uses the value of $LANG and whether the first two letters are "en" or "fr". [default: %s]
     --level=<level>              Only show messages at this level or above. There is critical, error, warning, info, and best-practice. You can also just use the first letter as an argument. [default: best-practice]    
     --max-repeat=<count>         The same message code will be shown this maximum number of times. Use zero for unlimited. [default: 5]
-    --whitelist=<codes>          Comma delimited list of codes like '--whitelist=c001,w001'. Only show these codes.
-    --blacklist=<codes>          Comma delimited list of codes like '--blacklist=c001,w001'. Never show these codes.
-    --home=<folder>              The home folder used to lookup files like '~/.suites/overrides.def'. By default, use the home of the owner of the maestro experiment.
     --op-home=<path>             Path to the home of the operational user. [default: /home/smco500]
-    --par-home=<path>            Path to the home of the parallel user. [default: /home/smco501]
     --op-suites-home=<path>       Path to the home of owner of operational maestro suite files. [default: /home/smco502]
-    
-    --count=<count>              How many top maintainers to show in heimdall blame. [default: 5]
-    
-    --language=<language>        Choose the language of the result messages. The default uses the value of $LANG and whether the first two letters are "en" or "fr". [default: %s]
+    --par-home=<path>            Path to the home of the parallel user. [default: /home/smco501]
     --verbose                    Enable verbose debug logging in the "$HOME/logs/mflow" files.
+    --whitelist=<codes>          Comma delimited list of codes like '--whitelist=c001,w001'. Only show these codes.
+    
     -h --help   Show this description.
 """
 from utilities.docopt import docopt
@@ -93,7 +92,7 @@ def scan_cli(args):
 
     whitelist = [] if not args["--whitelist"] else args["--whitelist"].split(",")
     blacklist = [] if not args["--blacklist"] else args["--blacklist"].split(",")
-    
+        
     """
     This next blacklist line can be removed once the MAESTRO_* 
     merge has been released to operations.
