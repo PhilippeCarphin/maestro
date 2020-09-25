@@ -48,6 +48,14 @@ class FileCache():
         return self.get_key_values_from_realpath(realpath)
     
     @cache
+    def get_mtime_from_realpath(self,realpath):
+        return os.path.getmtime(realpath)
+    
+    def get_mtime_from_path(self, path):
+        realpath = self.realpath(path)
+        return self.get_mtime_from_realpath(realpath)    
+    
+    @cache
     def get_bash_variables_used_in_realpath(self, realpath):
         text=self.open(realpath)
         return get_bash_variables_used_in_text(text)

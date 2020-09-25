@@ -1,10 +1,12 @@
 import os.path
 import re
-from collections import OrderedDict
 import Levenshtein
 import json
+from collections import OrderedDict
+from datetime import datetime
 
 from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS, EXPERIMENT_LOG_FOLDERS, REQUIRED_LOG_FOLDERS, OPERATIONAL_USERNAME, OLD_SEQ_VARIABLES, TASK_MAESTRO_BINS
+from utilities.math import clamp
 
 from maestro_experiment import MaestroExperiment
 from heimdall.file_cache import file_cache
@@ -41,14 +43,17 @@ class ExperimentScanner():
     def __init__(self,
                  path,
                  context=None,
-                 operational_home=None,
-                 parallel_home=None,
-                 operational_suites_home=None,
                  critical_error_is_exception=True,
-                 language=None,
-                 debug_qstat_output_override="",
                  debug_cmcconst_override="",
-                 debug_op_username_override=""):
+                 debug_op_username_override="",
+                 debug_qstat_output_override="",
+                 debug_hub_filecount=0,
+                 debug_hub_ignore_age=False,
+                 hub_seconds=1,
+                 language=None,
+                 operational_home=None,
+                 operational_suites_home=None,
+                 parallel_home=None):
 
         if not path.endswith("/"):
             path += "/"
@@ -57,6 +62,10 @@ class ExperimentScanner():
         self.maestro_experiment = None
         self.codes = set()
         self.messages = []
+        self.hub_seconds=clamp(hub_seconds,1,600)
+        
+        self.debug_hub_filecount=debug_hub_filecount
+        self.debug_hub_ignore_age=debug_hub_ignore_age
         
         if not language:
             language=get_language_from_environment()
@@ -110,7 +119,7 @@ class ExperimentScanner():
         Useful for debugging/tests.
         """
         self.operational_username=debug_op_username_override if debug_op_username_override else OPERATIONAL_USERNAME
-            
+                
         critical_errors = find_critical_errors(path)
         for code, kwargs in critical_errors.items():
             self.add_message(code, **kwargs)
@@ -146,6 +155,7 @@ class ExperimentScanner():
         self.scan_external_soft_links()
         self.scan_hcrons()
         self.scan_hub()
+        self.scan_hub_archiving()
         self.scan_identical_files()
         self.scan_install_soft_links()
         self.scan_log_folder_permissions()
@@ -784,6 +794,55 @@ class ExperimentScanner():
             for module_name,paths in module_breakdown.items():
                 if len(paths)>1:
                     self.add_message("b022",paths="\n".join(paths))
+    
+    def scan_hub_archiving(self):
+        "find folders in hub with many files from many days, without archiving"
+        
+        many_files_threshold=1000 if not self.debug_hub_filecount else self.debug_hub_filecount
+        many_days_threshold=7
+        big_folders_with_no_archiving=[]
+        
+        "key is folder path, value is filecount"
+        filecount={}
+        for path in self.hub_files:
+            folder=os.path.dirname(path)
+            if folder not in filecount:
+                filecount[folder]=0
+            filecount[folder]+=1        
+        
+        for folder,count in filecount.items():
+            paths=file_cache.listdir(folder)
+            
+            if len(paths)<many_files_threshold:
+                continue
+            
+            protocole_files=[path for path in paths if path.startswith(".protocole_")]
+            if protocole_files:
+                continue
+            
+            "getting mtime for all would be slow, so get an evenly spread out sample"
+            sample_count=20
+            step=max(1,round(len(paths)/sample_count))
+            datestamps=set()
+            for index in range(0,len(paths),step):
+                path=paths[index]
+                try:
+                    mtime=file_cache.get_mtime_from_path(path)
+                except:
+                    "in case the file has been deleted/moved since our scan"
+                    continue
+                date=datetime.utcfromtimestamp(mtime)
+                datestamp=date.strftime("%Y-%m-%d")
+                datestamps.add(datestamp)
+            
+            if len(datestamps)>=many_days_threshold or self.debug_hub_ignore_age:
+                big_folders_with_no_archiving.append(folder)
+        
+        if big_folders_with_no_archiving:
+            self.add_message("w036",
+                             file_count=many_files_threshold,
+                             day_count=many_days_threshold,
+                             folders="\n".join(big_folders_with_no_archiving))
         
     def scan_hub(self):
 
@@ -1985,8 +2044,7 @@ class ExperimentScanner():
         hub files
         This search may be endless, so cut off the search after some time.
         """
-        max_seconds=1
-        hub_files=iterative_deepening_search(self.path+"hub",max_seconds)
+        hub_files=iterative_deepening_search(self.path+"hub",self.hub_seconds)
 
         def sls(items):
             "sls is short for sorted, list, set"

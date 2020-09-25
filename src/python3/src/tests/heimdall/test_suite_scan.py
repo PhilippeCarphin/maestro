@@ -102,7 +102,9 @@ class TestSuiteScan(unittest.TestCase):
                                             critical_error_is_exception=False,
                                             debug_qstat_output_override=QSTAT_CMD_OUTPUT,
                                             debug_cmcconst_override=CMCCONST_OVERRIDE,
-                                            debug_op_username_override=debug_op_username_override)
+                                            debug_op_username_override=debug_op_username_override,
+                                            debug_hub_filecount=10,
+                                            debug_hub_ignore_age=True)
     
                 msg = "\n\nexperiment path:\n    %s\nrealpath:\n    %s\n" % (path,realpath)
                 self.assertIn(code, scanner.codes, msg=msg)

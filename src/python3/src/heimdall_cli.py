@@ -1,7 +1,7 @@
 #!venv/bin/python3
 
 """
-Heimdall is a maestro suite scanner. Scan for errors, warnings, recommendations, and installation issues. Version %s.
+Heimdall is a maestro suite scanner. Scan for errors, warnings, recommendations, and installation issues. Version {version}.
 
 Running just "heimdall" scans a maestro experiment.
 
@@ -15,13 +15,14 @@ Options:
     --blacklist=<codes>          Comma delimited list of codes like '--blacklist=c001,w001'. Never show these codes.
     --context=<context>          Heimdall will guess the context like operational, preoperational, or parallel. Or you can override the guess with this option.
     --count=<count>              How many top maintainers to show in heimdall blame. [default: 5]
-    --exp=<experiment-path>      The path to a maestro experiment. By default, look in $PWD. [default: %s]
+    --exp=<experiment-path>      The path to a maestro experiment. By default, look in $PWD. [default: {experiment_path}]
     --home=<folder>              The home folder used to lookup files like '~/.suites/overrides.def'. By default, use the home of the owner of the maestro experiment.
-    --language=<language>        Choose the language of the result messages. The default uses the value of $LANG and whether the first two letters are "en" or "fr". [default: %s]
+    --hub-seconds=<t>            Spend this many seconds scanning the hub folder with an iterative deepening search. Max {max_hub_seconds}. Necessary because hubs can be huge. [default: 1]
+    --language=<language>        Choose the language of the result messages. The default uses the value of $LANG and whether the first two letters are "en" or "fr". [default: {language}]
     --level=<level>              Only show messages at this level or above. There is critical, error, warning, info, and best-practice. You can also just use the first letter as an argument. [default: best-practice]    
     --max-repeat=<count>         The same message code will be shown this maximum number of times. Use zero for unlimited. [default: 5]
     --op-home=<path>             Path to the home of the operational user. [default: /home/smco500]
-    --op-suites-home=<path>       Path to the home of owner of operational maestro suite files. [default: /home/smco502]
+    --op-suites-home=<path>      Path to the home of owner of operational maestro suite files. [default: /home/smco502]
     --par-home=<path>            Path to the home of the parallel user. [default: /home/smco501]
     --verbose                    Enable verbose debug logging in the "$HOME/logs/mflow" files.
     --whitelist=<codes>          Comma delimited list of codes like '--whitelist=c001,w001'. Only show these codes.
@@ -67,6 +68,12 @@ def scan_cli(args):
         print("Invalid context '%s'. Context must be one of:\n    %s" % (context, "\n    ".join(SCANNER_CONTEXTS)))
         return
 
+    try:
+        hub_seconds=float(args["--hub-seconds"])
+    except ValueError:
+        print("--hub-seconds not a number.")
+        return
+
     print("Scanning maestro experiment.")
 
     scanner = ExperimentScanner(experiment_path,
@@ -75,6 +82,7 @@ def scan_cli(args):
                                 parallel_home=args["--par-home"],
                                 operational_suites_home=args["--op-suites-home"],
                                 language=args["--language"],
+                                hub_seconds=hub_seconds,
                                 critical_error_is_exception=False)
 
     try:
@@ -89,7 +97,7 @@ def scan_cli(args):
         print("Bad --level option. See -h for more info.")
         return
     level = level[0]
-
+    
     whitelist = [] if not args["--whitelist"] else args["--whitelist"].split(",")
     blacklist = [] if not args["--blacklist"] else args["--blacklist"].split(",")
         
