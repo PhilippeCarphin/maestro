@@ -22,7 +22,7 @@ from constants import DOC_FOLDER
 from heimdall import heimdall_message_manager
 from utilities.docopt import docopt
 
-DOC_BASENAME="HEIMDALL_CODES.md"
+DOC_BASENAME="heimdall_codes.md"
 
 def get_template(language):
     en="""{language_markdown}
