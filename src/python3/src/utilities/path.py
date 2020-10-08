@@ -108,6 +108,8 @@ def get_links_source_and_target(path,max_depth=0):
 def iterative_deepening_search(rootdir,
                                max_seconds, 
                                follow_links=True,
+                               include_files=True,
+                               include_folders=False,
                                debug_sleep_seconds=0):
     """
     Returns a list of file paths in this rootdir - as many as possible in the time given.
@@ -150,7 +152,12 @@ def iterative_deepening_search(rootdir,
             break
         
         start_time=time.time()
-        results=timeout_search(rootdir,depth,time_remaining,follow_links=follow_links)
+        results=timeout_search(rootdir,
+                               depth,
+                               time_remaining,
+                               follow_links=follow_links,
+                               include_files=include_files,
+                               include_folders=include_folders)
         if debug_sleep_seconds:
             time.sleep(debug_sleep_seconds)
         previous_depth_seconds=time.time()-start_time
@@ -163,17 +170,27 @@ def iterative_deepening_search(rootdir,
     
     return sorted(results)
     
-def timeout_search(rootdir,depth,max_seconds,follow_links=True):
+def timeout_search(rootdir,depth,max_seconds,follow_links=True,include_files=True,include_folders=False):
     """
     Returns a list of all files found in rootdir at this depth.
     Returns an empty list if the search takes longer than max_seconds.
     """
     
+    type_option=""
+    if include_files and include_folders:
+        type_option="-and \\( -type f -or -type d \\)"
+    elif include_files:
+        type_option="-type f"
+    elif include_folders:
+        type_option="-type d"
+        
     follow_links_option="-L" if follow_links else ""
-    cmd="timeout %s find %s %s -maxdepth %s -type f | cut -c1-"%(max_seconds,
-                                                    follow_links_option,
-                                                    rootdir,
-                                                    depth)
+    cmd="timeout {max_seconds} find {follow_links_option} {rootdir} -maxdepth {depth} {type_option} | cut -c1-"
+    cmd=cmd.format(max_seconds=max_seconds,
+                   follow_links_option=follow_links_option,
+                   rootdir=rootdir,
+                   depth=depth,
+                   type_option=type_option)
     output,status=safe_check_output_with_status(cmd)
     if status==0:
         return output.strip().split("\n")
