@@ -21,7 +21,7 @@ from utilities.heimdall.git import scan_git_authors
 from utilities.heimdall.uspmadt import get_uspmadt_lines
 from utilities.parsing import BASH_VARIABLE_DECLARE_REGEX
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip
-from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target, iterative_deepening_search
+from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target, iterative_deepening_search, is_probably_compiled_executable, is_executable
 from utilities.qstat import get_qstat_data_from_text, get_qstat_data, get_resource_limits_from_qstat_data
 from utilities.shell import safe_check_output_with_status, get_git_remotes, get_all_repo_files
 from utilities.heimdall.language import get_language_from_environment
@@ -147,6 +147,7 @@ class ExperimentScanner():
         self.scan_deprecated_files_folders()
         self.scan_dependencies()
         self.scan_etikets()
+        self.scan_executables()
         self.scan_exp_options()
         self.scan_extra_files()
         self.scan_file_permissions()
@@ -379,7 +380,11 @@ class ExperimentScanner():
                                          resource_path=node_data["resource_path"],
                                          node_path=dep_data["node_path"],
                                          exp=path)
-                
+    
+    def scan_executables(self):        
+        for path in self.executable_files:
+            if is_probably_compiled_executable(path):
+                self.add_message("b031",path=path)
     
     def scan_shell_scripts(self):
         "run shell script syntax checks like 'bash -n' and 'ksh -n' on all tsk and cfg files."
@@ -1961,6 +1966,7 @@ class ExperimentScanner():
         resource_files = set()
         flow_files = set()
         declared_files=set()
+        executable_files=set()
         rpath = self.path+"resources/"
         mpath = self.path+"modules/"
                 
@@ -2056,7 +2062,9 @@ class ExperimentScanner():
         This search may be endless, so cut off the search after some time.
         """
         hub_files=iterative_deepening_search(self.path+"hub",self.hub_seconds)
-
+        
+        executable_files=[path for path in set(paths) if is_executable(path)]
+        
         def sls(items):
             "sls is short for sorted, list, set"
             return sorted(list(set(items)))
@@ -2099,6 +2107,9 @@ class ExperimentScanner():
 
         "all xml files"
         self.xml_files = sls(xml_files)
+        
+        "all files with 'x' permission"
+        self.executable_files=executable_files
 
     def get_report_text(self,
                         max_repeat=0):

@@ -1096,6 +1096,14 @@ Le dossier '{bad}' dans 'hub' ne doit pas être un lien. Ce style de dossier de 
 Le fichier '{path}' utilise des variables comme domaines SSM, mais les noms ne commencent pas par 'SSM _':\n{variables}
 
 
+
+![color b image](../color-best-practice.png)
+
+### [b031](#b031): Exécutable compilé dans le projet
+
+Le fichier "{path}" semble être un exécutable compilé. Ceux-ci appartiennent à l'extérieur du projet maestro, ou peut-être dans un package SSM.
+
+
 ![color b image](../color-best-practice.png)
 
 # Page Générée

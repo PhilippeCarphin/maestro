@@ -1096,6 +1096,14 @@ The folder '{bad}' in 'hub' should not be a link. This style of product database
 The file '{path}' uses variables as SSM domains, but the names do not start with 'SSM_':\n{variables}
 
 
+
+![color b image](../color-best-practice.png)
+
+### [b031](#b031): Compiled executable in project
+
+The file '{path}' seems to be a compiled executable. These belong outside the maestro project, or perhaps in an SSM package.
+
+
 ![color b image](../color-best-practice.png)
 
 # Generated Page

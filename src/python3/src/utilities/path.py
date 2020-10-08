@@ -259,6 +259,29 @@ def get_matching_paths_recursively(rootdir,
             yield path
     return
 
+def is_executable(path):
+    
+    if not os.path.isfile(path):
+        return False
+    
+    return os.access(path, os.X_OK)
+
+def is_probably_compiled_executable(path):
+    """
+    Returns True if this file is probably a compiled (binary) executable.
+    If unsure or error, return False.
+    This function may be slow, use sparingly.
+    """
+    
+    if not os.path.isfile(path):
+        return False
+    
+    if not os.access(path, os.X_OK):
+        return False
+    
+    cmd="file "+path
+    output,status=safe_check_output_with_status(cmd)
+    return status==0 and " text" not in output and "executable" in output
 
 def guess_user_home_from_path(path):
     """
