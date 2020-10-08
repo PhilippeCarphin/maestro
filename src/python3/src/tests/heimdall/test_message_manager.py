@@ -2,7 +2,7 @@
 import unittest
 
 from heimdall.message_manager import hmm, MESSAGE_TOKEN_REGEX
-
+from constants.path import HEIMDALL_MESSAGE_CSV
 
 class TestHeimdallMessageManager(unittest.TestCase):
 
@@ -25,6 +25,16 @@ class TestHeimdallMessageManager(unittest.TestCase):
         description = hmm._code_to_csv["e001"]["description_en"]
         expected = description.format(folders=str(folders))
         self.assertEqual(expected, result)
+        
+    def test_bad_csv_characters(self):
+        "no weird characters like slanted quotes in message CSV."
+        
+        with open(HEIMDALL_MESSAGE_CSV,"r") as f:
+            text=f.read()
+        
+        bad_characters="‘’“”"
+        bad=[c for c in bad_characters if c in text]
+        self.assertFalse(bad,msg="\nBad characters were found in the message CSV.")
     
     def test_english_french_csv(self):
         "English and French in CSV match each other."
