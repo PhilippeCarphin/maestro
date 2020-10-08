@@ -15,6 +15,9 @@ DOC_FOLDER = MFLOW_ROOT+"doc/"
 DEFAULT_CONFIG_PATH = MFLOW_ROOT+"/config/default"
 TEMPLATE_FOLDER = MFLOW_ROOT+"templates/"
 
+HEIMDALL_CODES_DOC_EN=DOC_FOLDER+"en/heimdall_codes.md"
+HEIMDALL_CODES_DOC_FR=DOC_FOLDER+"fr/heimdall_codes.md"
+
 # To change this value, one must also change it in the bash wrapper script bin/mflow
 TMP_BASH_WRAPPER_COMMAND_FILE_PREFIX = TMP_FOLDER+".tmp-bash-wrapper-command-"
 

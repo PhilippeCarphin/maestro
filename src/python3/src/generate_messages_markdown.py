@@ -18,11 +18,12 @@ Options:
 import os.path
 
 from datetime import datetime
-from constants import DOC_FOLDER
+from constants import DOC_FOLDER, HEIMDALL_CODES_DOC_EN, HEIMDALL_CODES_DOC_FR
 from heimdall import heimdall_message_manager
 from utilities.docopt import docopt
 
-DOC_BASENAME="heimdall_codes.md"
+language_to_path={"en":HEIMDALL_CODES_DOC_EN,
+                  "fr":HEIMDALL_CODES_DOC_FR}
 
 def get_template(language):
     en="""{language_markdown}
@@ -57,7 +58,8 @@ def get_markdown(language,char_to_image):
     
     language_labels={"en":"English","fr":"Français"}
     other_language="en" if language=="fr" else "fr"
-    language_path="../%s/%s"%(other_language,DOC_BASENAME)
+    basename=os.path.basename(language_to_path[other_language])
+    language_path="../%s/%s"%(other_language,basename)
     language_markdown="[(%s)](%s)"%(language_labels[other_language],language_path)
     
     now=datetime.now().strftime("%Y-%m-%d")
@@ -153,7 +155,8 @@ def generate_markdown(doc_folder,verbose=False):
             os.makedirs(folder)
                 
         text=get_markdown(language,char_to_image)
-        path=folder+DOC_BASENAME
+        basename=os.path.basename(language_to_path[language])
+        path=folder+basename
         with open(path,"w") as f:
             f.write(text)
         if verbose:
