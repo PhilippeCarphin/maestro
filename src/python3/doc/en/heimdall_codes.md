@@ -335,6 +335,17 @@ The file '{resource_path}' has a relative 'dep_name' attribute '{dep_name}' but 
 
 ![color e image](../color-error.png)
 
+### [e029](#e029): Missing associative token
+
+The file '{path}' has a DEPENDS_ON element with attributes 'index={index}' and 'local_index={local_index}' but only one has an associate token like '$((x))'. They should both have the token.
+
+
+[More info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/Resources#WebX_Slides_and_Videos)
+
+
+
+![color e image](../color-error.png)
+
 # Level: Warning
 ![color w image](../color-warning.png)
 

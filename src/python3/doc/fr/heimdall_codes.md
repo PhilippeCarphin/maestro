@@ -335,6 +335,17 @@ Le fichier '{resource_path}' a un attribut relatif 'dep_name' '{dep_name}' mais 
 
 ![color e image](../color-error.png)
 
+### [e029](#e029): Jeton associatif manquant
+
+Le fichier '{path}' a un élément DEPENDS_ON avec les attributs 'index={index}' et 'local_index={local_index}' mais un seul a un jeton associatif comme '$((x))'. Ils devraient tous les deux avoir le jeton.
+
+
+[Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/Resources#WebX_Slides_and_Videos)
+
+
+
+![color e image](../color-error.png)
+
 # Niveau: Avertissment
 ![color w image](../color-warning.png)
 

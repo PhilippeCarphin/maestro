@@ -3,6 +3,7 @@ import unittest
 
 from heimdall.message_manager import hmm, MESSAGE_TOKEN_REGEX
 from constants.path import HEIMDALL_MESSAGE_CSV
+from constants.heimdall import BAD_SLANTED_QUOTE_CHARS
 
 class TestHeimdallMessageManager(unittest.TestCase):
 
@@ -32,8 +33,7 @@ class TestHeimdallMessageManager(unittest.TestCase):
         with open(HEIMDALL_MESSAGE_CSV,"r") as f:
             text=f.read()
         
-        bad_characters="‘’“”"
-        bad=[c for c in bad_characters if c in text]
+        bad=[c for c in BAD_SLANTED_QUOTE_CHARS if c in text]
         self.assertFalse(bad,msg="\nBad characters were found in the message CSV.")
     
     def test_english_french_csv(self):
