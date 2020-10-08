@@ -119,8 +119,8 @@ def get_markdown_codes_section(language,char_to_image):
 {description}
 """.format(code=code,label=label,image=image,description=description)
         if url.strip():
-            more="\n\n[More info](%s)" if language=="en" else "[Plus d'info](%s)"
-            chunk+=more%url+"\n"
+            more="[More info](%s)" if language=="en" else "[Plus d'info](%s)"
+            chunk+="\n\n"+more%url+"\n"
         
         
         previous_image=image

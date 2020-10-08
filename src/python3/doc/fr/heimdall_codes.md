@@ -13,6 +13,8 @@ Cette page liste tous les codes et messages Heimdall. Voir aussi le [Heimdall RE
 ### [c001](#c001): Pas de EntryModule
 
 Lien EntryModule n'existe pas: '{entry_module}'
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/EntryModule)
 
 
@@ -22,6 +24,8 @@ Lien EntryModule n'existe pas: '{entry_module}'
 ### [c002](#c002): Mauvais EntryModule
 
 EntryModule n'est pas un lien: '{entry_module}'
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/EntryModule)
 
 
@@ -31,6 +35,8 @@ EntryModule n'est pas un lien: '{entry_module}'
 ### [c003](#c003): Aucune expérience ici
 
 Impossible de trouver une expérience pour le chemin: '{path}'. Un dossier d'expérience valide contient un lien 'EntryModule'.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/EntryModule)
 
 
@@ -40,6 +46,8 @@ Impossible de trouver une expérience pour le chemin: '{path}'. Un dossier d'exp
 ### [c004](#c004): Pas de EntryModule flow.xml
 
 Le fichier requis flow.xml de EntryModule n'existe pas: '{flow_xml}'
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/EntryModule)
 
 
@@ -49,6 +57,8 @@ Le fichier requis flow.xml de EntryModule n'existe pas: '{flow_xml}'
 ### [c005](#c005): Mauvais EntryModule flow.xml
 
 Le fichier requis flow.xml de EntryModule n'a pas réussi à analyser comme XML: '{flow_xml}'
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/EntryModule)
 
 
@@ -61,6 +71,8 @@ Le fichier requis flow.xml de EntryModule n'a pas réussi à analyser comme XML:
 ### [e001](#e001): Dossiers manquants dans la suite
 
 Toutes les suites ont besoin des dossiers: 'listings', 'sequencing', and 'logs'. Cette suite est manquante: {folders}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders)
 
 
@@ -78,6 +90,8 @@ Impossible d'analyser XML '{xml}'
 ### [e003](#e003): Nom de nœud non valide
 
 Nom de nœud non valide '{node_name}' en flow XML '{flow_path}'. Les noms de nœuds doivent être alphanumériques avec comme caractères spéciaux des points, des tirets ou des sous-tirets. Doit correspondre à regex: {regex}
+
+
 [Plus d'info](https://regex101.com/)
 
 
@@ -87,6 +101,8 @@ Nom de nœud non valide '{node_name}' en flow XML '{flow_path}'. Les noms de nœ
 ### [e004](#e004): Lien symbolique brisé
 
 Le cible du lien symbolique '{link}' n'existe pas.
+
+
 [Plus d'info](https://www.google.com/search?q=linux+find+broken+symlinks)
 
 
@@ -96,6 +112,8 @@ Le cible du lien symbolique '{link}' n'existe pas.
 ### [e005](#e005): 'flow' du module est éparpillé
 
 Les enfants de flow XML pour le module '{module_name}' sont définis dans plus d'un fichier flow.xml:\n{flow_xmls}
+
+
 [Plus d'info](https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290)
 
 
@@ -105,6 +123,8 @@ Les enfants de flow XML pour le module '{module_name}' sont définis dans plus d
 ### [e007](#e007): Fichier de ressource nécessaire manquant
 
 La tâche '{task_path}' n'a pas de fichier de ressources à '{resource_path}'. Cela est nécessaire pour le '{context}' contexte.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/resources)
 
 
@@ -114,6 +134,8 @@ La tâche '{task_path}' n'a pas de fichier de ressources à '{resource_path}'. C
 ### [e008](#e008): Accolades manquantes dans un xml de ressource
 
 Les variables dans les fichiers XML de ressources doivent utiliser des accolades comme '${{ABC}}' et non '$ABC'. Le fichier '{file_path}' contient:\n{matching_string}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/resources)
 
 
@@ -139,6 +161,8 @@ Le chemin '{bad_path}' défini dans '{config_path}' est absolue et ne commence p
 ### [e011](#e011): Mauvaise dépendance d'expérience
 
 Le 'exp' attribut '{exp_value}' dans le fichier de ressources '{resource_path}' n'est pas un chemin à un dossier qui existe.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/resources)
 
 
@@ -148,6 +172,8 @@ Le 'exp' attribut '{exp_value}' dans le fichier de ressources '{resource_path}' 
 ### [e012](#e012): Variables indéfinies de xml ressource
 
 Le XML ressources '{resource_path}' utilise des variables qui ne sont pas définies dans les fichiers de ressources comme 'resources/resources.def'. Variables:\n{variable_names}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/resources)
 
 
@@ -157,6 +183,8 @@ Le XML ressources '{resource_path}' utilise des variables qui ne sont pas défin
 ### [e013](#e013): État de diffusion ne correspond pas à contexte
 
 L'expérience semble avoir le '{context}' contexte, mais les variables dans '{cfg_path}' ne correspond pas à ce qui est attendu: {unexpected}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Dissemination)
 
 
@@ -166,6 +194,8 @@ L'expérience semble avoir le '{context}' contexte, mais les variables dans '{cf
 ### [e014](#e014): Non-liens dans hub
 
 Les expériences avec le '{context}' contexte ne peuvent avoir des dossiers de liens souples dans leur dossier 'hub':\n{bad}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/hub)
 
 
@@ -175,6 +205,8 @@ Les expériences avec le '{context}' contexte ne peuvent avoir des dossiers de l
 ### [e015](#e015): Valeur des ressources plus que le maximum
 
 La valeur de la ressource '{value}' pour '{attribute}' dans '{xml_path}' est plus que le maximum de '{maximum}' défini dans 'jobctl-qstat' pour la file d'attente '{queue}'.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/resources)
 
 
@@ -200,6 +232,8 @@ Le contenant '{container_name}' dans un flow XML a plus d'un élément avec le '
 ### [e018](#e018): Élément submits a l'attribut name
 
 Tous les éléments de SUBMITS doivent avoir un attribut 'sub_name' et non un attribut 'name'. Le fichier '{file_path}' contient:\n{matching_string}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/SUBMITS)
 
 
@@ -209,6 +243,8 @@ Tous les éléments de SUBMITS doivent avoir un attribut 'sub_name' et non un at
 ### [e019](#e019): Élément non-submits a l'attribut sub_name
 
 Seuls les éléments de SUBMITS doivent avoir un attribut 'sub_name'. Vous devrez peut-être utiliser l'attribut 'name' au lieu. Le fichier '{file_path}' contient:\n{matching_string}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/SUBMITS)
 
 
@@ -218,6 +254,8 @@ Seuls les éléments de SUBMITS doivent avoir un attribut 'sub_name'. Vous devre
 ### [e020](#e020): Inconsistant propriétaires ou autorisations du dossier log
 
 Le dossier du journal '{path}' a la propriété et les autorisations '{ugp}' qui est différent des autres dossiers de journaux. Les permissions des dossiers journaux temporaires devraient être les mêmes: {folders}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders)
 
 
@@ -235,6 +273,8 @@ La variable '{variable}' est défini plus d'une fois dans le fichier '{path}'. D
 ### [e022](#e022): Dossier stats manquante
 
 Le dossier 'stats' est manquante, mais nécessaire parce que les variables de ressources SEQ_RUN_STATS_ON et SEQ_AVERAGE_WINDOW sont utilisés: '{required}'
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/stats)
 
 
@@ -244,6 +284,8 @@ Le dossier 'stats' est manquante, mais nécessaire parce que les variables de re
 ### [e023](#e023): Mauvais expression de boucle
 
 Le fichier '{path}' a une mauvaise expression de boucle '{loop_expression}'. Cela devrait être des virgules qui séparent les nombres dans le format 'début:fin:étape:set'.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/1.5.0/Release_Notes#Multi-definition_numeric_loops)
 
 
@@ -253,6 +295,8 @@ Le fichier '{path}' a une mauvaise expression de boucle '{loop_expression}'. Cel
 ### [e024](#e024): Mauvaises autorisations sur les dossiers de log opérationnels
 
 Le dossier du journal '{folder}' doit avoir les autorisations '{expected}' mais il a '{ugp}'.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders)
 
 
@@ -297,6 +341,8 @@ Le fichier '{resource_path}' a un attribut relatif 'dep_name' '{dep_name}' mais 
 ### [w001](#w001): Fichier de ressources manquante
 
 La tâche '{task_path}' n'a pas de fichier de ressources à '{resource_path}'. Créer un fichier de ressources pour éviter d'utiliser les valeurs défaut et inconnus.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/resources)
 
 
@@ -306,6 +352,8 @@ La tâche '{task_path}' n'a pas de fichier de ressources à '{resource_path}'. C
 ### [w002](#w002): Fichier de ressources boucle manquante
 
 La boucle ou un switch '{node_path}' n'a pas de fichier de ressources à '{resource_path}'. Créer un fichier de ressources pour éviter d'utiliser les valeurs défaut et inconnus.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/resources)
 
 
@@ -331,6 +379,8 @@ Les chemins 'hall1' et 'hall2' ne sont plus disponibles après les mises à jour
 ### [w005](#w005): Plusieurs chemins pour le projet
 
 L'expérience maestro se trouve dans le dossier de '{real_home}' mais les fichiers maestro principaux sont des liens souples vers d'autres utilisateurs. Cela peut être considéré comme trop instable pour installer opérationnellement. Exécutez realpath sur ces liens:\n{bad_links}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/User:Maciaa/home_references)
 
 
@@ -340,6 +390,8 @@ L'expérience maestro se trouve dans le dossier de '{real_home}' mais les fichie
 ### [w006](#w006): Chemin codé dur dans le fichier de configuration
 
 Le chemin '{bad_path}' défini dans '{config_path}' est absolue et ne commence pas par une variable comme '${{SEQ_EXP_HOME}}'. Ceci est une façon moins portable et plus fragile pour configurer une expérience.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/SEQ_EXP_HOME)
 
 
@@ -349,6 +401,8 @@ Le chemin '{bad_path}' défini dans '{config_path}' est absolue et ne commence p
 ### [w007](#w007): Aucun statut de soutien dans l'expérience opérationnelle
 
 Il n'y a pas d'attribut 'SupportInfo' dans le XML '{xml_path}' ou le XML n'existe pas. Cela est nécessaire pour les expériences opérationnelles.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/ExpOptions.xml)
 
 
@@ -358,6 +412,8 @@ Il n'y a pas d'attribut 'SupportInfo' dans le XML '{xml_path}' ou le XML n'exist
 ### [w008](#w008): Multiples statuts de soutien
 
 Le XML '{xml_path}' a plus d'un élément SupportInfo.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/ExpOptions.xml)
 
 
@@ -367,6 +423,8 @@ Le XML '{xml_path}' a plus d'un élément SupportInfo.
 ### [w009](#w009): Variable de ressource faute de frappe
 
 La variable ressource '{maybe_typo}' est défini, mais le nom de la variable standard '{expected}' n'est pas. Peut-être que vous vouliez écrire cela à la place.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/User:Lims/projects/tech_transfer_improvements#Using_standard_variables_for_machine_and_queue_definitions)
 
 
@@ -384,6 +442,8 @@ La valeur '{value}' pour la variable ressource '{name}' est pas une file d'atten
 ### [w011](#w011): Expérience n'est pas en overview XML
 
 L'expérience semble avoir le '{context}' contexte, mais il n'a pas été trouvé dans les expériences de {exp_count} dans le fichier XML overview: {xml_path}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/overview_xml)
 
 
@@ -393,6 +453,8 @@ L'expérience semble avoir le '{context}' contexte, mais il n'a pas été trouv�
 ### [w012](#w012): Expérience dans un overview XML inattendu
 
 L'expérience semble avoir le '{context}' contexte, mais il n'a pas été trouvé dans les {exp_count} expériences dans le '{xml_context} XML overview: {xml_path}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/overview_xml)
 
 
@@ -402,6 +464,8 @@ L'expérience semble avoir le '{context}' contexte, mais il n'a pas été trouv�
 ### [w013](#w013): Variables de diffusion égaré
 
 Les variables {variables} appartiennent uniquement dans 'experiment.cfg' fichiers, mais ont été trouvés dans: '{cfg_path}'
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Dissemination)
 
 
@@ -411,6 +475,8 @@ Les variables {variables} appartiennent uniquement dans 'experiment.cfg' fichier
 ### [w014](#w014): Paires hub ont des chemins différents
 
 Les liens de dossier hub '{folder1}' et '{folder2}' devraient avoir des cibles similaires. Au contraire, ils sont très différents:\n{target1}\n{target2}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/hub)
 
 
@@ -428,6 +494,8 @@ Il y a des changements non engagé dans le dépôt git. Les expériences avec le
 ### [w016](#w016): Tâche run_orji est désactivée
 
 La ressource de tâche '{resource_path}' a une valeur de catchup '{catchup}', mais les tâches 'run_orji' doivent toujours être activés. De cette façon, les utilisateurs peuvent décider de souscrire ou désabonner.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/orji)
 
 
@@ -437,6 +505,8 @@ La ressource de tâche '{resource_path}' a une valeur de catchup '{catchup}', ma
 ### [w017](#w017): Fichier d'archive n'est pas un lien
 
 Le fichier archive '{bad}' n'est pas un lien. Les fichiers nommés '.protocole_*' ou '.archive_monitor_*' doivent être des liens pour que les mainteneurs du système d'archivage peuvent gérer plus facilement ses paramètres.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Archive)
 
 
@@ -470,6 +540,8 @@ Il devrait y avoir un fichier gitignore ici: '{gitignore_path}'. Pas de '.gitign
 ### [w021](#w021): Fichier maestro dans $CMCCONST
 
 Le realpath pour le fichier '{path}' est dans le dossier $CMCCONST '{cmcconst}'. Tâche, configuration, flow et les fichiers XML de ressources utilisés dans une suite ne devrait pas être dans le dossier $CMCCONST.
+
+
 [Plus d'info](https://gitlab.science.gc.ca/CMOI/best-practices/blob/master/fr/constants.md)
 
 
@@ -487,6 +559,8 @@ L'expérience semble avoir le '{context}' contexte, mais la valeur '{machine_val
 ### [w023](#w023): Utilisateur opérationnelle peut écrire sur l'expérience 
 
 L'utilisateur opérationnel '{user}' a des autorisations en écriture sur le fichier de projet permanent '{path}'. Pour plus de sécurité au cours de passes opérationnelles, '{user}' devrait seulement avoir les autorisations de lire, et non d'exécution pour les fichiers de projet permanents.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/CMOI/Suite_Management_Process)
 
 
@@ -496,6 +570,8 @@ L'utilisateur opérationnel '{user}' a des autorisations en écriture sur le fic
 ### [w024](#w024): Utilisateur parallèle dans le contexte opérationnel
 
 L'expérience semble avoir le '{context}' contexte, mais le fichier '{file_path}' a des références au systèmes parallèles avec la texte '{par_string}'.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/CMOI/Suite_Management_Process)
 
 
@@ -505,6 +581,8 @@ L'expérience semble avoir le '{context}' contexte, mais le fichier '{file_path}
 ### [w025](#w025): Dossiers opérationnels ont propriétaire incorrect
 
 L'expérience semble avoir le '{context}' contexte, mais le fichier '{path}' est la propriété de '{owner}' mais '{expected}' est attendu.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/CMOI/Suite_Management_Process)
 
 
@@ -514,6 +592,8 @@ L'expérience semble avoir le '{context}' contexte, mais le fichier '{path}' est
 ### [w026](#w026): Wallclock beaucoup plus grand que l'histoire exige
 
 Le wallclock pour '{node_path}' est '{wallclock_seconds}' secondes dans '{resource_xml}' mais la dernière course réussie sur '{datestamp}' a pris '{latest_seconds}' secondes. Ceci est {factor} fois plus gros (le seuil de ce message est {threshold}). Le wallclock devrait probablement être abaissé.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Wallclock)
 
 
@@ -523,6 +603,8 @@ Le wallclock pour '{node_path}' est '{wallclock_seconds}' secondes dans '{resour
 ### [w027](#w027): Paquets SSM écrasés
 
 Les différentes versions du paquet SSM '{package}' sont utilisés: {versions}. La même version doit être utilisée par tous, ou le paquet ne doit être ajouté à l'environnement dans un endroit racine. Fichiers:\n{paths}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Ssm)
 
 
@@ -532,6 +614,8 @@ Les différentes versions du paquet SSM '{package}' sont utilisés: {versions}. 
 ### [w028](#w028): Chemin d'expérience en ressources sans datestamp
 
 Le fichier de ressources '{resource_path}' a des références génériques aux chemins de projet maestro qui n'utilisent pas la suffixe de date comme '_20200401'. Cela peut provoquer des problèmes avec le dépannage, l'histoire et les transferts. Chemins:\n{bad}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/CMOI/Suite_Management_Process)
 
 
@@ -541,6 +625,8 @@ Le fichier de ressources '{resource_path}' a des références génériques aux c
 ### [w029](#w029): Aucun lien souple sur la maison opérationnelle
 
 Le chemin d'expérience '{target}' est l'endroit où les suites opérationnelles sont installées, mais il n'y a pas un lien doux '{source}' pointant vers elle.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/CMOI/Suite_Management_Process)
 
 
@@ -550,6 +636,8 @@ Le chemin d'expérience '{target}' est l'endroit où les suites opérationnelles
 ### [w030](#w030): Obsolète système uspmadt
 
 Les options '-r' ou '-t' utilisés dans '{path}' avec 'fname', 'fgen+' ou 'dtstmp' ne devrait pas être une variable 'run'. Cela utilise le système obsolète 'uspmadt'. Utilisez 'CMCSTAMP' à la place. Lignes:\n{lines}
+
+
 [Plus d'info](https://gitlab.science.gc.ca/CMOI-Service-Desk/General/issues/5)
 
 
@@ -559,6 +647,8 @@ Les options '-r' ou '-t' utilisés dans '{path}' avec 'fname', 'fgen+' ou 'dtstm
 ### [w031](#w031): Manquantes variables dans resources.def
 
 Le fichier '{path}' doit définir les variables {required} mais ceux-ci étaient manquants: {missing}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/CMDI/Good_practices)
 
 
@@ -611,6 +701,8 @@ Le dossier 'hub' semble contenir des sous-dossiers contenant plus de {file_count
 ### [i001](#i001): Plusieurs chemins pour le projet
 
 L'expérience maestro se trouve dans le dossier de '{real_home}' mais les fichiers maestro principaux sont des liens souples vers d'autres utilisateurs. Cela peut être instable. Liens:\n{bad_links}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/User:Maciaa/home_references)
 
 
@@ -628,6 +720,8 @@ Le dossier du module '{folder_name}' diffère du nom du module '{attribute_name}
 ### [i003](#i003): Fichiers temporaires d'un éditeur de texte
 
 Fichiers temporaire d'un éditeur de texte ont été trouvés, par exemple pour vim ou emacs. Si votre éditeur est fermé, vous pouvez les récupérer ou supprimer:\n{swaps}
+
+
 [Plus d'info](https://www.google.com/search?q=what+is+a+text+editor+swap+file)
 
 
@@ -645,6 +739,8 @@ Il y a des changements non-engagé dans la dépôt git.
 ### [i005](#i005): Signal inconnu de nodelogger
 
 Le 'nodelogger' exécutable a été donné un signal pour son argument '-s' qui n'est pas un signal connu: {signals}. Ce message n'apparaîtra dans le centre de messages. Si vous ne voulez pas qu'il apparaisse dans le centre de message, utilisez 'infox'.\n{details}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Nodelogger)
 
 
@@ -670,6 +766,8 @@ Le fichier '{path}' contient des chemins absolus à un utilisateur non opératio
 ### [i008](#i008): Ancienne version SSM
 
 Le fichier '{path}' utilise un paquet SSM '{old}', mais une version plus récente '{new}' est disponible.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Ssm)
 
 
@@ -679,6 +777,8 @@ Le fichier '{path}' utilise un paquet SSM '{old}', mais une version plus récent
 ### [i009](#i009): Ressources avec des heures valides
 
 Les tâches de ce projet ont des configurations de ressources qui changent selon l'heure du jour. Recherchez le 'valid_hour' ou 'valid_dow' attributs:\n{paths}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/resources)
 
 
@@ -688,6 +788,8 @@ Les tâches de ce projet ont des configurations de ressources qui changent selon
 ### [i010](#i010): Pas de hcrons
 
 Aucun fichier de configuration actifs pour '{suite_name}' ont été trouvés dans '{hcron_folder}'. La suite pourrait ne pas rouler automatiquement.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Hcron)
 
 
@@ -708,6 +810,8 @@ L'attribut 'exp' '{exp_value}' dans le fichier de ressources '{resource_path}' e
 ### [b002](#b002): SupportInfo est trop long
 
 L'attribut SupportInfo dans le fichier XML '{xml_path}' est '{char_count}' caractères, mais devrait être plus court. Le maximum recommandé est {max_chars}.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/ExpOptions.xml)
 
 
@@ -717,6 +821,8 @@ L'attribut SupportInfo dans le fichier XML '{xml_path}' est '{char_count}' carac
 ### [b003](#b003): SupportInfo n'a pas de URL
 
 L'attribut SupportInfo dans le fichier XML '{xml_path}' doit contenir une URL. Ceci est la méthode recommandée pour fournir de l'information détaillée sur l'état du support et des étapes de dépannage.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/ExpOptions.xml)
 
 
@@ -726,6 +832,8 @@ L'attribut SupportInfo dans le fichier XML '{xml_path}' doit contenir une URL. C
 ### [b004](#b004): Texte SupportInfo non-standard
 
 L'attribut SupportInfo dans le fichier XML '{xml_path}' doit commencer par une valeur comme 'Full Support'. Débuts de textes recommandées:\n{substrings}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/ExpOptions.xml)
 
 
@@ -743,6 +851,8 @@ Le fichier ou le dossier '{path}' est dépréciée et devrait être supprimé.
 ### [b006](#b006): Les fichiers non maestro dans des dossiers de maestro
 
 Le dossier maestro '{folder}' ne doit contenir que des fichiers maestro comme tsk, cfg, xml. Ces fichiers ont été trouvés:\n{filenames}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders)
 
 
@@ -752,6 +862,8 @@ Le dossier maestro '{folder}' ne doit contenir que des fichiers maestro comme ts
 ### [b007](#b007): Commentaires dans le fichier de configuration
 
 La section pseudo-xml (contenant 'input', 'executables', et 'output') du fichier de configuration '{file_path}' contient des lignes de commentaires {count} commençant par '##'. Celles-ci semblent être des lignes de configuration et non des commentaires, et peuvent être supprimées.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/.cfg)
 
 
@@ -769,6 +881,8 @@ La valeur '{value}' pour la variable ressource '{name}' est un alias de file d'a
 ### [b009](#b009): Attribut obsolète dans l'élément de SUBMITS
 
 Le fichier '{xml_path}' a l'attribut 'type' dans un élément SUBMITS. Ceci est dépréciée et peut être retiré.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/SUBMITS)
 
 
@@ -778,6 +892,8 @@ Le fichier '{xml_path}' a l'attribut 'type' dans un élément SUBMITS. Ceci est 
 ### [b010](#b010): Caractères non-standard dans le nom exécutable
 
 Le chemin de configuration '{bad}' dans '{config_path}' a des caractères non standard qui ne correspondent pas au regex '{regex}'. Cela peut causer des coquilles avec les outils, les systèmes d'exploitation ou parseurs. Pensez à les renommer. {dollar_msg}
+
+
 [Plus d'info](https://regex101.com/)
 
 
@@ -787,6 +903,8 @@ Le chemin de configuration '{bad}' dans '{config_path}' a des caractères non st
 ### [b011](#b011): Référence a la racine du dossier CMCCONST 
 
 Il y a des références à des fichiers ou des dossiers dans la racine du dossier CMCCONST. Il est recommandé d'utiliser plutôt des dossiers dans CMCCONST. Le fichier '{file_path}' contient:\n{matching_string}
+
+
 [Plus d'info](https://gitlab.science.gc.ca/CMOI/best-practices/blob/master/fr/constants.md)
 
 
@@ -796,6 +914,8 @@ Il y a des références à des fichiers ou des dossiers dans la racine du dossie
 ### [b012](#b012): Fichier d'archive dépréciée
 
 Le fichier '{bad}' est un fichier d'archive dépréciée et doit être supprimé. Si le 'hub' n'a pas d'autres fichiers d'archive, son état d'archivage devrait être examiné.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Archive)
 
 
@@ -805,6 +925,8 @@ Le fichier '{bad}' est un fichier d'archive dépréciée et doit être supprimé
 ### [b013](#b013): Nom du dossier pas claire
 
 Le dossier '{unclear}' devrait avoir un lien symbolique descriptif à côté. Par exemple 'forecast -> e1. Cela donne les débutants une chose de moins à mémoriser.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Obfuscation)
 
 
@@ -814,6 +936,8 @@ Le dossier '{unclear}' devrait avoir un lien symbolique descriptif à côté. Pa
 ### [b014](#b014): Nom du nœud mauvais
 
 Mauvais nom du noeud '{node_name}' en flow XML '{flow_path}'. Ce nom fonctionne, mais la recommandation est de faire correspondre cette regex: {regex}
+
+
 [Plus d'info](https://regex101.com/)
 
 
@@ -823,6 +947,8 @@ Mauvais nom du noeud '{node_name}' en flow XML '{flow_path}'. Ce nom fonctionne,
 ### [b015](#b015): Noms de variables non standard dans les ressources BATCH
 
 L'attribut '{attribute_name}' dans l'élément BATCH de '{resource_path}' utilise une variable non-standard '{attribute_value}'. Pensez à utiliser une variable standard à la place si la configuration est plus facile à suivre et changer: {recommended}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/resources)
 
 
@@ -848,6 +974,8 @@ La variable dépréciée '{old}' a été trouvée dans '{path}'. Pensez à utili
 ### [b018](#b018): Variable en majuscule est redéfinie
 
 La variable majuscule '{variable}' est défini plus d'une fois dans le fichier '{path}'. Les variables en majuscules bash doivent être considérés comme constants et non modifiés. Notez que "const" dans d'autres langages de programmation ne peut être défini qu'une seule fois.
+
+
 [Plus d'info](https://google.github.io/styleguide/shellguide.html#s7.3-constants-and-environment-variable-names)
 
 
@@ -857,6 +985,8 @@ La variable majuscule '{variable}' est défini plus d'une fois dans le fichier '
 ### [b019](#b019): Readme n'est pas en markdown
 
 Le fichier '{readme}' ressemble à un fichier 'readme'. Considérez écrire dans 'markdown' et renommant '{suggested}' pour qu'il apparaisse automatiquement et formaté sur des plateformes comme GitLab.
+
+
 [Plus d'info](https://www.youtube.com/watch?v=SCAfcuQ0dBE)
 
 
@@ -866,6 +996,8 @@ Le fichier '{readme}' ressemble à un fichier 'readme'. Considérez écrire dans
 ### [b020](#b020): Chemin littérales au lieu de CMCPROD
 
 Chemins littérales à 'hall3' ou 'hall4' ont été trouvés. Pensez à utiliser la variable CMCPROD à la place afin que votre projet suit les 'switchover' des configurations. Le fichier '{file_path}' contient:\n{matching_string}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Cmcprod)
 
 
@@ -875,6 +1007,8 @@ Chemins littérales à 'hall3' ou 'hall4' ont été trouvés. Pensez à utiliser
 ### [b021](#b021): Chemin absolu dans la configuration au lieu de getdef
 
 Le fichier de configuration '{config}' doit utiliser getdef au lieu de chemins codés en dur absolus. Par exemple: ABC=$(getdef resource ABC)\nChemins absolute:\n{values}
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/User:Lims/projects/tech_transfer_improvements#Making_variables_configurable_from_high_level)
 
 
@@ -884,6 +1018,8 @@ Le fichier de configuration '{config}' doit utiliser getdef au lieu de chemins c
 ### [b022](#b022): Fichiers identiques dans le module
 
 Le contenu des fichiers dans le même module sont identiques. Envisager de remplacer les fichiers en double avec des liens souples, alors que un mise à jour s'applique à tous. Ou, distinguer les fichiers avec des commentaires. Fichiers:\n{paths}
+
+
 [Plus d'info](https://fr.wikipedia.org/wiki/Ne_vous_r%C3%A9p%C3%A9tez_pas)
 
 
@@ -893,6 +1029,8 @@ Le contenu des fichiers dans le même module sont identiques. Envisager de rempl
 ### [b023](#b023): Variables etiket non définies dans etikets.cfg
 
 Les variables etiket {etikets} ont été définis dans '{bad_path}' mais ils doivent être définis dans '{good_path}'. Les variables etiket sont découverts par ce scanner en fonction de leur 'ETIK' nom et l'utilisation de 'pgsm' et 'editfst'.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/Etikets.cfg)
 
 
@@ -934,6 +1072,8 @@ La commande '{cmd}' dans '{path}' pour l'outil maestro '{tool}' doit être préc
 ### [b028](#b028): Mauvais cible de EntryModule
 
 La cible pour le lien '{path}' doit être '{good}' au lieu de '{bad}'.
+
+
 [Plus d'info](https://wiki.cmc.ec.gc.ca/wiki/CMDI/Good_practices)
 
 
@@ -943,6 +1083,8 @@ La cible pour le lien '{path}' doit être '{good}' au lieu de '{bad}'.
 ### [b029](#b029): Lien products_dbase obsolète
 
 Le dossier '{bad}' dans 'hub' ne doit pas être un lien. Ce style de dossier de produits est obsolète.
+
+
 [Plus d'info](https://gitlab.science.gc.ca/CMOI/maestro/issues/219)
 
 
