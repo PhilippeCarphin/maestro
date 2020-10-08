@@ -1104,6 +1104,14 @@ Le fichier '{path}' utilise des variables comme domaines SSM, mais les noms ne c
 Le fichier "{path}" semble être un exécutable compilé. Ceux-ci appartiennent à l'extérieur du projet maestro, ou peut-être dans un package SSM.
 
 
+
+![color b image](../color-best-practice.png)
+
+### [b032](#b032): Fichier inutilisé dans le dossier bin
+
+Le fichier '{path}' dans le dossier 'bin' n'est utilisé dans aucun fichier 'cfg' ou 'tsk'. Pensez à le supprimer du projet.
+
+
 ![color b image](../color-best-practice.png)
 
 # Page Générée

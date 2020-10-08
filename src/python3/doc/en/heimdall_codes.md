@@ -1104,6 +1104,14 @@ The file '{path}' uses variables as SSM domains, but the names do not start with
 The file '{path}' seems to be a compiled executable. These belong outside the maestro project, or perhaps in an SSM package.
 
 
+
+![color b image](../color-best-practice.png)
+
+### [b032](#b032): Unused file in bin folder
+
+The file '{path}' in the 'bin' folder is not used in any 'cfg' or 'tsk' file. Consider deleting it from the project.
+
+
 ![color b image](../color-best-practice.png)
 
 # Generated Page

@@ -4,6 +4,10 @@ HEIMDALL_ROOT=$(dirname $(dirname $(realpath $0)))
 
 $HEIMDALL_ROOT/bin/assert_python3_is_setup || exit 1
 
+# There is a test that fails if a code has been added and this script has not run yet.
+# Out of convenience, run this very safe script whenever tests are run.
+$HEIMDALL_ROOT/bin/generate_messages_markdown || (echo "Failed to generate documentation." && exit 1)
+
 export MAESTRO_PYTHON3_LOGGING_CONFIG=test
 
 $HEIMDALL_ROOT/venv/bin/python3 $HEIMDALL_ROOT/src/run_tests.py --heimdall $@

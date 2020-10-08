@@ -138,6 +138,7 @@ class ExperimentScanner():
 
         self.scan_all_file_content()
         self.scan_all_task_content()
+        self.scan_bin_folder()
         self.scan_broken_symlinks()
         self.scan_config_files()
         self.scan_constant_redefines()
@@ -305,6 +306,33 @@ class ExperimentScanner():
 
             for filetype in filetypes:
                 self.filetype_to_check_datas[filetype].append(check_data)
+    
+    def scan_bin_folder(self):
+        
+        "find all bins in bin"
+        folder=self.path+"bin/"
+        if not os.path.exists(folder):
+            return
+        
+        bins={}
+        for filename in os.listdir(folder):
+            path=folder+filename
+            bins[filename]=path
+        
+        "find unused bins"
+        unused=list(bins.keys())
+        for path in self.task_files+self.config_files:
+            if not unused:
+                break
+            
+            for b in unused[:]:
+                text=file_cache.open_without_comments(path)
+                if b in text:
+                    unused.remove(b)
+        
+        "any unused bins?"
+        for b in unused:
+            self.add_message("b032",path=bins[b])
     
     def scan_dependencies(self):
         me=self.maestro_experiment
