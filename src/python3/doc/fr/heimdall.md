@@ -12,7 +12,7 @@ Quels cas "heimdall" peut-il détecter?
 * Informations comme: les fichiers maestro (tsk/cfg/xml) sont des liens vers des chemins en dehors du projet, git a des modifications pas dans la repo, des signaux de nodelogger inconnus.
 * Meilleures pratiques comme: chemins de dépendance codés en dur ou absolus, informations de support très longues, fichiers non-maestro dans les dossiers de fichiers maestro (tsk/cfg/xml).
 
-Et beaucoup plus! Voir le [liste des codes et messages](doc/fr/heimdall_codes.md) pour chaque cas. Chaque cas a un test automatisé.
+Et beaucoup plus! Voir le [liste des codes et messages](heimdall_codes.md) pour chaque cas. Chaque cas a un test automatisé.
 
 # Captures d'écran
 

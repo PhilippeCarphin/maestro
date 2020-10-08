@@ -12,7 +12,7 @@ What cases can `heimdall` detect?
 * Info like: maestro files (tsk/cfg/xml) are links to homes outside the project, git repo has uncommited changes, unknown nodelogger signals.
 * Best practices like: hard coded or absolute dependency paths, very long support info, non-maestro files in maestro file (tsk/cfg/xml) folders.
 
-And many more! See the [list of codes and messages](doc/en/heimdall_codes.md) for every case. Each case has an automated test.
+And many more! See the [list of codes and messages](heimdall_codes.md) for every case. Each case has an automated test.
 
 # Screenshots
 
