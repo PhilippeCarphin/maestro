@@ -1,4 +1,4 @@
-[(Français)](../fr/HEIMDALL_CODES.md)
+[(Français)](../fr/heimdall_codes.md)
 
 # Heimdall Message Codes
 
