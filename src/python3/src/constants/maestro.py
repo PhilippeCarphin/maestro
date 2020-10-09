@@ -30,4 +30,5 @@ class SWITCH_TYPE():
 
 CONTAINER_TAGS = ("loop", "switch", "family", "module")
 
+REQUIRED_LOG_FOLDERS= ("listings", "logs", "sequencing")
 EXPERIMENT_LOG_FOLDERS = ("listings", "logs", "sequencing", "stats")

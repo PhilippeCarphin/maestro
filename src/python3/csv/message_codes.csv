@@ -14,12 +14,12 @@ c002	Bad EntryModule	EntryModule is not a link: ‘{entry_module}’	https://wik
 c003	No experiment here	Could not find an experiment for path: '{path}'. A valid experiment folder contains an 'EntryModule' link.	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
 c004	No EntryModule flow.xml	The required EntryModule flow.xml file does not exist: ‘{flow_xml}’	https://wiki.cmc.ec.gc.ca/wiki/EntryModule	
 c005	Bad EntryModule flow.xml	The required EntryModule flow.xml file failed to parse as XML: ‘{flow_xml}’		
-e001	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, ‘stats’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders	
+e001	Missing suite folders	All suites require the folders: ‘listings’, ‘sequencing’, and ‘logs’. This suite is missing: {folders}	https://wiki.cmc.ec.gc.ca/wiki/Maestro_Files_and_Folders	
 e002	Bad XML	Failed to parse XML: ‘{xml}’		
 e003	Invalid node name	Invalid node name ‘{node_name}’ in flow XML ‘{flow_path}’. Node names must be alphanumeric with dot, dash, or underscores. Must match the regex: {regex}	https://regex101.com/	
 e004	Broken symlink	The target of soft link ‘{link}’ does not exist.		
 e005	Scattered module flow	The flow XML children for module ‘{module_name}’ are defined in more than one flow XML:\n{flow_xmls}	https://gitlab.science.gc.ca/CMOI/mflow-prototype/issues/23#note_189290	
-i005	Unknown nodelogger signal	The executable ‘nodelogger’ was given a signal for its ‘-s’ argument that is a known signal: {signals}. This message won’t appear in the message center.\n{details}	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
+i005	Unknown nodelogger signal	The executable ‘nodelogger’ was given a signal for its ‘-s’ argument that is not a known signal: {signals}. This message won’t appear in the message center. If you don’t want it to appear in the message center, use ‘infox’. \n{details}	https://wiki.cmc.ec.gc.ca/wiki/Nodelogger	
 e007	Missing required resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. This is required for the ‘{context}’ context.		
 e008	Missing curly brackets in resource xml	Variables in resource XMLs must use curly brackets like ‘${{ABC}}’ not ‘$ABC’. The file ‘{file_path}’ contains:\n{matching_string}		
 e009	Unbalanced curly brackets in resource xml	Found an uneven number of curly brackets ‘{attribute_value}’ in a resource file: ‘{file_path}’		
@@ -35,7 +35,7 @@ i002	Module name and path differ	The module folder ‘{folder_name}’ differs f
 i003	Text editor swap files	Text editor swap files were found, for example for vim or emacs. If your editor is closed, you may want to recover or delete these:\n{swaps}		
 i004	Git repo has uncommited changes	There are uncommited changes in the git repo.		
 w001	Missing resource file	The task ‘{task_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
-w002	Missing loop resource file	The loop ‘{node_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
+w002	Missing loop resource file	The loop or switch ‘{node_path}’ has no resource file at ‘{resource_path}’. Create a resource file to avoid using unknown defaults.		
 w003	Deprecated site1/site2	The paths site1 and site2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains:\n{matching_string}		
 w004	Deprecated hall1/hall2	The paths hall1 and hall2 are no longer available after the upgrades in early 2020. The file ‘{file_path}’ contains:\n{matching_string}		
 w005	Multiple homes for project	The maestro experiment is found in the home folder ‘{real_home}’ but core maestro files are soft links to other user homes. This may be considered too unstable to install operationally. Run realpath on these links:\n{bad_links}		
@@ -71,3 +71,17 @@ b016	Inconsistent file owners or permissions	The file ‘{path}’ has ownership
 e020	Inconsistent log folder owners or permissions	The log folder ‘{path}’ has ownership and permissions ‘{ugp}’ which is different from the other log folders. The permissions of the temporary log folders should be the same: {folders}		
 w023	Operational user can overwrite experiment	The operational user ‘{user}’ has write permissions on the permanent project file ‘{path}’. For safety during operational runs, ‘{user}’ should only have read and execution permissions for permanent project files.		
 b017	Found SEQ_ instead of MAESTRO_	The deprecated variable ‘{old}’ was found in ‘{path}’. Consider using the equivalent variable ‘{new}’ instead. This helps newbies understand your project since they will know this variable is related to maestro.		
+e021	Duplicate resource definitions	The variable ‘{variable}’ is defined more than once in the file ‘{path}’. Tools like getdef may behave unexpectedly.		
+b018	Uppercase variable is redefined	The uppercase variable ‘{variable}’ is defined more than once in the file ‘{path}’. Uppercase variables in bash should be considered constant and not changed.	https://google.github.io/styleguide/shellguide.html#s7.3-constants-and-environment-variable-names	
+e022	Missing stats folder	The ‘stats’ folder is missing but required because the resource variables SEQ_RUN_STATS_ON and SEQ_AVERAGE_WINDOW are used: ‘{required}’	https://wiki.cmc.ec.gc.ca/wiki/Maestro/folders/stats	
+b019	Readme is not markdown	The file ‘{readme}’ looks like a ‘read me’ file. Consider writing it in markdown and renaming it to ‘{suggested}’ so that it appears automatically and formatted on platforms like GitLab.		
+e023	Bad loop expression	The file ‘{path}’ has a bad loop expression ‘{loop_expression}’. This should be comma delimited sets of numbers in the format ‘start:end:step:set’.	https://wiki.cmc.ec.gc.ca/wiki/Maestro/1.5.0/Release_Notes#Multi-definition_numeric_loops	
+b020	Literal path instead of CMCPROD	Literal paths to ‘hall3’ or ‘hall4’ were found. Consider using the CMCPROD variable instead so your project follows switchover configurations. The file ‘{file_path}’ contains:\n{matching_string}		
+w024	Parallel user in operational context	The experiment seems to have the ‘{context}’ context but the file ‘{file_path}’ references the parallel systems with the string ‘{par_string}’.		
+b021	Absolute path in config instead of getdef	The configuration file ‘{config}’ should use getdef instead of absolute hard coded paths. For example: ABC=$(getdef resources ABC)\nAbsolute paths:\n{values}	https://wiki.cmc.ec.gc.ca/wiki/User:Lims/projects/tech_transfer_improvements#Making_variables_configurable_from_high_level	
+e024	Bad permissions on operational log folders	The log folder ‘{folder}’ should have ‘{expected}’ permissions but instead it has ‘{ugp}’.		
+e025	Operational experiment with developer paths	The experiment seems to have the ‘{context}’ context but the file ‘{path}’ contains references to a non-operational user’s home:\n{bad}		
+i007	Absolute developer paths	The file ‘{path}’ contains absolute paths to a non-operational user’s home. This cannot be installed operationally:\n{bad}		
+w025	Operational files have incorrect owner	The experiment seems to have the ‘{context}’ context but the file ‘{path}’ is owned by ‘{owner}’ whereas ‘{expected}’ is expected.		
+b022	Identical files in module	The content of files in the same module are identical. Consider replacing duplicate files with soft links to one file, so fixing and updating one fixes and updates all. Or distinguish the files with comments. Files:\n{paths}		
+i008	Old SSM version	The file ‘{path}’ uses an SSM package ‘{old}’ but a newer version ‘{new}’ is available.		

@@ -16,7 +16,7 @@ now=datetime.datetime.now()
 "default logging config"
 class LogConfig():
     LOG_FOLDER_COMPONENT="maestro-python3"
-    LEVEL=logging.WARNING
+    LEVEL=logging.INFO
     WRITE_TO_FILE=True
     WRITE_TO_STDOUT=True
     FORMATTER = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
@@ -35,11 +35,12 @@ class LogConfigTui(LogConfig):
 "logging configs when running heimdall"
 class LogConfigHeimdall(LogConfig):
     LOG_FOLDER_COMPONENT="heimdall"
+    WRITE_TO_STDOUT=False
 
 "logging configs when running search utility"
 class LogConfigSearch(LogConfig):
     LOG_FOLDER_COMPONENT="search"
-    LEVEL=logging.CRITICAL+100
+    WRITE_TO_STDOUT=False
 
 def get_log_config_from_environment():    
     status=os.environ.get("MAESTRO_PYTHON3_LOGGING_CONFIG","").lower()
@@ -71,28 +72,31 @@ def get_logger():
     safe_check_output("mkdir -p "+folder)    
     logger = logging.getLogger('maestro-python3-logger')
     config=get_log_config_from_environment()
+    logger.setLevel(config.LEVEL)
     
     """
     add null in case no other handlers so error/critical not printed to stdout
     https://docs.python-guide.org/writing/logging/
     """
     logger.addHandler(logging.NullHandler())
-
+    
     if config.WRITE_TO_FILE:
         fh = logging.FileHandler(log_file_path)
         fh.setFormatter(config.FORMATTER)
+        fh.setLevel(config.LEVEL)
         logger.addHandler(fh)
         logger.fh = fh
 
     if config.WRITE_TO_STDOUT:
         ch = logging.StreamHandler()
         ch.setFormatter(config.FORMATTER)
+        ch.setLevel(config.LEVEL)
         logger.addHandler(ch)
         logger.ch = ch
-
-    for handler in logger.handlers:
-        handler.setLevel(config.LEVEL)
-
+    
+    if config.WRITE_TO_FILE and config.WRITE_TO_STDOUT:
+        print("Writing to log '%s'"%log_file_path)
+        
     return logger
 
 

@@ -7,6 +7,7 @@ This abstract class is not meant to be instantiated, only inherited.
 
 import re
 from utilities.xml import xml_cache
+import itertools
 import os.path
 
 from utilities import get_key_values_from_path, superstrip
@@ -14,11 +15,12 @@ from home_logger import logger
 from constants import DEFAULT_BATCH_RESOURCES
 
 """
-Matches variables in curly brackets.
+Matches bash variables in curly brackets.
 group0 is ${ABC}
 group1 is ABC
 """
-CURLY_VARIABLE_REGEX = re.compile(r"\${([a-zA-Z0-9_]+)}")
+CURLY_VARIABLE_REGEX = re.compile(r"\${([a-zA-Z_]+[a-zA-Z0-9_]*)}")
+NO_CURLY_VARIABLE_REGEX = re.compile(r"\$([a-zA-Z_]+[a-zA-Z0-9_]*)")
 
 
 class ME_Resources():
@@ -59,8 +61,10 @@ class ME_Resources():
         and undefined are any variables that were used but don't seem to be defined.
         """
         undefined = []
-
-        for match in CURLY_VARIABLE_REGEX.finditer(text):
+        
+        matches=itertools.chain(CURLY_VARIABLE_REGEX.finditer(text),
+                                NO_CURLY_VARIABLE_REGEX.finditer(text))
+        for match in matches:
             name = match.group(1)
             value = self.get_resource_value_from_key(name)
             if value:
@@ -127,9 +131,10 @@ class ME_Resources():
             return self.resource_cache[key]
 
         "starting with highest priority"
-        paths = [self.user_home+".suites/overrides.def",
-                 self.path+"resources/resources.def",
-                 self.user_home+".suites/default_resources.def"]
+        self.resource_definition_paths = [self.user_home+".suites/overrides.def",
+                                   self.path+"resources/resources.def",
+                                   self.user_home+".suites/default_resources.def"]
+        paths=self.resource_definition_paths
         for path in paths:
             if path not in self.path_to_resource_declares:
                 self.path_to_resource_declares[path] = get_key_values_from_path(path)

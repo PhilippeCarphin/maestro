@@ -6,10 +6,16 @@ import re
 import os
 import gzip
 import os.path
+import json
 from constants import ENCODINGS
 from utilities.colors import print_green
 from utilities.path import get_matching_paths_recursively
 
+"matches lines that declare a bash variable, group(1) is the variable name"
+BASH_VARIABLE_DECLARE_REGEX=re.compile("^([a-zA-Z]+[a-zA-Z0-9_]*)[ ]*=")
+
+"matches lines that declare a bash variable, with optional 'export' "
+BASH_VARIABLE_DECLARE_REGEX_WITH_EXPORT=re.compile("^(export )?[a-zA-Z]+[a-zA-Z0-9_]*[ ]*=")
 
 def get_change_time(path):
     try:
@@ -29,12 +35,13 @@ def cache(function):
     """
     memo = {}
 
-    def wrapper(*args):
-        if args in memo:
-            return memo[args]
+    def wrapper(*args, **kwargs):
+        key=(str(args),json.dumps(kwargs,sort_keys=1))
+        if key in memo:
+            return memo[key]
         else:
-            rv = function(*args)
-            memo[args] = rv
+            rv = function(*args,**kwargs)
+            memo[key] = rv
             return rv
     return wrapper
 
@@ -91,9 +98,9 @@ stab        ABC=123
 
     "select only var declare lines"
     if include_export_lines:
-        var_regex = re.compile("(export )?[a-zA-Z]+[a-zA-Z0-9_]*[ ]*=")
+        var_regex = BASH_VARIABLE_DECLARE_REGEX
     else:
-        var_regex = re.compile("[a-zA-Z]+[a-zA-Z0-9_]*[ ]*=")
+        var_regex = BASH_VARIABLE_DECLARE_REGEX_WITH_EXPORT
 
     lines = [line.strip() for line in lines if var_regex.search(line)]
 

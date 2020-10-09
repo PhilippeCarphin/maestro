@@ -1,5 +1,7 @@
 <MODULE name="module1">
     <SUBMITS name="task1"/>
     <LOOP name="task1"/>
+    <SUBMITS name="task2"/>
+    <LOOP name="task2"/>
 </MODULE>
 

@@ -16,7 +16,7 @@ Matches lines like:
     ## residus.123 ${SEQ_BIN}/residus.123
 found in the pseudo-xml sections of cfg files.
 """
-PSEUDO_CONFIG_COMMENTED_LINE = re.compile(r"##[ \t]+[a-zA-Z0-9-_.]+[ \t]+[a-zA-Z0-9-_.]+")
+PSEUDO_CONFIG_COMMENTED_LINE = re.compile(r"^##[ \t]+[${}\/a-zA-Z0-9-_.]+[ \t]+[${}\/a-zA-Z0-9-_.]+[ \t]*$")
 
 
 def get_commented_pseudo_xml_lines(content):

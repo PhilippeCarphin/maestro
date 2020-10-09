@@ -47,6 +47,11 @@ class MaestroExperiment(ME_Flow, ME_Indexes, ME_Logs, ME_NodeData, ME_NodeStatus
         key is resource variable like FRONTEND, value is its value from resource files.
         """
         self.resource_cache = {}
+        
+        """
+        A list of all paths to resources.def like files, starting with the highest priority.
+        """
+        self.resource_definition_paths = []
 
         """
         key is path to a resoure file like resources.def

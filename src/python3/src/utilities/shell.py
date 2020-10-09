@@ -14,20 +14,35 @@ def run_shell_cmd(cmd):
 def safe_check_output(cmd):
     "subprocess.check_output can raise an exception. This always returns shell output string."
     try:
-        return subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT).decode("utf8")
+        output_bytes=subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:
-        return e.output.decode("utf8")
+        output_bytes=e.output
 
+    return safe_decode(output_bytes)
+
+def safe_decode(bytes_to_decode,default=""):
+    """
+    Tries to decode these bytes with various encodings, returns the default if all fails.
+    """
+
+    for encoding in ("iso-8859-1","utf-8"):
+        try:
+            return bytes_to_decode.decode(encoding)
+        except:
+            pass
+
+    return default
 
 def safe_check_output_with_status(cmd):
     "like safe_check_output, but also returns exit status"
     try:
         status = 0
-        return subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT).decode("utf8"), status
+        output_bytes=subprocess.check_output(cmd, shell=True, stderr=subprocess.STDOUT)
     except subprocess.CalledProcessError as e:
         status = 1
-        return e.output.decode("utf8"), status
+        output_bytes=e.output
 
+    return safe_decode(output_bytes), status
 
 def get_true_host():
     """

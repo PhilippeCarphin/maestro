@@ -1,0 +1,27 @@
+<!--
+valid ExpOptions copied from:
+/fs/homeu1/eccc/cmod/ords/production/smco502/.suites/rdps_20191231/r1/ExpOptions.xml
+-->
+<ExpOptions displayName="r1" shortName="r1">
+
+<Exp hour="00">
+ <SupportInfo executing="Yes" status=" Full support 24/7.  core: daytime  Support: UMOS https://wiki.cmc.ec.gc.ca/wiki/UMOS/Support "/>
+ <!--  <SupportInfo executing="Yes" status="Full support for core, daytime support for post_processing. Support: UMOS https://wiki.cmc. ec.gc.ca/wiki/UMOS/Support "/> --> 
+  <TimingInfo ref_start="2:00" ref_end="3:30"/> 
+</Exp>
+  
+<Exp hour="06">
+ <SupportInfo executing="Yes" status="Full support"/>
+ <TimingInfo ref_start="8:00" ref_end="9:30"/> 
+</Exp>
+
+<Exp hour="12">
+ <SupportInfo executing="Yes" status="Full support"/>
+ <TimingInfo ref_start="14:00" ref_end="15:30"/> 
+</Exp>
+
+<Exp hour="18">
+ <SupportInfo executing="Yes" status="Full support"/>
+ <TimingInfo ref_start="20:00" ref_end="21:30"/> 
+</Exp>
+</ExpOptions>

@@ -14,7 +14,7 @@ from lxml import etree
 from utilities.shell import safe_check_output_with_status
 from utilities.xml import xml_cache
 
-from tests.path import MOCK_FILES, TMP_FOLDER, TURTLE_ME_PATH
+from tests.path import MOCK_FILES, TMP_FOLDER, TURTLE_ME_PATH, ABSOLUTE_SYMLINK_EXISTS_PATH
 
 def setup_tricky_mock_files():
     """
@@ -29,6 +29,14 @@ def setup_tricky_mock_files():
         empty=folder+"/empty-file"
         with open(empty,"w") as f:
             f.write(" ")
+    
+    "create a symlink with an absolute path to a file that exists"
+    source=ABSOLUTE_SYMLINK_EXISTS_PATH
+    target=TURTLE_ME_PATH+"experiment.cfg"
+    try:
+        os.symlink(target,source)
+    except FileExistsError:
+        pass
 
 def setup_tmp_git_author_repo(always_recreate=False):
     """
@@ -100,7 +108,9 @@ def setup_tmp_smco501_home():
 
 def setup_tmp_experiment1():
     """
-    Returns a path to an experiment that produces the b001, w015 codes.
+    Returns a path to an experiment that produces the b001, w015, i008 codes.
+    
+    For example, dynamic values will change depending on who runs the test suite and from where.
     """
 
     source = MOCK_FILES+"suites_with_codes/e005"
@@ -111,18 +121,22 @@ def setup_tmp_experiment1():
     shutil.copytree(source, target, symlinks=True)
 
     xml_path = target+"/resources/module1/module2/task1.xml"
+    cfg_path = target+"/resources/module1/task1.cfg"
 
     root = xml_cache.get(xml_path)
-
-    "this is the dynamic value to insert, which changes depending on who runs the test suite where"
+    
+    "depends on a full experiment path that exists"
     exp = MOCK_FILES+"suites_with_codes/w001"
-
     for element in root.xpath("//DEPENDS_ON"):
         element.set("exp", exp)
-
     with open(xml_path, "w") as f:
         data = etree.tostring(root).decode("utf8")
         f.write(data)
+    
+    "ssm use line with old ssm domain"
+    ssm_line=". ssmuse-sh -d "+MOCK_FILES+"ssm-versions/1.6"
+    with open(cfg_path,"a") as f:
+        f.write("\n\n"+ssm_line)
 
     "create new git repo so there are uncommited changes for w15"
     cmd = "cd %s ; git init ; sleep 0.1" % target

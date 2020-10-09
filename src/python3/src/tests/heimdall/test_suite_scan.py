@@ -1,5 +1,6 @@
 import os.path
 import unittest
+from functools import lru_cache
 
 from constants import SCANNER_CONTEXT
 from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, OPERATIONAL_HOME, PARALLEL_HOME, TMP_FOLDER, QSTAT_OUTPUT1_PATH, CMCCONST_OVERRIDE
@@ -8,6 +9,20 @@ from heimdall.experiment_scanner import ExperimentScanner
 from tests.test_file_builder import setup_tricky_mock_files, setup_tmp_experiment1, setup_tmp_smco501_home, setup_tmp_git_author_repo
 from tests.cache import QSTAT_CMD_OUTPUT
 
+@lru_cache(maxsize=1000)
+def get_scanner_from_cache(*args, **kwargs):
+    """
+    Calling:
+        get_scanner_from_cache( ... )
+    is identical to:
+        ExperimentScanner( ... )    
+    except if a scan has already happened for these exact arguments, returns that
+    cached scanner instead.
+    
+    This is useful because the realpath to one test experiment may apply to
+    many different scan codes we want to verify.
+    """
+    return ExperimentScanner(*args, **kwargs)
 
 class TestSuiteScan(unittest.TestCase):
 
@@ -27,6 +42,7 @@ class TestSuiteScan(unittest.TestCase):
 
         for code in hmm.codes:
             path = SUITES_WITH_CODES+code
+            realpath=os.path.realpath(path)
 
             if code == "e016":
                 """
@@ -42,26 +58,31 @@ class TestSuiteScan(unittest.TestCase):
 
             "override the context, if necessary"
             context = None
+            debug_op_username_override = None
             if code in ["e007", "e010", "w007", "w011", "w012", "e014", 
-                        "e016", "w015", "w022", "w023"]:
+                        "e016", "w015", "w022", "w023", "w024", "e024",
+                        "e025", "w025"]:
                 context = SCANNER_CONTEXT.OPERATIONAL
-            if code in ["i001"]:
+            if code in ["i001", "i007"]:
                 context = SCANNER_CONTEXT.DEVELOPMENT
+            if code in ["w023"]:
+                debug_op_username_override=os.environ["USER"]
 
             "override op/par homes, if necessary"
             parallel_home = PARALLEL_HOME
             if code == "w012":
                 parallel_home = TMP_FOLDER+"smco501"
 
-            scanner = ExperimentScanner(path,
+            scanner = get_scanner_from_cache(realpath,
                                         context=context,
                                         operational_home=OPERATIONAL_HOME,
                                         parallel_home=parallel_home,
                                         critical_error_is_exception=False,
                                         debug_qstat_output_override=QSTAT_CMD_OUTPUT,
-                                        debug_cmcconst_override=CMCCONST_OVERRIDE)
+                                        debug_cmcconst_override=CMCCONST_OVERRIDE,
+                                        debug_op_username_override=debug_op_username_override)
 
-            msg = "Experiment path: '%s'\n" % path
+            msg = "Experiment path:\n    %s\nrealpath:\n    %s\n" % (path,realpath)
             self.assertIn(code, scanner.codes, msg=msg)
 
     def test_suites_without_codes(self):
@@ -75,17 +96,19 @@ class TestSuiteScan(unittest.TestCase):
 
         for code in hmm.codes:
             path = SUITES_WITHOUT_CODES+code
+            realpath=os.path.realpath(path)
+            
             if not os.path.isdir(path):
                 continue
 
             if code in unused_folders:
                 unused_folders.remove(code)
 
-                scanner = ExperimentScanner(path,
+                scanner = get_scanner_from_cache(realpath,
                                             critical_error_is_exception=False,
                                             debug_qstat_output_override=QSTAT_CMD_OUTPUT)
 
-                msg = "Experiment path: '%s'" % path
+                msg = "Experiment path:\n    %s\nrealpath:\n    %s\n" % (path,realpath)
                 msg += "\n\n"+scanner.get_report_text()
 
                 self.assertNotIn(code, scanner.codes, msg=msg)
@@ -103,7 +126,7 @@ class TestSuiteScan(unittest.TestCase):
         Even good suites may have these codes so ignore them.
         This may also be due to real path is a test suite, or git repo stuff.
         """
-        ignore_codes = ["w001", "i002", "e016", "i004", "b009", "i006", "b014", "b017"]
+        ignore_codes = ["w001", "w002", "i002", "e016", "i004", "b009", "i006", "b014", "b017", "e021"]
 
         """
         key is experiment path
@@ -115,11 +138,12 @@ class TestSuiteScan(unittest.TestCase):
         expected_errors = {key: set(value) for key, value in expected_errors.items()}
 
         for path in paths:
-            scanner = ExperimentScanner(path,
+            realpath=os.path.realpath(path)
+            scanner = get_scanner_from_cache(realpath,
                                         critical_error_is_exception=False,
                                         debug_qstat_output_override=QSTAT_CMD_OUTPUT)
-            msg = "Experiment path: '%s'" % path
-            msg += "\n\n"+scanner.get_report_text()
+            msg = "Experiment path:\n    %s\nrealpath:\n    %s\n" % (path,realpath)
+            msg += "\n\n"+scanner.get_report_text(max_repeat=5)
 
             "never look for codes we want to ignore"
             result = scanner.codes

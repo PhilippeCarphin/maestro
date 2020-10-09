@@ -10,6 +10,7 @@ same-name functions instead.
 
 import os
 import os.path
+import hashlib
 from pwd import getpwuid, getpwnam
 from grp import getgrgid, getgrall
 from lxml import etree
@@ -83,6 +84,17 @@ class FileCache():
         permissions=long_permissions[-3:]
         return (owner,group,permissions,long_permissions)
     
+    def get_ugp_string(self,path):
+        """
+        Returns a string like:
+            zulban:zulban:755
+        for the user, group, and permissions of this file.
+        """
+        name,group,permissions,long_permissions=file_cache.get_user_group_permissions(path)
+        if not name or not group or not permissions or not long_permissions:
+            return ""
+        return "%s:%s:%s"%(name,group,permissions)
+    
     def can_user_write_to_path(self,user,path):
         realpath = self.realpath(path)
         return self.can_user_write_to_realpath(user,realpath)
@@ -115,6 +127,23 @@ class FileCache():
             pass
 
         return permissions[2] in write_digits
+    
+    @cache
+    def md5_from_realpath(self,realpath,empty_file_is_empty_string=True,strip_whitespace=True):
+        content=self.open_realpath(realpath)
+        if strip_whitespace:
+            content=content.strip()
+        if empty_file_is_empty_string and not content:
+            return ""
+        encoding="iso-8859-1"
+        md5=hashlib.md5(content.encode(encoding)).hexdigest()
+        return md5
+    
+    def md5(self,path,empty_file_is_empty_string=True,strip_whitespace=True):
+        realpath = self.realpath(path)
+        return self.md5_from_realpath(realpath,
+                                      empty_file_is_empty_string=True,
+                                      strip_whitespace=True)
 
     @cache
     def open_without_comments(self, path):
@@ -137,7 +166,7 @@ class FileCache():
         if not self.islink(path):
             return False
 
-        link = os.path.dirname(path)+"/"+os.readlink(path)
+        link = os.path.join(os.path.dirname(path),os.readlink(path))
         return not self.exists(link)
 
     @cache
