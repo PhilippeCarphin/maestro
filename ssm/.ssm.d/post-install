@@ -15,9 +15,6 @@ MAN1_FOLDER=${PACKAGE_HOME}/man/man1
 ln -s ${PACKAGE_HOME}/src/core/bin/* ${BIN_FOLDER}/
 ln -s ${PACKAGE_HOME}/src/utilities/bin/* ${BIN_FOLDER}/
 ln -s ${PACKAGE_HOME}/src/xflow/bin/* ${BIN_FOLDER}/
-for executable in heimdall mflow maestro_search ; do
-	ln -s ${PACKAGE_HOME}/src/python3/bin/$executable ${BIN_FOLDER}/
-done
 ln -s ${PACKAGE_HOME}/src/xm/bin/* ${BIN_FOLDER}/
 
 # remove .orig files if they are there

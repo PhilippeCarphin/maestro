@@ -37,7 +37,7 @@ all: clean
 	cp ${SHARED_MAKE_CONFIGURATION} ${BUILD_PLATFORM_FOLDER}/
 	cp -r src ssm/.ssm.d scripts ${BUILD_PLATFORM_FOLDER}/
 
-	${BUILD_PLATFORM_FOLDER}/src/python3/setup/install-dependencies.sh
+	${BUILD_PLATFORM_FOLDER}/setup/install-python-dependencies.sh
 	${XC_MODULE_SWITCH} make -C ${BUILD_PLATFORM_FOLDER}/src/core
 
 	if [ -d "${TCL_COMPILE_BACKUP_FOLDER}" ] ; then \
