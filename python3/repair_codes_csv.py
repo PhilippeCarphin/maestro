@@ -19,7 +19,6 @@ from constants import HEIMDALL_MESSAGE_CSV, BAD_SINGLE_QUOTE_CHARS, BAD_DOUBLE_Q
 from utilities.docopt import docopt
     
 def main(args):
-    
     path=args["--csv"]
     verbose=args["--verbose"]
     if not os.path.isfile(path):
@@ -40,7 +39,7 @@ def main(args):
             f.write(data)
         if verbose:
             print("Fixed bad characters in CSV '%s'"%path)
-
+    
 if __name__ == "__main__":
     doc=__doc__.format(csv_path=HEIMDALL_MESSAGE_CSV)
     

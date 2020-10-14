@@ -18,7 +18,7 @@ Et beaucoup plus! Voir le [liste des codes et messages](heimdall_codes.md) pour 
 
 (La préférence de langue est automatiquement détectée)
 
-![heimdall screenshot](/src/python3/screenshots/heimdall1.png)
+![heimdall screenshot](/doc/heimdall1.png)
 
 # Essaye le
 
@@ -108,4 +108,4 @@ La structure du projet et les tests pourraient être aplatis / fusionnés dans u
 
 Dans la mythologie nordique, Heimdall ou Heimdallr est attesté comme possédant une prescience, une vue et une audition aiguës, et surveille les envahisseurs et l'apparition de Ragnarök. Heimdall voit tout.
 
-![avatar heimdall](/src/python3/screenshots/heimdall-avatar.jpg)
+![avatar heimdall](/doc/heimdall-avatar.jpg)

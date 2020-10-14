@@ -9,7 +9,7 @@
 
 Found a bug or have an idea? See the [contributing guide](/CONTRIBUTING.md) for how to help. Make sure to label `mflow` issues with the [mflow GitLab label](https://gitlab.science.gc.ca/CMOI/maestro/issues?label_name%5B%5D=component%3Amflow).
 
-![alt text](screenshots/gdps-g0-0.4.png)
+![alt text](/doc/gdps-g0-0.4.png)
 
 # Try it out
 

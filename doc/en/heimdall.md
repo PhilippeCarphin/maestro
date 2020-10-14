@@ -16,7 +16,7 @@ And many more! See the [list of codes and messages](heimdall_codes.md) for every
 
 # Screenshots
 
-![heimdall screenshot](/screenshots/heimdall1.png)
+![heimdall screenshot](/doc/heimdall1.png)
 
 # Try it out
 
@@ -95,4 +95,4 @@ Files in the root level of `maestro/python3/utilities` are generically useful in
 
 In Norse mythology, Heimdall or Heimdallr is attested as possessing foreknowledge, keen eyesight and hearing, and keeps watch for invaders and the onset of Ragnarök. Heimdall sees all.
 
-![heimdall avatar](/screenshots/heimdall-avatar.jpg)
+![heimdall avatar](/doc/heimdall-avatar.jpg)
