@@ -1,4 +1,3 @@
-/bin
 /src/core/bin/*
 /src/core/include/*
 /build

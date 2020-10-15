@@ -1,0 +1,9 @@
+#!/bin/bash
+
+MAESTRO_ROOT=$(dirname $(dirname $(realpath $0)))
+
+$MAESTRO_ROOT/bin/assert_python3_is_setup || exit 1
+
+export MAESTRO_PYTHON3_LOGGING_CONFIG=heimdall
+
+$MAESTRO_ROOT/venv/bin/python3 $MAESTRO_ROOT/python3/heimdall_cli.py $@ 

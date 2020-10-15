@@ -1,0 +1,21 @@
+#!/bin/bash
+
+# A wrapper around run_tests.py to setup and verify environment first.
+# For usage information run with '-h' or see:
+#     python3/run_tests.py
+
+MAESTRO_ROOT=$(dirname $(dirname $(realpath $0)))
+PYTHON3_ROOT=$MAESTRO_ROOT/python3
+
+$MAESTRO_ROOT/bin/assert_python3_is_setup || exit 1
+
+# These scripts can be safely run at any time to repair aspects of the project.
+# For example, accidentally re-introducing bad quotatation characters, or forgetting to regenerate documention.
+# Out of convenience, these are run whenever tests are run.
+cd $PYTHON3_ROOT
+./generate_messages_markdown.py --doc-folder=$MAESTRO_ROOT/doc || (echo "Failed to generate documentation." && exit 1)
+./repair_codes_csv.py --csv=$MAESTRO_ROOT/csv/message_codes.csv || (echo "Failed to repair codes CSV." && exit 1)
+
+export MAESTRO_PYTHON3_LOGGING_CONFIG=test
+
+$MAESTRO_ROOT/venv/bin/python3 $PYTHON3_ROOT/run_tests.py $@
