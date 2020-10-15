@@ -33,10 +33,11 @@ class TestMaestroExperimentDependencies(unittest.TestCase):
         me = get_experiment_from_cache(path)
         node_path="module1/task1/task2/task3"
         result = me.get_dependency_data_for_node_path(node_path)
-        expected=[new_dep_data(node_path="/module1/task1"),
-                  new_dep_data(node_path="/module1/task1/task2"),
+        expected=[new_dep_data(node_path="/module1/task1",dep_name="/module1/task1"),
+                  new_dep_data(node_path="/module1/task1/task2",dep_name="../task2"),
                   new_dep_data(node_path="/turtle/TurtlePower/pizza1",
-                               experiment_path="/path/does/not/exist")]
+                               experiment_path="/path/does/not/exist",
+                               dep_name="/turtle/TurtlePower/pizza1")]
         msg=pretty_kwargs(result=result,expected=expected)
         self.assertEqual(result,expected,msg)
 
