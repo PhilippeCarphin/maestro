@@ -1263,7 +1263,8 @@ static void maestro_l2d2_main_process_server(int fserver) {
                   Time);
           close(fserver);
           for (j = 0; j < MAX_PROCESS; j++) {
-            ChildPids[j] == 0 ?: kill(ChildPids[j], 9);
+            if(ChildPids[j] != 0)
+              kill(ChildPids[j], 9);
           }
           kill(L2D2.depProcPid, 9);
           /* send email notice */
@@ -1310,7 +1311,8 @@ static void maestro_l2d2_main_process_server(int fserver) {
                   Time);
           kill(pid_eworker, 9);
           for (j = 0; j < MAX_PROCESS; j++) {
-            ChildPids[j] == 0 ?: kill(ChildPids[j], 9);
+            if(ChildPids[j] != 0)
+              kill(ChildPids[j], 9);
           }
           snprintf(message, sizeof(message),
                    "Dependency manager (pid=%u) died (at:%s) after being "
@@ -1406,7 +1408,8 @@ static void maestro_l2d2_main_process_server(int fserver) {
       close(fserver);
       sleep(2);
       for (j = 0; j < MAX_PROCESS; j++) {
-        ChildPids[j] == 0 ?: kill(ChildPids[j], 9);
+        if(ChildPids[j] != 0)
+          kill(ChildPids[j], 9);
       }
       kill(pid_eworker, 9);
       kill(L2D2.depProcPid, 9);
@@ -1426,7 +1429,8 @@ static void maestro_l2d2_main_process_server(int fserver) {
                 "at:%s killing server\n",
                 L2D2.auth, m5sum, L2D2.m5sum, Time);
         for (j = 0; j < MAX_PROCESS; j++) {
-          ChildPids[j] == 0 ?: kill(ChildPids[j], 9);
+          if(ChildPids[j] != 0)
+            kill(ChildPids[j], 9);
         }
         kill(pid_eworker, 9);
         l2d2server_remove(smlog);

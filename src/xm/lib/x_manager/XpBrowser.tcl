@@ -389,12 +389,6 @@ proc XpBrowser::SetExpdate {exp value} {
              Dialogs::show_msgdlg $Dialogs::Dlg_ExpDateInvalid  ok warning "" .
              return
       }
-
-      if {[regexp {[0-9]{14}$} $value]} {
-          catch {[exec echo -n "${value}"     > $exp/ExpDate]}
-      } else {
-          catch {[exec echo -n "${value}0000" > $exp/ExpDate]}
-     }
 }
 
 proc XpBrowser::SetCatchup {exp value} {
