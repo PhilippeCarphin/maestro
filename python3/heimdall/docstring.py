@@ -1,7 +1,7 @@
 
 from constants import VERSION, MAX_HUB_SCAN_SECONDS
-from utilities.maestro.path import get_exp_home_from_pwd
-from utilities.heimdall.language import get_language_from_environment
+from maestro.path import get_exp_home_from_pwd
+from heimdall.language import get_language_from_environment
 
 def adjust_docstring(doc):
     exp = get_exp_home_from_pwd()

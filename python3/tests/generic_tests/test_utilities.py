@@ -2,7 +2,7 @@ import unittest
 
 from tests.path import TURTLE_ME_PATH
 from utilities import superstrip
-from utilities.maestro import get_latest_yyyymmddhh_from_experiment_path, get_yyyymmddhh, get_day_of_week
+from maestro import get_latest_yyyymmddhh_from_experiment_path, get_yyyymmddhh, get_day_of_week
 
 
 class TestUtilities(unittest.TestCase):

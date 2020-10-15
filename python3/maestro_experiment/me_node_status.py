@@ -8,7 +8,7 @@ This abstract class is not meant to be instantiated, only inherited.
 import glob
 import os.path
 
-from utilities.maestro.status import get_status_from_path
+from maestro.status import get_status_from_path
 from constants import NODE_STATUS
 
 

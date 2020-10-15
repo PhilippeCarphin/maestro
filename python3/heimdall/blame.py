@@ -1,6 +1,6 @@
 
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue
-from utilities.heimdall.git import scan_git_authors
+from heimdall.git import scan_git_authors
 
 def run_heimdall_blame(repo_path,
                        count=0):

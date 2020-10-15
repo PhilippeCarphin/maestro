@@ -9,7 +9,7 @@ import os.path
 
 from utilities.pretty import pretty_kwargs
 from utilities.parsing import superstrip
-from utilities.maestro import resolve_dependency_path
+from maestro import resolve_dependency_path
 from home_logger import logger
 
 class ME_Dependencies():

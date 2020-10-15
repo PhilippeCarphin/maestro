@@ -5,7 +5,7 @@ from utilities import *
 from tests.path import *
 from heimdall import *
 from maestro_experiment import *
-from utilities.heimdall.path import *
+from heimdall.path import *
 
 context=SCANNER_CONTEXT.TEST
 path=SUITES_WITHOUT_CODES+"b026"

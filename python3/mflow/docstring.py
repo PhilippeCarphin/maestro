@@ -2,7 +2,7 @@ import os.path
 import os
 
 from constants import DEFAULT_CONFIG_PATH, VERSION
-from utilities.maestro.path import get_exp_home_from_pwd
+from maestro.path import get_exp_home_from_pwd
 
 
 def get_default_config_path():

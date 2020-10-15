@@ -1,28 +1,26 @@
 
-from tests.path import CSV_DICTIONARY
-
 import os
 import unittest
 import os.path
 
-from tests.path import CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES, SUITES_WITHOUT_CODES, ABSOLUTE_SYMLINK_EXISTS_PATH, TURTLE_ME_PATH, TMP_FOLDER
-from tests.test_file_builder import setup_tmp_git_author_repo, setup_tricky_mock_files, setup_tmp_experiment3
+from tests.path import CSV_DICTIONARY, CONTEXT_GUESS_HOMES, G0_MINI_ME_PATH, MOCK_FILES, SUITES_WITHOUT_CODES, ABSOLUTE_SYMLINK_EXISTS_PATH, TURTLE_ME_PATH, TMP_FOLDER
+from tests.mock_file_builder import setup_tmp_git_author_repo, setup_tricky_mock_files, setup_tmp_experiment3
 
 from constants import SCANNER_CONTEXT
 from utilities import get_dictionary_list_from_csv
-from utilities.heimdall.context import guess_scanner_context_from_path
-from utilities.heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs, get_constant_definition_count, get_ssm_domains_from_string, get_etiket_variables_used_from_path, get_maestro_executables_from_bash_text
-from utilities.heimdall.path import is_editor_swapfile, get_latest_ssm_path_from_path
-from utilities.heimdall.git import scan_git_authors
-from utilities.heimdall.uspmadt import get_uspmadt_lines
+from heimdall.context import guess_scanner_context_from_path
+from heimdall.parsing import get_nodelogger_signals_from_task_text, get_levenshtein_pairs, get_constant_definition_count, get_ssm_domains_from_string, get_etiket_variables_used_from_path, get_maestro_executables_from_bash_text
+from heimdall.path import is_editor_swapfile, get_latest_ssm_path_from_path
+from heimdall.git import scan_git_authors
+from heimdall.uspmadt import get_uspmadt_lines
 from utilities import guess_user_home_from_path, pretty, pretty_kwargs
 from utilities.path import iterative_deepening_search, get_link_chain_from_link
-from utilities.maestro import get_weird_assignments_from_config_path, get_commented_pseudo_xml_lines
+from maestro import get_weird_assignments_from_config_path, get_commented_pseudo_xml_lines
 from utilities.parsing import get_bash_variables_used_in_text, get_key_values_from_text
 from utilities.shell import get_all_repo_files
 from heimdall.file_cache import file_cache
 
-class TestUtilities(unittest.TestCase):
+class TestHeimdallUtilities(unittest.TestCase):
 
     def test_uspmadt(self):
         

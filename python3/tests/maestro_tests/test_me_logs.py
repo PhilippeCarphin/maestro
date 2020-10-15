@@ -1,6 +1,6 @@
 import unittest
 
-from maestro_experiment import MaestroExperiment
+from tests.cache import get_experiment_from_cache
 from tests.path import TURTLE_ME_PATH, RESOURCES_HOME3
 
 """
@@ -16,7 +16,7 @@ class TestMaestroExperimentLogs(unittest.TestCase):
 
     def test_get_listings(self):
         datestamp = "2020032200"
-        me = MaestroExperiment(TURTLE_ME_PATH,
+        me = get_experiment_from_cache(TURTLE_ME_PATH,
                                datestamp=datestamp,
                                user_home=RESOURCES_HOME3)
         folder = TURTLE_ME_PATH+"listings/latest/"

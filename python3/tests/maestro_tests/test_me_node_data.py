@@ -1,10 +1,9 @@
 import unittest
 
-from maestro_experiment import MaestroExperiment
-from tests.path import BIG_ME_PATH, TURTLE_ME_PATH, SUBMIT_CHAIN_ME_PATH
+from tests.path import BIG_ME_PATH, TURTLE_ME_PATH
 from constants import JSON_SCHEMAS, NODE_TYPE
-from utilities import assert_valid_json, pretty, get_true_host
-from utilities.mflow.resources import insert_default_batch_data
+from utilities import assert_valid_json, pretty
+from mflow.resources import insert_default_batch_data
 from tests.cache import G1_MINI_ME, TURTLE_ME, BIG_ME, SUBMIT_CHAIN_ME, SWITCH_HOUR_ME
 
 """

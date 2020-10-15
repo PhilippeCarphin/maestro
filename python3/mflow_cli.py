@@ -32,11 +32,11 @@ See Also:
     https://gitlab.science.gc.ca/CMOI/maestro/issues?label_name%%5B%%5D=component%%3Amflow
 """
 
-from utilities.maestro.datestamp import get_latest_yyyymmddhh_from_experiment_path, get_yyyymmddhh
+from maestro.datestamp import get_latest_yyyymmddhh_from_experiment_path, get_yyyymmddhh
 from maestro_experiment import MaestroExperiment
 from mflow import TuiManager
-from utilities.mflow.threading import async_set_qstat_data_in_maestro_experiment
-from utilities.mflow import get_mflow_config, get_unknown_mflow_config_keys
+from mflow.threading import async_set_qstat_data_in_maestro_experiment
+from mflow import get_mflow_config, get_unknown_mflow_config_keys
 from utilities import print_red
 from utilities.docopt import docopt
 import traceback

@@ -1,7 +1,7 @@
 import unittest
 
 from mflow.text_flow import TextFlow
-from maestro_experiment import MaestroExperiment
+from tests.cache import get_experiment_from_cache
 from tests.path import TURTLE_ME_PATH
 from utilities import pretty_kwargs
 from tests.utilities import get_test_config
@@ -45,7 +45,7 @@ class TestTextFlow(unittest.TestCase):
 
         tui_config = get_test_config(NODE_MARGIN_BOTTOM=0)
         datestamp = "2020040100"
-        me = MaestroExperiment(TURTLE_ME_PATH, datestamp=datestamp)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, datestamp=datestamp)
         tf = TextFlow(me, tui_config=tui_config)
         result = tf.get_string_flow()
 
@@ -54,7 +54,7 @@ class TestTextFlow(unittest.TestCase):
 
     def test_loop_indexes(self):
         datestamp = "2020040100"
-        me = MaestroExperiment(TURTLE_ME_PATH, datestamp=datestamp)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, datestamp=datestamp)
         tf = TextFlow(me)
 
         node_path = "turtle/TurtlePower"
@@ -78,7 +78,7 @@ class TestTextFlow(unittest.TestCase):
     def test_get_node_path_from_xy(self):
         "nodes with height 1, no extra info"
         datestamp = "2020040100"
-        me = MaestroExperiment(TURTLE_ME_PATH, datestamp=datestamp)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, datestamp=datestamp)
         tf = TextFlow(me)
 
         coords = {(3, 1): "turtle",
@@ -99,7 +99,7 @@ class TestTextFlow(unittest.TestCase):
         "nodes with height 2"
         datestamp = "2020040100"
         tui_config = get_test_config(FLOW_NODE_SHOW_TYPE=True)
-        me = MaestroExperiment(TURTLE_ME_PATH, datestamp=datestamp)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, datestamp=datestamp)
         tf = TextFlow(me, tui_config=tui_config)
 
         coords = {(3, 1): "turtle",
@@ -191,7 +191,7 @@ class TestTextFlow(unittest.TestCase):
 
     def test_turtle_flow(self):
         datestamp = "2020040100"
-        me = MaestroExperiment(TURTLE_ME_PATH, datestamp=datestamp)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, datestamp=datestamp)
         tf = TextFlow(me)
         expected = TURTLE_FLOW_NORMAL
         result = tf.get_string_flow()
@@ -200,7 +200,7 @@ class TestTextFlow(unittest.TestCase):
 
     def test_turtle_flow_node_type(self):
         datestamp = "2020040100"
-        me = MaestroExperiment(TURTLE_ME_PATH, datestamp=datestamp)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, datestamp=datestamp)
         tui_config = get_test_config(FLOW_NODE_SHOW_TYPE=True)
         tf = TextFlow(me, tui_config=tui_config)
         expected = """

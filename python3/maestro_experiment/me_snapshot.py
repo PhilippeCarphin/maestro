@@ -7,7 +7,7 @@ This class contains and finds information that can only be known about an experi
 This abstract class is not meant to be instantiated, only inherited.
 """
 
-from utilities.maestro.node_log_parser import NodeLogParser
+from maestro.node_log_parser import NodeLogParser
 
 
 class ME_Snapshot():

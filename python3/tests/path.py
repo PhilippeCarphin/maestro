@@ -1,8 +1,10 @@
 import os
 from constants.path import MAESTRO_ROOT, PYTHON3_ROOT
 
-MFLOW_TEST_FOLDER = PYTHON3_ROOT+"tests/mflow/"
-HEIMDALL_TEST_FOLDER = PYTHON3_ROOT+"tests/heimdall/"
+MFLOW_TEST_FOLDER = PYTHON3_ROOT+"tests/mflow_tests/"
+HEIMDALL_TEST_FOLDER = PYTHON3_ROOT+"tests/heimdall_tests/"
+MAESTRO_TEST_FOLDER = PYTHON3_ROOT+"tests/maestro_tests/"
+GENERIC_TEST_FOLDER = PYTHON3_ROOT+"tests/generic_tests/"
 MOCK_FILES = MAESTRO_ROOT+"mock_files/"
 
 TMP_FOLDER = MAESTRO_ROOT+"tmp/"

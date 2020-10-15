@@ -6,16 +6,16 @@ import os.path
 import logging
 from curses import wrapper
 
-from utilities.maestro import dashify_datestamp
+from maestro.datestamp import dashify_datestamp
 from utilities.curses import get_curses_attr_from_string
 from utilities import clamp, get_console_dimensions, pretty, safe_write, run_shell_cmd
-from utilities.mflow import get_mflow_config
+from mflow import get_mflow_config
 from home_logger import logger, set_log_level
 from constants import VERSION, TMP_BASH_WRAPPER_COMMAND_FILE_PREFIX, MINIMUM_CONSOLE_DIMENSIONS, TMP_FOLDER, LOG_FOLDER
 from constants.mflow import KEYBOARD_NAVIGATION_TYPE, NAVIGATION_KEYS, TUI_STATE
 from mflow.text_flow import TextFlow
 from mflow import PopupManager
-from utilities.mflow import get_text_lines_within_width, pad_text_with_spaces
+from mflow import get_text_lines_within_width, pad_text_with_spaces
 
 CURSOR_POINTS = ((-1, 0), (0, 1), (1, 0), (0, -1))
 

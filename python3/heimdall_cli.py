@@ -34,7 +34,7 @@ import os
 
 from constants import SCANNER_CONTEXTS
 from heimdall import ExperimentScanner, run_heimdall_blame
-from utilities.heimdall.docstring import adjust_docstring
+from heimdall.docstring import adjust_docstring
 __doc__ = adjust_docstring(__doc__)
 
 def blame_cli(args):

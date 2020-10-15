@@ -2,9 +2,9 @@ import unittest
 import curses
 
 from mflow import TuiManager
-from maestro_experiment import MaestroExperiment
+from tests.cache import get_experiment_from_cache
 from utilities import get_console_dimensions
-from utilities.mflow import get_mflow_config
+from mflow import get_mflow_config
 from tests.path import TURTLE_ME_PATH, BIG_LOOP_ME_PATH, G1_MINI_ME_PATH
 
 """
@@ -21,7 +21,7 @@ class TestTuiManager(unittest.TestCase):
 
     def test_simple_flow_navigation(self):
         datestamp = "2020040100"
-        me = MaestroExperiment(TURTLE_ME_PATH, datestamp=datestamp)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, datestamp=datestamp)
 
         for is_tree_nav in (False, True):
             tui_config = get_test_config(tree_nav=is_tree_nav)
@@ -53,7 +53,7 @@ class TestTuiManager(unittest.TestCase):
         d = curses.KEY_DOWN
         u = curses.KEY_UP
         keys = [r, d, d, r, r, r, u]
-        me = MaestroExperiment(G1_MINI_ME_PATH)
+        me = get_experiment_from_cache(G1_MINI_ME_PATH)
         me.set_snapshot("2020040100")
 
         tui = TuiManager(me, debug_keypresses=keys)
@@ -66,7 +66,7 @@ class TestTuiManager(unittest.TestCase):
 
     def test_node_select_popup(self):
         datestamp = "2020040100"
-        me = MaestroExperiment(TURTLE_ME_PATH, datestamp=datestamp)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, datestamp=datestamp)
         xy = (1, 1)
 
         "select a node, scroll around the popup options"
@@ -82,7 +82,7 @@ class TestTuiManager(unittest.TestCase):
 
     def test_many_popup_options(self):
         datestamp = "2020040100"
-        me = MaestroExperiment(BIG_LOOP_ME_PATH, datestamp=datestamp)
+        me = get_experiment_from_cache(BIG_LOOP_ME_PATH, datestamp=datestamp)
 
         xy = (20, 1)
 
@@ -100,7 +100,7 @@ class TestTuiManager(unittest.TestCase):
 
     def test_okay_popup(self):
         datestamp = "2020040100"
-        me = MaestroExperiment(TURTLE_ME_PATH, datestamp=datestamp)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, datestamp=datestamp)
 
         messages = ["this is a short message",
                     "this is a long message "*10,
@@ -114,7 +114,7 @@ class TestTuiManager(unittest.TestCase):
     def test_maestro_commands(self):
         "submit and force status commands are constructed with proper arguments"
         datestamp = "2020040100"
-        me = MaestroExperiment(TURTLE_ME_PATH, datestamp=datestamp)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, datestamp=datestamp)
         tui = TuiManager(me,
                          tui_config=get_test_config())
         node_path1 = "turtle/TurtlePower"

@@ -1,7 +1,7 @@
 import unittest
 import json
 
-from utilities.maestro import NodeLogParser, get_values_from_node_log_line
+from maestro import NodeLogParser, get_values_from_node_log_line
 from tests.path import NODE_LOG_UTF8_ERROR, NODE_LOG_TURTLE_DURATION
 from utilities import pretty_kwargs
 

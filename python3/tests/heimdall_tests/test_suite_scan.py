@@ -1,28 +1,12 @@
 import os.path
 import unittest
-from functools import lru_cache
 
 from constants import SCANNER_CONTEXT
 from tests.path import SUITES_WITH_CODES, SUITES_WITHOUT_CODES, TURTLE_ME_PATH, G0_MINI_ME_PATH, G1_MINI_ME_PATH, GV_MINI_ME_PATH, OPERATIONAL_HOME, PARALLEL_HOME, OPERATIONAL_SUITES_HOME, TMP_FOLDER, QSTAT_OUTPUT1_PATH, CMCCONST_OVERRIDE
 from heimdall.message_manager import hmm
 from heimdall.experiment_scanner import ExperimentScanner
-from tests.test_file_builder import setup_tricky_mock_files, setup_tmp_experiment1, setup_tmp_experiment2, setup_tmp_experiment3, setup_tmp_smco501_home, setup_tmp_git_author_repo
-from tests.cache import QSTAT_CMD_OUTPUT
-
-@lru_cache(maxsize=1000)
-def get_scanner_from_cache(*args, **kwargs):
-    """
-    Calling:
-        get_scanner_from_cache( ... )
-    is identical to:
-        ExperimentScanner( ... )    
-    except if a scan has already happened for these exact arguments, returns that
-    cached scanner instead.
-    
-    This is useful because the realpath to one test experiment may apply to
-    many different scan codes we want to verify.
-    """
-    return ExperimentScanner(*args, **kwargs)
+from tests.mock_file_builder import setup_tricky_mock_files, setup_tmp_experiment1, setup_tmp_experiment2, setup_tmp_experiment3, setup_tmp_smco501_home, setup_tmp_git_author_repo
+from tests.cache import QSTAT_CMD_OUTPUT, get_scanner_from_cache
 
 class TestSuiteScan(unittest.TestCase):
 

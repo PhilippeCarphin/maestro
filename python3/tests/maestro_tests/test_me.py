@@ -1,6 +1,6 @@
 import unittest
 
-from maestro_experiment import MaestroExperiment
+from tests.cache import get_experiment_from_cache
 from constants import JSON_SCHEMAS, NODE_TYPE
 from tests.path import BIG_ME_PATH, TURTLE_ME_PATH, RESOURCES_HOME3
 from utilities import assert_valid_json, pretty
@@ -22,16 +22,16 @@ class TestMaestroExperiment(unittest.TestCase):
             $SEQ_EXP_HOME/listings/folder1/folder2
         should still open that experiment just fine.
         """
-        me = MaestroExperiment(BIG_ME_PATH+"/resources/sample")
+        me = get_experiment_from_cache(BIG_ME_PATH+"/resources/sample")
         self.assertEqual(me.path, BIG_ME_PATH)
 
         "even when inside no longer existing folders"
-        me = MaestroExperiment(BIG_ME_PATH+"/does/not-exist/123")
+        me = get_experiment_from_cache(BIG_ME_PATH+"/does/not-exist/123")
         self.assertEqual(me.path, BIG_ME_PATH)
 
     def test_get_workdir_path(self):
         datestamp = "2020040100"
-        me = MaestroExperiment(TURTLE_ME_PATH,
+        me = get_experiment_from_cache(TURTLE_ME_PATH,
                                datestamp=datestamp,
                                user_home=RESOURCES_HOME3)
         node_path = "turtle/turtleTask1"
@@ -40,7 +40,7 @@ class TestMaestroExperiment(unittest.TestCase):
         self.assertEqual(result, expected)
 
     def test_switch_child(self):
-        me = MaestroExperiment(BIG_ME_PATH)
+        me = get_experiment_from_cache(BIG_ME_PATH)
         node_path = "sample/switch_hour"
 
         result = me.get_switch_child_for_datestamp(node_path, "2020040100")
@@ -61,12 +61,12 @@ class TestMaestroExperiment(unittest.TestCase):
         self.assertEqual(result, expected)
 
     def test_complete_experiment_nodes(self):
-        me = MaestroExperiment(BIG_ME_PATH)
+        me = get_experiment_from_cache(BIG_ME_PATH)
         assert_valid_json(me.root_node_data, JSON_SCHEMAS.NODE)
         self.assertEqual(me.root_node_data["name"], "sample", msg=pretty(me.root_node_data))
 
     def test_tree_traversal(self):
-        me = MaestroExperiment(TURTLE_ME_PATH)
+        me = get_experiment_from_cache(TURTLE_ME_PATH)
 
         result = me.get_siblings("turtle")
         expected = ["turtle"]
@@ -95,7 +95,7 @@ class TestMaestroExperiment(unittest.TestCase):
         self.assertEqual(result, expected)
 
     def test_node_paths(self):
-        me = MaestroExperiment(BIG_ME_PATH)
+        me = get_experiment_from_cache(BIG_ME_PATH)
         """
         No node_path should end in a slash, for consistency, even though this ambiguity is 
         allowed in maestro arguments.
@@ -104,7 +104,7 @@ class TestMaestroExperiment(unittest.TestCase):
         self.assertFalse(slashes)
 
     def test_children(self):
-        me = MaestroExperiment(TURTLE_ME_PATH)
+        me = get_experiment_from_cache(TURTLE_ME_PATH)
 
         node = "turtle/TurtlePower"
         self.assertTrue(me.has_children(node))
@@ -121,7 +121,7 @@ class TestMaestroExperiment(unittest.TestCase):
         self.assertEqual(children, [])
 
     def test_has_indexes(self):
-        me = MaestroExperiment(TURTLE_ME_PATH)
+        me = get_experiment_from_cache(TURTLE_ME_PATH)
 
         node = "turtle/TurtlePower"
         self.assertTrue(me.has_indexes(node))
@@ -136,7 +136,7 @@ class TestMaestroExperiment(unittest.TestCase):
         self.assertFalse(me.has_indexes(node))
 
     def test_module(self):
-        me = MaestroExperiment(BIG_ME_PATH)
+        me = get_experiment_from_cache(BIG_ME_PATH)
         node_path = "sample/Different_Hosts/IBMTask"
         node_data = me.get_node_data(node_path)
         self.assertEqual(node_data["type"], NODE_TYPE.TASK)

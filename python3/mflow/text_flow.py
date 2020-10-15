@@ -6,7 +6,7 @@ This class converts a MaestroExperiment into chunks of text with coordinates, fo
 import time
 from collections import OrderedDict
 
-from utilities.mflow import get_mflow_config
+from mflow import get_mflow_config
 from home_logger import logger
 from utilities.curses import get_curses_attr_from_status
 from utilities import pretty, is_xy_in_rect

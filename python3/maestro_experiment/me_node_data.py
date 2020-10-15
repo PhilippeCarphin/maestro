@@ -8,7 +8,7 @@ This abstract class is not meant to be instantiated, only inherited.
 from constants import NODE_TYPE, DEFAULT_BATCH_RESOURCES
 from utilities import pretty, get_true_host
 from utilities.parsing import superstrip
-from utilities.maestro.xml import is_container
+from maestro.xml import is_container
 
 
 class ME_NodeData():

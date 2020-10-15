@@ -1,8 +1,8 @@
+
 import unittest
 import sys
-from tests.path import MFLOW_TEST_FOLDER, HEIMDALL_TEST_FOLDER
-from utilities.mflow import get_mflow_config
-
+from tests.path import MFLOW_TEST_FOLDER, HEIMDALL_TEST_FOLDER, MAESTRO_TEST_FOLDER, GENERIC_TEST_FOLDER
+from mflow import get_mflow_config
 
 def filter_tests_with_whitelist(tests, whitelist):
     """
@@ -25,6 +25,7 @@ def filter_tests_with_whitelist(tests, whitelist):
 
 def run_tests(test_mflow=True,
               test_heimdall=True,
+              test_maestro=True,
               verbose=False,
               test_filter=None):
 
@@ -32,19 +33,24 @@ def run_tests(test_mflow=True,
         test_filter = "*"+test_filter+"*"
     else:
         test_filter = "test*.py"
-
+        
+    "load the appropriate subset of test scripts"
+    test_suites=[]
+    path_to_bool={MFLOW_TEST_FOLDER:test_mflow,
+                  HEIMDALL_TEST_FOLDER:test_heimdall,
+                  MAESTRO_TEST_FOLDER:test_maestro,
+                  GENERIC_TEST_FOLDER:True}
+    for path,b in path_to_bool.items():
+        if b:
+            test_loader=unittest.TestLoader()
+            test_suites.append(test_loader.discover(path, pattern=test_filter))
+    
+    "combine suites"
+    combined=unittest.TestSuite(test_suites)
+    
+    "run tests"
     runner = unittest.TextTestRunner(sys.stdout, verbosity=2)
-
-    if test_mflow:
-        print("\nStarting mflow tests.")
-        tests = unittest.TestLoader().discover(MFLOW_TEST_FOLDER, pattern=test_filter)
-        runner.run(tests)
-
-    if test_heimdall:
-        print("\nStarting heimdall tests.")
-        tests = unittest.TestLoader().discover(HEIMDALL_TEST_FOLDER, pattern=test_filter)
-        runner.run(tests)
-
+    runner.run(combined)
 
 def get_test_config(**kwargs):
     "easy way to get a full config, with some changes, for testing"

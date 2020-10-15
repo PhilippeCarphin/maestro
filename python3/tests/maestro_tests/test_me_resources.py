@@ -1,11 +1,11 @@
 
-import unittest
 
-from utilities import get_key_value_from_path, get_key_values_from_path, get_true_host
+import unittest
+from tests.cache import get_experiment_from_cache
+from utilities import get_key_value_from_path, get_key_values_from_path
 from tests.path import RESOURCES_HOME1, RESOURCES_HOME2, TURTLE_ME_PATH
 from tests.cache import STRANGE_RESOURCES_ME
 from constants import DEFAULT_BATCH_RESOURCES
-from maestro_experiment import MaestroExperiment
 
 """
 Tests for finding and parsing resource DEF and XML files.
@@ -32,7 +32,7 @@ class TestMaestroResources(unittest.TestCase):
         self.assertEqual(result["FRONTEND"], expected)
 
     def test_me_get_resource_value(self):
-        me = MaestroExperiment(TURTLE_ME_PATH, user_home=RESOURCES_HOME1)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, user_home=RESOURCES_HOME1)
 
         "ignore default_resources.def because task resource xml exists"
         result = me.get_resource_value_from_key("FRONTEND")
@@ -44,7 +44,7 @@ class TestMaestroResources(unittest.TestCase):
         self.assertEqual(result, expected)
 
         "ignore task resource xml because overrides.def exists"
-        me = MaestroExperiment(TURTLE_ME_PATH, user_home=RESOURCES_HOME2)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, user_home=RESOURCES_HOME2)
         result = me.get_resource_value_from_key("FRONTEND")
         expected = "overrides-home2-frontend"
         self.assertEqual(result, expected)
@@ -58,7 +58,7 @@ class TestMaestroResources(unittest.TestCase):
 
         "empty XML, default resources"
         path = "/home/that/does/not/exist/"
-        me = MaestroExperiment(TURTLE_ME_PATH, user_home=path)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, user_home=path)
         node_path = "turtle/turtleTask2"
         result_node_data = me.get_node_data(node_path)
         "defaults presently found in SeqNode.c around line 680"
@@ -69,7 +69,7 @@ class TestMaestroResources(unittest.TestCase):
             self.assertEqual(result, expected)
 
         "use resources file and xml file to figure out custom value"
-        me = MaestroExperiment(TURTLE_ME_PATH, user_home=RESOURCES_HOME2)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, user_home=RESOURCES_HOME2)
         node_path = "turtle/turtleTask1"
         result_node_data = me.get_node_data(node_path)
         machine = "overrides-home2-default-machine"

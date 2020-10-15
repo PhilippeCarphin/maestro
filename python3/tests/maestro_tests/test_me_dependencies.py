@@ -1,8 +1,7 @@
 import unittest
 
-from maestro_experiment import MaestroExperiment
-from tests.cache import TURTLE_ME
-from tests.path import SUITES_WITH_CODES, TURTLE_ME_PATH
+from tests.cache import get_experiment_from_cache
+from tests.path import SUITES_WITH_CODES
 from utilities.pretty import pretty_kwargs
 from maestro_experiment.me_dependencies import new_dep_data, resolve_dependency_path
 
@@ -31,7 +30,7 @@ class TestMaestroExperimentDependencies(unittest.TestCase):
 
     def test_get_dep_data(self):
         path=SUITES_WITH_CODES+"b007"
-        me = MaestroExperiment(path)
+        me = get_experiment_from_cache(path)
         node_path="module1/task1/task2/task3"
         result = me.get_dependency_data_for_node_path(node_path)
         expected=[new_dep_data(node_path="/module1/task1"),

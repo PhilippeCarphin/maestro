@@ -5,13 +5,13 @@ import time
 import copy
 
 from mflow.text_flow import TextFlow
-from utilities.mflow import pad_text_with_spaces
+from mflow.string import pad_text_with_spaces
 from constants import TMP_FOLDER
 from constants.mflow import TUI_STATE
 from utilities import safe_check_output, safe_check_output_with_status, \
     run_shell_cmd, is_gzipped, safe_write, pretty
 from home_logger import logger
-from utilities.maestro.sequencer import get_sequencer_loop_argument, get_sequencer_command
+from maestro.sequencer import get_sequencer_loop_argument, get_sequencer_command
 
 """
 This class handles all popups.

@@ -1,8 +1,7 @@
 import unittest
 
-from maestro_experiment import MaestroExperiment
+from tests.cache import TURTLE_ME
 from constants import JSON_SCHEMAS, NODE_TYPE
-from tests.path import TURTLE_ME_PATH, BIG_ME_PATH
 from utilities import assert_valid_json, pretty, pretty_kwargs
 from tests.path import NODE_PATHS_G0, NODE_PATHS_G1, NODE_PATHS_COMP_EXP
 from tests.cache import G0_MINI_ME, G1_MINI_ME, BIG_ME
@@ -22,7 +21,7 @@ class TestMaestroExperimentFlowData(unittest.TestCase):
 
     def test_turtle_experiment_flow_data(self):
         node_path = "turtle"
-        me = MaestroExperiment(TURTLE_ME_PATH)
+        me = TURTLE_ME
         result = me.get_flow_data(node_path)
         assert_valid_json(result, JSON_SCHEMAS.FLOW)
 

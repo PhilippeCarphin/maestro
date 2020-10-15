@@ -3,7 +3,6 @@ from tests.path import FILE_INDEX_ME_PATH
 from heimdall.experiment_scanner import ExperimentScanner
 from utilities import pretty_kwargs
 
-
 class TestFileIndex(unittest.TestCase):
 
     def test_file_index(self):

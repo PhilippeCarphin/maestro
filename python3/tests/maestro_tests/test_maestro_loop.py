@@ -1,10 +1,10 @@
 
 import unittest
 
+from tests.cache import get_experiment_from_cache
 from constants import NODE_STATUS
 from tests.path import TURTLE_ME_PATH
-from maestro_experiment import MaestroExperiment
-from utilities.maestro import get_loop_indexes_from_loop_data, get_loop_composite_data_from_xml, get_loop_indexes_from_expression
+from maestro import get_loop_indexes_from_loop_data, get_loop_composite_data_from_xml, get_loop_indexes_from_expression
 from tests.cache import G0_MINI_ME, TURTLE_ME
 
 """
@@ -33,7 +33,7 @@ class TestMaestroLoop(unittest.TestCase):
         self.assertEqual(result, expected)
 
     def test_npt_indexes(self):
-        me = MaestroExperiment(TURTLE_ME_PATH, datestamp=TURTLE_DATESTAMP1)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, datestamp=TURTLE_DATESTAMP1)
 
         node_path = "turtle/TurtlePower/pizza1"
         expected = {"TurtlePower": 0}
@@ -104,7 +104,7 @@ class TestMaestroLoop(unittest.TestCase):
     def test_get_node_status_task_loop_end(self):
         node_path = "turtle/TurtlePower/BossaNova/donatello"
         loop_index_selection = {"TurtlePower": 1, "BossaNova": 3}
-        me = MaestroExperiment(TURTLE_ME_PATH, datestamp=TURTLE_DATESTAMP1)
+        me = get_experiment_from_cache(TURTLE_ME_PATH, datestamp=TURTLE_DATESTAMP1)
         result = me.get_node_status(node_path, loop_index_selection=loop_index_selection)
         self.assertEqual(NODE_STATUS.END, result)
 

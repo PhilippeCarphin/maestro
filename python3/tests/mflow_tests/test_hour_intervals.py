@@ -1,6 +1,6 @@
 import unittest
 
-from utilities.maestro import get_intervals_from_status_path
+from maestro.status import get_intervals_from_status_path
 from tests.path import MOCK_FILES
 
 
