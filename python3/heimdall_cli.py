@@ -24,6 +24,7 @@ Options:
     --op-home=<path>             Path to the home of the operational user. [default: /home/smco500]
     --op-suites-home=<path>      Path to the home of owner of operational maestro suite files. [default: /home/smco502]
     --par-home=<path>            Path to the home of the parallel user. [default: /home/smco501]
+    --results-json=<path>        Write the full scan results JSON to this path. [default: {user_home}/tmp/heimdall-scan-results.json]
     --verbose                    Enable verbose debug logging in the "$HOME/logs/mflow" files.
     --whitelist=<codes>          Comma delimited list of codes like '--whitelist=c001,w001'. Only show these codes.
     
@@ -83,7 +84,8 @@ def scan_cli(args):
                                 operational_suites_home=args["--op-suites-home"],
                                 language=args["--language"],
                                 hub_seconds=hub_seconds,
-                                critical_error_is_exception=False)
+                                critical_error_is_exception=False,
+                                write_results_json_path=args["--results-json"])
 
     try:
         max_repeat = int(args["--max-repeat"])

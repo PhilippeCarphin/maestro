@@ -2,6 +2,7 @@ import os.path
 import re
 import Levenshtein
 import json
+import time
 from collections import OrderedDict
 from datetime import datetime
 
@@ -53,7 +54,10 @@ class ExperimentScanner():
                  language=None,
                  operational_home=None,
                  operational_suites_home=None,
-                 parallel_home=None):
+                 parallel_home=None,
+                 write_results_json_path=""):
+        
+        self.start_time=time.time()
 
         if not path.endswith("/"):
             path += "/"
@@ -102,6 +106,7 @@ class ExperimentScanner():
         Instead of running the qstat shell command, use this output instead.
         Useful for debugging/tests.
         """
+        self.debug_qstat_output_override=debug_qstat_output_override
         if debug_qstat_output_override:
             self.qstat_data = get_qstat_data_from_text(debug_qstat_output_override)
         else:
@@ -111,6 +116,7 @@ class ExperimentScanner():
         Instead of environment CMCCONST value, use this instead.
         Useful for debugging/tests.
         """
+        self.debug_cmcconst_override=debug_cmcconst_override
         if debug_cmcconst_override:
             os.environ["CMCCONST"]=debug_cmcconst_override
         
@@ -177,14 +183,64 @@ class ExperimentScanner():
         self.scan_ssm_uses()
         self.scan_unused_variables()
         self.scan_xmls()
-
+        
         self.sort_messages()
+        self.end_time=time.time()
         
-        self.write_codes_log()
-        
-    def write_codes_log(self):
+        self.write_code_count_log()
+        if write_results_json_path:
+            self.write_results_json(write_results_json_path)
+    
+    def write_results_json(self, write_results_json_path):
         """
-        Write a summary of the scan codes found to the home log.
+        Capture the full results and scan parameters in a JSON, and write to this path.
+        """
+        folder=os.path.dirname(write_results_json_path)
+        if os.path.exists and not os.path.isdir(folder):
+            raise ValueError("JSON results path exists but is not a folder: '%s'"%write_results_json_path)
+            
+        if not os.path.exists(folder):
+            os.makedirs(folder)
+            
+        j=self.get_results_json()
+        text=json.dumps(j,indent=4,sort_keys=True)
+        with open(write_results_json_path,"w") as f:
+            f.write(text)
+        logger.info("Wrote full scan results JSON to file '%s'"%write_results_json_path)
+    
+    def get_results_json(self):
+        """
+        Return a dictionary summarizing the full scan results and scan parameters.
+        """
+                
+        parameters={"path":self.path,
+                    "hub_seconds":self.hub_seconds,
+                    "debug_hub_filecount":self.debug_hub_filecount,
+                    "debug_hub_ignore_age":self.debug_hub_ignore_age,
+                    "debug_cmcconst_override":self.debug_cmcconst_override,
+                    "has_debug_qstat_output_override":bool(self.debug_qstat_output_override),
+                    "has_qstat_data":bool(self.qstat_data),
+                    "language":self.language,
+                    "operational_home":self.operational_home,
+                    "parallel_home":self.parallel_home,
+                    "operational_suites_home":self.operational_suites_home,
+                    "home_root":self.home_root,
+                    "operational_username":self.operational_username,
+                    "context":self.context}
+        seconds=self.end_time-self.start_time
+        j={"messages":self.messages,
+           "codes":sorted(list(self.codes)),
+           "parameters":parameters,
+           "unix_start_time":self.start_time,
+           "unix_end_time":self.end_time,
+           "duration_seconds":seconds,
+           "USER":os.environ.get("USER",""),
+           "TRUE_HOST":os.environ.get("TRUE_HOST","")}
+        return j
+        
+    def write_code_count_log(self):
+        """
+        Write a summary count of the scan codes found to the home log.
         This permits future audits of user homes to understand code frequencies.
         """
         
@@ -2188,7 +2244,7 @@ class ExperimentScanner():
                 "do not print levels lower priority than the desired level"
                 if levels.index(code[0]) > levels.index(level):
                     continue
-
+                
                 code_count[code] += 1
                 if max_repeat and code_count[code] > max_repeat:
                     "already shown enough of this code, do not show"
