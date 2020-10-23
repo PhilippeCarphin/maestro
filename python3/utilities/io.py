@@ -1,6 +1,7 @@
 
 import gzip
 import os
+import json
 
 from constants import ENCODINGS
 from utilities.colors import print_green
@@ -19,6 +20,13 @@ def recursive_replace_in_files(before, after, folder):
                 f.write(data)
         except (UnicodeDecodeError, FileNotFoundError, OSError):
             pass
+
+def get_json_from_path(path):
+    try:
+        with open(path, "r") as f:
+            return json.loads(f.read())
+    except (json.decoder.JSONDecodeError, FileNotFoundError):
+        return None
 
 def safe_get_lines(path):
     """

@@ -10,6 +10,28 @@ def run_shell_cmd(cmd):
     """
     subprocess.Popen(shlex.split(cmd), stdout=subprocess.PIPE)
 
+def get_latest_hash_from_repo(path):
+    """
+    Returns the latest checked out commit hash from a repo.
+    """
+    commits=get_latest_hashes_from_repo(path,number=1)
+    if commits:
+        return commits[0]
+    return ""
+    
+def get_latest_hashes_from_repo(path,number=1):
+    """
+    Returns a list of commit hash strings from the history,
+    starting with the most recent checked out hash.
+    """
+    cmd="""cd {path} ; git log -n{number} --format=format:"%H" """.format(path=path,
+                                                                          number=number)
+    output,status=safe_check_output_with_status(cmd)
+    if status==0:
+        return output.strip().split("\n")
+    else:
+        return []
+
 def get_all_repo_files(path_to_repo):
     """
     Returns a list of the full path to all files in this git repo.

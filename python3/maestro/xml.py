@@ -18,6 +18,21 @@ from constants import NODE_TYPES, CONTAINER_TAGS
 "A regex where group(1) is the contents of the 'catchup' attribute."
 CATCHUP_XML_REGEX = re.compile(r"""[ ]+catchup[ ]*=[ ]*["']([^'"]*)["']""")
 
+def get_experiment_paths_from_suites_xml(path):
+    """
+    Returns a list of experiment paths found in all the <Exp> elements 
+    in this suites XML path.
+    """
+    if not xml_cache.is_valid_xml(path):
+        return []
+    
+    paths=[]
+    root=xml_cache.get(path)
+    for element in root.iter():
+        if element.tag.lower() == "exp":
+            paths.append(element.text.strip())
+            
+    return paths
 
 def has_empty_inner_modules(element):
     """

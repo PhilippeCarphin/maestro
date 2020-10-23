@@ -3,28 +3,28 @@ import re
 import Levenshtein
 import json
 import time
-from collections import OrderedDict
 from datetime import datetime
 
 from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS, EXPERIMENT_LOG_FOLDERS, REQUIRED_LOG_FOLDERS, OPERATIONAL_USERNAME, OLD_SEQ_VARIABLES, TASK_MAESTRO_BINS
 from utilities.math import clamp
 
 from maestro_experiment import MaestroExperiment
-from heimdall.file_cache import file_cache
+from heimdall.file_cache import FileCache
 from heimdall.message_manager import hmm
 from home_logger import logger
 from maestro import is_empty_module, get_weird_assignments_from_config_text, get_commented_pseudo_xml_lines, get_loop_indexes_from_expression, NodeLogParser, get_node_folder_from_node_path
 from maestro.critical_errors import find_critical_errors
-from heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count, get_ssm_domains_from_string, get_etiket_variables_used_from_text, get_maestro_executables_from_bash_text
+from heimdall.parsing import get_nodelogger_signals_from_task_path, get_levenshtein_pairs, get_resource_limits_from_batch_element, get_constant_definition_count, get_ssm_domains_from_string, get_etiket_variables_used_from_text, get_maestro_executables_from_bash_text, strip_batch_variable, replace_bash_variables
 from heimdall.context import guess_scanner_context_from_path
 from heimdall.path import get_ancestor_folders, is_editor_swapfile, is_parallel_path, DECENT_LINUX_PATH_REGEX_WITH_START_END, DECENT_LINUX_PATH_REGEX, DECENT_LINUX_PATH_REGEX_WITH_DOLLAR, get_latest_ssm_path_from_path, has_active_hcron_files
 from heimdall.git import scan_git_authors
+from heimdall.messages import print_scan_message
 from heimdall.uspmadt import get_uspmadt_lines
 from utilities.parsing import BASH_VARIABLE_DECLARE_REGEX
 from utilities import print_red, print_orange, print_yellow, print_green, print_blue, superstrip
 from utilities import xml_cache, get_dictionary_list_from_csv, guess_user_home_from_path, get_links_source_and_target, iterative_deepening_search, is_probably_compiled_executable, is_executable
 from utilities.qstat import get_qstat_data_from_text, get_qstat_data, get_resource_limits_from_qstat_data
-from utilities.shell import safe_check_output_with_status, get_git_remotes, get_all_repo_files
+from utilities.shell import safe_check_output_with_status, get_git_remotes, get_all_repo_files, get_latest_hash_from_repo
 from heimdall.language import get_language_from_environment
 
 """
@@ -57,6 +57,8 @@ class ExperimentScanner():
                  parallel_home=None,
                  write_results_json_path=""):
         
+        self.file_cache=FileCache()
+            
         self.start_time=time.time()
 
         if not path.endswith("/"):
@@ -125,11 +127,17 @@ class ExperimentScanner():
         Useful for debugging/tests.
         """
         self.operational_username=debug_op_username_override if debug_op_username_override else OPERATIONAL_USERNAME
-                
+        
+        "guess context if necessary"        
+        if not context:
+            context = guess_scanner_context_from_path(self.path)
+        self.context = context
+        
         critical_errors = find_critical_errors(path)
         for code, kwargs in critical_errors.items():
             self.add_message(code, **kwargs)
         if critical_errors:
+            self.set_results_json()
             if critical_error_is_exception:
                 raise ValueError("Experiment path:\n'%s'\nhas critical errors:\n%s" % (path, str(critical_errors)))
             return
@@ -137,10 +145,6 @@ class ExperimentScanner():
         self.maestro_experiment = MaestroExperiment(path)
 
         self.index_experiment_files()
-
-        if not context:
-            context = guess_scanner_context_from_path(self.path)
-        self.context = context
 
         self.scan_all_file_content()
         self.scan_all_task_content()
@@ -185,7 +189,7 @@ class ExperimentScanner():
         self.scan_xmls()
         
         self.sort_messages()
-        self.end_time=time.time()
+        self.set_results_json()
         
         self.write_code_count_log()
         if write_results_json_path:
@@ -196,23 +200,21 @@ class ExperimentScanner():
         Capture the full results and scan parameters in a JSON, and write to this path.
         """
         folder=os.path.dirname(write_results_json_path)
-        if os.path.exists and not os.path.isdir(folder):
-            raise ValueError("JSON results path exists but is not a folder: '%s'"%write_results_json_path)
+        if os.path.exists(folder) and not os.path.isdir(folder):
+            raise ValueError("JSON results path exists but is not a folder: '%s'"%folder)
             
         if not os.path.exists(folder):
             os.makedirs(folder)
             
-        j=self.get_results_json()
-        text=json.dumps(j,indent=4,sort_keys=True)
+        text=json.dumps(self.results_json,indent=4,sort_keys=True)
         with open(write_results_json_path,"w") as f:
             f.write(text)
         logger.info("Wrote full scan results JSON to file '%s'"%write_results_json_path)
     
-    def get_results_json(self):
-        """
-        Return a dictionary summarizing the full scan results and scan parameters.
-        """
+    def set_results_json(self):
                 
+        self.end_time=time.time()
+        
         parameters={"path":self.path,
                     "hub_seconds":self.hub_seconds,
                     "debug_hub_filecount":self.debug_hub_filecount,
@@ -227,16 +229,17 @@ class ExperimentScanner():
                     "home_root":self.home_root,
                     "operational_username":self.operational_username,
                     "context":self.context}
+        
         seconds=self.end_time-self.start_time
-        j={"messages":self.messages,
-           "codes":sorted(list(self.codes)),
-           "parameters":parameters,
-           "unix_start_time":self.start_time,
-           "unix_end_time":self.end_time,
-           "duration_seconds":seconds,
-           "USER":os.environ.get("USER",""),
-           "TRUE_HOST":os.environ.get("TRUE_HOST","")}
-        return j
+        self.results_json={"messages":self.messages,
+                           "codes":sorted(list(self.codes)),
+                           "parameters":parameters,
+                           "unix_start_time":self.start_time,
+                           "unix_end_time":self.end_time,
+                           "duration_seconds":seconds,
+                           "USER":os.environ.get("USER",""),
+                           "TRUE_HOST":os.environ.get("TRUE_HOST",""),
+                           "commit_hash":get_latest_hash_from_repo(self.path)}
         
     def write_code_count_log(self):
         """
@@ -382,7 +385,7 @@ class ExperimentScanner():
                 break
             
             for b in unused[:]:
-                text=file_cache.open_without_comments(path)
+                text=self.file_cache.open_without_comments(path)
                 if b in text:
                     unused.remove(b)
         
@@ -474,7 +477,7 @@ class ExperimentScanner():
         "run shell script syntax checks like 'bash -n' and 'ksh -n' on all tsk and cfg files."
         
         for path in self.task_files+self.config_files:
-            content=file_cache.open(path)
+            content=self.file_cache.open(path)
             
             if "\n" not in content:
                 continue
@@ -521,7 +524,7 @@ class ExperimentScanner():
             hcron_folder=self.home_root+".hcron"
             
         suite_name1=self.maestro_experiment.name.split("/")[-1]
-        suite_name2=file_cache.realpath(self.path).split("/")[-1]
+        suite_name2=self.file_cache.realpath(self.path).split("/")[-1]
         
         for suite_name in (suite_name1,suite_name2):
             if has_active_hcron_files(hcron_folder,suite_name):
@@ -539,7 +542,7 @@ class ExperimentScanner():
         variable_to_paths={}
         
         for path in self.config_files:
-            values=file_cache.get_key_values_from_path(path)
+            values=self.file_cache.get_key_values_from_path(path)
             defines.update(values.keys())
             for variable in values:
                 if variable not in variable_to_paths:
@@ -550,7 +553,7 @@ class ExperimentScanner():
         unused=defines
         paths=self.config_files+self.task_files+self.resource_files
         for path in paths:
-            variables=file_cache.get_bash_variables_used_in_path(path)
+            variables=self.file_cache.get_bash_variables_used_in_path(path)
             unused=unused.difference(set(variables))
             
         "key is path to config file, value is list of variables it defines but which are unused"
@@ -560,7 +563,7 @@ class ExperimentScanner():
                 if path not in path_to_unused:
                     path_to_unused[path]=[]
                 path_to_unused[path].append(variable)
-        
+                
         for path,variables in  path_to_unused.items():
             self.add_message("b024",
                              config=path,
@@ -575,13 +578,13 @@ class ExperimentScanner():
         "find etikets variable names used anywhere"
         etikets_used=[]
         for path in paths:
-            text=file_cache.open_without_comments(path)
+            text=self.file_cache.open_without_comments(path)
             etikets_used+=get_etiket_variables_used_from_text(text,require_etiket_programs=True)
         etikets_used=set(etikets_used)
         
         "find etikets defined outside etikets.cfg"
         for path in paths:
-            values=file_cache.get_key_values_from_path(path)
+            values=self.file_cache.get_key_values_from_path(path)
             bad_etikets=set(values.keys()).intersection(etikets_used)
             bad_etikets=sorted(list(bad_etikets))
             if bad_etikets:
@@ -611,7 +614,7 @@ class ExperimentScanner():
         path_to_ugp={}
         for folder in EXPERIMENT_LOG_FOLDERS:
             path=self.path+folder
-            ugp=file_cache.get_ugp_string(path)
+            ugp=self.file_cache.get_ugp_string(path)
             path_to_ugp[path]=ugp
             
             if not ugp:
@@ -641,7 +644,7 @@ class ExperimentScanner():
         "experiment files with inconsistent user/group/permissions"
         ugp_to_paths={}
         for path in self.files:
-            ugp=file_cache.get_ugp_string(path)
+            ugp=self.file_cache.get_ugp_string(path)
             
             if not ugp:
                 continue
@@ -684,12 +687,12 @@ class ExperimentScanner():
             if path==self.path+"resources/catchup.xml":
                 continue
             
-            if file_cache.can_user_write_to_path(self.operational_username,path):
+            if self.file_cache.can_user_write_to_path(self.operational_username,path):
                 self.add_message("w023",
                                  user=self.operational_username,
                                  path=path)
             
-            owner,_,_,_=file_cache.get_user_group_permissions(path)
+            owner,_,_,_=self.file_cache.get_user_group_permissions(path)
             expected="smco502"
             if expected != owner:
                 self.add_message("w025",context=self.context,path=path,owner=owner,expected=expected)
@@ -706,25 +709,25 @@ class ExperimentScanner():
         link_basenames=target_basenames+source_basenames
         
         r=re.compile("[a-z][0-9]")
-        for folder in file_cache.listdir(self.path):
+        for folder in self.file_cache.listdir(self.path):
             if r.match(folder) and folder not in link_basenames:
                 unclear=self.path+folder
                 self.add_message("b013", unclear=unclear)
                 
     def scan_gitignore(self):
         
-        has_repo=file_cache.isdir(self.path+".git")
+        has_repo=self.file_cache.isdir(self.path+".git")
         if not has_repo:
             return
         
         gitignore_path=self.path+".gitignore"
 
         "no gitignore"
-        if not file_cache.isfile(gitignore_path):
+        if not self.file_cache.isfile(gitignore_path):
             self.add_message("w020", gitignore_path=gitignore_path)
             return
         
-        content=file_cache.open(gitignore_path)
+        content=self.file_cache.open(gitignore_path)
         lines=[line.strip() for line in content.split("\n") if line.strip()]            
         must_have=list(EXPERIMENT_LOG_FOLDERS)
         must_not_have=["hub","EntryModule","modules","flow.xml"]
@@ -826,14 +829,14 @@ class ExperimentScanner():
             explored.add(folder)
 
             extra = []
-            for basename in file_cache.listdir(folder):
+            for basename in self.file_cache.listdir(folder):
 
                 path = folder+"/"+basename
                 
                 if basename in whitelist or path in whitelist:
                     continue
 
-                if file_cache.isfile(path) and path not in maestro_files:
+                if self.file_cache.isfile(path) and path not in maestro_files:
                     extra.append(path)
 
             if extra:
@@ -850,10 +853,10 @@ class ExperimentScanner():
             if "/modules/" not in path:
                 continue
             
-            if file_cache.islink(path):
+            if self.file_cache.islink(path):
                 continue
             
-            md5=file_cache.md5(path)
+            md5=self.file_cache.md5(path)
             
             "empty file"
             if not md5:
@@ -900,7 +903,7 @@ class ExperimentScanner():
             filecount[folder]+=1        
         
         for folder,count in filecount.items():
-            paths=file_cache.listdir(folder)
+            paths=self.file_cache.listdir(folder)
             
             if len(paths)<many_files_threshold:
                 continue
@@ -916,7 +919,7 @@ class ExperimentScanner():
             for index in range(0,len(paths),step):
                 path=paths[index]
                 try:
-                    mtime=file_cache.get_mtime_from_path(path)
+                    mtime=self.file_cache.get_mtime_from_path(path)
                 except:
                     "in case the file has been deleted/moved since our scan"
                     continue
@@ -935,7 +938,7 @@ class ExperimentScanner():
         
     def scan_hub(self):
 
-        hub_items = [self.path+"hub/"+filename for filename in file_cache.listdir(self.path+"hub")]
+        hub_items = [self.path+"hub/"+filename for filename in self.file_cache.listdir(self.path+"hub")]
 
         "items in hub that are not links to folders"
         if self.context in (SCANNER_CONTEXT.OPERATIONAL,
@@ -943,7 +946,7 @@ class ExperimentScanner():
                             SCANNER_CONTEXT.PARALLEL):
             bad = []
             for path in hub_items:
-                if not file_cache.islink(path):
+                if not self.file_cache.islink(path):
                     bad.append(path)
             if bad:
                 msg = "\n".join(bad)
@@ -954,7 +957,7 @@ class ExperimentScanner():
         "deprecated products_dbase link"
         for path in hub_items:
             folder=path+"/products_dbase"
-            if file_cache.exists(path) and file_cache.islink(path):
+            if self.file_cache.exists(path) and self.file_cache.islink(path):
                 self.add_message("b029",bad=folder)
         
         "bad archive and protocol files"
@@ -965,7 +968,7 @@ class ExperimentScanner():
                 self.add_message("b012", bad=path)
             
             if basename.startswith(".protocole_") or basename.startswith(".archive_monitor_"):
-                if not file_cache.islink(path):
+                if not self.file_cache.islink(path):
                     self.add_message("w017", bad=path)
         
         """
@@ -984,7 +987,7 @@ class ExperimentScanner():
         for item1, item2 in HUB_PAIRS:
             path1 = hub+item1
             path2 = hub+item2
-            if file_cache.exists(path1) and file_cache.exists(path2):
+            if self.file_cache.exists(path1) and self.file_cache.exists(path2):
                 pairs.append([path1, path2])
 
         for item1, item2 in pairs:
@@ -1010,7 +1013,7 @@ class ExperimentScanner():
                "flow.xml"]
         paths = [self.path+a for a in old]
         for path in paths:
-            if not file_cache.exists(path):
+            if not self.file_cache.exists(path):
                 continue
             
             self.add_message("b005", path=path)
@@ -1030,11 +1033,11 @@ class ExperimentScanner():
         if self.context not in context_to_path:
             return
 
-        realpath = file_cache.realpath(self.path)
+        realpath = self.file_cache.realpath(self.path)
 
         for context, xml_path in context_to_path.items():
 
-            root = file_cache.etree_parse(xml_path)
+            root = self.file_cache.etree_parse(xml_path)
 
             if root is None:
                 """
@@ -1043,7 +1046,7 @@ class ExperimentScanner():
                 """
                 return
 
-            experiments = [file_cache.realpath(e.text) for e in root.xpath("//Exp")]
+            experiments = [self.file_cache.realpath(e.text) for e in root.xpath("//Exp")]
             should_be_in_xml = self.context == context
 
             if should_be_in_xml and realpath not in experiments:
@@ -1139,12 +1142,12 @@ class ExperimentScanner():
     def scan_config_file(self, path):
         "scan the content of config files (see scan_file_content for CSV content scan)"
         
-        key_values = file_cache.get_key_values_from_path(path)
+        key_values = self.file_cache.get_key_values_from_path(path)
         expected_config = EXPECTED_CONFIG_STATES.get(self.context, {})
 
         "find hard coded paths in pseudo-xml cfg variables"
         code = "e010" if self.is_context_operational() else "w006"
-        content = file_cache.open(path)
+        content = self.file_cache.open(path)
         weird_data = get_weird_assignments_from_config_text(content)
         for section, d in weird_data.items():
             for key, value in d.items():
@@ -1248,7 +1251,7 @@ class ExperimentScanner():
         for path, declares in me.path_to_resource_declares.items():
             if not path.endswith("resources.def"):
                 continue
-            if not file_cache.exists(path):
+            if not self.file_cache.exists(path):
                 continue
             result=set(declares.keys())
             missing=required.difference(result)
@@ -1260,7 +1263,7 @@ class ExperimentScanner():
                                  missing=missing)
     
     def scan_resource_definition(self,path):
-        content=file_cache.open_without_comments(path)
+        content=self.file_cache.open_without_comments(path)
         
         "find duplicate declares"
         lines=content.split("\n")
@@ -1279,7 +1282,7 @@ class ExperimentScanner():
         
         "suite paths without datestamps"
         if self.is_context_monitored():
-            variables=file_cache.get_key_values_from_path(path)
+            variables=self.file_cache.get_key_values_from_path(path)
             not_datestamped=[]
             for name,value in variables.items():
                 
@@ -1287,7 +1290,7 @@ class ExperimentScanner():
                     continue
                 
                 entry_module=value+"/EntryModule"
-                is_experiment=file_cache.exists(entry_module)
+                is_experiment=self.file_cache.exists(entry_module)
                 if not is_experiment:
                     continue
                 
@@ -1338,7 +1341,7 @@ class ExperimentScanner():
         attribute_regex = re.compile(r"""([a-zA-Z_]+)[ ]*=[ ]*["']([^'"]+)["']""")
         time_dependent_resources=[]
         for path in self.resource_files:
-            content = file_cache.open(path)
+            content = self.file_cache.open(path)
             for match in attribute_regex.finditer(content):
                 
                 attribute_name = match.group(1)
@@ -1369,7 +1372,7 @@ class ExperimentScanner():
                     
         "DEPENDS_ON element"
         for path in self.resource_files:
-            etree = file_cache.etree_parse(path)
+            etree = self.file_cache.etree_parse(path)
             elements = etree.xpath("//DEPENDS_ON")
             for d_element in elements:
 
@@ -1377,7 +1380,7 @@ class ExperimentScanner():
                 exp = d_element.get("exp")
                 if exp and exp.startswith("/"):
 
-                    if file_cache.isdir(exp):
+                    if self.file_cache.isdir(exp):
                         code = "b001"
                     else:
                         code = "e011"
@@ -1400,7 +1403,7 @@ class ExperimentScanner():
                                      "FRONTEND_HPNLS_Q",
                                      "FRONTEND_XFER_Q"]
         for path in self.resource_files:
-            etree = file_cache.etree_parse(path)        
+            etree = self.file_cache.etree_parse(path)        
             batches = etree.xpath("//BATCH")
             for batch in batches:
                 for attribute_name,variables in recommended_variables.items():
@@ -1420,8 +1423,8 @@ class ExperimentScanner():
         if not self.operational_suites_home:
             return
         
-        realpath=file_cache.realpath(self.path)
-        suites_realpath=file_cache.realpath(self.operational_suites_home)+"/.suites/"
+        realpath=self.file_cache.realpath(self.path)
+        suites_realpath=self.file_cache.realpath(self.operational_suites_home)+"/.suites/"
         
         if not realpath or not suites_realpath:
             return
@@ -1429,7 +1432,7 @@ class ExperimentScanner():
         if realpath.startswith(suites_realpath):
             no_slash=realpath[:-1] if realpath.endswith("/") else realpath
             expected=self.operational_home+"/.suites/"+os.path.basename(no_slash)
-            if not file_cache.islink(expected):
+            if not self.file_cache.islink(expected):
                 self.add_message("w029",
                                  target=self.path,
                                  source=expected)
@@ -1442,7 +1445,7 @@ class ExperimentScanner():
         "find core maestro files with a realpath outside the user home containing this project."
         bad_links = []
         for path in self.files:
-            realpath = file_cache.realpath(path)
+            realpath = self.file_cache.realpath(path)
             if not realpath.startswith(self.home_root):
                 bad_links.append(path)
         if bad_links:
@@ -1460,7 +1463,7 @@ class ExperimentScanner():
                 if path in bad_links:
                     continue
                 
-                link_chain=file_cache.get_link_chain_from_link(path)
+                link_chain=self.file_cache.get_link_chain_from_link(path)
                 for link_path in link_chain:
                     if link_path.startswith(self.home_root) or self.home_root.startswith(link_path):
                         continue
@@ -1482,7 +1485,7 @@ class ExperimentScanner():
             
     def scan_file_content(self,path):
 
-        content_without_comments = file_cache.open_without_comments(path)
+        content_without_comments = self.file_cache.open_without_comments(path)
         
         "deprecated SEQ_ variables"
         for old,new in OLD_SEQ_VARIABLES.items():
@@ -1564,7 +1567,7 @@ class ExperimentScanner():
     
     def scan_ssm_uses_in_file(self,path):
         
-        content_without_comments = file_cache.open_without_comments(path)
+        content_without_comments = self.file_cache.open_without_comments(path)
         lines=content_without_comments.split("\n")
         domains=[]
         for line in lines:
@@ -1578,7 +1581,7 @@ class ExperimentScanner():
                 continue
             if "$" in domain:
                 continue
-            if file_cache.exists(domain):
+            if self.file_cache.exists(domain):
                 latest=get_latest_ssm_path_from_path(domain)
                 if latest != domain:
                     self.add_message("i008",path=path,old=domain,new=latest)
@@ -1606,8 +1609,8 @@ class ExperimentScanner():
             "files of unknown type are not content scanned"
             return
 
-        content_without_comments = file_cache.open_without_comments(path)
-        content_with_comments = file_cache.open(path)
+        content_without_comments = self.file_cache.open_without_comments(path)
+        content_with_comments = self.file_cache.open(path)
         for check_data in self.filetype_to_check_datas[filetype]:
 
             content = content_without_comments if check_data["strip_comments"] else content_with_comments
@@ -1643,7 +1646,7 @@ class ExperimentScanner():
         cmcconst=os.path.realpath(cmcconst)
         
         for path in self.declared_files:
-            realpath=file_cache.realpath(path)
+            realpath=self.file_cache.realpath(path)
             if realpath.startswith(cmcconst):
                 self.add_message("w021",
                                       path=path,
@@ -1658,7 +1661,7 @@ class ExperimentScanner():
             resource_path = node_data["resource_path"]
             task_path = node_data["task_path"]
 
-            if file_cache.exists(resource_path):
+            if self.file_cache.exists(resource_path):
                 continue
 
             if node_type == NODE_TYPE.TASK:
@@ -1702,7 +1705,7 @@ class ExperimentScanner():
                              signals=str(NODELOGGER_SIGNALS))
         
         "maestro executables in task files without $SEQ_BIN prefix"
-        content=file_cache.open_without_comments(task_path)
+        content=self.file_cache.open_without_comments(task_path)
         executables=get_maestro_executables_from_bash_text(content)
         prefix1="SEQ_BIN"
         prefix2="MAESTRO_BIN"
@@ -1728,7 +1731,7 @@ class ExperimentScanner():
             self.scan_container_xml_file(path)
     
     def scan_container_xml_file(self,path):
-        root=file_cache.etree_parse(path)
+        root=self.file_cache.etree_parse(path)
         
         "lxml is silly and prints a warning to stdout unless the check is done this way"
         if not (root is not None):
@@ -1862,7 +1865,7 @@ class ExperimentScanner():
     def scan_required_folders(self):
         missing = []
         for folder in REQUIRED_LOG_FOLDERS:
-            if not file_cache.isdir(self.path+folder):
+            if not self.file_cache.isdir(self.path+folder):
                 missing.append(folder)
         if missing:
             folders_msg = ", ".join(missing)
@@ -1873,12 +1876,12 @@ class ExperimentScanner():
         value2=me.get_resource_value_from_key("SEQ_AVERAGE_WINDOW")
         is_stats_required=value1 or value2
         folder=self.path+"stats"
-        if is_stats_required and not file_cache.isdir(folder):
+        if is_stats_required and not self.file_cache.isdir(folder):
             self.add_message("e022", required=folder)
 
     def scan_broken_symlinks(self):
         for path in self.files:
-            if file_cache.is_broken_symlink(path):
+            if self.file_cache.is_broken_symlink(path):
                 self.add_message("e004",
                                  link=path)
 
@@ -1960,7 +1963,7 @@ class ExperimentScanner():
         url_regex = re.compile(r"https?:\/\/(www\.)?[-a-zA-Z0-9@:%._\+~#=]{1,256}\.[a-zA-Z0-9()]{1,6}\b([-a-zA-Z0-9()@:%_\+.~#?&//=]*)")
 
         "multiple support info elements in the same parent element"
-        root = file_cache.etree_parse(xml_path)
+        root = self.file_cache.etree_parse(xml_path)
         if root is not None:
             support_infos = root.xpath("//SupportInfo")
             parents=[e.getparent() for e in support_infos]
@@ -2013,7 +2016,7 @@ class ExperimentScanner():
         """
         Look at a bash-like file (tsk, cfg) for variable definition issues.
         """
-        content_without_comments = file_cache.open_without_comments(path)
+        content_without_comments = self.file_cache.open_without_comments(path)
         constants=get_constant_definition_count(content_without_comments)
         for variable,count in constants.items():
             if count>1:
@@ -2022,12 +2025,12 @@ class ExperimentScanner():
     def scan_xmls(self):
         code = "e002"
         for path in self.xml_files:
-            if file_cache.etree_parse(path) is None:
+            if self.file_cache.etree_parse(path) is None:
                 self.add_message(code, xml=path)
 
         deprecated_attribute_xmls = []
         for path in self.flow_files:
-            root = file_cache.etree_parse(path)
+            root = self.file_cache.etree_parse(path)
             if root is None:
                 continue
             elements = root.xpath("//SUBMITS[@type]")
@@ -2055,12 +2058,12 @@ class ExperimentScanner():
         mpath = self.path+"modules/"
                 
         "full path to all folders in the 'modules' folder"
-        self.module_folders=[f for f in file_cache.listdir(mpath) if file_cache.isdir(f)]
+        self.module_folders=[f for f in self.file_cache.listdir(mpath) if self.file_cache.isdir(f)]
 
         "flow.xml files in modules folder"
         for folder in self.module_folders:
             flow = mpath+"flow.xml"
-            if file_cache.isfile(flow):
+            if self.file_cache.isfile(flow):
                 paths.add(flow)
                 flow_files.add(flow)
                 declared_files.add(flow)        
@@ -2074,7 +2077,7 @@ class ExperimentScanner():
                 folder = os.path.dirname(path)
                 folders.add(folder)
 
-                if not file_cache.isfile(path):
+                if not self.file_cache.isfile(path):
                     continue
                 paths.add(path)
                 declared_files.add(path)
@@ -2089,11 +2092,11 @@ class ExperimentScanner():
 
         "find maestro files (including broken symlinks) not in flow.xml, but in the same folders"
         for folder in folders:
-            if not file_cache.isdir(folder):
+            if not self.file_cache.isdir(folder):
                 continue
-            for filename in file_cache.listdir(folder):
+            for filename in self.file_cache.listdir(folder):
                 path = folder+"/"+filename
-                if file_cache.isfile(path) or file_cache.is_broken_symlink(path):
+                if self.file_cache.isfile(path) or self.file_cache.is_broken_symlink(path):
                     paths.add(path)
 
                     "also add resource XMLs that were not discovered by using the flow"
@@ -2109,16 +2112,16 @@ class ExperimentScanner():
         module_folder=self.path+"modules/"
         def is_readme(basename):
             return basename.lower().startswith("readme")
-        for subfolder in file_cache.listdir(module_folder):
+        for subfolder in self.file_cache.listdir(module_folder):
             path=module_folder+subfolder+"/internal.var"
-            if file_cache.exists(path):
+            if self.file_cache.exists(path):
                 internal_var_files.append(path)
             
-            for basename in file_cache.listdir(module_folder+subfolder):
+            for basename in self.file_cache.listdir(module_folder+subfolder):
                 path=module_folder+subfolder+"/"+basename
-                if is_readme(basename) and file_cache.isfile(path):                    
+                if is_readme(basename) and self.file_cache.isfile(path):                    
                     readme_files.append(path)
-        for basename in file_cache.listdir(self.path):
+        for basename in self.file_cache.listdir(self.path):
             if is_readme(basename):
                 readme_files.append(self.path+basename)
                 
@@ -2129,7 +2132,7 @@ class ExperimentScanner():
         container_xml_files = []
         links = []
         for path in paths:
-            if file_cache.islink(path):
+            if self.file_cache.islink(path):
                 links.append(path)
             
             if path.endswith(".tsk"):
@@ -2218,11 +2221,6 @@ class ExperimentScanner():
                      level="b",
                      whitelist=None,
                      blacklist=None):
-        char_color_functions = OrderedDict([("c", print_red),
-                                            ("e", print_orange),
-                                            ("w", print_yellow),
-                                            ("i", print_green),
-                                            ("b", print_blue)])
 
         levels = "cewib"
         if level not in levels:
@@ -2234,7 +2232,7 @@ class ExperimentScanner():
         "key is first char of a code, value is how many we didn't show"
         hidden_code_counts_by_char = {c: 0 for c in levels}
 
-        for c, f in char_color_functions.items():
+        for c in levels:
             for message in self.messages:
                 code = message["code"]
 
@@ -2258,9 +2256,8 @@ class ExperimentScanner():
                 if blacklist and code in blacklist:
                     hidden_code_counts_by_char[code[0]] += 1
                     continue
-
-                f(code+": "+message["label"])
-                print(message["description"])
+                
+                print_scan_message(message)
 
         if max(hidden_code_counts_by_char.values()):
             msg = "\nSkipped showing %s codes because of repeat, whitelist, or blacklist: " % sum(hidden_code_counts_by_char.values())
@@ -2272,39 +2269,5 @@ class ExperimentScanner():
 
         print("\nHeimdall found %s items to report for maestro suite:\n    %s" % (len(self.messages), self.path))
 
-def strip_batch_variable(variable):
-    """
-    Given:
-        $ABC
-        ${ABC}
-        XYZ
-        $ABC$XYZ
-    returns (stripped, is_one_variable):
-        ABC, True
-        ABC, True
-        XYZ, False
-        $ABC$XYZ, False
-    """
-    if not variable:
-        return "",False
-    
-    is_one=False
-    if variable.startswith("$") and variable.count("$")==1:
-        is_one=True
-        variable=superstrip(variable,"${}")
-    return variable,is_one
 
-BASH_VARIABLE_CURLY_REGEX=re.compile("\\${[\\w]+}")
-def replace_bash_variables(text):
-    """
-    Some source paths in CFG files may be complex.
-    Given:
-        folder${XYZ}1/file1${ABC}.sh
-    basename is:
-        foldera1/file1a.sh
-    which is useful for non-standard character verification.
-    """
-    
-    return BASH_VARIABLE_CURLY_REGEX.sub("a",text)
-                
                 

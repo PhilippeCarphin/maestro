@@ -5,8 +5,8 @@ from utilities import pretty
 from maestro.xml import get_combined_flow_from_text_list, find_all_flow_xml_for_experiment, \
     get_submits_from_flow_element, get_flow_children_from_flow_element, get_paths_from_element, \
     get_combined_flow_for_experiment_path, get_flow_branch_from_flow_element, get_node_path_from_flow_element, get_combined_flow_from_paths, \
-    has_empty_inner_modules, get_empty_inner_modules, is_empty_module, element_has_node_children, replace_module_name
-from tests.path import BIG_ME_PATH
+    has_empty_inner_modules, get_empty_inner_modules, is_empty_module, element_has_node_children, replace_module_name, get_experiment_paths_from_suites_xml
+from tests.path import BIG_ME_PATH, MINI_SUITES_XML_PATH
 
 XML1 = """
 <MODULE name="module1">
@@ -35,7 +35,14 @@ class TestMaestroXML(unittest.TestCase):
     @classmethod
     def setUpClass(cls):
         cls.maxDiff = 5000
-
+        
+    def test_get_experiment_paths_from_suites_xml(self):
+        
+        result=get_experiment_paths_from_suites_xml(MINI_SUITES_XML_PATH)
+        expected=["/home/smco500/maestro_suites/default",
+                  "/home/smco500/maestro_suites/gdps_20191231/g3"]
+        self.assertEqual(result,expected)
+        
     def test_switch_children(self):
         xml1 = """
 <MODULE name="module1">
