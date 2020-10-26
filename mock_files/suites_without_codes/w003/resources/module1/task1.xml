@@ -1,0 +1,5 @@
+<NODE_RESOURCES>
+    <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="4G" wallclock="60" catchup="60" cpu="2" />
+
+    <DEPENDS_ON dep_name="/module1/task2" index="loop1=$((abc))" local_index="loop2=$((abc))" status="end" type="node"/>
+</NODE_RESOURCES>

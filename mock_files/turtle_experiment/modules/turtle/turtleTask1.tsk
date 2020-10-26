@@ -1,0 +1,5 @@
+nodelogger -n ${SEQ_NODE} ${SEQ_LOOP_ARGS} -s info -m "turtleTask1 var='${SEQ_EXP_HOME}' CMCGRIDP='${CMCGRIDP}'"
+
+python3 ${SEQ_EXP_HOME}/turtle_crawl.py
+
+echo $SUPER

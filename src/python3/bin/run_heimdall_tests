@@ -1,9 +1,0 @@
-#!/bin/bash
-
-HEIMDALL_ROOT=$(dirname $(dirname $(realpath $0)))
-
-$HEIMDALL_ROOT/bin/assert_python3_is_setup || exit 1
-
-export MAESTRO_PYTHON3_LOGGING_CONFIG=test
-
-$HEIMDALL_ROOT/venv/bin/python3 $HEIMDALL_ROOT/src/run_tests.py --heimdall $@

@@ -1,0 +1,10 @@
+TIMESTAMP=20200828.20:30:49:SEQNODE=/module1/task1:MSGTYPE=begin:SEQLOOP=:SEQMSG=host=cs3be-010p26 job_ID=job1
+TIMESTAMP=20200828.20:30:50:SEQNODE=/module1/task1:MSGTYPE=abort:SEQLOOP=:SEQMSG=ABORTED job stopped , job_ID=job1
+TIMESTAMP=20200828.20:30:50:SEQNODE=/turtle:MSGTYPE=abortx:SEQLOOP=:SEQMSG=ABORTED job stopped , job_ID=job1
+TIMESTAMP=20200828.20:31:00:SEQNODE=/module1/task1:MSGTYPE=submit:SEQLOOP=:SEQMSG=Machine=eccc-ppp3 Queue=null CPU=1 (x1 CPU Multiplier as 1 MPIxOMP) Memory=3G Wallclock Limit=5 mpi=0 Submit method:Manual or cron submitted from host hpcr4-in soumetArgs=""
+TIMESTAMP=20200828.20:31:10:SEQNODE=/module1/task1:MSGTYPE=begin:SEQLOOP=:SEQMSG=host=cs3be-010p27 job_ID=job3
+TIMESTAMP=20200828.20:31:15:SEQNODE=/module1/task1:MSGTYPE=info:SEQLOOP=:SEQMSG=turtleTask1 var='/fs/homeu1/eccc/cmod/cmoi/sts271/.suites/turtle' CMCGRIDP=''
+TIMESTAMP=20200828.20:31:20:SEQNODE=/module1/task1:MSGTYPE=end:SEQLOOP=:SEQMSG=job_ID=job3
+TIMESTAMP=20200828.20:35:49:SEQNODE=/module1/task1:MSGTYPE=begin:SEQLOOP=:SEQMSG=host=cs3be-010p26 job_ID=job4
+TIMESTAMP=20200828.20:35:50:SEQNODE=/module1/task1:MSGTYPE=abort:SEQLOOP=:SEQMSG=ABORTED job stopped , job_ID=job4
+TIMESTAMP=20200828.20:35:50:SEQNODE=/turtle:MSGTYPE=abortx:SEQLOOP=:SEQMSG=ABORTED job stopped , job_ID=job4

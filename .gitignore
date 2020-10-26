@@ -1,4 +1,3 @@
-/bin
 /src/core/bin/*
 /src/core/include/*
 /build
@@ -7,7 +6,7 @@ _*
 *~
 
 # Debug scripts
-src/python3/mflow-debug.sh
+/python3/mflow-debug.sh
 
 # Shortcuts with extensions to that file without extension, useful for IDE's to recognize file types for colors.
 ssm/.ssm.d/post-install.ksh
@@ -22,7 +21,7 @@ ssm/.ssm.d/post-install.ksh
 /man/.offline_man_backup
 .ssm.d/control*
 tests/src/config.py
-/src/python3/tmp
+/tmp
 tests/config.py
 
 # git

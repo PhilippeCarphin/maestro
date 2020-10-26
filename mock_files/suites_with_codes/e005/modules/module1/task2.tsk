@@ -1,0 +1,4 @@
+#!/bin/ksh
+
+# these backticks are not recommended by 'ksh -n'
+echo `basename $ABC`

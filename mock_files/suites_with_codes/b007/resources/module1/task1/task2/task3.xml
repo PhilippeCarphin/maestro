@@ -1,0 +1,6 @@
+<NODE_RESOURCES>
+  <BATCH machine="${FRONTEND}" queue="${FRONTEND_DEFAULT_Q}" memory="1G" wallclock="1000" catchup="3" cpu="1" />
+  <DEPENDS_ON dep_name="/module1/task1" status="end" type="node"/>
+  <DEPENDS_ON dep_name="../task2" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/turtle/TurtlePower/pizza1" status="end" type="node" exp="${TURTLE_ME_PATH}"/>
+</NODE_RESOURCES>

@@ -9,7 +9,7 @@ Here are some of the main tools in the Maestro suite:
 * [xflow_overview](https://wiki.cmc.ec.gc.ca/wiki/Maestro/xflow_overview) monitors and visualizes many experiments created by Maestro.
 * The [sequencer](https://wiki.cmc.ec.gc.ca/wiki/Maestro/sequencer) manages the sequenced execution of task nodes.
 * [xm](https://wiki.cmc.ec.gc.ca/wiki/Maestro/xm) is a visual tool used to create new Maestro experiments.
-* [heimdall](src/python3/HEIMDALL.md) is a maestro suite scanner. Scan for errors, warnings, recommendations, and installation issues.
+* [heimdall](/HEIMDALL.md) is a maestro suite scanner. Scan for errors, warnings, recommendations, and installation issues.
 * Finally, many commandline tools. As of version `1.8.0` you can type `m. <tab> <tab>` to see a list of most maestro commandline tools.
 
 ## Community & Resources

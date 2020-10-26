@@ -1,0 +1,11 @@
+<NODE_RESOURCES>
+  <BATCH machine="hard-coded-machine-is-bad" queue="dev" memory="${VARIABLE_DOES_NOT_EXIST}" wallclock="361" catchup="4" cpu="$CPU}" />
+  <DEPENDS_ON dep_name="/node/path/does/not/exist" status="end" type="node" valid_hour="12" exp="/home/abc123/maestro_suites/zdps"/>
+  
+  <DEPENDS_ON dep_name="/not/a/path/in/this/exp" status="end" type="node"/>
+  <DEPENDS_ON dep_name="../../not/a/relative/path/in/this/exp" status="end" type="node"/>
+  <DEPENDS_ON dep_name="/not/a/path/in/external/exp" status="end" type="node" exp="${PATH_TO_NOT_DATESTAMPED_SUITE}"/>
+  <DEPENDS_ON dep_name="../relative/path" status="end" type="node" exp="${PATH_TO_NOT_DATESTAMPED_SUITE}"/>
+
+  <DEPENDS_ON dep_name="/not/a/path/in/this/exp" status="end" type="node" index="loop1=$((x))" local_index="loop2=1"/>
+</NODE_RESOURCES>
