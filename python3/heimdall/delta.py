@@ -16,24 +16,28 @@ def get_new_messages_for_experiment_paths(experiment_paths,
     """
     Scan each experiment path.
     Compare those results to the last scan performed.
-    Return a dictionary. Key is experiment path, value is its list of 
-    new messages found in the new scan but not the old.
+    Returns a list of:
+        {"scanner":ExperimentScanner,
+         "path":path,
+         "new_messages":messages}
     
     scan_history_folder example:
         ~/tmp/heimdall-scans
     """
     
-    data={}
+    results=[]
     
     for path in experiment_paths:
         scan_result_folder=scan_history_folder+"/"+path
-        data[path]=get_new_messages_for_experiment_path(path,
-                                                        scan_result_folder,
-                                                        operational_home=operational_home,
-                                                        parallel_home=parallel_home,
-                                                        operational_suites_home=operational_suites_home)
+        new_messages,scanner=get_new_messages_for_experiment_path(path,
+                                                                  scan_result_folder,
+                                                                  operational_home=operational_home,
+                                                                  parallel_home=parallel_home,
+                                                                  operational_suites_home=operational_suites_home)
+        data={"scanner":scanner,"new_messages":new_messages,"path":path}
+        results.append(data)
         
-    return data
+    return results
         
 def get_new_messages_for_experiment_path(experiment_path,
                                          scan_result_folder,
@@ -41,7 +45,9 @@ def get_new_messages_for_experiment_path(experiment_path,
                                          parallel_home="",
                                          operational_suites_home=""):
     """
-    If no history is found, return empty list.
+    returns (new_messages,scanner)
+
+    new_messages may be an empty list if none are found.
     
     scan_result_folder example:
         ~/tmp/heimdall-scans/home/zulban/folder1
@@ -63,10 +69,10 @@ def get_new_messages_for_experiment_path(experiment_path,
         previous_hash=""
     if not now_hash:
         logger.info("Skipping new messages scan of experiment because it seems to have no git commit hash: '%s'"%experiment_path)
-        return []
+        return [], None
     if now_hash==previous_hash:
         logger.info("Repo commit has not changed since last scan: '%s'"%experiment_path)
-        return []
+        return [], None
     
     scanner = ExperimentScanner(path=experiment_path,
                                 operational_home=operational_home,
@@ -84,13 +90,14 @@ def get_new_messages_for_experiment_path(experiment_path,
     "if no previous history, nothing to compare"
     if not previous_results:
         logger.info("No previous history found for '%s'."%experiment_path)
-        return []
+        return [], scanner
     
     "compare old and new"
     latest_results=scanner.results_json
     previous_messages=previous_results["messages"]
     latest_messages=latest_results["messages"]
-    return get_new_messages_from_old_new(previous_messages,latest_messages)
+    new_messages=get_new_messages_from_old_new(previous_messages,latest_messages)
+    return new_messages,scanner
 
 def get_experiment_paths_from_deltas_argument(argument):
     """

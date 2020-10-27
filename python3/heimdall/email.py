@@ -3,10 +3,12 @@ import os
 import os.path
 import time
 import json
+import copy
+
 from datetime import datetime
 
-from constants import WITNESSM_ROOT, MAX_EMAIL_CONTENT_LENGTH_CHARS, LOG_FOLDER, TMP_FOLDER
-from simple_logging import logger
+from constants import MAX_EMAIL_CONTENT_LENGTH_CHARS, LOG_FOLDER, TMP_FOLDER
+from home_logger import logger
 from utilities.shell import safe_check_output_with_status
 
 email_template="""The heimdall experiment scanner found {new_message_count} new messages {level_threshold_message}in the maestro experiment '{experiment_path}' for commit '{commit}' that were not present in the scan before.
@@ -31,11 +33,14 @@ def get_email_content_for_new_messages(emails,new_messages,results_json,level=""
     See 'send_email_for_new_messages'
     """
         
-    parameters=json.dumps(results_json["parameters"],indent=4,sort_keys=True)
+    results_minus_data=copy.copy(results_json)
+    for key in ("messages","codes"):
+        results_minus_data.pop(key)
+    parameters=json.dumps(results_minus_data,indent=4,sort_keys=True)
     
     level_threshold_message=""
     if level:
-        level_threshold_message="(at level '%s' or above)"%level
+        level_threshold_message="(at level '%s' or above) "%level
     
     json_path_message=""
     if json_path:
@@ -55,7 +60,7 @@ def get_email_content_for_new_messages(emails,new_messages,results_json,level=""
     
     script_path=os.path.realpath(__file__)
     
-    commit=results_json["commit"][:COMMIT_DISPLAY_LENGTH]
+    commit=results_json["commit_hash"][:COMMIT_DISPLAY_LENGTH]
         
     content=email_template.format(new_message_count=len(new_messages),
                                  level_threshold_message=level_threshold_message,
@@ -87,15 +92,18 @@ def send_email_for_new_messages(emails,new_messages,results_json,level="",json_p
     
     content=get_email_content_for_new_messages(emails,new_messages,results_json,level=level,json_path=json_path)
     
-    commit=results_json["commit"][:COMMIT_DISPLAY_LENGTH]
+    commit=results_json["commit_hash"][:COMMIT_DISPLAY_LENGTH]
     
     """
     For path:
         /folder1/folder2/folder3/folder4
     the exp_label is:
         folder3/folder4
-    """    
-    exp_label="/".join(results_json["parameters"]["path"].split("/")[-2:])
+    """
+    path=results_json["parameters"]["path"]
+    if path.endswith("/"):
+        path=path[:-1]
+    exp_label="/".join(path.split("/")[-2:])
     subject="heimdall: %s has new codes for commit %s"%(exp_label,commit)
     
     for email in emails:

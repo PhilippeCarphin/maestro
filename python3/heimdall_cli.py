@@ -12,12 +12,13 @@ Running just "heimdall" scans a maestro experiment.
 Usage:
     heimdall [options]
     heimdall blame <path-to-git-repo> [--count=<count>]
-    heimdall deltas <delta-targets> [--scan-history=<folder>] [--email=<address>] [--op-home=<path>] [--op-suites-home=<path>] [--par-home=<path>]
+    heimdall deltas <delta-targets> [--scan-history=<folder>] [--email=<address>] [--op-home=<path>] [--op-suites-home=<path>] [--par-home=<path>] [--dry-run] [--verbose]
 
 Options:
     --blacklist=<codes>          Comma delimited list of codes like '--blacklist=c001,w001'. Never show these codes.
     --context=<context>          Heimdall will guess the context like operational, preoperational, or parallel. Or you can override the guess with this option.
     --count=<count>              How many top maintainers to show in heimdall blame. [default: 5]
+    --dry-run                    Do not perform any actions, like sending emails.
     --email=<address>            For use with 'deltas'. If new codes detected, sends an email with a delta report. Can also be a comma delimited list of emails.
     --exp=<experiment-path>      The path to a maestro experiment. By default, look in $PWD. [default: {experiment_path}]
     --home=<folder>              The home folder used to lookup files like '~/.suites/overrides.def'. By default, use the home of the owner of the maestro experiment.
@@ -39,7 +40,7 @@ from utilities.docopt import docopt
 import os
 import os.path
 
-from home_logger import logger
+from home_logger import logger, add_stdout_handler
 from constants import SCANNER_CONTEXTS
 from heimdall import ExperimentScanner, run_heimdall_blame, get_new_messages_for_experiment_paths, print_scan_message, send_email_for_new_messages
 from heimdall.docstring import adjust_docstring
@@ -77,6 +78,7 @@ def process_scan_cli_options(args):
     
     if not args["--scan-history"].endswith("/"):
         args["--scan-history"]+="/"
+    args["--scan-history"]=os.path.expanduser(args["--scan-history"])
 
     try:
         args["--max-repeat"] = max(0,int(args["--max-repeat"]))
@@ -104,6 +106,13 @@ def process_scan_cli_options(args):
         if "@" not in email:
             print("Not an email address: '%s'"%email)
             return False
+
+    targets=args["<delta-targets>"]
+    if targets:
+        targets=targets.split(",")
+    else:
+        targets=[]
+    args["<delta-targets>"]=[os.path.expanduser(target) for target in targets]
     
     return True
 
@@ -111,32 +120,41 @@ def deltas_cli(args):
     
     if not process_scan_cli_options(args):
         return
-    
-    new_messages=get_new_messages_for_experiment_paths(args["<delta-targets>"],
-                                                       scan_history_folder=args["--scan-history"],
-                                                       operational_home=args["--op-home"],
-                                                       parallel_home=args["--par-home"],
-                                                       operational_suites_home=args["--op-suites-home"])
-    
-    "filter out levels if --level"
-    level=args["--level"]
-    if level:
-        levels="cewib"
-        new_messages=[m for m in new_messages if levels.index(m["code"][0])<=levels.index(level)]
-    
-    "print"
-    for message in new_messages:
-        print_scan_message(message)
+
+    results=get_new_messages_for_experiment_paths(args["<delta-targets>"],
+                                                  args["--scan-history"],
+                                                  operational_home=args["--op-home"],
+                                                  parallel_home=args["--par-home"],
+                                                  operational_suites_home=args["--op-suites-home"])
+
+    for result in results:
+        new_messages=result["new_messages"]
+        path=result["path"]
+        scanner=result["scanner"]
+
+        "filter out levels if --level"
+        level=args["--level"]
+        if level:
+            levels="cewib"
+            new_messages=[m for m in new_messages if levels.index(m["code"][0])<=levels.index(level)]
         
-    if new_messages:
-        logger.info("\nFound %s new message codes compared to last scan."%len(new_messages))
-    else:
-        logger.info("\nNo new message codes compared to last scan.")
-    
-    emails=args["--email"]
-    if new_messages and emails:
-        send_email_for_new_messages(emails,new_messages)
+        "print"
+        for message in new_messages:
+            print_scan_message(message)
+
+        if new_messages:
+            logger.info("Found %s new message codes compared to last scan."%len(new_messages))
+        else:
+            logger.info("No new message codes compared to last scan.")
         
+        emails=args["--email"]
+        if new_messages and emails:
+            send_email_for_new_messages(emails,
+                                        new_messages,
+                                        scanner.results_json,
+                                        level=level,
+                                        is_dry_run=args["--dry-run"])
+            
 def scan_cli(args):
     """
     Parse and validate the commandline options before proceeding to run the scan.
@@ -169,6 +187,9 @@ def scan_cli(args):
                          blacklist=args["--blacklist"])
 
 def main(args):
+
+    if args["--verbose"]:
+        add_stdout_handler(logger)
     
     if args["blame"]:
         blame_cli(args)
