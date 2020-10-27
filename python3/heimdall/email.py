@@ -7,20 +7,16 @@ import copy
 
 from datetime import datetime
 
-from constants import MAX_EMAIL_CONTENT_LENGTH_CHARS, LOG_FOLDER, TMP_FOLDER
-from home_logger import logger
+from constants import MAX_EMAIL_CONTENT_LENGTH_CHARS, TMP_FOLDER
+from home_logger import logger, get_log_file_path
 from utilities.shell import safe_check_output_with_status
 
 email_template="""The heimdall experiment scanner found {new_message_count} new messages {level_threshold_message}in the maestro experiment '{experiment_path}' for commit '{commit}' that were not present in the scan before.
 
 {messages_text}
-
-Heimdall scan parameters:
-    
-{parameters}
 {json_path_message}
-Heimdall logs:
-    {LOG_FOLDER}
+Heimdall log:
+    {log_path}
     
 This email was sent by the script '{script_path}' in the maestro project:    
     https://gitlab.science.gc.ca/CMOI/maestro
@@ -33,11 +29,6 @@ def get_email_content_for_new_messages(emails,new_messages,results_json,level=""
     See 'send_email_for_new_messages'
     """
         
-    results_minus_data=copy.copy(results_json)
-    for key in ("messages","codes"):
-        results_minus_data.pop(key)
-    parameters=json.dumps(results_minus_data,indent=4,sort_keys=True)
-    
     level_threshold_message=""
     if level:
         level_threshold_message="(at level '%s' or above) "%level
@@ -48,7 +39,7 @@ def get_email_content_for_new_messages(emails,new_messages,results_json,level=""
     
     chunks=[]
     for message in new_messages:
-        text="{code}: {label}\n{description}"
+        text="{code}: {label}\n----------\n{description}"
         text=text.format(code=message["code"],
                          label=message["label"],
                          description=message["description"])
@@ -67,10 +58,9 @@ def get_email_content_for_new_messages(emails,new_messages,results_json,level=""
                                  experiment_path=results_json["parameters"]["path"],
                                  commit=commit,
                                  messages_text=messages_text,
-                                 parameters=parameters,
                                  json_path_message=json_path_message,
                                  script_path=script_path,
-                                 LOG_FOLDER=LOG_FOLDER)
+                                 log_path=get_log_file_path())
     
     return content
 

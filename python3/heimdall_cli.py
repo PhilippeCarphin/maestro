@@ -7,7 +7,7 @@ Running just "heimdall" scans a maestro experiment.
 
 "heimdall blame" examines the git history of a project to find its lead authors. It awards points based on commit frequency, recency, and consistency.
 
-"heimdall deltas" examines all experiments described in the comma delimited list '<delta-targets>'. A target can be a path to a suites XML, or a single experiment.
+"heimdall deltas" examines all experiments described in the comma delimited list '<delta-targets>'. A target can be a path to a suites XML, or a single experiment. If new scan codes are detected compared to last time 'deltas' was run, messages are printed and optionally emails are sent.
 
 Usage:
     heimdall [options]

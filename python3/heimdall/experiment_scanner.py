@@ -3,6 +3,7 @@ import re
 import Levenshtein
 import json
 import time
+import copy
 from datetime import datetime
 
 from constants import NODELOGGER_SIGNALS, SCANNER_CONTEXT, NODE_TYPE, HEIMDALL_CONTENT_CHECKS_CSV, EXPECTED_CONFIG_STATES, HUB_PAIRS, EXPERIMENT_LOG_FOLDERS, REQUIRED_LOG_FOLDERS, OPERATIONAL_USERNAME, OLD_SEQ_VARIABLES, TASK_MAESTRO_BINS
@@ -56,6 +57,8 @@ class ExperimentScanner():
                  operational_suites_home=None,
                  parallel_home=None,
                  write_results_json_path=""):
+
+        logger.info("Starting ExperimentScanner for '%s'"%path)
         
         self.file_cache=FileCache()
             
@@ -210,6 +213,13 @@ class ExperimentScanner():
         with open(write_results_json_path,"w") as f:
             f.write(text)
         logger.info("Wrote full scan results JSON to file '%s'"%write_results_json_path)
+
+        "log the scan parameters used"
+        short_results_json=copy.copy(self.results_json)
+        for key in ("messages","codes"):
+            short_results_json.pop(key)
+        parameters=json.dumps(short_results_json,indent=4,sort_keys=True)
+        logger.info("Parameters used for the scan:\n"+parameters)
     
     def set_results_json(self):
                 
