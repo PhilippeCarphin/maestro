@@ -1514,11 +1514,6 @@ class ExperimentScanner():
                                      file_path=path,
                                      par_string=par_string)
         
-        "using deprecated uspmadt system"
-        lines=get_uspmadt_lines(content_without_comments)
-        if lines:
-            self.add_message("w030",path=path,lines="\n".join(lines))
-    
     def scan_ssm_uses(self):
         
         "key is path to a file, value is list of SSM domains SSM used in that file"
