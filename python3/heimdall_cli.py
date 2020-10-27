@@ -42,6 +42,7 @@ import os.path
 
 from home_logger import logger, add_stdout_handler
 from constants import SCANNER_CONTEXTS
+from maestro.xml import get_experiment_paths_from_suites_xml
 from heimdall import ExperimentScanner, run_heimdall_blame, get_new_messages_for_experiment_paths, print_scan_message, send_email_for_new_messages
 from heimdall.docstring import adjust_docstring
 __doc__ = adjust_docstring(__doc__)
@@ -120,8 +121,15 @@ def deltas_cli(args):
     
     if not process_scan_cli_options(args):
         return
-
-    results=get_new_messages_for_experiment_paths(args["<delta-targets>"],
+    
+    targets=[]
+    for path in args["<delta-targets>"]:
+        if path.endswith(".xml"):
+            targets+=get_experiment_paths_from_suites_xml(path)
+        else:
+            targets.append(path)
+            
+    results=get_new_messages_for_experiment_paths(targets,
                                                   args["--scan-history"],
                                                   operational_home=args["--op-home"],
                                                   parallel_home=args["--par-home"],
