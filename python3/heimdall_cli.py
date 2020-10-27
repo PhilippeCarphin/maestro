@@ -9,8 +9,6 @@ Running just "heimdall" scans a maestro experiment.
 
 "heimdall deltas" examines all experiments described in the comma delimited list '<delta-targets>'. A target can be a path to a suites XML, or a single experiment.
 
-"heimdall delta" compares two full scan result JSONs, and prints a report showing messages present in 2 but not in 1.
-
 Usage:
     heimdall [options]
     heimdall blame <path-to-git-repo> [--count=<count>]
@@ -41,8 +39,9 @@ from utilities.docopt import docopt
 import os
 import os.path
 
+from home_logger import logger
 from constants import SCANNER_CONTEXTS
-from heimdall import ExperimentScanner, run_heimdall_blame, get_new_messages_for_experiment_paths
+from heimdall import ExperimentScanner, run_heimdall_blame, get_new_messages_for_experiment_paths, print_scan_message, send_email_for_new_messages
 from heimdall.docstring import adjust_docstring
 __doc__ = adjust_docstring(__doc__)
 
@@ -119,13 +118,25 @@ def deltas_cli(args):
                                                        parallel_home=args["--par-home"],
                                                        operational_suites_home=args["--op-suites-home"])
     
+    "filter out levels if --level"
+    level=args["--level"]
+    if level:
+        levels="cewib"
+        new_messages=[m for m in new_messages if levels.index(m["code"][0])<=levels.index(level)]
+    
+    "print"
     for message in new_messages:
         print_scan_message(message)
+        
     if new_messages:
         logger.info("\nFound %s new message codes compared to last scan."%len(new_messages))
     else:
         logger.info("\nNo new message codes compared to last scan.")
-
+    
+    emails=args["--email"]
+    if new_messages and emails:
+        send_email_for_new_messages(emails,new_messages)
+        
 def scan_cli(args):
     """
     Parse and validate the commandline options before proceeding to run the scan.
