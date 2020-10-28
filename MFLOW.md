@@ -22,6 +22,12 @@ mflow
 
 Use the keyboard to navigate to a node, and press enter. See `mflow -h` for more options and keyboard commands.
 
+You can also try the most recent development version here:
+
+```
+~sts271/stable/bin/mflow -h
+```
+
 # Software Design
 
 This project aims to be simple, tested, fast, and lightweight. This means:
