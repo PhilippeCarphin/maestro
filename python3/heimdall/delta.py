@@ -97,6 +97,8 @@ def get_new_messages_for_experiment_path(experiment_path,
     previous_messages=previous_results["messages"]
     latest_messages=latest_results["messages"]
     new_messages=get_new_messages_from_old_new(previous_messages,latest_messages)
+    if new_messages:
+        logger.info("Found %s new scan messages since last scan for '%s'"%(len(new_messages),experiment_path))
     return new_messages,scanner
 
 def get_experiment_paths_from_deltas_argument(argument):
