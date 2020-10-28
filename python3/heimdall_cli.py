@@ -145,6 +145,9 @@ def deltas_cli(args):
         if level:
             levels="cewib"
             new_messages=[m for m in new_messages if levels.index(m["code"][0])<=levels.index(level)]
+
+        "filter out messages whose exact text is likely to change upon each scan, like latest run seconds"
+        new_messages=[m for m in new_messages if m["code"] not in ["w026"]]
         
         "print"
         for message in new_messages:

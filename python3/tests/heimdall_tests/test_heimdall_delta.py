@@ -27,11 +27,10 @@ class TestHeimdallDelta(unittest.TestCase):
             output,status=safe_check_output_with_status(cmd)
             self.assertEqual(status,0,msg=cmd)
             
-            result=get_new_messages_for_experiment_paths(paths,
+            new_messages=get_new_messages_for_experiment_paths(paths,
                                                      scan_history_folder,
                                                      operational_home=OPERATIONAL_HOME,
                                                      parallel_home=PARALLEL_HOME,
                                                      operational_suites_home=OPERATIONAL_SUITES_HOME)
             
-        messages=result[path]
-        self.assertEqual(len(messages),1)
+        self.assertEqual(len(new_messages),1)
