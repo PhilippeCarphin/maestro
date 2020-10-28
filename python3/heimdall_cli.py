@@ -12,7 +12,7 @@ Running just "heimdall" scans a maestro experiment.
 Usage:
     heimdall [options]
     heimdall blame <path-to-git-repo> [--count=<count>]
-    heimdall deltas <delta-targets> [--scan-history=<folder>] [--email=<address>] [--op-home=<path>] [--op-suites-home=<path>] [--par-home=<path>] [--dry-run] [--verbose]
+    heimdall deltas <delta-targets> [--level=<level>] [--scan-history=<folder>] [--email=<address>] [--op-home=<path>] [--op-suites-home=<path>] [--par-home=<path>] [--dry-run] [--verbose]
 
 Options:
     --blacklist=<codes>          Comma delimited list of codes like '--blacklist=c001,w001'. Never show these codes.
@@ -145,15 +145,13 @@ def deltas_cli(args):
         if level:
             levels="cewib"
             new_messages=[m for m in new_messages if levels.index(m["code"][0])<=levels.index(level)]
+
+        "filter out messages whose exact text is likely to change upon each scan, like latest run seconds"
+        new_messages=[m for m in new_messages if m["code"] not in ["w026"]]
         
         "print"
         for message in new_messages:
             print_scan_message(message)
-
-        if new_messages:
-            logger.info("Found %s new message codes compared to last scan."%len(new_messages))
-        else:
-            logger.info("No new message codes compared to last scan.")
         
         emails=args["--email"]
         if new_messages and emails:
