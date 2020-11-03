@@ -1127,4 +1127,4 @@ Le fichier '{path}' dans le dossier 'bin' n'est utilisé dans aucun fichier 'cfg
 
 # Page Générée
 
-Cette page a été générée par le script 'generate_messages_markdown.py' du repo 'https://gitlab.science.gc.ca/CMOI/maestro' le '2020-10-15'.
+Cette page a été générée par le script 'generate_messages_markdown.py' du repo 'https://gitlab.science.gc.ca/CMOI/maestro' le '2020-10-27'.

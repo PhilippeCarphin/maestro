@@ -11,10 +11,38 @@ These functions prepare those files.
 import shutil
 import os
 from lxml import etree
-from utilities.shell import safe_check_output_with_status
+from utilities.shell import safe_check_output_with_status, get_latest_hashes_from_repo
 from utilities.xml import xml_cache
 
-from tests.path import MOCK_FILES, TMP_FOLDER, TURTLE_ME_PATH, ABSOLUTE_SYMLINK_EXISTS_PATH, OPERATIONAL_HOME
+from tests.path import MOCK_FILES, TMP_FOLDER, TURTLE_ME_PATH, ABSOLUTE_SYMLINK_EXISTS_PATH, OPERATIONAL_HOME, DELTA_ME_PATH, TMP_DELTA_ME_PATH
+
+def setup_repo_for_delta():
+    """
+    Setup a simple maestro suite with a git repo, with two commits.
+    The second commit produces one more scan message.
+    Returns (path, commit1, commit2) where commits are hash strings.
+    """
+    
+    path=TMP_DELTA_ME_PATH
+    if os.path.exists(path):
+        shutil.rmtree(path, ignore_errors=True)
+    shutil.copytree(DELTA_ME_PATH, path, symlinks=True)
+    
+    task_path=path+"modules/module1/task1.tsk"
+    commands = ["cd "+path,
+                "git init",
+                "git add .",
+                "git commit -am \"commit1\"",
+                "echo 1 > "+task_path,
+                "git commit -am \"commit2\""]
+    cmd = " && ".join(commands)
+
+    output, status = safe_check_output_with_status(cmd)
+    if status != 0:
+        raise ValueError("status '%s' from cmd '%s' output =\n%s" % (status, cmd, output))
+
+    commits=get_latest_hashes_from_repo(path,number=2)
+    return (path,commits[1],commits[0])
 
 def setup_tricky_mock_files():
     """

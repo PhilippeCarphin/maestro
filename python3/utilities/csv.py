@@ -1,3 +1,4 @@
+from constants import ENCODING
 
 def get_dictionary_list_from_csv(path,
                                  delimiter="\t",
@@ -21,7 +22,8 @@ def get_dictionary_list_from_csv(path,
     dictionary, ignoring comment lines. Ignore all data rows before this index row.
     """
 
-    with open(path, "r") as f:
+    "encoding is necessary because on some environments LC_ALL may change to a broken encoding"
+    with open(path, "r",encoding=ENCODING) as f:
         lines = f.readlines()
 
     if ignore_hash_lines:

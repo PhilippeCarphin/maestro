@@ -2,7 +2,7 @@
 import Levenshtein
 import re
 from heimdall.file_cache import file_cache
-from utilities.parsing import get_bash_variables_used_in_text
+from utilities.parsing import get_bash_variables_used_in_text, superstrip
 from constants import TASK_MAESTRO_BINS
 
 """
@@ -44,6 +44,41 @@ def get_maestro_executables_from_bash_text(text):
     results=[m.group(0) for m in TASK_MAESTRO_BINS_REGEX.finditer(text)]
     
     return sorted(list(set(results)))
+
+BASH_VARIABLE_CURLY_REGEX=re.compile("\\${[\\w]+}")
+def replace_bash_variables(text):
+    """
+    Some source paths in CFG files may be complex.
+    Given:
+        folder${XYZ}1/file1${ABC}.sh
+    returns:
+        foldera1/file1a.sh
+    which is useful for non-standard character verification.
+    """
+    
+    return BASH_VARIABLE_CURLY_REGEX.sub("a",text)
+                
+def strip_batch_variable(variable):
+    """
+    Given:
+        $ABC
+        ${ABC}
+        XYZ
+        $ABC$XYZ
+    returns (stripped, is_one_variable):
+        ABC, True
+        ABC, True
+        XYZ, False
+        $ABC$XYZ, False
+    """
+    if not variable:
+        return "",False
+    
+    is_one=False
+    if variable.startswith("$") and variable.count("$")==1:
+        is_one=True
+        variable=superstrip(variable,"${}")
+    return variable,is_one
 
 def is_etiket_variable(bash_variable_name):
     """

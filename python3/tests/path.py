@@ -21,7 +21,8 @@ G1_MINI_ME_PATH = GDPS_MINI_ME_PATH+"g1/"
 GV_MINI_ME_PATH = GDPS_MINI_ME_PATH+"verification/"
 SWITCH_HOUR_ME_PATH = MOCK_FILES+"switch-datestamp-hour/"
 FILE_INDEX_ME_PATH = MOCK_FILES+"file_index/"
-
+DELTA_ME_PATH = MOCK_FILES+"delta-old-new/"
+TMP_DELTA_ME_PATH = TMP_FOLDER+"delta-old-new/"
 
 def get_lines_from_file(path, remove_prefix_slash=True):
     "Return a list of stripped strings for each non-empty line in this file."
@@ -49,6 +50,7 @@ CONTEXT_GUESS_HOMES = MOCK_FILES+"homes/"
 OPERATIONAL_HOME = CONTEXT_GUESS_HOMES+"smco500"
 PARALLEL_HOME = CONTEXT_GUESS_HOMES+"smco501"
 OPERATIONAL_SUITES_HOME=CONTEXT_GUESS_HOMES+"smco502"
+MINI_SUITES_XML_PATH=OPERATIONAL_HOME+"/xflow.suites.xml"
 
 QSTAT_OUTPUT1_PATH = MOCK_FILES+"qstat-output1"
 CMCCONST_OVERRIDE=MOCK_FILES+"cmcconst/"

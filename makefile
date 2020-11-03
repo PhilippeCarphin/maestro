@@ -35,7 +35,7 @@ all: clean
 	
 	${SCRIPTS_FOLDER}/copy_wrappers.sh ${WRAPPER_PREFIX} ${WRAPPERS_BUILD_FOLDER}
 	cp ${SHARED_MAKE_CONFIGURATION} ${BUILD_PLATFORM_FOLDER}/
-	cp -r src ssm/.ssm.d scripts ${BUILD_PLATFORM_FOLDER}/
+	cp -r src ssm/.ssm.d bin scripts python3 config schemas csv setup ${BUILD_PLATFORM_FOLDER}/
 
 	${BUILD_PLATFORM_FOLDER}/setup/install-python-dependencies.sh
 	${XC_MODULE_SWITCH} make -C ${BUILD_PLATFORM_FOLDER}/src/core

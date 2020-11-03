@@ -1,7 +1,7 @@
 #!/bin/bash
 
-PYTHON3_ROOT=$(dirname $(dirname $(realpath $0)))
-MAESTRO_ROOT=$(dirname $PYTHON3_ROOT)
+MAESTRO_ROOT=$(dirname $(dirname $(realpath $0)))
+PYTHON3_ROOT=$MAESTRO_ROOT/python3
 
 $MAESTRO_ROOT/bin/assert_python3_is_setup || exit 1
 

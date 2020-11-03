@@ -81,24 +81,35 @@ def get_logger():
     logger.addHandler(logging.NullHandler())
     
     if config.WRITE_TO_FILE:
-        fh = logging.FileHandler(log_file_path)
-        fh.setFormatter(config.FORMATTER)
-        fh.setLevel(config.LEVEL)
-        logger.addHandler(fh)
-        logger.fh = fh
+        add_file_handler(logger,config)
 
     if config.WRITE_TO_STDOUT:
-        ch = logging.StreamHandler()
-        ch.setFormatter(config.FORMATTER)
-        ch.setLevel(config.LEVEL)
-        logger.addHandler(ch)
-        logger.ch = ch
+        add_stdout_handler(logger,config)
     
     if config.WRITE_TO_FILE and config.WRITE_TO_STDOUT:
         print("Writing to log '%s'"%log_file_path)
         
     return logger
 
+def add_file_handler(logger,config=None):
+    if not config:
+        config=get_log_config_from_environment()
+    log_file_path=get_log_file_path()
+    fh = logging.FileHandler(log_file_path)
+    fh.setFormatter(config.FORMATTER)
+    fh.setLevel(config.LEVEL)
+    logger.addHandler(fh)
+    logger.fh = fh
+
+def add_stdout_handler(logger,config=None):
+    if not config:
+        config=get_log_config_from_environment()
+    log_file_path=get_log_file_path()
+    ch = logging.StreamHandler()
+    ch.setFormatter(config.FORMATTER)
+    ch.setLevel(config.LEVEL)
+    logger.addHandler(ch)
+    logger.ch = ch
 
 logger = get_logger()
 LOG_FILE = get_log_file_path()
