@@ -187,6 +187,12 @@ def scan_cli(args):
     """
     args["--blacklist"].append("b017")
 
+    """
+    This next blacklist line can be removed once this ticket is resolved:
+    https://gitlab.science.gc.ca/CMOI/maestro/issues/267
+    """
+    args["--blacklist"].append("b009")
+
     scanner.print_report(level=args["--level"],
                          max_repeat=args["--max-repeat"],
                          whitelist=args["--whitelist"],
