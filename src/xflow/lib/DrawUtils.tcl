@@ -34,7 +34,10 @@ proc ::DrawUtils::init {} {
    }
    if { [SharedData_getMiscData FONT_NAME] != "" } {
       # use user defined font
-      ::DrawUtils::setDefaultFonts [SharedData_getMiscData FONT_NAME] [SharedData_getMiscData FONT_NAME_SIZE] [SharedData_getMiscData FONT_NAME_SLANT] [SharedData_getMiscData FONT_NAME_UNDERL]
+      ::DrawUtils::setDefaultFonts [SharedData_getMiscData FONT_NAME] \
+                                   [SharedData_getMiscData FONT_NAME_SIZE] \
+                                   [SharedData_getMiscData FONT_NAME_SLANT] \
+                                   [SharedData_getMiscData FONT_NAME_UNDERL]
    }
 }
 
@@ -51,7 +54,7 @@ proc ::DrawUtils::setDefaultFonts { {_family fixed} {_size 12} {_slant roman} {_
 proc ::DrawUtils::getBoxLabelFont { _canvas } {
    set labelFont flow_box_label_font
    
-   if { [SharedData_getMiscData FONT_NAME] == "" } {
+   if { [SharedData_getMiscData FONT_TASK] == "" &&  [SharedData_getMiscData FONT_NAME] == ""} {
       # use legacy font
       return [SharedData_getMiscData FONT_BOLD]
    }
