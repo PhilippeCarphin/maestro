@@ -72,7 +72,7 @@ proc ::DrawUtils::selectFallbackFont { args } {
     
     # select fallback font based on the size and style
     set fallback_font "-*-*-$opts(-style)-r-normal--$opts(-size)-*-*-*-p-*-iso8859-10"
-    set msg "\n font_name is not defined (see ~/.maestrorc), "
+    set msg "INFO: font_name parameter is not defined (see ~/.maestrorc), "
     set msg "${msg}\n fallback to the legacy font: "
     set msg "${msg}\n ${fallback_font}"
     
