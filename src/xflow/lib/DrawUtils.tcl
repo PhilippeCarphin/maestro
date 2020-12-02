@@ -55,7 +55,7 @@ proc ::DrawUtils::setDefaultFonts { {_family fixed} {_size 12} {_slant roman} {_
 proc ::DrawUtils::selectFallbackFont { args } {
     # reuse fallback font if already constructed
     set fallback_font [SharedData_getMiscData FALLBACK_FONT]
-    if { ${fallback_font} != "" }{
+    if { ${fallback_font} != "" } {
       return ${fallback_font}
     }
         
