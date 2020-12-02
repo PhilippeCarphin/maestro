@@ -54,7 +54,8 @@ proc ::DrawUtils::setDefaultFonts { {_family fixed} {_size 12} {_slant roman} {_
 
 proc ::DrawUtils::selectFallbackFont { args } {
     
-    array set opts ${args}
+    array set opts {-style bold -size 11} ;# defaults
+    array set opts ${args} ;# arguments
     
     # select fallback font based on the size and style
     return "-*-*-$opts(-style)-r-normal--$opts(-size)-*-*-*-p-*-iso8859-10"
@@ -63,12 +64,12 @@ proc ::DrawUtils::selectFallbackFont { args } {
 proc ::DrawUtils::getBoxLabelFont { _canvas } {
    set labelFont flow_box_label_font
    
-   if { [SharedData_getMiscData FONT_TASK] == "" &&  [SharedData_getMiscData FONT_NAME] == ""} {
+   if { [SharedData_getMiscData FONT_NAME] == ""} {
       
       set fallback_font [selectFallbackFont -size [SharedData_getMiscData FONT_TASK_SIZE] \
                                             -style [SharedData_getMiscData FONT_TASK_STYLE]]
                                             
-      set msg "\n Neither font_task nor font_name are defined (see ~/.maestrorc), "
+      set msg "\n font_name is not defined (see ~/.maestrorc), "
       set msg "${msg}\n fallback to the legacy font: "
       set msg "${msg}\n ${fallback_font}"
       
