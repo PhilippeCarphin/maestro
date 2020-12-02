@@ -51,12 +51,33 @@ proc ::DrawUtils::setDefaultFonts { {_family fixed} {_size 12} {_slant roman} {_
    font configure TkIconFont -size ${_size} -family ${_family} -slant $_slant -underline ${_underline}
 }
 
+
+proc ::DrawUtils::selectFallbackFont { args } {
+    
+    array set opts ${args}
+    
+    # select fallback font based on the size and style
+    return "-*-*-$opts(-style)-r-normal--$opts(-size)-*-*-*-p-*-iso8859-10"
+}
+
 proc ::DrawUtils::getBoxLabelFont { _canvas } {
    set labelFont flow_box_label_font
    
    if { [SharedData_getMiscData FONT_TASK] == "" &&  [SharedData_getMiscData FONT_NAME] == ""} {
+      
+      set fallback_font [selectFallbackFont -size [SharedData_getMiscData FONT_TASK_SIZE] \
+                                            -style [SharedData_getMiscData FONT_TASK_STYLE]]
+                                            
+      set msg "\n Neither font_task nor font_name are defined (see ~/.maestrorc), "
+      set msg "${msg}\n fallback to the legacy font: "
+      set msg "${msg}\n ${fallback_font}"
+      
+      ::log::log notice ${msg}
+      
+      puts ${msg}
+      
       # use legacy font
-      return [SharedData_getMiscData FONT_BOLD]
+      return ${fallback_font}
    }
 
    # use user defined font
