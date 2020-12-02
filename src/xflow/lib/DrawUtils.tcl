@@ -80,7 +80,7 @@ proc ::DrawUtils::selectFallbackFont { args } {
     
     puts ${msg}
     
-    [SharedData_setMiscData FALLBACK_FONT ${fallback_font}]
+    SharedData_setMiscData FALLBACK_FONT ${fallback_font}
     
     return ${fallback_font}
 }
