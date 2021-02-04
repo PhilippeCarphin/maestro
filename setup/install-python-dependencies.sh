@@ -1,6 +1,16 @@
 #!/bin/bash
 
-MAESTRO_ROOT=$(realpath $(dirname $(dirname $(realpath $0))))
+# Some older platforms do not have realpath, they use a substitute instead.
+REALPATH=realpath
+if [[ -z $(which $REALPATH) ]] ; then
+	REALPATH="true_path -n"
+fi
+if [[ -z $(which $REALPATH) ]] ; then
+	echo "Setup requires 'realpath' or 'true_path' but failed to find either. Aborted."
+	exit 1
+fi
+
+MAESTRO_ROOT=$($REALPATH $(dirname $(dirname $(dirname $(dirname $($REALPATH $0))))))
 set -u
 
 VENV=$MAESTRO_ROOT/venv
