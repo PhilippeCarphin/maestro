@@ -34,7 +34,10 @@ proc ::DrawUtils::init {} {
    }
    if { [SharedData_getMiscData FONT_NAME] != "" } {
       # use user defined font
-      ::DrawUtils::setDefaultFonts [SharedData_getMiscData FONT_NAME] [SharedData_getMiscData FONT_NAME_SIZE] [SharedData_getMiscData FONT_NAME_SLANT] [SharedData_getMiscData FONT_NAME_UNDERL]
+      ::DrawUtils::setDefaultFonts [SharedData_getMiscData FONT_NAME] \
+                                   [SharedData_getMiscData FONT_NAME_SIZE] \
+                                   [SharedData_getMiscData FONT_NAME_SLANT] \
+                                   [SharedData_getMiscData FONT_NAME_UNDERL]
    }
 }
 
@@ -48,12 +51,50 @@ proc ::DrawUtils::setDefaultFonts { {_family fixed} {_size 12} {_slant roman} {_
    font configure TkIconFont -size ${_size} -family ${_family} -slant $_slant -underline ${_underline}
 }
 
+
+proc ::DrawUtils::selectFallbackFont { args } {
+    # reuse fallback font if already constructed
+    set fallback_font [SharedData_getMiscData FALLBACK_FONT]
+    if { ${fallback_font} != "" } {
+      return ${fallback_font}
+    }
+        
+    array set default_opts {-style bold -size 11} ;# defaults
+    array set opts ${args} ;# arguments
+    
+    if { $opts(-style) == "" } {
+      set $opts(-style) $default_opts(-style)
+    }
+    
+    if { $opts(-size) == "" } {
+      set $opts(-size) $default_opts(-size)
+    }
+    
+    # select fallback font based on the size and style
+    set fallback_font "-*-*-$opts(-style)-r-normal--$opts(-size)-*-*-*-p-*-iso8859-10"
+    set msg "INFO: font_name parameter is not defined (see ~/.maestrorc), "
+    set msg "${msg}\n fallback to the legacy font: "
+    set msg "${msg}\n ${fallback_font}"
+    
+    ::log::log notice ${msg}
+    
+    puts ${msg}
+    
+    SharedData_setMiscData FALLBACK_FONT ${fallback_font}
+    
+    return ${fallback_font}
+}
+
 proc ::DrawUtils::getBoxLabelFont { _canvas } {
    set labelFont flow_box_label_font
    
-   if { [SharedData_getMiscData FONT_NAME] == "" } {
+   if { [SharedData_getMiscData FONT_NAME] == ""} {
+      
+      set fallback_font [selectFallbackFont -size [SharedData_getMiscData FONT_TASK_SIZE] \
+                                            -style [SharedData_getMiscData FONT_TASK_STYLE]]
+                                            
       # use legacy font
-      return [SharedData_getMiscData FONT_BOLD]
+      return ${fallback_font}
    }
 
    # use user defined font
