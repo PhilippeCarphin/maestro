@@ -1,0 +1,57 @@
+stages:
+  - build
+
+variables:
+  ORD_SOUMET_C: "40"
+  ORD_SOUMET_T: "3600"
+  ORD_SOUMET_TMPFS: "5G"
+  ORD_SOUMET_CM: "100G"
+  ORD_SOUMET_SHELL: "/bin/bash"
+
+
+# build_tcl:
+#   stage: build
+#   script:
+#     - cd src/tcl
+#     - ./INSTALL.sh
+#
+# build_core:
+#   stage: build
+#   script:
+#     - cd src/core
+#     - make
+
+build_cmake:
+  stage: build
+  script:
+    - make
+
+build_make:
+  stage: build
+  script:
+    - cd src/core
+    - make
+
+test_all:
+  stage: test
+  script:
+    - cd src/core/build
+    - mkdir test_tmpdir
+    - export TMPDIR=$PWD/test_tmpdir
+    - make test
+
+test_single:
+  stage: test
+  script:
+    - set +o errexit
+    - cd src/core/build
+    - mkdir test_tmpdir
+    - export TMPDIR=$PWD/test_tmpdir
+    - ./test_nfs_functions
+
+install:
+  stage: install
+  script:
+    - cd src/core/build
+    - make install
+
