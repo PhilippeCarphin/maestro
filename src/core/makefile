@@ -1,4 +1,4 @@
-include shared-make-configuration.cfg
+# include shared-make-configuration.cfg
 
 XML_LIB_DIR=/usr/lib
 XML_INCLUDE_DIR=/usr/include/libxml2
@@ -18,7 +18,9 @@ LD_FLAGS=-L. -L$(XML_LIB_DIR)
 # Source file lists
 SRC = $(wildcard *.c)
 MAIN_SRC = $(filter %_main.c,$(SRC))
-LIB_SRC = $(filter-out $(MAIN_SRC),$(SRC))
+TEST_SRC = $(filter test_%.c,$(SRC))
+NO_MAINS = $(filter-out $(MAIN_SRC),$(SRC))
+LIB_SRC = $(filter-out $(TEST_SRC),$(NO_MAINS))
 
 # Targets
 OBJ = $(SRC:.c=.o)

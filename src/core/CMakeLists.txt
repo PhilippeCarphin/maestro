@@ -69,3 +69,27 @@ install(TARGETS
     tictac
     tsvinfo
 )
+
+
+enable_testing()
+add_custom_target(check COMMAND ${CMAKE_CTEST_COMMAND})
+
+macro(add_maestro_test test_name test_source)
+    add_executable(${test_name} ${test_source})
+    add_test(NAME ${test_name} COMMAND ${test_name})
+    add_dependencies(check ${test_name})
+endmacro()
+
+add_maestro_test(test_datestamp test_datestamp.c)
+add_maestro_test(test_MISC test_MISC.c)
+add_maestro_test(test_node_stack_functions test_node_stack_functions.c)
+add_maestro_test(test_path test_path.c)
+add_maestro_test(test_resources test_resources.c)
+add_maestro_test(test_validity test_validity.c)
+add_maestro_test(test_variables test_variables.c)
+add_maestro_test(test_xml test_xml.c)
+add_maestro_test(test_nfs_functions test_nfs_functions.c)
+
+
+
+
