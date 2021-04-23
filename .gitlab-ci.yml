@@ -1,6 +1,7 @@
 stages:
   - build
   - test
+  - install
 
 variables:
   ORD_SOUMET_C: "40"
@@ -28,27 +29,10 @@ build_cmake:
     - cd src/core
     - mkdir build
     - cd build
-    - /home/phc001/miniconda3/bin/cmake ..
+    - /home/phc001/miniconda3/bin/cmake .. -DCMAKE_INSTALL_PREFIX=${CI_PROJECT_DIR}/src/core
     - make
   artifacts:
     untracked: true
-
-test_all:
-  stage: test
-  script:
-    - cd src/core/build
-    - mkdir test_tmpdir
-    - export TMPDIR=$PWD/test_tmpdir
-    - make test
-
-test_single:
-  stage: test
-  script:
-    - set +o errexit
-    - cd src/core/build
-    - mkdir test_tmpdir
-    - export TMPDIR=$PWD/test_tmpdir
-    - ./test_nfs_functions
 
 build_make:
   stage: build
