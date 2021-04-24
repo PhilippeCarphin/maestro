@@ -217,7 +217,7 @@ static int gnl_enterSwitchItem(FlowVisitorPtr fv) {
 
   /* Get the switch answer */
   SeqNodeData nd;
-  nd.datestamp = fv->datestamp;
+  nd.datestamp = (char*) fv->datestamp;
   const char *switch_value = switchReturn(&nd, switch_type);
 
   /* Enter the switch item corresponding to switch_value */

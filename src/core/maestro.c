@@ -3415,7 +3415,7 @@ int writeWaitedFile(SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep,
   int writeStatus = 0;
   if (dep->exp_scope == InterUser) {
     writeStatus = writeInterUserNodeWaitedFile(
-        _nodeDataPtr, dep->node_name, dep->index, extension, dep->datestamp,
+        _nodeDataPtr, dep->node_name, dep->index, (char*) extension, dep->datestamp,
         dep->status, dep->exp, dep->protocol, statusFile, _flow);
   } else {
     writeStatus = writeNodeWaitedFile(_nodeDataPtr, dep->exp, dep->node_name,
