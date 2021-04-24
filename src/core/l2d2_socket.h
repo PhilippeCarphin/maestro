@@ -47,5 +47,5 @@ int read_socket(int, char *, int, unsigned int);
 int recv_socket(int, char *, int, unsigned int);
 int recv_full(int sock, char *buff, int rsize);
 void send_reply(int, int);
-int do_Login(int, unsigned int, char *, char *, char *, char *, char **);
+int do_Login(int, unsigned int, const char *, const char *, const char *, const char *, char * const *);
 #endif

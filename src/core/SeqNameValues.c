@@ -11,8 +11,8 @@
 /********************************************************************************
  * SeqListNode_insertItem: Inserts an Item into the list
  ********************************************************************************/
-void SeqNameValues_insertItem(SeqNameValuesPtr *listPtrPtr, char *name,
-                              char *value) {
+void SeqNameValues_insertItem(SeqNameValuesPtr *listPtrPtr, const char *name,
+                              const char *value) {
   SeqNameValuesPtr newPtr = NULL, previousPtr = NULL, currentPtr = NULL;
 
   newPtr = malloc(sizeof(SeqNameValues));

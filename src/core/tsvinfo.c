@@ -202,7 +202,7 @@ int write_db_file(const char *seq_exp_home, const char *datestamp,
   SeqNodeDataPtr ndp = NULL;
   for_pap_list(itr, nodeList) {
 
-    ndp = SeqNode_createNode(itr->path);
+    ndp = SeqNode_createNode((char *)itr->path);
 
     SeqNode_setDatestamp(ndp, datestamp);
     SeqNode_setSeqExpHome(ndp, seq_exp_home);
