@@ -485,6 +485,8 @@ int main(int argc, char *argv[]) {
       fprintf(stdout, "%s\n", &buffer[2]);
 
     break;
+  case NONE:
+    break;
   }
   /* end session */
   alarm(5);
