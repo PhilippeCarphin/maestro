@@ -90,8 +90,9 @@ int isNodeXState(const char *node, const char *loopargs, const char *datestamp,
 /* submission utilities */
 static void submitDependencies(const SeqNodeDataPtr _nodeDataPtr,
                                const char *signal, const char *_flow);
-static void submitForEach(const SeqNodeDataPtr _nodeDataPtr,
-                          const char *signal);
+// Static unused
+// static void submitForEach(const SeqNodeDataPtr _nodeDataPtr,
+//                          const char *signal);
 static void submitNodeList(const SeqNodeDataPtr _nodeDataPtr);
 static void submitLoopSetNodeList(const SeqNodeDataPtr _nodeDataPtr,
                                   SeqNameValuesPtr container_args_ptr,
@@ -2784,6 +2785,7 @@ Inputs:
   _signal - pointer to the signal being checked
 
 */
+#if 0 // STATIC UNUSED FUNCTION
 static void submitForEach(const SeqNodeDataPtr _nodeDataPtr,
                           const char *_signal) {
   char line[SEQ_MAXFIELD];
@@ -2908,6 +2910,7 @@ static void submitForEach(const SeqNodeDataPtr _nodeDataPtr,
   free(tmpExt);
   free(tmpValue);
 }
+#endif
 
 /*
 isNodeXState
