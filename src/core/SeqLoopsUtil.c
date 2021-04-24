@@ -1110,7 +1110,6 @@ SeqNameValuesPtr SeqLoops_submitLoopArgs(const SeqNodeDataPtr _nodeDataPtr,
                                 loopStart);
     }
   }
-  free(loopStart);
   return newLoopsArgsPtr;
 }
 
