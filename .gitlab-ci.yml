@@ -17,6 +17,7 @@ build_cmake:
     - mkdir build
     - cd build
     - export PATH=/home/phc001/miniconda3/bin:$PATH
+    - export PATH=/opt/homebrew/bin:.:/Users/pcarphin/go/bin:/Users/pcarphin/fs/bin:/Users/pcarphin/.local/bin:/Users/pcarphin/.philconfig/utils:.:/opt/homebrew/bin:.:/Users/pcarphin/go/bin:/Users/pcarphin/fs/bin:/Users/pcarphin/.local/bin:/Users/pcarphin/.philconfig/utils:.:/usr/local/bin:/usr/bin:/bin:/usr/sbin:/sbin:/opt/X11/bin:/opt/homebrew/bin:/Users/pcarphin/go/bin:/Users/pcarphin/fs/bin:/Users/pcarphin/.local/bin:/Users/pcarphin/.philconfig/utils:${PATH}
     - cmake .. -DCMAKE_INSTALL_PREFIX=${CI_PROJECT_DIR}/src/core
     - make
   artifacts:
