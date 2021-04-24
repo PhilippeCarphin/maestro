@@ -49,7 +49,6 @@ add_executable(l2d2_admin l2d2_admin_main.c)
 add_executable(l2d2_server l2d2_server_main.c)
 add_executable(logreader logreader_main.c)
 add_executable(maestro maestro_main.c)
-add_executable(mtest mtest_main.c)
 add_executable(nodeinfo nodeinfo_main.c)
 add_executable(nodelogger nodelogger_main.c)
 add_executable(tictac tictac_main.c)
@@ -63,7 +62,6 @@ install(TARGETS
     l2d2_server
     logreader
     maestro
-    mtest
     nodeinfo
     nodelogger
     tictac
