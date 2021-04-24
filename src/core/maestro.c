@@ -2702,6 +2702,9 @@ static void submitDependencies(const SeqNodeDataPtr _nodeDataPtr,
                           "maestro.submitDependencies() submitCode: %d\n",
                           submitCode);
             if (submitCode != 0) {
+              // PHIL: How this isn't a problem I don't know!
+              // char *SeqLoops_getExtFromLoopArgs(SeqNameValuesPtr _loop_args);
+              // THat's not what the function does
               depExtension = SeqLoops_getExtFromLoopArgs(depArgs);
               sprintf(statusFile, "%s/sequencing/status/%s/%s.%s.%s", depExp,
                       depDatestamp, depNode, depExtension, "end");
@@ -3320,6 +3323,11 @@ int processDepStatus(const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep,
     goto out_free;
   }
 
+  // PHIL: depNodeDataPtr takes a SeqDepDataPtr as it's second argument yet
+  //       depNodeDataPtr is a SeqNodeDataPtr, this should cause massive problems!
+  // int checkTargetedIterations(SeqNodeDataPtr _nodeDataPtr,
+  //                             SeqDepDataPtr depNodeDataPtr, SeqDepDataPtr dep,
+  //                             const char *_flow);
   retval = checkTargetedIterations(_nodeDataPtr, depNodeDataPtr, dep, _flow);
 
   /* loop iterations until we find one that is not satisfied */
@@ -3345,6 +3353,8 @@ int checkTargetedIterations(SeqNodeDataPtr _nodeDataPtr,
   char statusFile[SEQ_MAXFIELD];
   char *lastCheckedIndex = NULL;
   LISTNODEPTR extensions =
+      // PHIL Again this isn't even a pointer to the right type of struct, it's
+      // nuts that this works but I think I know why
       SeqLoops_getLoopContainerExtensionsInReverse(depNodeDataPtr, dep->index);
   LISTNODEPTR itr;
 
