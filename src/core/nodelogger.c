@@ -72,7 +72,7 @@ void nodelogger(const char *job, const char *type, const char *loop_ext,
   struct passwd *p, *p2;
   struct sigaction sa;
   char *logtocreate = NULL;
-  int pathcounter = 0, ret;
+  int pathcounter = 0;
   char *pathelement = NULL, *tmpbuf = NULL, *startOfTmp = NULL;
 
   if (loop_ext == NULL) {
