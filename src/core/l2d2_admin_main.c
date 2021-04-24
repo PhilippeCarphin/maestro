@@ -101,7 +101,7 @@ int main(int argc, char *argv[]) {
   char dpkey[128];
   char cmdBuf[3000];
   char Time[40];
-  char lpargs[512];
+  char lpargs[1024];
   char *mversion = NULL;
   char *mshortcut = NULL;
   char *m5sum = NULL;
