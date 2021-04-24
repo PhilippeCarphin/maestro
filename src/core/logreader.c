@@ -1147,17 +1147,17 @@ int processStats(char *exp, char *datestamp, FILE *output_file) {
       truncate_amount = (avg_counter + 9) / 10;
     }
     submit = secondsToChar(
-        SeqUtil_basicTruncatedMean(&int_submit, avg_counter, truncate_amount));
+        SeqUtil_basicTruncatedMean(int_submit, avg_counter, truncate_amount));
     begin = secondsToChar(
-        SeqUtil_basicTruncatedMean(&int_begin, avg_counter, truncate_amount));
+        SeqUtil_basicTruncatedMean(int_begin, avg_counter, truncate_amount));
     end = secondsToChar(
-        SeqUtil_basicTruncatedMean(&int_end, avg_counter, truncate_amount));
+        SeqUtil_basicTruncatedMean(int_end, avg_counter, truncate_amount));
     submitdelay = secondsToChar(SeqUtil_basicTruncatedMean(
-        &int_submitdelay, avg_counter, truncate_amount));
+        int_submitdelay, avg_counter, truncate_amount));
     exectime = secondsToChar(SeqUtil_basicTruncatedMean(
-        &int_exectime, avg_counter, truncate_amount));
+        int_exectime, avg_counter, truncate_amount));
     deltafromstart = secondsToChar(SeqUtil_basicTruncatedMean(
-        &int_deltafromstart, avg_counter, truncate_amount));
+        int_deltafromstart, avg_counter, truncate_amount));
 
     SeqUtil_printOrWrite(output_file,
                          "SEQNODE=%s:MEMBER=%s:SUBMIT=%s:BEGIN=%s:END=%s:"
