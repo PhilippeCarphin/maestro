@@ -1,3 +1,8 @@
+image: gcc
+before_script:
+  - if [[ $(whoami) != phc001 ]] ; then apt-get update --yes ; fi
+  - if [[ $(whoami) != phc001 ]] ; then apt-get install --yes cmake ; fi
+
 stages:
   - build
   - test
