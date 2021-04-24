@@ -187,7 +187,7 @@ ResourceVisitorPtr newResourceVisitor(SeqNodeDataPtr _nodeDataPtr,
   rv->abortActionFound = RESOURCE_FALSE;
   rv->workerPathFound = RESOURCE_FALSE;
 
-  memset(rv->_nodeStack, '\0', RESOURCE_VISITOR_STACK_SIZE);
+  memset(rv->_nodeStack, '\0', RESOURCE_VISITOR_STACK_SIZE * sizeof(rv->_nodeStack[0]));
   rv->_stackSize = 0;
 
   SeqUtil_TRACE(TL_FULL_TRACE, "newResourceVisitor() end\n");
