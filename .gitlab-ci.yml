@@ -1,10 +1,14 @@
 image: gcc
 before_script:
-  - if [[ $(whoami) != phc001 ]] ; then apt-get update --yes ; fi
-  - if [[ $(whoami) != phc001 ]] ; then apt-get install --yes cmake ; fi
-  - if [[ $(whoami) != phc001 ]] ; then apt-get install --yes openssl ; fi
-  - if [[ $(whoami) != phc001 ]] ; then apt-get install --yes libxml2; fi
-  - if [[ $(whoami) != phc001 ]] ; then apt-get install --yes libxml2-dev ; fi
+  - if [[ $(whoami) != phc001 ]] ; then
+        apt-get update --yes
+        apt-get install --yes openssl
+        apt-get install --yes libxml2
+        apt-get install --yes libxml2-dev
+        apt-get install --yes cmake
+        dpkg -L openssl
+        dpkg -L libxml2
+    fi
 
 stages:
   - build
