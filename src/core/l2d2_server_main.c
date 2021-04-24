@@ -59,21 +59,19 @@ double diff_t;
 /* global default data for l2d2server */
 _clean_times L2D2_cleantimes = {1, 48, 48, 25, 25};
 
-_l2d2server L2D2 = {0,    0,    0,    0,    30,   24,   1,    4,    20,   '\0',
-                    '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
-                    '\0', '\0', '\0', '\0', '\0', '\0', '\0', 0,    0};
-// Just initialize it normally
-// L2D2
-//  L2D2.pid = 0;
-//  L2D2.depProcPid = 0;
-//  L2D2.sock = 0;
-//  L2D2.port = 0;
-//  ...
-// or make a function becuse I can't figure out how to place the braces for it
-// not to say that it is missing things
-//
-// This weird initialization adds nothing.
-
+_l2d2server L2D2 = {
+    .pid = 0,
+    .depProcPid = 0,
+    .sock = 0,
+    .port = 0,
+    .pollfreq = 30,
+    .dependencyTimeOut = 24,
+    .dzone = 1,
+    .maxNumOfProcess = 4,
+    .maxClientPerProcess = 20,
+    .port_min = 0,
+    .port_max = 0
+};
 
 /* variable for Signal handlers */
 volatile sig_atomic_t ProcessCount = 0; /* number of workers */
