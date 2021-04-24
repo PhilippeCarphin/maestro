@@ -147,7 +147,6 @@ int isDirExists(const char *path_name) {
 
   DIR *pDir = NULL;
   int Exists = 0;
-  int ret;
 
   if (path_name == NULL)
     return 0;
@@ -155,7 +154,7 @@ int isDirExists(const char *path_name) {
 
   if (pDir != NULL) {
     Exists = 1;
-    ret = closedir(pDir);
+    closedir(pDir);
   }
 
   return (Exists);
