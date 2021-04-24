@@ -34,7 +34,6 @@
 extern _l2d2server L2D2;
 extern FILE *mlog;
 dpnode *PRT_listdep;
-static void pdir(const char *dir_name);
 
 /**
  * Copied from SeqUtil
