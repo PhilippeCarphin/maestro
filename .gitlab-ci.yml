@@ -34,7 +34,8 @@ build_cmake:
     - cd src/core
     - mkdir build
     - cd build
-    - /home/phc001/miniconda3/bin/cmake .. -DCMAKE_INSTALL_PREFIX=${CI_PROJECT_DIR}/src/core
+    - export PATH=/home/phc001/miniconda3/bin:$PATH
+    - cmake .. -DCMAKE_INSTALL_PREFIX=${CI_PROJECT_DIR}/src/core
     - make
   artifacts:
     untracked: true
