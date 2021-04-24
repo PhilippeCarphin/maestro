@@ -71,7 +71,8 @@ volatile sig_atomic_t sig_recv = 0;
 volatile sig_atomic_t sig_child = 0;
 
 /* signal handler for sesion control not used for the moment  */
-static void recv_handler(int notused) { sig_recv = 1; }
+// Static but never used
+// static void recv_handler(int notused) { sig_recv = 1; }
 
 static void show_usage() {
   char *usage = "For complete and up to date information on this command, see "
@@ -1268,7 +1269,7 @@ static void maestro_l2d2_main_process_server(int fserver) {
           }
           kill(L2D2.depProcPid, 9);
           /* send email notice */
-          snprintf(message, sizeof(message),
+          snprintf((char*)message, sizeof(message),
                    "maestro server (pid=%u) died (at:%s) after being "
                    "re-started 2 times, Please check",
                    L2D2.pid, Time);
@@ -1314,7 +1315,7 @@ static void maestro_l2d2_main_process_server(int fserver) {
             if(ChildPids[j] != 0)
               kill(ChildPids[j], 9);
           }
-          snprintf(message, sizeof(message),
+          snprintf((char*)message, sizeof(message),
                    "Dependency manager (pid=%u) died (at:%s) after being "
                    "re-started, mserver exiting, Please check",
                    L2D2.depProcPid, Time);
