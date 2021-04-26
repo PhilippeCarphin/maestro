@@ -22,8 +22,8 @@
 
 char *absolutePath(const char *relativePath) {
   SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() begin\n");
-  char *absPath = (char *)malloc(strlen(TEST_FILES_DIR) + 1 + strlen(relativePath) + 1);
-  sprintf(absPath, "%s%c%s", TEST_FILES_DIR, '/', relativePath);
+  char *absPath = (char *)malloc(strlen(C_TEST_FILES_FOLDER) + 1 + strlen(relativePath) + 1);
+  sprintf(absPath, "%s%c%s", C_TEST_FILES_FOLDER, '/', relativePath);
   SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() end, returning %s\n", absPath);
   return absPath;
 }

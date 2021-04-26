@@ -21,9 +21,9 @@
 
 char *absolutePath(const char *relativePath) {
   SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() begin\n");
-  char *absPath = (char *)malloc(strlen(TEST_FILES_DIR) + 1 +
+  char *absPath = (char *)malloc(strlen(C_TEST_FILES_FOLDER) + 1 +
                                  strlen(relativePath) + 1);
-  sprintf(absPath, "%s%c%s", TEST_FILES_DIR, '/', relativePath);
+  sprintf(absPath, "%s%c%s", C_TEST_FILES_FOLDER, '/', relativePath);
   SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() end, returning %s\n", absPath);
   return absPath;
 }
@@ -106,7 +106,7 @@ int main(int argc, char *argv[]) {
   while (*(p - 1) != '/')
     --p;
 
-  puts(TEST_FILES_DIR);
+  puts(C_TEST_FILES_FOLDER);
 
   if ((datestamp == NULL) && ((tmpDate = getenv("SEQ_DATE")) != NULL)) {
     datestamp = malloc(PADDED_DATE_LENGTH + 1);

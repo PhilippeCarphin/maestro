@@ -47,7 +47,7 @@ objects: $(OBJ)
 %.o:%.c
 	$(CC) $(CFLAGS) -c $<
 test_%.o:test_%.c
-	$(CC) $(CFLAGS) -c $< -DTEST_FILES_DIR=\"$(PWD)/../../tests/mock_files/c_tests\"
+	$(CC) $(CFLAGS) -c $< -DC_TEST_FILES_FOLDER=\"$(PWD)/../../tests/mock_files/c_tests\"
 
 %.out:%.o $(LIB_OBJ)
 	$(CC) $^ $(LD_FLAGS) $(LD_LIBS) -o $@

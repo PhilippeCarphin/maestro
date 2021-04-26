@@ -28,10 +28,10 @@
  ********************************************************************************/
 char *absolutePath(const char *relativePath) {
   SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() begin\n");
-  char *absPath = (char *)malloc(strlen(TEST_FILES_DIR
+  char *absPath = (char *)malloc(strlen(C_TEST_FILES_FOLDER
 ) + 1 +
                                  strlen(relativePath) + 1);
-  sprintf(absPath, "%s%c%s", TEST_FILES_DIR, '/', relativePath);
+  sprintf(absPath, "%s%c%s", C_TEST_FILES_FOLDER, '/', relativePath);
   SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() end, returning %s\n", absPath);
   return absPath;
 }
@@ -51,12 +51,12 @@ FlowVisitorPtr createTestFlowVisitor() {
 
   char postfix[] = "/flow.xml";
   char *xmlFilename =
-      (char *)malloc(strlen(TEST_FILES_DIR) + strlen(postfix) + 1);
+      (char *)malloc(strlen(C_TEST_FILES_FOLDER) + strlen(postfix) + 1);
   if (xmlFilename == NULL) {
     raiseError("createTestFlowVisitor(): out of memory\n");
   }
 
-  sprintf(xmlFilename, "%s%s", TEST_FILES_DIR, postfix);
+  sprintf(xmlFilename, "%s%s", C_TEST_FILES_FOLDER, postfix);
   xmlDocPtr doc = XmlUtils_getdoc(xmlFilename);
   if (doc == NULL) {
     raiseError("createTestFlowVisitor(): file %s not found or unreadable\n",
@@ -164,7 +164,7 @@ int main(int argc, char *argv[]) {
   while (*(p - 1) != '/')
     --p;
 
-  puts(TEST_FILES_DIR);
+  puts(C_TEST_FILES_FOLDER);
 
   if ((datestamp == NULL) && ((tmpDate = getenv("SEQ_DATE")) != NULL)) {
     datestamp = malloc(PADDED_DATE_LENGTH + 1);

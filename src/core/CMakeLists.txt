@@ -76,7 +76,7 @@ macro(add_maestro_test test_name test_source)
     add_executable(${test_name} ${test_source})
     add_test(NAME ${test_name} COMMAND ${test_name})
     add_dependencies(check ${test_name})
-    add_compile_definitions(TEST_FILES_DIR=\"${CMAKE_SOURCE_DIR}/../../tests/mock_files/c_tests\")
+    add_compile_definitions(C_TEST_FILES_FOLDER=\"${CMAKE_SOURCE_DIR}/../../tests/mock_files/c_tests\")
 endmacro()
 
 

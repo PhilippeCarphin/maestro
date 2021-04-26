@@ -28,7 +28,7 @@
  * This file assumes that the executable is being run from the maestro directory
  * so that paths can be relative to that directory:
  *
- * TEST_FILES_DIR is the location to look in for whaterver files are being
+ * C_TEST_FILES_FOLDER is the location to look in for whaterver files are being
  *used for these tests.
  *
  * It is encouraged to put all files that need to be accessed in
@@ -50,16 +50,16 @@
 
 /********************************************************************************
  * Creates an absolute path by appending the relative path to
- *TEST_FILES_DIR, where TEST_FILES_DIR =
- *${MAESTRO_REPO_LOCATION}/TEST_FILES_DIR/ This should be used for any
+ *C_TEST_FILES_FOLDER, where C_TEST_FILES_FOLDER =
+ *${MAESTRO_REPO_LOCATION}/C_TEST_FILES_FOLDER/ This should be used for any
  *paths so that the tests can be portable to different users who keep their
  *maestro stuff in different places.
  ********************************************************************************/
 char *absolutePath(const char *relativePath) {
   SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() begin\n");
-  char *absPath = (char *)malloc(strlen(TEST_FILES_DIR) + 1 +
+  char *absPath = (char *)malloc(strlen(C_TEST_FILES_FOLDER) + 1 +
                                  strlen(relativePath) + 1);
-  sprintf(absPath, "%s%c%s", TEST_FILES_DIR, '/', relativePath);
+  sprintf(absPath, "%s%c%s", C_TEST_FILES_FOLDER, '/', relativePath);
   SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() end, returning %s\n", absPath);
   return absPath;
 }
@@ -163,7 +163,7 @@ int main(int argc, char *argv[]) {
   while (*(p - 1) != '/')
     --p;
 
-  puts(TEST_FILES_DIR);
+  puts(C_TEST_FILES_FOLDER);
 
   if ((datestamp == NULL) && ((tmpDate = getenv("SEQ_DATE")) != NULL)) {
     datestamp = malloc(PADDED_DATE_LENGTH + 1);
