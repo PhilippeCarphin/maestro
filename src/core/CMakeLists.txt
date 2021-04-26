@@ -76,7 +76,9 @@ macro(add_maestro_test test_name test_source)
     add_executable(${test_name} ${test_source})
     add_test(NAME ${test_name} COMMAND ${test_name})
     add_dependencies(check ${test_name})
+    add_compile_definitions(MAESTRO_BUILT_WITH_CMAKE)
 endmacro()
+
 
 add_maestro_test(test_datestamp test_datestamp.c)
 add_maestro_test(test_MISC test_MISC.c)

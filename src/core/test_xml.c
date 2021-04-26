@@ -165,7 +165,7 @@ int main(int argc, char *argv[]) {
   while (*(p - 1) != '/')
     --p;
 
-#ifdef CMAKE
+#ifdef MAESTRO_BUILT_WITH_CMAKE
   char *suffix = "/../../../tests/mock_files/c_tests";
 #else
   char *suffix = "/../../tests/mock_files/c_tests";
