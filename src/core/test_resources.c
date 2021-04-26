@@ -19,20 +19,18 @@
 #include "XmlUtils.h"
 #include "l2d2_commun.h"
 
-static char *c_test_files_folder = NULL;
-
 /********************************************************************************
  * Creates an absolute path by appending the relative path to
- *c_test_files_folder, where c_test_files_folder =
- *${MAESTRO_REPO_LOCATION}/c_test_files_folder/ This should be used for any
+ *TEST_FILES_DIR, where TEST_FILES_DIR =
+ *${MAESTRO_REPO_LOCATION}/TEST_FILES_DIR/ This should be used for any
  *paths so that the tests can be portable to different users who keep their
  *maestro stuff in different places.
  ********************************************************************************/
 char *absolutePath(const char *relativePath) {
   SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() begin\n");
-  char *absPath = (char *)malloc(strlen(c_test_files_folder) + 1 +
+  char *absPath = (char *)malloc(strlen(TEST_FILES_DIR) + 1 +
                                  strlen(relativePath) + 1);
-  sprintf(absPath, "%s%c%s", c_test_files_folder, '/', relativePath);
+  sprintf(absPath, "%s%c%s", TEST_FILES_DIR, '/', relativePath);
   SeqUtil_TRACE(TL_FULL_TRACE, "absolutePath() end, returning %s\n", absPath);
   return absPath;
 }
@@ -265,17 +263,7 @@ int main(int argc, char *argv[]) {
   while (*(p - 1) != '/')
     --p;
 
-#ifdef MAESTRO_BUILT_WITH_CMAKE
-  char *suffix = "/../../../tests/mock_files/c_tests";
-#else
-  char *suffix = "/../../tests/mock_files/c_tests";
-#endif
-
-  c_test_files_folder =
-      (char *)malloc(sizeof(char) * (strlen(PWD) + strlen(suffix) + 1));
-  sprintf(c_test_files_folder, "%s%s", PWD, suffix);
-
-  puts(c_test_files_folder);
+  puts(TEST_FILES_DIR);
 
   if ((datestamp == NULL) && ((tmpDate = getenv("SEQ_DATE")) != NULL)) {
     datestamp = malloc(PADDED_DATE_LENGTH + 1);

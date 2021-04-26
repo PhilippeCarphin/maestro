@@ -1,4 +1,4 @@
-include shared-make-configuration.cfg
+# include shared-make-configuration.cfg
 
 XML_LIB_DIR=/usr/lib
 XML_INCLUDE_DIR=/usr/include/libxml2
@@ -46,6 +46,8 @@ objects: $(OBJ)
 
 %.o:%.c
 	$(CC) $(CFLAGS) -c $<
+test_%.o:test_%.c
+	$(CC) $(CFLAGS) -c $< -DTEST_FILES_DIR=\"$(PWD)/../../tests/mock_files/c_tests\"
 
 %.out:%.o $(LIB_OBJ)
 	$(CC) $^ $(LD_FLAGS) $(LD_LIBS) -o $@
