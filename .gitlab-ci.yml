@@ -52,6 +52,8 @@ test_make:
   stage: test
   script:
     - cd src/core
+    - mkdir -p test_tmpdir
+    - export TMPDIR=$PWD/test_tmpdir
     - make test
 
 install:
