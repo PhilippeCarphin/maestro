@@ -51,6 +51,7 @@ test_cmake:
 test_make:
   stage: test
   script:
+    - cd src/core
     - make test
 
 install:
