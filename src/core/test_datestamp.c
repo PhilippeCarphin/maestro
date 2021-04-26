@@ -82,7 +82,12 @@ int main(int argc, char *argv[]) {
   while (*(p - 1) != '/')
     --p;
 
+#ifdef CMAKE
   char *suffix = "/../../../tests/mock_files/c_tests";
+#else
+  char *suffix = "/../../tests/mock_files/c_tests";
+#endif
+
   c_test_files_folder = (char *)malloc(sizeof(char) * (strlen(PWD) + strlen(suffix) + 1));
   sprintf(c_test_files_folder, "%s%s", PWD, suffix);
 

@@ -1,4 +1,4 @@
-# include shared-make-configuration.cfg
+include shared-make-configuration.cfg
 
 XML_LIB_DIR=/usr/lib
 XML_INCLUDE_DIR=/usr/include/libxml2
@@ -26,6 +26,7 @@ LIB_SRC = $(filter-out $(TEST_SRC),$(NO_MAINS))
 OBJ = $(SRC:.c=.o)
 LIB_OBJ = $(LIB_SRC:.c=.o)
 EXECUTABLES = $(MAIN_SRC:.c=.out)
+TEST_EXECS = $(TEST_SRC:.c=.out)
 
 # UNUSED VARIABLES, I don't know what they are for so I will leave them
 LIBDIR=lib
@@ -63,5 +64,8 @@ vars:
 	@echo "LIB_OBJ = $(LIB_OBJ)"
 	@echo "EXECUTABLES = $(EXECUTABLES)"
 	@echo "SRC = $(SRC)"
+
+test: $(TEST_EXECS)
+	for t in $(TEST_EXECS) ; do ./$$t ; done
 
 -include *.d

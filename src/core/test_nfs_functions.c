@@ -177,18 +177,13 @@ int main(int argc, char *argv[]) {
     ;
   while (*(p - 1) != '/')
     --p;
-//   if (strcmp(p, "maestro") != 0) {
-//     SeqUtil_TRACE(TL_FULL_TRACE, "\
-// Main function for doing tests, please run this from the maestro directory so\n\
-// that the location of the test files may be known.  Eg by doing \n\
-//    'make install; mtest'\n\
-// or\n\
-//    'make; ./src/mtest\n\
-// from the maestro directory.\n");
-//     exit(1);
-//   }
 
+#ifdef CMAKE
   char *suffix = "/../../../tests/mock_files/c_tests";
+#else
+  char *suffix = "/../../tests/mock_files/c_tests";
+#endif
+
   c_test_files_folder =
       (char *)malloc(sizeof(char) * (strlen(PWD) + strlen(suffix) + 1));
   sprintf(c_test_files_folder, "%s%s", PWD, suffix);
