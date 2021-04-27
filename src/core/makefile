@@ -68,6 +68,6 @@ vars:
 	@echo "SRC = $(SRC)"
 
 test: $(TEST_EXECS)
-	for t in $(TEST_EXECS) ; do ./$$t ; done
+	set -e ; for t in $(TEST_EXECS) ; do ./$$t ; done
 
 -include *.d
