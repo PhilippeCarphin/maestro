@@ -90,8 +90,6 @@ int isNodeXState(const char *node, const char *loopargs, const char *datestamp,
 /* submission utilities */
 static void submitDependencies(const SeqNodeDataPtr _nodeDataPtr,
                                const char *signal, const char *_flow);
-static void submitForEach(const SeqNodeDataPtr _nodeDataPtr,
-                          const char *signal);
 static void submitNodeList(const SeqNodeDataPtr _nodeDataPtr);
 static void submitLoopSetNodeList(const SeqNodeDataPtr _nodeDataPtr,
                                   SeqNameValuesPtr container_args_ptr,
@@ -2701,6 +2699,8 @@ static void submitDependencies(const SeqNodeDataPtr _nodeDataPtr,
                           "maestro.submitDependencies() submitCode: %d\n",
                           submitCode);
             if (submitCode != 0) {
+              // SeqLoops_getExtFromLoopArgs uses _loop_args not depArgs
+              // So this doesn't seem correct, but leaving it here so no changes are made.
               depExtension = SeqLoops_getExtFromLoopArgs(depArgs);
               sprintf(statusFile, "%s/sequencing/status/%s/%s.%s.%s", depExp,
                       depDatestamp, depNode, depExtension, "end");
@@ -2768,142 +2768,6 @@ static void submitDependencies(const SeqNodeDataPtr _nodeDataPtr,
     SeqListNode_deleteWholeList(&dependencyLines);
   }
 
-  free(extName);
-  free(tmpExt);
-  free(tmpValue);
-}
-
-/*
-submitForEach
-
- Checks if node has a ForEach node waiting on this, and read the message file to
-submit the right dependency if the submission hasn't been done yet.
-
-Inputs:
-  _nodeDataPtr - pointer to the node targetted by the execution
-  _signal - pointer to the signal being checked
-
-*/
-static void submitForEach(const SeqNodeDataPtr _nodeDataPtr,
-                          const char *_signal) {
-  char line[SEQ_MAXFIELD];
-  FILE *FEFile = NULL;
-  SeqNameValuesPtr newArgs = NULL, poppedArgs = NULL;
-  char depExp[256], depNode[256], depIndex[128], depArgs[256], depDatestamp[20],
-      poppedValue[128];
-  char filename[SEQ_MAXFIELD], submitCmd[SEQ_MAXFIELD], extendedArgs[256];
-  char *extName = NULL, *tmpValue = NULL, *tmpExt = NULL;
-  int submitCode = 0, line_count = 0, ret;
-
-  SeqUtil_TRACE(TL_FULL_TRACE, "maestro.submitForEach() executing for %s\n",
-                _nodeDataPtr->nodeName);
-
-  LISTNODEPTR cmdList = NULL;
-
-  newArgs = SeqNameValues_clone(_nodeDataPtr->loop_args);
-  SeqNameValues_popValue(&newArgs, poppedValue, sizeof(poppedValue));
-  tmpExt = (char *)SeqLoops_getExtFromLoopArgs(newArgs);
-  SeqUtil_stringAppend(&extName, _nodeDataPtr->name);
-  if ((tmpExt = (char *)SeqLoops_getExtFromLoopArgs(newArgs)) != NULL) {
-    SeqUtil_stringAppend(&extName, ".");
-    SeqUtil_stringAppend(&extName, tmpExt);
-  }
-  ret = SeqLoops_parseArgs(&poppedArgs, poppedValue);
-
-  memset(filename, '\0', sizeof filename);
-  sprintf(filename, "%s%s%s/%s.FE_%s", _nodeDataPtr->expHome, LOCAL_DEPENDS_DIR,
-          _nodeDataPtr->datestamp, extName, _signal);
-  SeqUtil_TRACE(TL_FULL_TRACE,
-                "maestro.submitForEach() looking for FE file=%s\n", filename);
-
-  if (_access(filename, R_OK, _nodeDataPtr->expHome) == 0) {
-    memset(submitCmd, '\0', sizeof submitCmd);
-
-    SeqUtil_TRACE(TL_FULL_TRACE, "maestro.submitForEach() found FE file=%s\n",
-                  filename);
-    /* build a node list for all entries found in the waited file */
-    if ((FEFile = _fopen(filename, MLLServerConnectionFid)) != NULL) {
-      while (fgets(line, sizeof(line), FEFile) != NULL) {
-        memset(depExp, '\0', sizeof depExp);
-        memset(depNode, '\0', sizeof depNode);
-        memset(depDatestamp, '\0', sizeof depDatestamp);
-        memset(depIndex, '\0', sizeof depIndex);
-        memset(depArgs, '\0', sizeof depArgs);
-        memset(extendedArgs, '\0', sizeof extendedArgs);
-        line_count++;
-        SeqUtil_TRACE(TL_FULL_TRACE,
-                      "maestro.submitForEach() from waited file line: %s\n",
-                      line);
-        ret = sscanf(
-            line,
-            "exp=%255s node=%255s datestamp=%19s index_to_add=%127s args=%255s",
-            depExp, depNode, depDatestamp, depIndex, depArgs);
-        if (ret != 5) {
-          ret = sscanf(
-              line,
-              "exp=%255s node=%255s datestamp=%19s index_to_add=%127s args=",
-              depExp, depNode, depDatestamp, depIndex);
-          if (ret != 4) {
-            fprintf(stderr,
-                    "Format error in scanning current line: %s . Skipping. \n",
-                    line);
-            continue;
-          }
-        }
-        SeqUtil_TRACE(TL_FULL_TRACE,
-                      "maestro.submitForEach() file line parsed depExp:%s "
-                      "depNode:%s depDatestamp:%s depIndex:%s depArgs:%s\n",
-                      depExp, depNode, depDatestamp, depIndex, depArgs);
-
-        /* build loop args based on depArgs and adding the index to add */
-
-        if ((depArgs != NULL) && (strlen(depArgs) > 0)) {
-          sprintf(extendedArgs, "-l %s,%s=%s", depArgs,
-                  SeqUtil_getPathLeaf(depNode),
-                  SeqNameValues_getValue(_nodeDataPtr->loop_args, depIndex));
-        } else {
-          sprintf(extendedArgs, "-l %s=%s", SeqUtil_getPathLeaf(depNode),
-                  SeqNameValues_getValue(_nodeDataPtr->loop_args, depIndex));
-        }
-        SeqUtil_TRACE(TL_FULL_TRACE,
-                      "maestro.submitForEach() extendedArgs:%s\n",
-                      extendedArgs);
-
-        sprintf(submitCmd,
-                "(export SEQ_EXP_HOME=%s;maestro -d %s -s submit -f continue "
-                "-n %s %s)",
-                depExp, depDatestamp, depNode, extendedArgs);
-        /* add nodes to be submitted if not already there */
-        if (SeqListNode_isItemExists(cmdList, submitCmd) == 0) {
-          SeqListNode_insertItem(&cmdList, submitCmd);
-        }
-      }
-      fclose(FEFile);
-
-      /* warn if file empty ... */
-      if (line_count == 0)
-        raiseError("FE file:%s (submitForEach) EMPTY !!!! \n", filename);
-
-    } else {
-      raiseError("maestro cannot read file: %s (submitForEach) \n", filename);
-    }
-  }
-  /*  go and submit the nodes from the cmd list */
-  while (cmdList != NULL) {
-    SeqUtil_TRACE(TL_FULL_TRACE,
-                  "maestro.submitForEach() calling submit cmd: %s\n",
-                  cmdList->data);
-    submitCode = system(cmdList->data);
-    SeqUtil_TRACE(TL_FULL_TRACE, "maestro.submitForEach() submitCode: %d\n",
-                  submitCode);
-    if (submitCode != 0) {
-      raiseError("An error happened while submitting dependant nodes error "
-                 "number: %d\n",
-                 submitCode);
-    }
-    cmdList = cmdList->nextPtr;
-  }
-  SeqListNode_deleteWholeList(&cmdList);
   free(extName);
   free(tmpExt);
   free(tmpValue);
@@ -3317,6 +3181,8 @@ int processDepStatus(const SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep,
     goto out_free;
   }
 
+  // depNodeDataPtr seems to be a pointer to the wrong type of struct.
+  // Leaving this here instead of trying out risky changes.
   retval = checkTargetedIterations(_nodeDataPtr, depNodeDataPtr, dep, _flow);
 
   /* loop iterations until we find one that is not satisfied */
@@ -3342,6 +3208,8 @@ int checkTargetedIterations(SeqNodeDataPtr _nodeDataPtr,
   char statusFile[SEQ_MAXFIELD];
   char *lastCheckedIndex = NULL;
   LISTNODEPTR extensions =
+  // depNodeDataPtr seems to be a pointer to the wrong type of struct.
+  // Leaving this here instead of trying out risky changes.
       SeqLoops_getLoopContainerExtensionsInReverse(depNodeDataPtr, dep->index);
   LISTNODEPTR itr;
 
@@ -3412,7 +3280,7 @@ int writeWaitedFile(SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep,
   int writeStatus = 0;
   if (dep->exp_scope == InterUser) {
     writeStatus = writeInterUserNodeWaitedFile(
-        _nodeDataPtr, dep->node_name, dep->index, extension, dep->datestamp,
+        _nodeDataPtr, dep->node_name, dep->index, (char*) extension, dep->datestamp,
         dep->status, dep->exp, dep->protocol, statusFile, _flow);
   } else {
     writeStatus = writeNodeWaitedFile(_nodeDataPtr, dep->exp, dep->node_name,

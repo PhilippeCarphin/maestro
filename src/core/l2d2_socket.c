@@ -453,8 +453,8 @@ int send_socket(int sock, char *buf, int size, unsigned int timeout) {
 /**
  * Initiate a connection with maestro_server mserver
  */
-int do_Login(int sock, unsigned int pid, char *node, char *xpname, char *signl,
-             char *username, char **m5) {
+int do_Login(int sock, unsigned int pid, const char *node, const char *xpname, const char *signl,
+             const char *username, char *const*m5) {
 
   char host[25];
   char bLogin[1024];
