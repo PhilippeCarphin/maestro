@@ -18,12 +18,15 @@ LD_FLAGS=-L. -L$(XML_LIB_DIR)
 # Source file lists
 SRC = $(wildcard *.c)
 MAIN_SRC = $(filter %_main.c,$(SRC))
-LIB_SRC = $(filter-out $(MAIN_SRC),$(SRC))
+TEST_SRC = $(filter test_%.c,$(SRC))
+NO_MAINS = $(filter-out $(MAIN_SRC),$(SRC))
+LIB_SRC = $(filter-out $(TEST_SRC),$(NO_MAINS))
 
 # Targets
 OBJ = $(SRC:.c=.o)
 LIB_OBJ = $(LIB_SRC:.c=.o)
 EXECUTABLES = $(MAIN_SRC:.c=.out)
+TEST_EXECS = $(TEST_SRC:.c=.out)
 
 # UNUSED VARIABLES, I don't know what they are for so I will leave them
 LIBDIR=lib
@@ -43,6 +46,8 @@ objects: $(OBJ)
 
 %.o:%.c
 	$(CC) $(CFLAGS) -c $<
+test_%.o:test_%.c
+	$(CC) $(CFLAGS) -c $< -DC_TEST_FILES_FOLDER=\"$(PWD)/../../tests/mock_files/c_tests\"
 
 %.out:%.o $(LIB_OBJ)
 	$(CC) $^ $(LD_FLAGS) $(LD_LIBS) -o $@
@@ -61,5 +66,8 @@ vars:
 	@echo "LIB_OBJ = $(LIB_OBJ)"
 	@echo "EXECUTABLES = $(EXECUTABLES)"
 	@echo "SRC = $(SRC)"
+
+test: $(TEST_EXECS)
+	set -e ; for t in $(TEST_EXECS) ; do ./$$t ; done
 
 -include *.d
