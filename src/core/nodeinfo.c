@@ -219,7 +219,7 @@ int validateDepLocalArgs(SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep,
           SeqUtil_TRACE(TL_FULL_TRACE,
                         "Nodeinfo_parseDepends() inserting token=%s value=%s\n",
                         tok_name, tok_value);
-          SeqNameValues_insertItem(tokenValues, tok_name, tok_value);
+          SeqNameValues_insertItem(tokenValues, (char *) tok_name, tok_value);
         }
         free(tok_value);
       }
@@ -261,7 +261,7 @@ int validateDepArgs(SeqNodeDataPtr _nodeDataPtr, SeqDepDataPtr dep,
                       "Nodeinfo_parseDepends() looking for token=%s\n",
                       tok_name);
         SeqNameValues_printList(*tokenValues);
-        if ((tok_value = SeqNameValues_getValue(*tokenValues, tok_name)) !=
+        if ((tok_value = SeqNameValues_getValue(*tokenValues, (char*)tok_name)) !=
             NULL) {
           SeqNameValues_setValue(depArgs, itr->name, tok_value);
         }
@@ -489,7 +489,7 @@ void parseLoopAttributes(xmlXPathObjectPtr _result, const char *_loop_node_path,
       }
     }
     if (loopStep != NULL || loopSet != NULL || loopExpression != NULL) {
-      SeqNode_addNumLoop(_nodeDataPtr, _loop_node_path, loopStart, loopStep,
+      SeqNode_addNumLoop(_nodeDataPtr, (char*)_loop_node_path, loopStart, loopStep,
                          loopSet, loopEnd, loopExpression);
     }
   }
@@ -822,7 +822,7 @@ int doesNodeExist(const char *_nodePath, const char *_seq_exp_home,
   int nodeExists = FLOW_FALSE;
   char *newNode = (char *)SeqUtil_fixPath(_nodePath);
   SeqNodeDataPtr tempNode = (SeqNodeDataPtr)SeqNode_createNode(newNode);
-  const char *newDatestamp = tictac_getDate(_seq_exp_home, NULL, _datestamp);
+  const char *newDatestamp = tictac_getDate((char*)_seq_exp_home, NULL, (char*)_datestamp);
   SeqNode_setDatestamp(tempNode, (const char *)newDatestamp);
 
   if (Flow_walkPath(flow_visitor, tempNode, _nodePath) == FLOW_SUCCESS)
@@ -832,7 +832,7 @@ int doesNodeExist(const char *_nodePath, const char *_seq_exp_home,
 
   Flow_deleteVisitor(flow_visitor);
   free(newNode);
-  free(newDatestamp);
+  free((char*)newDatestamp);
   SeqNode_freeNode(tempNode);
   SeqUtil_TRACE(TL_FULL_TRACE, "doesNodeExist() end\n");
   return nodeExists;
@@ -850,7 +850,7 @@ SeqNodeDataPtr nodeinfo(const char *node, unsigned int filters,
     raiseError("SEQ_EXP_HOME not set! (nodeinfo) \n");
   }
 
-  newNode = (const char *)SeqUtil_fixPath(node);
+  newNode = SeqUtil_fixPath(node);
   SeqUtil_TRACE(TL_FULL_TRACE,
                 "nodeinfo.nodeinfo() trying to create node %s, exp %s\n",
                 newNode, _exp_home);
@@ -864,7 +864,7 @@ SeqNodeDataPtr nodeinfo(const char *node, unsigned int filters,
                 "nodeinfo.nodefinfo() argument datestamp %s. If (null), will "
                 "run tictac to find value.\n",
                 datestamp);
-  const char *newDatestamp = tictac_getDate(_exp_home, NULL, datestamp);
+  const char *newDatestamp = tictac_getDate((char*)_exp_home, NULL, datestamp);
   SeqNode_setDatestamp(nodeDataPtr, newDatestamp);
   /*pass the content of the command-line (or interface) extra soumet args to the
    * node*/

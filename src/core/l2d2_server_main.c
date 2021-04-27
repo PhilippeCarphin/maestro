@@ -58,9 +58,20 @@ double diff_t;
 
 /* global default data for l2d2server */
 _clean_times L2D2_cleantimes = {1, 48, 48, 25, 25};
-_l2d2server L2D2 = {0,    0,    0,    0,    30,   24,   1,    4,    20,   '\0',
-                    '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0', '\0',
-                    '\0', '\0', '\0', '\0', '\0', '\0', '\0', 0,    0};
+
+_l2d2server L2D2 = {
+    .pid = 0,
+    .depProcPid = 0,
+    .sock = 0,
+    .port = 0,
+    .pollfreq = 30,
+    .dependencyTimeOut = 24,
+    .dzone = 1,
+    .maxNumOfProcess = 4,
+    .maxClientPerProcess = 20,
+    .port_min = 0,
+    .port_max = 0
+};
 
 /* variable for Signal handlers */
 volatile sig_atomic_t ProcessCount = 0; /* number of workers */
@@ -71,7 +82,8 @@ volatile sig_atomic_t sig_recv = 0;
 volatile sig_atomic_t sig_child = 0;
 
 /* signal handler for sesion control not used for the moment  */
-static void recv_handler(int notused) { sig_recv = 1; }
+// Static but never used
+// static void recv_handler(int notused) { sig_recv = 1; }
 
 static void show_usage() {
   char *usage = "For complete and up to date information on this command, see "
@@ -1268,7 +1280,7 @@ static void maestro_l2d2_main_process_server(int fserver) {
           }
           kill(L2D2.depProcPid, 9);
           /* send email notice */
-          snprintf(message, sizeof(message),
+          snprintf((char*)message, sizeof(message),
                    "maestro server (pid=%u) died (at:%s) after being "
                    "re-started 2 times, Please check",
                    L2D2.pid, Time);
@@ -1314,7 +1326,7 @@ static void maestro_l2d2_main_process_server(int fserver) {
             if(ChildPids[j] != 0)
               kill(ChildPids[j], 9);
           }
-          snprintf(message, sizeof(message),
+          snprintf((char*)message, sizeof(message),
                    "Dependency manager (pid=%u) died (at:%s) after being "
                    "re-started, mserver exiting, Please check",
                    L2D2.depProcPid, Time);

@@ -11,8 +11,8 @@ typedef struct _SeqNameValues {
 
 typedef SeqNameValues *SeqNameValuesPtr;
 
-void SeqNameValues_insertItem(SeqNameValuesPtr *listPtrPtr, char *name,
-                              char *value);
+void SeqNameValues_insertItem(SeqNameValuesPtr *listPtrPtr, const char *name,
+                              const char *value);
 void SeqNameValues_deleteItem(SeqNameValuesPtr *listPtrPtr, char *name);
 void SeqNameValues_printList(SeqNameValuesPtr listPtr);
 char *SeqNameValues_getValue(SeqNameValuesPtr ptr, char *attr_name);

@@ -482,8 +482,8 @@ int test_Resource_parseWorkerPath() {
 const char *getVarName(const char *, const char *, const char *);
 int test_getVarName() {
   header("getVarName()");
-  char *input = "$((varname))";
-  char *output = getVarName(input, "$((", "))");
+  const char *input = "$((varname))";
+  const char *output = getVarName(input, "$((", "))");
   fprintf(stderr, "%s -> %s\n", input, output);
   if (strcmp(output, "varname") != 0)
     raiseError("TEST_FAILED:%s()[%s:%d]\n", __func__, __FILE__, __LINE__);

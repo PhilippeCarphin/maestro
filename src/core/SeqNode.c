@@ -173,7 +173,7 @@ void SeqNode_setCpu(SeqNodeDataPtr node_ptr, const char *cpu) {
 }
 
 void SeqNode_setCpu_new(SeqNodeDataPtr node_ptr, const char *cpu) {
-  char *strPtr = cpu;
+  const char *strPtr = cpu;
   int value1 = 0, value2 = 0, value3 = 0;
   size_t x_count = 0;
   if (cpu != NULL) {
@@ -839,9 +839,9 @@ const char *SeqNode_getCfgPath(SeqNodeDataPtr node_ptr) {
 }
 
 void SeqNode_printCfgPath(FILE *file, SeqNodeDataPtr node_ptr) {
-  char *cfg_path = SeqNode_getCfgPath(node_ptr);
+  const char *cfg_path = SeqNode_getCfgPath(node_ptr);
   SeqUtil_printOrWrite(file, "node.configpath=${SEQ_EXP_HOME}%s\n", cfg_path);
-  free(cfg_path);
+  free((char*)cfg_path);
 }
 
 const char *SeqNode_getTaskPath(SeqNodeDataPtr node_ptr) {

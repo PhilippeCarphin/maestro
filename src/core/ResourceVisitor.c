@@ -77,16 +77,16 @@ ValidityDataPtr getValidityData(xmlNodePtr validityNode) {
     raiseError("isValid() must receive a VALIDITY xml node\n");
   ValidityDataPtr val = newValidityData();
 
-  val->dow = (const char *)xmlGetProp(validityNode, (const xmlChar *)"dow");
-  val->hour = (const char *)xmlGetProp(validityNode, (const xmlChar *)"hour");
+  val->dow = (char *)xmlGetProp(validityNode, (const xmlChar *)"dow");
+  val->hour = (char *)xmlGetProp(validityNode, (const xmlChar *)"hour");
   val->time_delta =
-      (const char *)xmlGetProp(validityNode, (const xmlChar *)"time_delta");
+      (char *)xmlGetProp(validityNode, (const xmlChar *)"time_delta");
   val->valid_hour =
-      (const char *)xmlGetProp(validityNode, (const xmlChar *)"valid_hour");
+      (char *)xmlGetProp(validityNode, (const xmlChar *)"valid_hour");
   val->valid_dow =
-      (const char *)xmlGetProp(validityNode, (const xmlChar *)"valid_dow");
+      (char *)xmlGetProp(validityNode, (const xmlChar *)"valid_dow");
   val->local_index =
-      (const char *)xmlGetProp(validityNode, (const xmlChar *)"local_index");
+      (char *)xmlGetProp(validityNode, (const xmlChar *)"local_index");
 
   SeqUtil_TRACE(TL_FULL_TRACE, "getValidityData() end\n");
   return val;
@@ -187,7 +187,7 @@ ResourceVisitorPtr newResourceVisitor(SeqNodeDataPtr _nodeDataPtr,
   rv->abortActionFound = RESOURCE_FALSE;
   rv->workerPathFound = RESOURCE_FALSE;
 
-  memset(rv->_nodeStack, '\0', RESOURCE_VISITOR_STACK_SIZE);
+  memset(rv->_nodeStack, '\0', RESOURCE_VISITOR_STACK_SIZE * sizeof(rv->_nodeStack[0]));
   rv->_stackSize = 0;
 
   SeqUtil_TRACE(TL_FULL_TRACE, "newResourceVisitor() end\n");

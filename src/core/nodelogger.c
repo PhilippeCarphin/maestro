@@ -54,7 +54,8 @@ static int sync_nodelog_over_nfs(const char *job, const char *type,
                                  const char *loop_ext, const char *message,
                                  const char *dtstmp, const char *logtype,
                                  const char *_seq_exp_home);
-static void NotifyUser(int sock, int top, char mode, const char *_seq_exp_home);
+// Static unused
+// static void NotifyUser(int sock, int top, char mode, const char *_seq_exp_home);
 extern char *str2md5(const char *str, int length);
 
 static void log_alarm_handler() {
@@ -72,7 +73,7 @@ void nodelogger(const char *job, const char *type, const char *loop_ext,
   struct passwd *p, *p2;
   struct sigaction sa;
   char *logtocreate = NULL;
-  int pathcounter = 0, ret;
+  int pathcounter = 0;
   char *pathelement = NULL, *tmpbuf = NULL, *startOfTmp = NULL;
 
   if (loop_ext == NULL) {
@@ -652,6 +653,7 @@ static int sync_nodelog_over_nfs(const char *node, const char *type,
  * Notify User if he is using nfs mode, This notification will happen twice a
  * run : in the beginning and end of root Node
  */
+#if 0 // UNUSED STATIC FUNCTION
 static void NotifyUser(int sock, int top, char mode,
                        const char *_seq_exp_home) {
   char bf[512];
@@ -713,3 +715,5 @@ static void NotifyUser(int sock, int top, char mode,
     }
   }
 }
+#endif
+
