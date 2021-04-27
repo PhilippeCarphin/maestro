@@ -1,0 +1,10 @@
+stages:
+  - build_and_test
+
+build_and_test:
+  stage: build_and_test
+  script:
+    - cd src/core
+    - make
+    - export TMPDIR=$PWD
+    - ./mtest_main.out
