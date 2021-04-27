@@ -14,7 +14,7 @@ build:
 test:
   stage: test
   script:
-    - cd src/core/build
+    - cd src/core
     - mkdir test_tmpdir
     - export TMPDIR=$PWD/test_tmpdir
     - make test
