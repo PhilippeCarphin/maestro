@@ -1,0 +1,27 @@
+stages:
+  - build
+  - test
+  - install
+
+build:
+  stage: build
+  script:
+    - cd src/core
+    - make
+  artifacts:
+    untracked: true
+
+test:
+  stage: test
+  script:
+    - cd src/core/build
+    - mkdir test_tmpdir
+    - export TMPDIR=$PWD/test_tmpdir
+    - make test
+
+install:
+  stage: install
+  script:
+    - cd src/core/build
+    - make install
+
