@@ -22,6 +22,6 @@ test:
 install:
   stage: install
   script:
-    - cd src/core/build
+    - cd src/core
     - make install
 
