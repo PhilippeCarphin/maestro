@@ -5,16 +5,9 @@ stages:
 build:
   stage: build
   script:
-    - cd src/core
+    - mkdir build
+    - cd build
+    - cmake .. -DCMAKE_INSTALL_PREFIX=$PWD
     - make
-  artifacts:
-    untracked: true
-
-test:
-  stage: test
-  script:
-    - cd src/core
-    - mkdir test_tmpdir
-    - export TMPDIR=$PWD/test_tmpdir
-    - make test
+    - make check
 
