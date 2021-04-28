@@ -6,52 +6,22 @@
 
 set -eu
 
-SOURCE_FOLDER=markdown
-TARGET_FOLDER=roff
-
-# Verify script was run correctly
-if [ `basename $PWD` != "man" ] ; then
-    echo "This script must be run from the 'man' folder."
-    exit 1
-fi
-if [ ! -d $SOURCE_FOLDER ] ; then
-    echo "Not a folder: '$SOURCE_FOLDER'"
-    exit 1
-fi
-rm -rf $TARGET_FOLDER
-mkdir -p $TARGET_FOLDER
-
-# Create soft link for MANPATH
-ln -s $TARGET_FOLDER man1
-
-# Abort if we cannot generate the man pages.
-# This is done after we have safely created the directory structure.
-if [[ -z $(command -v python3) ]] ; then
-		echo "		
-WARNING: not creating man pages. Python 3 is required, but was not found."
-		sleep 5
-		exit 0
-fi
-
-# Setup Python virtual environment if necessary
-VENV=../python_venv/$ORDENV_PLAT
-if [ ! -d $VENV ] ; then
-    virtualenv -p python3 $VENV || python3 -m venv $VENV
-fi
-$VENV/bin/pip3 install -r requirements.txt
+SOURCE_FOLDER=$1/markdown
+TARGET_FOLDER=$2
+mkdir -p ${TARGET_FOLDER}
 
 # Convert all markdowns to roff
-for markdown in `find $SOURCE_FOLDER -name "*.md"` ; do    
+for markdown in `find $SOURCE_FOLDER -name "*.md"` ; do
     name=`basename $markdown`
     name=${name::-5}
-    
+
     # Copy markdown to a temp file and append the footer.md to it.
     temp_markdown=$TARGET_FOLDER/$(basename $markdown)
     cp $markdown $temp_markdown
-    cat footer.md >> $temp_markdown
-    
+    cat $1/footer.md >> $temp_markdown
+
     echo "Converting markdown to man page for '$name'."
-    $VENV/bin/python3 mrkd.py $temp_markdown $TARGET_FOLDER/$name.1
+    python3 $1/mrkd.py $temp_markdown $TARGET_FOLDER/$name.1
     rm $temp_markdown
 done
 

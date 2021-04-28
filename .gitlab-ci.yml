@@ -1,20 +1,98 @@
+variables:
+  build_dir: /home/phc001/site3/out-of-tree-builds//${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/${CI_PIPELINE_ID}/cmake-build-release
 stages:
-  - build
-  - test
+  - configure
+  - core
+  - tcl_deps
+  - bundle
 
-build:
-  stage: build
+
+before_script:
+  - mkdir -p ${build_dir}
+  - cd ${build_dir}
+  - export CLICOLOR_FORCE=true
+  - export TMPDIR=$PWD
+
+configure:
+  stage: configure
   script:
-    - cd src/core
-    - make
+    - /home/phc001/miniconda3/bin/cmake ${CI_PROJECT_DIR} -DCMAKE_INSTALL_PREFIX=$${CI_PROJECT_DIR}/install-site
   artifacts:
     untracked: true
 
-test:
-  stage: test
+core:
+  stage: core
   script:
     - cd src/core
-    - mkdir test_tmpdir
-    - export TMPDIR=$PWD/test_tmpdir
-    - make test
+    - make
+    - make check
+    - make install
+  artifacts:
+    untracked: true
 
+make_man:
+  stage: core
+  script:
+    - ssh ppp3 "cd $PWD ; CLICOLOR_FORCE=true make man"
+  artifacts:
+    untracked: true
+
+build_tcl:
+  stage: core
+  script:
+    - make tcl8.5.11
+  artifacts:
+    untracked: true
+
+build_tk8.5.11:
+  stage: tcl_deps
+  script:
+    - make tk8.5.11
+  artifacts:
+    untracked: true
+
+build_tcllib-1.13:
+  stage: tcl_deps
+  script:
+    - make tcllib-1.13
+  artifacts:
+    untracked: true
+build_tDOM-0.8.3:
+  stage: tcl_deps
+  script:
+    - make tDOM-0.8.3
+  artifacts:
+    untracked: true
+build_tklib-0.5:
+  stage: tcl_deps
+  script:
+    - make tklib-0.5
+  artifacts:
+    untracked: true
+build_thread2.6.7:
+  stage: tcl_deps
+  script:
+    - make thread2.6.7
+  artifacts:
+    untracked: true
+build_Tktable2.10:
+  stage: tcl_deps
+  script:
+    - make Tktable2.10
+  artifacts:
+    untracked: true
+build_tkimg1.4:
+  stage: tcl_deps
+  script:
+    - make tkimg1.4
+  artifacts:
+    untracked: true
+
+bundle:
+  stage: bundle
+  script:
+    - echo "combining artifacts?"
+    - make install
+  artifacts:
+    paths:
+      - install-site

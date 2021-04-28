@@ -1,4 +1,4 @@
-include shared-make-configuration.cfg
+# include shared-make-configuration.cfg
 
 XML_LIB_DIR=/usr/lib
 XML_INCLUDE_DIR=/usr/include/libxml2
