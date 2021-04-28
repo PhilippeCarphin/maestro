@@ -59,8 +59,8 @@ set(MARKDOWN_OUTPUT
 
 add_custom_command(
 	OUTPUT ${MARKDOWN_OUTPUT}
-	# COMMAND source manvenv/bin/activate
-	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/create_roffs_from_markdown.sh ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}
+	COMMAND source manvenv/bin/activate
+	COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/create_roffs_from_markdown.sh ${CMAKE_CURRENT_SOURCE_DIR} ${CMAKE_CURRENT_BINARY_DIR}/roff
 	DEPENDS venv ${MARKDOWN_INPUT}
 )
 add_custom_target(man ALL DEPENDS ${MARKDOWN_OUTPUT})

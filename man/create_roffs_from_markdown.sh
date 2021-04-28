@@ -10,12 +10,6 @@ SOURCE_FOLDER=$1/markdown
 TARGET_FOLDER=$2
 mkdir -p ${TARGET_FOLDER}
 
-if ! [ -e venv/bin/activate ] ; then
-	echo "NNNNNOOOOOOOOOOOOOOOOOOOOOOOOOO"
-	exit 8
-fi
-source manvenv/bin/activate
-
 # Convert all markdowns to roff
 for markdown in `find $SOURCE_FOLDER -name "*.md"` ; do
     name=`basename $markdown`
