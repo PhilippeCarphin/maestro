@@ -3,7 +3,6 @@ macro(add_tcl_external_project tcl_thing subdir)
     ExternalProject_Add(
         tcl8.5.11
         SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}
-        DOWNLOAD_COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}
         CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}/configure
                           --prefix=${CMAKE_INSTALL_PREFIX}
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/unix
@@ -17,7 +16,6 @@ macro(add_tcl_external_dep_project tcl_thing subdir)
     ExternalProject_Add(
         ${tcl_thing}
         SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}
-        DOWNLOAD_COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}
         CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}/configure
         # --srcdir=${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${surdir}
                           -with-tcl=${CMAKE_INSTALL_PREFIX}/lib
@@ -35,7 +33,6 @@ macro(add_tk_external_dep_project tcl_thing)
     ExternalProject_Add(
         ${tcl_thing}
         SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}
-        DOWNLOAD_COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}
         CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}/configure
         # --srcdir=${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${surdir}
                           -with-tcl=${CMAKE_INSTALL_PREFIX}/lib
