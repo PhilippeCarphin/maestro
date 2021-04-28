@@ -3,6 +3,11 @@ cmake_minimum_required(VERSION 3.10)
 project(masetro C)
 
 find_package(libxml2 REQUIRED)
+
+if(CMAKE_SYSTEM_NAME STREQUAL Darwin)
+    set(OPENSSL_ROOT_DIR /opt/homebrew/Cellar/openssl@1.1/1.1.1k/)
+endif()
+
 find_package(OpenSSL REQUIRED)
 
 add_library(maestro_core STATIC
