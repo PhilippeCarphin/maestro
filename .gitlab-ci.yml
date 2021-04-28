@@ -18,3 +18,5 @@ build:
     paths:
       - build/install-site
 
+  tags:
+    - internet
