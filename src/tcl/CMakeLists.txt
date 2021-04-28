@@ -21,7 +21,7 @@ macro(add_tcl_external_dep_project tcl_thing subdir)
         CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}/configure
         # --srcdir=${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${surdir}
                           -with-tcl=${CMAKE_INSTALL_PREFIX}/lib
-                          --with-tclinclude=${CMAKE_CURRENT_SOURCE_DIR}/include
+                          --with-tclinclude=${CMAKE_INSTALL_PREFIX}/include
                           --prefix=${CMAKE_INSTALL_PREFIX}
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}
         BUILD_IN_SOURCE 1
@@ -39,7 +39,7 @@ macro(add_tk_external_dep_project tcl_thing)
         CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}/configure
         # --srcdir=${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${surdir}
                           -with-tcl=${CMAKE_INSTALL_PREFIX}/lib
-                          --with-tclinclude=${CMAKE_CURRENT_SOURCE_DIR}/include
+                          --with-tclinclude=${CMAKE_INSTALL_PREFIX}/include
                           --with-tk=${CMAKE_INSTALL_PREFIX}/lib
                           --prefix=${CMAKE_INSTALL_PREFIX}
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}
