@@ -2,8 +2,8 @@ message(STATUS "Implement me")
 add_custom_command(
 	OUTPUT manvenv
 	COMMAND virtualenv -p python3 manvenv || python3 -m venv manvenv
-	COMMAND source manvenv/bin/activate
-	COMMAND pip3 install -r ${CMAKE_CURRENT_SOURCE_DIR}/requirements.txt
+    # COMMAND source manvenv/bin/activate
+	COMMAND manvenv/bin/pip3 install -r ${CMAKE_CURRENT_SOURCE_DIR}/requirements.txt
 	DEPENDS requirements.txt
 )
 add_custom_target(venv DEPENDS manvenv)
