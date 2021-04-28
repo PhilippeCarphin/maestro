@@ -17,6 +17,3 @@ build:
   artifacts:
     paths:
       - build/install-site
-
-  tags:
-    - internet
