@@ -1,10 +1,10 @@
 include(ExternalProject)
-macro(add_tcl_external_project tcl_thing)
+macro(add_tcl_external_project tcl_thing subdir)
     ExternalProject_Add(
         tcl8.5.11
         SOURCE_DIR ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}
-        DOWNLOAD_COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/unix
-        CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/unix/configure
+        DOWNLOAD_COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}
+        CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}/configure
                           --prefix=${CMAKE_INSTALL_PREFIX}
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/unix
         BUILD_IN_SOURCE 1
@@ -20,7 +20,7 @@ macro(add_tcl_external_dep_project tcl_thing subdir)
         DOWNLOAD_COMMAND cd ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}
         CONFIGURE_COMMAND ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}/configure
         # --srcdir=${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${surdir}
-                          -with-tcl=${CMAKE_CURRENT_SOURCE_DIR}/lib
+                          -with-tcl=${CMAKE_INSTALL_PREFIX}/lib
                           --with-tclinclude=${CMAKE_CURRENT_SOURCE_DIR}/include
                           --prefix=${CMAKE_INSTALL_PREFIX}
         PREFIX ${CMAKE_CURRENT_SOURCE_DIR}/${tcl_thing}/${subdir}
@@ -50,11 +50,18 @@ macro(add_tk_external_dep_project tcl_thing)
     add_dependencies(${tcl_thing} tcl8.5.11 tk8.5.11)
 endmacro()
 
-add_tcl_external_project(tcl8.5.11)
+if(CMAKE_SYSTEM_NAME STREQUAL Linux)
+    message(STATUS LINUX)
+    set(platform_subdir unix)
+else()
+    message(STATUS "NOT LINUX")
+    set(platform_subdir macos)
+endif()
+add_tcl_external_project(tcl8.5.11 ${platform_subdir})
 add_tcl_external_dep_project(thread2.6.7 "")
-add_tcl_external_dep_project(tk8.5.11 unix)
+add_tcl_external_dep_project(tk8.5.11  ${platform_subdir})
 add_tcl_external_dep_project(tDOM-0.8.3 "")
 add_tcl_external_dep_project(tcllib-1.13 "")
 add_tcl_external_dep_project(tklib-0.5 "")
-add_tk_external_dep_project(Tktable2.10)
-add_tk_external_dep_project(tkimg1.4)
+add_tk_external_dep_project(Tktable2.10 "")
+add_tk_external_dep_project(tkimg1.4 "")

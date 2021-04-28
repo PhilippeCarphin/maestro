@@ -11,4 +11,9 @@ build:
     - make
     - export TMPDIR=$PWD
     - make check
+    - make install
+
+  artifacts:
+    paths:
+      - build/install-site
 
