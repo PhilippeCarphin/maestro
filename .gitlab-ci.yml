@@ -9,5 +9,6 @@ build:
     - cd build
     - /home/phc001/miniconda3/bin/cmake .. -DCMAKE_INSTALL_PREFIX=$PWD
     - make
+    - export TMPDIR=$PWD
     - make check
 
