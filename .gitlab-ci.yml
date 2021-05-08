@@ -4,6 +4,7 @@ stages:
   - configure
   - core
   - tcl_deps
+  - tk_deps
   - bundle
 
 
@@ -63,12 +64,12 @@ build_tDOM-0.8.3:
     - make tDOM-0.8.3
   artifacts:
     untracked: true
-#build_tklib-0.5:
-#  stage: tcl_deps
-#  script:
-#    - make tklib-0.5
-#  artifacts:
-#    untracked: true
+build_tklib-0.5:
+  stage: tk_deps
+  script:
+    - make tklib-0.5
+  artifacts:
+    untracked: true
 build_thread2.6.7:
   stage: tcl_deps
   script:
