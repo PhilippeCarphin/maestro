@@ -29,7 +29,6 @@ core:
   script:
     - cd src/core
     - make
-    - make check
   artifacts:
     paths:
       - build
