@@ -3,6 +3,7 @@ stages:
   - core
   - tcl
   - tcl_deps
+  - bundle
 
 
 before_script:
@@ -41,7 +42,7 @@ build_tcl:
       - build
 
 build_tk8.5.11:
-  stage: build
+  stage: tcl_deps
   script:
     - make tk8.5.11
   artifacts:
@@ -49,14 +50,14 @@ build_tk8.5.11:
       - build
 
 build_tcllib-1.13:
-  stage: build
+  stage: tcl_deps
   script:
     - make tcllib-1.13
   artifacts:
     paths:
       - build/install-site
 build_tDOM-0.8.3:
-  stage: build
+  stage: tcl_deps
   script:
     - make tDOM-0.8.3
   artifacts:
