@@ -19,7 +19,7 @@ configure:
     - /home/phc001/.local/bin/cmake .. -DCMAKE_INSTALL_PREFIX=$PWD/install-site
   artifacts:
     paths:
-      - build/install-site
+      - build
 
 core:
   stage: core
@@ -61,39 +61,39 @@ build_tDOM-0.8.3:
     - make tDOM-0.8.3
   artifacts:
     paths:
-      - build/install-site
+      - build
 build_tklib-0.5:
   stage: tcl_deps
   script:
     - make tklib-0.5
   artifacts:
     paths:
-      - build/install-site
+      - build
 build_threads2.6.7:
   stage: tcl_deps
   script:
     - make threads2.6.7
   artifacts:
     paths:
-      - build/install-site
+      - build
 build_Tktable2.10:
   stage: tcl_deps
   script:
     - make Tktable2.10
   artifacts:
     paths:
-      - build/install-site
+      - build
 build_tkimg1.4:
   stage: tcl_deps
   script:
     - make tkimg1.4
   artifacts:
     paths:
-      - build/install-site
+      - build
 bundle:
   stage: bundle
   script:
     - echo "combining artifacts?"
   artifacts:
     paths:
-      - build/install-site
+      - build
