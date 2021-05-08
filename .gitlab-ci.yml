@@ -17,9 +17,6 @@ configure:
   stage: configure
   script:
     - /home/phc001/.local/bin/cmake .. -DCMAKE_INSTALL_PREFIX=$PWD/install-site
-    - ssh ppp3 "cd $PWD ; make man"
-    - make
-
   artifacts:
     paths:
       - build/install-site
@@ -29,6 +26,7 @@ core:
   script:
     - cd src/core
     - make
+    - make check
   artifacts:
     paths:
       - build
