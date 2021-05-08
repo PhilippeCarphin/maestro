@@ -1,5 +1,5 @@
 variables:
-  build_dir: /home/phc001/site3/out-of-tree-builds//${CI_PROJECT_PATH}/${CI_BUILD_REF_NAME}/${CI_PIPELINE_ID}/cmake-build-release
+  build_dir: ${CI_PROJECT_DIR}/build/
 stages:
   - configure
   - core
@@ -16,7 +16,7 @@ before_script:
 configure:
   stage: configure
   script:
-    - /home/phc001/miniconda3/bin/cmake ${CI_PROJECT_DIR} -DCMAKE_INSTALL_PREFIX=$${CI_PROJECT_DIR}/install-site
+    - /home/phc001/miniconda3/bin/cmake ${CI_PROJECT_DIR} -DCMAKE_INSTALL_PREFIX=${CI_PROJECT_DIR}/install-site
   artifacts:
     untracked: true
 
@@ -63,12 +63,12 @@ build_tDOM-0.8.3:
     - make tDOM-0.8.3
   artifacts:
     untracked: true
-build_tklib-0.5:
-  stage: tcl_deps
-  script:
-    - make tklib-0.5
-  artifacts:
-    untracked: true
+#build_tklib-0.5:
+#  stage: tcl_deps
+#  script:
+#    - make tklib-0.5
+#  artifacts:
+#    untracked: true
 build_thread2.6.7:
   stage: tcl_deps
   script:
