@@ -1,19 +1,99 @@
 stages:
-  - build
-  - test
+  - configure
+  - core
+  - tcl
+  - tcl_deps
 
-build:
-  stage: build
+
+before_script:
+  - mkdir -p build
+  - cd build
+  - export CFLAGS="${CFLAGS} -I${CI_PROJECT_DIR}/build/install-site/include"
+  - export CLICOLOR_FORCE=true
+  - export TMPDIR=$PWD
+
+configure:
+  stage: configure
   script:
-    - mkdir build
-    - cd build
-    - /home/phc001/miniconda3/bin/cmake .. -DCMAKE_INSTALL_PREFIX=$PWD/install-site
+    - /home/phc001/.local/bin/cmake .. -DCMAKE_INSTALL_PREFIX=$PWD/install-site
     - ssh ppp3 "cd $PWD ; make man"
     - make
-    - export TMPDIR=$PWD
-    - make check
-    - make install
 
+  artifacts:
+    paths:
+      - build/install-site
+
+core:
+  stage: core
+  script:
+    - cd src/core
+    - make
+    - make check
+  artifacts:
+    - build
+
+build_tcl:
+  stage: tcl
+  script:
+    - make tcl8.5.11
+  artifacts:
+    paths:
+      - build
+
+build_tk8.5.11:
+  stage: build
+  script:
+    - make tk8.5.11
+  artifacts:
+    paths:
+      - build
+
+build_tcllib-1.13:
+  stage: build
+  script:
+    - make tcllib-1.13
+  artifacts:
+    paths:
+      - build/install-site
+build_tDOM-0.8.3:
+  stage: build
+  script:
+    - make tDOM-0.8.3
+  artifacts:
+    paths:
+      - build/install-site
+build_tklib-0.5:
+  stage: tcl_deps
+  script:
+    - make tklib-0.5
+  artifacts:
+    paths:
+      - build/install-site
+build_threads2.6.7:
+  stage: tcl_deps
+  script:
+    - make threads2.6.7
+  artifacts:
+    paths:
+      - build/install-site
+build_Tktable2.10:
+  stage: tcl_deps
+  script:
+    - make Tktable2.10
+  artifacts:
+    paths:
+      - build/install-site
+build_tkimg1.4:
+  stage: tcl_deps
+  script:
+    - make tkimg1.4
+  artifacts:
+    paths:
+      - build/install-site
+bundle:
+  stage: bundle
+  script:
+    - echo "combining artifacts?"
   artifacts:
     paths:
       - build/install-site
