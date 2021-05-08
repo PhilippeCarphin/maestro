@@ -27,6 +27,7 @@ core:
     - cd src/core
     - make
     - make check
+    - make install
   artifacts:
     paths:
       - build
