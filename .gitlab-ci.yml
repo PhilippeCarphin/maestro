@@ -31,7 +31,8 @@ core:
     - make
     - make check
   artifacts:
-    - build
+    paths:
+      - build
 
 build_tcl:
   stage: tcl
