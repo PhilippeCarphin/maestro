@@ -68,3 +68,6 @@ add_tcl_external_dep_project(tcllib-1.13 "")
 add_tcl_external_dep_project(tklib-0.5 "")
 add_tk_external_dep_project(Tktable2.10 "")
 add_tk_external_dep_project(tkimg1.4 "")
+
+install(DIRECTORY lib/ DESTINATION lib/)
+install(DIRECTORY tkimg1.4 DESTINATION lib/)

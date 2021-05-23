@@ -6,10 +6,10 @@ assert_x11_forwarding_is_enabled || exit 1
 # check tcl/tk installation: 
 [[ -z ${MAESTRO_DOMAIN} ]] && echo "MAESTRO_DOMAIN not set, maestro installation incomplete" && exit 1 
 
-export PATH=${PATH}:${MAESTRO_SRC}/tcl/bin
-export TCL_LIBRARY=${TCL_LIBRARY}:${MAESTRO_SRC}/tcl/lib/tcl8.5
-export TK_LIBRARY=${TK_LIBRARY}:${MAESTRO_SRC}/tcl/lib/tk8.5
-export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:$MAESTRO_TCL_LIB
+export PATH=${PATH}:${SEQ_PACKAGE_HOME}/bin
+export TCL_LIBRARY=${TCL_LIBRARY}:${SEQ_PACKAGE_HOME}/lib/tcl8.5:${SEQ_PACKAGE_HOME}/lib/tkimg1.4
+export TK_LIBRARY=${TK_LIBRARY}:${SEQ_PACKAGE_HOME}/lib/tk8.5
+export LD_LIBRARY_PATH=$LD_LIBRARY_PATH:${SEQ_PACKAGE_HOME}/lib
 
 TCLSH=$(which maestro_wish8.5)
 
@@ -91,6 +91,6 @@ if [[ "${debug}" = "1" ]] ; then
    debug_opt="-debug"
 fi
 
-echo $TCLSH ${MAESTRO_SRC}/xflow/lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt}
+echo $TCLSH ${SEQ_PACKAGE_HOME}/lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt}
 export NO_STOP_MESSAGE=on
-$TCLSH ${MAESTRO_SRC}/xflow/lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt} ${exp_opt}
+$TCLSH ${SEQ_PACKAGE_HOME}/lib/xflow.tcl -main ${automsg_opt} ${nosubmitpopup_opt} ${date_opt} ${rc_opt} ${node_opt} ${loop_opt} ${debug_opt} ${exp_opt}
